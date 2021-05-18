@@ -6,7 +6,7 @@ export function App() {
   let b = useRandomNumber();
   return (
     <div>
-      Hello World! Did you know that {a} + {b} = {add(a, b)}
+      Did you know that {a} + {b} = {add(a, b)}
     </div>
   );
 }
