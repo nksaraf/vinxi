@@ -1,12 +1,14 @@
-import { add, useRandomNumber } from "@lib/math";
 import React from "react";
+import { HelloWorld } from "@/components/HelloWorld";
+
+function Providers({ children }) {
+  return <>{children}</>;
+}
 
 export function App() {
-  let a = useRandomNumber();
-  let b = useRandomNumber();
   return (
-    <div>
-      Did you know that {a} + {b} = {add(a, b)}
-    </div>
+    <Providers>
+      <HelloWorld />
+    </Providers>
   );
 }
