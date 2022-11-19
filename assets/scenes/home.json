@@ -1,0 +1,90 @@
+[
+  {
+    "name": "World",
+    "script": "/src/scripts/world.tsx"
+  },
+  {
+    "name": "Tree",
+    "script": "/src/scripts/tree.tsx",
+    "transform": {
+      "position": [9.629012242319803, 0, -6.718835092424175],
+      "rotation": [0, 0, 0, "XYZ"],
+      "scale": [1, 1, 1]
+    }
+  },
+  {
+    "name": "MainCamera",
+    "camera": {},
+    "active": true,
+    "controls": {
+      "type": "thirdPerson"
+    },
+    "transform": {
+      "position": [-1.5279769187204015, 9.999999999366459, -1.4640455467864484],
+      "rotation": [
+        -2.3561944883184394,
+        -0.6154797095831415,
+        -2.6179938758096992,
+        "XYZ"
+      ],
+      "scale": [1, 1, 1]
+    }
+  },
+  {
+    "name": "Grid",
+    "grid": {
+      "width": 10,
+      "height": 10
+    },
+    "transform": {
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, "XYZ"],
+      "scale": [1, 1, 1]
+    }
+  },
+  {
+    "name": "Player",
+    "script": "/src/scripts/player.tsx",
+    "controller": {
+      "movement": {
+        "velocity": [0, 0, 0],
+        "decceleration": [-0.0005, -0.0001, -5],
+        "acceleration": [1, 0.5, 20]
+      }
+    },
+    "gltf": {
+      "import": "/assets/models/animals/Adventurer.gltf?gltfjsx"
+    },
+    "cameraTarget": {
+      "positionOffset": [-10, 10, -10],
+      "lookAtOffset": [0, 0, 0]
+    },
+    "transform": {
+      "position": [8.472023081269455, 0, 8.535954415101916],
+      "rotation": [0, 0, 0, "XYZ"],
+      "scale": [1, 1, 1]
+    }
+  },
+  {
+    "name": "Light",
+    "transform": {
+      "position": [5.571024542982639, 22.927196932393798, 18.48846042336374],
+      "rotation": [0, 0, 0, "XYZ"],
+      "scale": [1, 1, 1]
+    },
+    "directionalLight": {
+      "intensity": 1,
+      "castShadow": true
+    }
+  },
+  {
+    "transform": {
+      "position": [0, 0, 0],
+      "rotation": [0, 0, 0, "XYZ"],
+      "scale": [5, 5, 5]
+    },
+    "gltf": {
+      "import": "/assets/models/map/Houses_FirstAge_1_Level1.gltf?gltfjsx"
+    }
+  }
+]
