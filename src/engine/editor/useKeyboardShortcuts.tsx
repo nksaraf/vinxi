@@ -1,38 +1,8 @@
 import { useEffect, useState } from "react"
 import { serialize } from "../world"
-import { store } from "../editor/system"
-
-import { useLayoutEffect, useMemo } from "react"
+import { store } from "./system"
 import { useStore } from "statery"
 import { game } from "../game"
-
-export const useKeyboard = ({ onKeyDown = null, onKeyUp = null } = {}) => {
-  const keys = useMemo(() => new Set<string>(), [])
-
-  useLayoutEffect(() => {
-    const down = (event: KeyboardEvent) => (
-      onKeyDown?.(event), keys.add(event.code)
-    )
-    const up = (event: KeyboardEvent) => (
-      onKeyUp?.(event), keys.delete(event.code)
-    )
-
-    window.addEventListener("keydown", down)
-    window.addEventListener("keyup", up)
-    return () => {
-      window.removeEventListener("keydown", down)
-      window.removeEventListener("keyup", up)
-    }
-  }, [])
-
-  return useMemo(() => {
-    const getKey = (key: string) => (keys.has(key) ? 1 : 0)
-    const getAxis = (minKey: string, maxKey: string) =>
-      getKey(maxKey) - getKey(minKey)
-
-    return { getKey, getAxis }
-  }, [])
-}
 
 export function useKeyboardShortcuts() {
   const { editor } = useStore(store)
@@ -56,6 +26,7 @@ export function useKeyboardShortcuts() {
         })
         console.log(game.world.entities)
       }
+
       // listen for Space to play/pause the scene
       else if (e.key === " ") {
         e.preventDefault()
@@ -81,6 +52,11 @@ export function useKeyboardShortcuts() {
               }
             })
           })
+
+          let len = restore.length
+          for (let i = game.world.entities.length - 1; i >= len; i--) {
+            game.world.remove(game.world.entities[i])
+          }
         }
       }
     }

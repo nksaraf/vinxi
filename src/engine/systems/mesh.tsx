@@ -6,6 +6,7 @@ import { MeshComponent } from "../lib/MeshComponent"
 import { folder, LevaInputs } from "leva"
 import { useFrame } from "@react-three/fiber"
 import { game } from "../game"
+import { copyTransform } from "vinxi/copyTransform"
 
 declare global {
   export interface Components {
@@ -23,9 +24,7 @@ const meshObjects = game.world.with("mesh$", "transform")
 export default function MeshSystem() {
   useFrame(() => {
     for (var entity of meshObjects) {
-      entity.mesh$.position.copy(entity.transform.position)
-      entity.mesh$.rotation.copy(entity.transform.rotation)
-      entity.mesh$.scale.copy(entity.transform.scale)
+      copyTransform(entity.mesh$, entity.transform)
     }
   })
   return (

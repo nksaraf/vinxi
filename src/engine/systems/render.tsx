@@ -21,7 +21,8 @@ registerComponent("transform", {
     game.world.addComponent(e, "transform", {
       position: new Vector3(0, 0, 0),
       rotation: new Euler(0, 0, 0),
-      scale: new Vector3(1, 1, 1)
+      scale: new Vector3(1, 1, 1),
+      visible: true
     })
   },
   controls(entity) {

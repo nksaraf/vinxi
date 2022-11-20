@@ -28,8 +28,9 @@ export const entitiesPanel = createPlugin({
 function EntityItem({ entity }: { entity: Components }): JSX.Element {
   const [visible, setVisible] = useState(true)
   return (
-    <EntityLabel>
+    <EntityLabel className="group">
       <span
+        className="cursor-pointer hover:text-white"
         style={{
           marginLeft: "4px"
         }}
@@ -41,6 +42,7 @@ function EntityItem({ entity }: { entity: Components }): JSX.Element {
       </span>
       <div className="flex flex-row space-x-1">
         <span
+          className="cursor-pointer  opacity-0 group-hover:opacity-100 hover:text-white"
           onClick={(e) => {
             setVisible((v) => !v)
             if (entity.mesh$) {
@@ -54,6 +56,7 @@ function EntityItem({ entity }: { entity: Components }): JSX.Element {
           {visible ? <EyeOpenIcon /> : <EyeClosedIcon />}
         </span>
         <span
+          className="cursor-pointer opacity-0 group-hover:opacity-100 hover:text-white"
           onClick={(e) => {
             game.world.remove(entity)
           }}

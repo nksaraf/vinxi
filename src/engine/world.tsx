@@ -68,7 +68,8 @@ export function parse<T>(json: string) {
                 : undefined,
               scale: entity[key].scale
                 ? new Vector3().fromArray(entity[key].scale)
-                : undefined
+                : undefined,
+              visible: true
             }
           ]
         }

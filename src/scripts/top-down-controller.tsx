@@ -21,6 +21,8 @@ declare global {
   }
 }
 
+import { MapControls, OrbitControls } from "@react-three/drei"
+
 const decceleration = new Vector3(-0.0005, -0.0001, -5.0)
 const acceleration = new Vector3(1, 1, 50.0)
 const turnSpeed = 10
@@ -81,13 +83,13 @@ export function TopDownControlledMovementSystem() {
     if (move.x < 0) {
       _A.set(0, 1, 0)
       velocity.z += forwardAcceleration * dt
-      _Q.setFromAxisAngle(_A, 4.0 * Math.PI * dt * acceleration.y)
+      // _Q.setFromAxisAngle(_A, 4.0 * Math.PI * dt * acceleration.y)
       _R.setFromAxisAngle(_A, -Math.PI / 2)
     }
     if (move.x > 0) {
       _A.set(0, 1, 0)
       velocity.z += forwardAcceleration * dt
-      _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * dt * acceleration.y)
+      // _Q.setFromAxisAngle(_A, 4.0 * -Math.PI * dt * acceleration.y)
       _R.setFromAxisAngle(_A, Math.PI / 2)
     }
 
@@ -187,6 +189,18 @@ export function TopDownControlledMovementSystem() {
       <mesh position={[-20, getYPosition(memo, -20, 0, 2.0), 0]}>
         <boxGeometry />
       </mesh> */}
+      {/* {!editor && <MapControls makeDefault screenSpacePanning={false} />} */}
+      {!editor && (
+        <MapControls
+          panSpeed={1}
+          rotateSpeed={1}
+          zoomSpeed={1}
+          minDistance={5}
+          maxDistance={100}
+          target={[16, 0, 16]}
+          maxPolarAngle={Math.PI / 4}
+        />
+      )}
     </>
   )
 }

@@ -7,6 +7,14 @@ import { Helper } from "vinxi/lib/Helper"
 import { MeshComponent } from "vinxi/lib/MeshComponent"
 import { selectEntity } from "vinxi/editor/system"
 
+declare global {
+  export interface Components {
+    grid?: {
+      size: number
+    }
+  }
+}
+
 let grids = game.world.with("grid")
 
 const Grid = forwardRef(({ width, height, entity, cellSize = 5 }, ref) => {
@@ -43,7 +51,9 @@ const Grid = forwardRef(({ width, height, entity, cellSize = 5 }, ref) => {
             }}
           >
             <planeGeometry args={[cellSize - 1, cellSize - 1]} />
-            <meshStandardMaterial transparent opacity={0} />
+            <meshStandardMaterial
+            // transparent opacity={0}
+            />
             <Html transform zIndexRange={[10, 20]}>
               <span className="text-white text-2xl z-0">
                 [{x}, {y}]

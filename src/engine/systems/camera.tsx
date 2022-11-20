@@ -26,6 +26,7 @@ import { Stage } from "../configuration"
 import { bitmask } from "render-composer"
 import { createPlugin, useInputContext } from "leva/plugin"
 import { With } from "miniplex"
+import { copyTransform } from "../copyTransform"
 
 declare global {
   export interface Components {
@@ -49,11 +50,7 @@ export function CameraSystem() {
   useFrame(() => {
     for (var entity of cameraObjects) {
       if (!entity.controls || editor) {
-        entity.camera$.position.copy(entity.transform.position)
-        entity.transform.rotation &&
-          entity.camera$.rotation.copy(entity.transform.rotation)
-        entity.transform.scale &&
-          entity.camera$.scale.copy(entity.transform.scale)
+        copyTransform(entity.camera$, entity.transform)
       }
     }
   })
@@ -138,8 +135,8 @@ export const CameraLookAtSystem = () => {
       if (!target) {
         // object.position.copy(camera.transform.position);
         // object.setRotationFromEuler(camera.transform.rotation);
-        camera.camera$.lookAt(0, 0, 0)
-        camera.transform.rotation.copy(camera.camera$.rotation)
+        // camera.camera$.lookAt(0, 0, 0)
+        // camera.transform.rotation.copy(camera.camera$.rotation)
       } else {
         lookAt.set(...target.cameraTarget.lookAtOffset)
         offset.set(...target.cameraTarget.positionOffset)

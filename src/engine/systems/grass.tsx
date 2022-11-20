@@ -27,7 +27,7 @@ declare global {
 }
 
 const grass = game.world.with("grass")
-const grassRef = game.world.with("grass$")
+const grassRef = game.world.with("grass$", "transform")
 
 registerComponent("grass", {
   addTo(entity) {
@@ -48,9 +48,11 @@ registerComponent("grass", {
             onChange(e) {
               if (e !== entity.grass.width) {
                 entity.grass.width = e
-                entity.grass$.geometry.dispose()
-                entity.grass$.geometry = createGrassGeometry(entity.grass)
-                entity.grass$.material.uniforms.width.value = e
+                if (entity.grass$) {
+                  entity.grass$.geometry.dispose()
+                  entity.grass$.geometry = createGrassGeometry(entity.grass)
+                  entity.grass$.material.uniforms.width.value = e
+                }
               }
             }
           },
@@ -59,8 +61,10 @@ registerComponent("grass", {
             onChange(e) {
               if (e !== entity.grass.count) {
                 entity.grass.count = e
-                entity.grass$.geometry.dispose()
-                entity.grass$.geometry = createGrassGeometry(entity.grass)
+                if (entity.grass$) {
+                  entity.grass$.geometry.dispose()
+                  entity.grass$.geometry = createGrassGeometry(entity.grass)
+                }
               }
             }
           },
@@ -70,9 +74,11 @@ registerComponent("grass", {
             onChange(e) {
               if (e !== entity.grass.bladeHeight) {
                 entity.grass.bladeHeight = e
-                entity.grass$.geometry.dispose()
-                entity.grass$.geometry = createGrassGeometry(entity.grass)
-                entity.grass$.material.uniforms.bladeHeight.value = e
+                if (entity.grass$) {
+                  entity.grass$.geometry.dispose()
+                  entity.grass$.geometry = createGrassGeometry(entity.grass)
+                  entity.grass$.material.uniforms.bladeHeight.value = e
+                }
               }
             }
           },
@@ -82,8 +88,10 @@ registerComponent("grass", {
             onChange(e) {
               if (e !== entity.grass.bladeWidth) {
                 entity.grass.bladeWidth = e
-                entity.grass$.geometry.dispose()
-                entity.grass$.geometry = createGrassGeometry(entity.grass)
+                if (entity.grass$) {
+                  entity.grass$.geometry.dispose()
+                  entity.grass$.geometry = createGrassGeometry(entity.grass)
+                }
               }
             }
           }

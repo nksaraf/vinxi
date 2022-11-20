@@ -6,6 +6,7 @@ import { useStore } from "statery"
 import { DirectionalLightProps, useFrame } from "@react-three/fiber"
 import { game, Layers } from "../game"
 import { bitmask } from "render-composer"
+import { copyTransform } from "vinxi/copyTransform"
 
 export const directionalLights = game.world.with("directionalLight")
 export const directionalLightObjects = game.world.with(
@@ -24,9 +25,7 @@ export default function LightSystem() {
   const { editor } = useStore(store)
   useFrame(() => {
     for (const entity of directionalLightObjects) {
-      entity.directionalLight$.position.copy(entity.transform.position)
-      entity.directionalLight$.rotation.copy(entity.transform.rotation)
-      entity.directionalLight$.scale.copy(entity.transform.scale)
+      copyTransform(entity.directionalLight$, entity.transform)
     }
   })
   return (

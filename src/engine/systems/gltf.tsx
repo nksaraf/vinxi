@@ -12,6 +12,7 @@ import { useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { GLTFLoader, DRACOLoader } from "three-stdlib"
 import { ScriptedEntity } from "./script"
+import { copyTransform } from "vinxi/copyTransform"
 declare global {
   export interface Components {
     gltf?: {
@@ -74,9 +75,7 @@ function Gltf({ entity }: { entity: With<Components, "gltf"> }) {
 export function GLTFSystem() {
   useFrame(() => {
     for (var entity of gltfObjects) {
-      entity.gltfMesh$.position.copy(entity.transform.position)
-      entity.gltfMesh$.rotation.copy(entity.transform.rotation)
-      entity.gltfMesh$.scale.copy(entity.transform.scale)
+      copyTransform(entity.gltfMesh$, entity.transform)
     }
   })
 
