@@ -4,7 +4,7 @@ import React, { useEffect, useLayoutEffect } from "react"
 import { useStore } from "statery"
 import { Quaternion } from "three"
 import { game } from "../game"
-import { store } from "./editor"
+import { store } from "../editor/system"
 import { MeshComponent } from "../lib/MeshComponent"
 
 declare global {

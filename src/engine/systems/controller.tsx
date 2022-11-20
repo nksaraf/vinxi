@@ -7,7 +7,7 @@ import { Vector3, Quaternion } from "three"
 import { lerp } from "three/src/math/MathUtils"
 import { controller } from "../../input"
 import { game } from "../game"
-import { store } from "./editor"
+import { store } from "../editor/system"
 
 declare global {
   export interface Components {

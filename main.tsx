@@ -9,7 +9,7 @@ because otherwise Vite gets confused. :( */
 import "@react-three/fiber"
 import { GameCanvas } from "vinxi/GameCanvas"
 import { CameraSystem } from "vinxi/systems/camera"
-import EditorSystem from "vinxi/systems/editor"
+import EditorSystem from "vinxi/editor/system"
 import RenderSystem from "vinxi/systems/render"
 import { GLTFSystem } from "vinxi/systems/gltf"
 import { ControlledMovementSystem } from "vinxi/systems/controller"

@@ -1,6 +1,6 @@
 import { useStore } from "statery"
 import { Leva } from "leva"
-import { store } from "vinxi/systems/editor"
+import { store } from "vinxi/editor/system"
 
 export function EditorPanels() {
   const { editor } = useStore(store)

@@ -1,4 +1,4 @@
-import { registerComponent, store } from "./editor"
+import { registerComponent, store } from "../editor/system"
 import React from "react"
 import * as THREE from "three"
 import { Mesh } from "three"
@@ -6,14 +6,6 @@ import { MeshComponent } from "../lib/MeshComponent"
 import { folder, LevaInputs } from "leva"
 import { useFrame } from "@react-three/fiber"
 import { game } from "../game"
-
-export const meshes = game.world.with("mesh")
-export const meshObjects = game.world.with("mesh$", "transform")
-// .without("physics")
-
-// export const geometryWithoutMaterial = game.world
-//   .with("geometry")
-//   .without("material", "physics");
 
 declare global {
   export interface Components {
@@ -23,6 +15,29 @@ declare global {
     }
     mesh$?: Mesh
   }
+}
+
+const meshes = game.world.with("mesh")
+const meshObjects = game.world.with("mesh$", "transform")
+
+export default function MeshSystem() {
+  useFrame(() => {
+    for (var entity of meshObjects) {
+      entity.mesh$.position.copy(entity.transform.position)
+      entity.mesh$.rotation.copy(entity.transform.rotation)
+      entity.mesh$.scale.copy(entity.transform.scale)
+    }
+  })
+  return (
+    <>
+      <game.Entities in={meshes}>
+        {(entity) => {
+          let { geometry, material, ...props } = entity.mesh
+          return <MeshComponent entity={entity} {...entity.mesh} />
+        }}
+      </game.Entities>
+    </>
+  )
 }
 
 registerComponent("mesh", {
@@ -62,9 +77,6 @@ registerComponent("mesh", {
               if (mesh) {
                 mesh.geometry = new THREE[className]()
               }
-
-              // game.world.remove(entity);
-              // game.world.add(entity);
             }
           },
           widthSegments: {
@@ -90,23 +102,3 @@ registerComponent("mesh", {
     }
   }
 })
-
-export default function MeshSystem() {
-  useFrame(() => {
-    for (var entity of meshObjects) {
-      entity.mesh$.position.copy(entity.transform.position)
-      entity.mesh$.rotation.copy(entity.transform.rotation)
-      entity.mesh$.scale.copy(entity.transform.scale)
-    }
-  })
-  return (
-    <>
-      <game.Entities in={meshes}>
-        {(entity) => {
-          let { geometry, material, ...props } = entity.mesh
-          return <MeshComponent entity={entity} {...entity.mesh} />
-        }}
-      </game.Entities>
-    </>
-  )
-}

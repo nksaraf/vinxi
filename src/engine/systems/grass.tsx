@@ -12,7 +12,7 @@ import {
 } from "three"
 import { createGrassGeometry, Grass } from "../lib/GrassMaterial"
 import { game } from "../game"
-import { registerComponent } from "./editor"
+import { registerComponent } from "../editor/system"
 
 declare global {
   export interface Components {

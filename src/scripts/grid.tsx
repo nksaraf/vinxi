@@ -5,7 +5,7 @@ import { Euler, GridHelper, Vector3 } from "three"
 import { game } from "vinxi/game"
 import { Helper } from "vinxi/lib/Helper"
 import { MeshComponent } from "vinxi/lib/MeshComponent"
-import { selectEntity } from "vinxi/systems/editor"
+import { selectEntity } from "vinxi/editor/system"
 
 let grids = game.world.with("grid")
 

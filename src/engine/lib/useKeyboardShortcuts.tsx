@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { serialize } from "../world"
-import { store } from "../systems/editor"
+import { store } from "../editor/system"
 
 import { useLayoutEffect, useMemo } from "react"
 import { useStore } from "statery"

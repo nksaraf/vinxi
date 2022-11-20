@@ -1,11 +1,11 @@
 import { Suspense, useMemo, useRef, useState } from "react"
-import { registerComponent, selectEntity } from "./editor"
+import { registerComponent, selectEntity } from "../editor/system"
 import { folder } from "leva"
 import { game } from "../game"
 import { With } from "miniplex"
 import { useAnimations, useGLTF, useHelper } from "@react-three/drei"
 import { useLayoutEffect } from "react"
-import { store } from "../systems/editor"
+import { store } from "../editor/system"
 import { useFrame, useGraph } from "@react-three/fiber"
 import { BoxHelper, Group } from "three"
 import { useEffect } from "react"
@@ -120,7 +120,7 @@ export function Model({ url, ...props }: { url: string }) {
           selectEntity(entity)
         }}
       >
-        <primitive object={clone} key={clone} />
+        <primitive object={clone} key={clone.id} />
       </group>
     </game.Component>
   )

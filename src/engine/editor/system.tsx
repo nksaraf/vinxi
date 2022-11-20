@@ -20,14 +20,14 @@ import { TransformControls as TransformControlsImpl } from "three-stdlib"
 import { useKeyboardShortcuts } from "../lib/useKeyboardShortcuts"
 import { memo, useEffect, useRef, useState } from "react"
 import { usePersistedControls } from "../lib/usePersistedControls"
-import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons"
 import { selectButton } from "../lib/selectButton"
 import { game } from "../game"
 import { With } from "miniplex"
 import { bitmask, Layers } from "render-composer"
 import { SidebarTunnel } from "../state"
-import { EditorPanels } from "../editor/EditorPanels"
-import { Components, createPlugin, styled, useInputContext } from "leva/plugin"
+import { EditorPanels } from "./EditorPanels"
+import { Components, styled } from "leva/plugin"
+import { entitiesPanel } from "./entitiesPanel"
 
 declare global {
   export interface Components {
@@ -57,65 +57,13 @@ export function selectEntity(entity: Components) {
 
 let i = 0
 
-const EntityLabel = styled("div", {
+export const EntityLabel = styled("div", {
   color: "$highlight2",
   display: "flex",
   flexDirection: "flex-row",
   alignItems: "center",
   justifyContent: "space-between"
 })
-
-const entities = createPlugin({
-  normalize(input) {
-    return { value: "", settings: input }
-  },
-  component: () => {
-    const a = useInputContext()
-    const [input, setInput] = useState(0)
-
-    useEffect(() => {
-      game.world.onEntityAdded.add((e) => setInput((i) => i + 1))
-    }, [])
-    return (
-      <div>
-        {game.world.entities.map((entity) => (
-          <EntityItem entity={entity} key={entity} />
-        ))}
-      </div>
-    )
-  }
-})
-
-function EntityItem({ entity }: { entity: Components }): JSX.Element {
-  const [visible, setVisible] = useState(true)
-  return (
-    <EntityLabel>
-      <span
-        style={{
-          marginLeft: "4px"
-        }}
-        onClick={(e) => {
-          selectEntity(entity)
-        }}
-      >
-        {entity.name}
-      </span>
-      <span
-        onClick={(e) => {
-          setVisible((v) => !v)
-          if (entity.mesh$) {
-            entity.mesh$.visible = !entity.mesh$.visible
-          }
-          if (entity.gltfMesh$) {
-            entity.gltfMesh$.visible = !entity.gltfMesh$.visible
-          }
-        }}
-      >
-        {visible ? <EyeOpenIcon /> : <EyeClosedIcon />}
-      </span>
-    </EntityLabel>
-  )
-}
 
 export default function EditorSystem() {
   const { editor } = useStore(store)
@@ -170,11 +118,11 @@ export default function EditorSystem() {
       }
     })
   })
-  const a = useThree((s) => s.raycaster)
+  const raycaster = useThree((s) => s.raycaster)
 
   useEffect(() => {
     if (editor) {
-      a.layers.mask = bitmask(Layers.Default, 1)
+      raycaster.layers.mask = bitmask(Layers.Default, 1)
     }
 
     set({
@@ -182,21 +130,9 @@ export default function EditorSystem() {
       enabled: editor
     })
     return () => {
-      a.layers.mask = bitmask(Layers.Default)
+      raycaster.layers.mask = bitmask(Layers.Default)
     }
-  }, [editor])
-
-  const entityStore = useCreateStore()
-
-  useControls(
-    {
-      entities: entities()
-    },
-    {
-      store: entityStore
-    }
-  )
-
+  }, [editor, raycaster])
   const size = useThree((s) => s.size)
 
   return editor ? (
@@ -205,26 +141,7 @@ export default function EditorSystem() {
       <EditorCamera />
       <SidebarTunnel.In>
         <EditorPanels />
-        <LevaPanel
-          ref={console.log}
-          flat={false}
-          store={entityStore}
-          titleBar={{
-            position: {
-              x: -size.width + 300,
-              y: 1
-            }
-          }}
-          theme={{
-            space: {
-              rowGap: "2px",
-              md: "10px"
-            },
-            sizes: {
-              titleBarHeight: "28px"
-            }
-          }}
-        />
+        <ScenePanel size={size} />
       </SidebarTunnel.In>
       {grid && <gridHelper layers-mask={bitmask(1)} />}
       {axis && <axesHelper layers-mask={bitmask(1)} />}
@@ -235,7 +152,49 @@ export default function EditorSystem() {
   ) : null
 }
 
-function EditorCamera() {
+export function ScenePanel({
+  size
+}: {
+  size: {
+    width: number
+    height: number
+  }
+}) {
+  const entityStore = useCreateStore()
+
+  useControls(
+    {
+      entities: entitiesPanel()
+    },
+    {
+      store: entityStore
+    }
+  )
+
+  return (
+    <LevaPanel
+      flat={false}
+      store={entityStore}
+      titleBar={{
+        position: {
+          x: -size.width + 300,
+          y: 1
+        }
+      }}
+      theme={{
+        space: {
+          rowGap: "2px",
+          md: "10px"
+        },
+        sizes: {
+          titleBarHeight: "28px"
+        }
+      }}
+    />
+  )
+}
+
+export function EditorCamera() {
   const [{ camera }, set] = usePersistedControls("editor", {
     camera: [10, 10, 10]
   })
@@ -263,10 +222,10 @@ export function EditorControls() {
   return (
     <>
       {entities.map((entity) => (
-        <EntityControls key={entity as any} entity={entity} />
+        <EntityControls key={game.world.id(entity)} entity={entity} />
       ))}
       {entities.map((entity) => (
-        <EntityTransformControls key={entity as any} entity={entity} />
+        <EntityTransformControls key={game.world.id(entity)} entity={entity} />
       ))}
     </>
   )
@@ -374,7 +333,7 @@ function EntityTransformControls({
         <TransformControls
           ref={ref}
           onPointerDown={(e) => {}}
-          key={entity as any}
+          key={game.world.id(entity)}
           {...entity.transform}
           onChange={(c) => {
             if (c?.type === "change" && c.target.object && entity.transform) {
