@@ -93,10 +93,10 @@ export default defineConfig({
             .replace("@assets", "assets")
             .replace("?gltfjsx", "")
             .replace(".jsx", "")
-          const js = await d.default(fp, "Ghost.jsx", {})
-
           const { name } = path.parse(fp)
-          let code = fs.readFileSync("Ghost.jsx", "utf-8")
+          const js = await d.default(fp, `.tmp/${name}.jsx`, {})
+
+          let code = fs.readFileSync(`.tmp/${name}.jsx`, "utf-8")
 
           console.log({ name, fp })
 
@@ -126,7 +126,6 @@ export default defineConfig({
             return (
             `
             )
-          console.log(code)
 
           return esbuild.transformSync(code, {
             jsx: "automatic",
