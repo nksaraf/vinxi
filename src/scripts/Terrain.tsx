@@ -14,7 +14,7 @@ export function Terrain() {
     const [player] = players
     vel.copy(player.transform.position)
   })
-  const map = useTexture("/assets/textures/green_grass.jpg")
+  const map = useTexture("/assets/textures/factory_floor.jpeg")
   map.wrapS = RepeatWrapping
   map.wrapT = RepeatWrapping
   map.repeat.set(100, 100)

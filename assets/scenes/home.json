@@ -54,8 +54,9 @@
   {
     "name": "Grid",
     "grid": {
-      "width": 10,
-      "height": 10
+      "width": 20,
+      "height": 20,
+      "cellSize": 2
     },
     "transform": {
       "position": [
@@ -143,6 +144,31 @@
     "directionalLight": {
       "intensity": 1,
       "castShadow": true
+    }
+  },
+  {
+    "name": "Building Ghost",
+    "gltf": {
+      "url": "/assets/models/map/Houses_FirstAge_1_Level1.gltf?id=1"
+    },
+    "script": "/src/scripts/BuildingGhost.tsx",
+    "transform": {
+      "position": [
+        15.000000017801893,
+        0,
+        14.999997219830952
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        "XYZ"
+      ],
+      "scale": [
+        2,
+        2,
+        2
+      ]
     }
   }
 ]

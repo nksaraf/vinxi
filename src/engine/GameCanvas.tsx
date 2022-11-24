@@ -8,6 +8,7 @@ import { Physics } from "@react-three/rapier"
 import { ErrorBoundary } from "react-error-boundary"
 import { SidebarTunnel } from "./editor/tunnel"
 import { Devtools } from "./Devtools"
+import { store } from "./editor/Editor"
 
 export const World = ({ children }: React.PropsWithChildren<{}>) => {
   return (
@@ -18,8 +19,8 @@ export const World = ({ children }: React.PropsWithChildren<{}>) => {
           colliders={false}
           timeStep="vary"
         >
-          <Devtools />
           {children}
+          <Devtools />
         </Physics>
       </ErrorBoundary>
     </group>
@@ -53,6 +54,11 @@ export const GameCanvas = ({ children, ...props }: RC.CanvasProps) => {
         shadows={true}
         gl={{
           alpha: true
+        }}
+        onPointerMissed={() => {
+          store.set({
+            entities: []
+          })
         }}
         {...props}
       >

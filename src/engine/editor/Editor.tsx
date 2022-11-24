@@ -8,26 +8,28 @@ import { useStore } from "statery"
 import { makeStore } from "statery"
 import {
   useControls,
-  folder,
   buttonGroup,
   LevaPanel,
-  useCreateStore
+  useCreateStore,
+  LevaStoreProvider,
+  useStoreContext,
+  folder
 } from "leva"
-import { DirectionalLightProps, useFrame, useThree } from "@react-three/fiber"
+import { DirectionalLightProps, useThree } from "@react-three/fiber"
 import { Euler, Object3D, Vector3 } from "three"
 import { TransformControls as TransformControlsImpl } from "three-stdlib"
 import { useKeyboardShortcuts } from "./useKeyboardShortcuts"
-import { memo, useEffect, useState } from "react"
+import { useEffect } from "react"
 import { usePersistedControls } from "../lib/usePersistedControls"
-import { selectButton } from "./selectButton"
 import { game } from "vinxi/game"
 import { With } from "miniplex"
 import { bitmask, Layers } from "render-composer"
 import { SidebarTunnel } from "./tunnel"
-import { EditorPanels } from "./EditorPanels"
+import { EntityPanel, EntityControls } from "./EntityInspectorPanel"
 import { Components, styled } from "leva/plugin"
 import { entitiesPanel } from "./entitiesPanel"
 import { EntityTransformControls } from "./EntityTransformControls"
+import { Toaster } from "react-hot-toast"
 
 declare global {
   export interface Components {
@@ -47,7 +49,8 @@ declare global {
 
 export const store = makeStore({
   entities: [] as Components[],
-  editor: true
+  editor: false,
+  store: null
 })
 
 export function selectEntity(entity: Components) {
@@ -56,7 +59,7 @@ export function selectEntity(entity: Components) {
   })
 }
 
-let i = 0
+export let i = 0
 
 export const EntityLabel = styled("div", {
   color: "$highlight2",
@@ -66,59 +69,71 @@ export const EntityLabel = styled("div", {
   justifyContent: "space-between"
 })
 
-export default function EditorSystem() {
+export default function Editor() {
   const { editor } = useStore(store)
   useKeyboardShortcuts()
+  const entityStore = useCreateStore()
+  store.set({ store: entityStore })
 
-  const [{ grid, axis }, set] = usePersistedControls("editor", {
-    grid: true,
-    axis: true,
-    camera: [10, 10, 10],
-    enabled: {
-      value: true,
-      onChange(v) {
-        console.log("editor changed")
-        store.set({
-          editor: v
-        })
+  const [{ grid, axis }, set] = usePersistedControls(
+    "editor",
+    {
+      grid: true,
+      axis: true,
+      enabled: {
+        value: true,
+        onChange(v) {
+          console.log("editor changed")
+          store.set({
+            editor: v
+          })
+        }
       }
+    },
+    {
+      store: entityStore
     }
-  })
+  )
 
-  useControls({
-    "add entity": buttonGroup({
-      "🎥": () => {},
-      "💡": () => {},
-      "⏺️": () => {},
-      "⏹️": () => {
-        let e = game.world.add({
-          transform: {
-            position: new Vector3(0, 0, 0),
-            rotation: new Euler(0, 0, 0),
-            scale: new Vector3(1, 1, 1)
-          },
-          name: "unnamed" + i++,
-          mesh: {
-            geometry: {
-              type: "boxGeometry",
-              props: {
-                args: [1, 1, 1]
-              }
+  useControls(
+    {
+      "add entity": buttonGroup({
+        "🎥": () => {},
+        "💡": () => {},
+        "⏺️": () => {},
+        "⏹️": () => {
+          let e = game.world.add({
+            transform: {
+              position: new Vector3(0, 0, 0),
+              rotation: new Euler(0, 0, 0),
+              scale: new Vector3(1, 1, 1)
             },
-            material: {
-              type: "meshStandardMaterial",
-              props: {
-                color: "red"
+            name: "unnamed" + i++,
+            mesh: {
+              geometry: {
+                type: "boxGeometry",
+                props: {
+                  args: [1, 1, 1]
+                }
+              },
+              material: {
+                type: "meshStandardMaterial",
+                props: {
+                  color: "red"
+                }
               }
             }
-          }
-        })
-        store.set({
-          entities: [e]
-        })
-      }
-    })
-  })
+          })
+          store.set({
+            entities: [e]
+          })
+        }
+      })
+    },
+    {
+      store: entityStore
+    }
+  )
   const raycaster = useThree((s) => s.raycaster)
 
   useEffect(() => {
@@ -138,11 +153,14 @@ export default function EditorSystem() {
 
   return editor ? (
     <>
-      <EditorControls />
-      <EditorCamera />
+      <LevaStoreProvider store={entityStore}>
+        <EditorControls />
+        <EditorCamera />
+      </LevaStoreProvider>
       <SidebarTunnel.In>
-        <EditorPanels />
-        <ScenePanel size={size} />
+        <EntityPanel />
+        <WorldPanel size={size} store={entityStore} />
+        <Toaster position="bottom-right" />
       </SidebarTunnel.In>
       {grid && <gridHelper layers-mask={bitmask(1)} />}
       {axis && <axesHelper layers-mask={bitmask(1)} />}
@@ -153,29 +171,30 @@ export default function EditorSystem() {
   ) : null
 }
 
-export function ScenePanel({
-  size
+export function WorldPanel({
+  size,
+  store
 }: {
   size: {
     width: number
     height: number
   }
+  store: ReturnType<typeof useCreateStore>
 }) {
-  const entityStore = useCreateStore()
-
   useControls(
+    "world",
+
+    { entities: entitiesPanel() },
     {
-      entities: entitiesPanel()
-    },
-    {
-      store: entityStore
+      store: store,
+      order: 0
     }
   )
 
   return (
     <LevaPanel
       flat={false}
-      store={entityStore}
+      store={store}
       titleBar={{
         position: {
           x: -size.width + 300,
@@ -196,21 +215,35 @@ export function ScenePanel({
 }
 
 export function EditorCamera() {
-  const [{ camera }, set] = usePersistedControls("editor", {
-    camera: [10, 10, 10]
-  })
+  const leva = useStoreContext()
+  const [{ cameraPosition, cameraRotation }, set] = usePersistedControls(
+    "editor",
+    {
+      cameraPosition: [10, 10, 10],
+      cameraRotation: [0, 0, 0]
+    },
+    {
+      store: leva
+    }
+  )
   return (
     <>
       <PerspectiveCamera
         layers-mask={bitmask(Layers.Default, 1)}
-        position={camera}
+        position={cameraPosition}
+        rotation={cameraRotation}
         makeDefault
       />
       <OrbitControls
         makeDefault
         onChange={(e) => {
           set({
-            camera: e?.target.object.position.toArray()
+            cameraPosition: e?.target.object.position.toArray(),
+            cameraRotation: [
+              e?.target.object.rotation.x,
+              e?.target.object.rotation.y,
+              e?.target.object.rotation.z
+            ]
           })
         }}
       />
@@ -232,7 +265,7 @@ export function EditorControls() {
   )
 }
 
-let componentLibrary: {
+export let componentLibrary: {
   [key: string]: Parameters<typeof registerComponent>[1]
 } = {}
 
@@ -250,68 +283,3 @@ export function registerComponent<T extends keyof Components>(
   // @ts-expect-error
   componentLibrary[name] = comp
 }
-
-const EntityControls = memo(({ entity }: { entity: Components }) => {
-  console.log(entity)
-  const scene = useThree((s) => s.scene)
-  const [run, setRun] = useState(0)
-  function reset() {
-    setRun((r) => r + 1)
-  }
-  const [, set] = useControls(() => {
-    let name = entity.name ?? "unnamed" + i++
-    let controls = {}
-    Object.keys(entity).forEach((key) => {
-      if (componentLibrary[key]) {
-        controls = {
-          ...controls,
-          ...(componentLibrary[key]?.controls?.(entity as any, reset, scene) ??
-            {})
-        }
-      }
-    })
-    return {
-      [name]: folder(
-        {
-          name: {
-            value: name,
-            onChange: (value) => {
-              entity.name = value
-            }
-          },
-          ...controls,
-          newComponent: selectButton({
-            options: Object.keys(componentLibrary).filter(
-              (e) => !entity[e as keyof Components]
-            ),
-            onClick: (get: any) => {
-              let componentType = get(name + ".newComponent")
-              componentLibrary[componentType]?.addTo(entity)
-              reset()
-            }
-          })
-        },
-        {
-          color: "blue"
-        }
-      )
-    }
-  }, [entity, run])
-
-  useFrame(function editorControlsSystem() {
-    if (entity.transform) {
-      set({
-        // @ts-expect-error
-        position: entity.transform.position.toArray(),
-        rotation: [
-          entity.transform.rotation.x,
-          entity.transform.rotation.y,
-          entity.transform.rotation.z
-        ],
-        scale: entity.transform.scale.toArray()
-      })
-    }
-  })
-
-  return null
-})

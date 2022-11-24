@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { EyeClosedIcon, EyeOpenIcon, TrashIcon } from "@radix-ui/react-icons"
 import { game } from "../game"
 import { createPlugin, useInputContext } from "leva/plugin"
-import { EntityLabel, selectEntity } from "./system"
+import { EntityLabel, selectEntity } from "./Editor"
 
 export const entitiesPanel = createPlugin({
   normalize(input) {

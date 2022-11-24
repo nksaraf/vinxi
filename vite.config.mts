@@ -9,8 +9,12 @@ import type { Plugin, ResolvedConfig, ViteDevServer } from "vite"
 import { createMiddleware } from "@hattip/adapter-node"
 import { GLTFLoader, DRACOLoader } from "three-stdlib"
 import esbuild from "esbuild"
+import { parseSync, transformFileSync, transformSync } from "@babel/core"
+
+import { createRouter } from "@hattip/router"
 
 globalThis.fetch = undefined
+import glsl from "vite-plugin-glsl"
 
 const d = await import("@react-three/gltfjsx/src/gltfjsx")
 // const gltfLoader = new GLTFLoader()
@@ -61,12 +65,22 @@ function hattip({
   }
 }
 
+import babel from "./babel"
+
+const router = createRouter()
+
 // https://vitejs.dev/config/
 export default defineConfig({
   publicDir: "assets",
   plugins: [
     tsconfiPaths(),
-    react(),
+    glsl(),
+    react({
+      jsxRuntime: "classic",
+      babel: {
+        plugins: [babel]
+      }
+    }),
     {
       name: "cross-server",
       configureServer(server) {
@@ -120,6 +134,7 @@ export default defineConfig({
               if (props.entity) {
                 props.game.world.addComponent(props.entity, "gltfMesh$", group.current);
                 props.entity.gltfMesh$ = group.current
+                props.entity.gltf$ = { nodes, materials, setUrl: props.setUrl }
                 
               }
             }, [props.entity, nodes])
@@ -164,6 +179,19 @@ export default defineConfig({
           console.log("saving", name, scene)
           fs.writeFileSync("assets/" + name, scene)
           return new Response("ok")
+        }
+        if (
+          event.request.method === "POST" &&
+          url.pathname === "/__editor/write"
+        ) {
+          const data = await event.request.json()
+          console.log("writing", data)
+          console.log(
+            parseSync(fs.readFileSync(data.source.fileName).toString(), {
+              presets: ["@babel/preset-typescript", "@babel/preset-react"],
+              filename: data.source.fileName
+            })
+          )
         }
         if (
           event.request.method === "GET" &&

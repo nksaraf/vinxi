@@ -1,0 +1,94 @@
+{
+  "asset": { "generator": "Khronos glTF Spline I/O v0.0.1", "version": "2.0" },
+  "scenes": [{ "nodes": [0] }],
+  "nodes": [
+    { "name": "", "children": [1, 2] },
+    {
+      "name": "Conveyer Belt",
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      "mesh": 0
+    },
+    {
+      "name": "Personal Camera",
+      "camera": 0,
+      "translation": [464.13621925821565, 393.1014849364863, 793.7642112943536],
+      "rotation": [
+        -0.1919573426288064, 0.25651663422996673, 0.052058991737345336,
+        0.9458548812336423
+      ]
+    }
+  ],
+  "cameras": [
+    {
+      "type": "orthographic",
+      "orthographic": {
+        "xmag": 1920,
+        "ymag": 1080,
+        "zfar": 100000,
+        "znear": -100000
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": { "POSITION": 1, "NORMAL": 2, "TEXCOORD_0": 3 },
+          "indices": 0
+        }
+      ]
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "data:application/octet-stream;base64,AAACAAEAAgADAAEABAAGAAUABgAHAAUACAAKAAkACgALAAkADAAOAA0ADgAPAA0AEAASABEAEgATABEAFAAWABUAFgAXABUAAAAAPwAAAD4AAAA/AAAAPwAAAD4AAAC/AAAAPwAAAL4AAAA/AAAAPwAAAL4AAAC/AAAAvwAAAD4AAAC/AAAAvwAAAD4AAAA/AAAAvwAAAL4AAAC/AAAAvwAAAL4AAAA/AAAAvwAAAD4AAAC/AAAAPwAAAD4AAAC/AAAAvwAAAD4AAAA/AAAAPwAAAD4AAAA/AAAAvwAAAL4AAAA/AAAAPwAAAL4AAAA/AAAAvwAAAL4AAAC/AAAAPwAAAL4AAAC/AAAAvwAAAD4AAAA/AAAAPwAAAD4AAAA/AAAAvwAAAL4AAAA/AAAAPwAAAL4AAAA/AAAAPwAAAD4AAAC/AAAAvwAAAD4AAAC/AAAAPwAAAL4AAAC/AAAAvwAAAL4AAAC/AACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAgD8AAIA/AACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAgD8AAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AACAPwAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAIA/AACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAgD8AAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AACAPwAAgD8AAAAAAAAAAAAAgD8AAAAA",
+      "byteLength": 840
+    }
+  ],
+  "bufferViews": [
+    { "buffer": 0, "byteOffset": 0, "byteLength": 72, "target": 34963 },
+    { "buffer": 0, "byteOffset": 72, "byteLength": 288, "target": 34962 },
+    { "buffer": 0, "byteOffset": 360, "byteLength": 288, "target": 34962 },
+    { "buffer": 0, "byteOffset": 648, "byteLength": 192, "target": 34962 }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 36,
+      "type": "SCALAR",
+      "min": [0],
+      "max": [23]
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3",
+      "min": [-0.5, -0.125, -0.5],
+      "max": [0.5, 0.125, 0.5]
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3",
+      "min": [-1, -1, -1],
+      "max": [1, 1, 1]
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC2",
+      "min": [0, 0],
+      "max": [1, 1]
+    }
+  ],
+  "extensions": { "KHR_lights_punctual": { "lights": [] } },
+  "extensionsUsed": ["KHR_lights_punctual"]
+}

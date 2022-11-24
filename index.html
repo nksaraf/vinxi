@@ -12,6 +12,15 @@
   </head>
   <body>
     <div id="root"></div>
+    <script type="module">
+      import * as THREE from "three"
+      import Buffer from "buffer"
+      globalThis.THREE = THREE
+
+      // globalThis.THREE.BufferGeometry.prototype = BufferGeometry.prototype
+      // globalThis.THREE.BufferAttribute.prototype = BufferAttribute.prototype
+      globalThis.Buffer = Buffer.Buffer
+    </script>
     <script type="module" src="/main.tsx"></script>
   </body>
 </html>

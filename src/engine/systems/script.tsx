@@ -2,7 +2,7 @@ import { lazy, Suspense, useMemo } from "react"
 import { game } from "../game"
 
 let map = {}
-export function ScriptedEntity({ entity, script }) {
+export function ScriptedEntity({ entity, script, ...props }) {
   const Component = useMemo(() => {
     if (map[script]) return map[script]
     console.log(script)
@@ -10,7 +10,7 @@ export function ScriptedEntity({ entity, script }) {
     map[script] = el
     return el
   }, [entity, script])
-  return <Component entity={entity} game={game} />
+  return <Component entity={entity} game={game} {...props} />
 }
 const scripts = game.world.with("script")
 export function ScriptSystem() {

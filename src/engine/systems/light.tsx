@@ -1,7 +1,7 @@
 import { Html, PivotControls, Plane, Sphere } from "@react-three/drei"
 import { DirectionalLight, DirectionalLightHelper } from "three"
 import { Helper } from "../lib/Helper"
-import { selectEntity, store } from "../editor/system"
+import { selectEntity, store } from "../editor/Editor"
 import { useStore } from "statery"
 import { DirectionalLightProps, useFrame } from "@react-three/fiber"
 import { game, Layers } from "../game"

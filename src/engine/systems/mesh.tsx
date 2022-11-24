@@ -1,4 +1,4 @@
-import { registerComponent, store } from "../editor/system"
+import { registerComponent, store } from "../editor/Editor"
 import React from "react"
 import * as THREE from "three"
 import { Mesh } from "three"

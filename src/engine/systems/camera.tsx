@@ -7,19 +7,20 @@ import {
   Vector3
 } from "three"
 import { Helper } from "../lib/Helper"
-import { registerComponent, selectEntity, store } from "../editor/system"
+import { registerComponent, selectEntity, store } from "../editor/Editor"
 
 import { useEntities } from "miniplex/react"
 import {
   createRoot,
   PerspectiveCameraProps,
   ReconcilerRoot,
+  RenderCallback,
   useFrame,
   useThree
 } from "@react-three/fiber"
 import { useLayoutEffect, useRef } from "react"
 import { useStore } from "statery"
-import { folder } from "leva"
+import { folder, useStoreContext } from "leva"
 import { usePersistedControls } from "../lib/usePersistedControls"
 import { game } from "../game"
 import { Stage } from "../configuration"
@@ -117,16 +118,35 @@ const idealLookAt = new Vector3()
 const tmpTarget = new Vector3()
 const tmpLookAt = new Vector3()
 
+function useSystem(
+  callback: RenderCallback,
+  renderPriority?: number | undefined
+) {
+  const [controls] = usePersistedControls(
+    "systems",
+    {
+      [callback.name]: false
+    },
+    {
+      store: store.state.store
+    }
+  )
+
+  useFrame(function (...args) {
+    if (controls[callback.name]) {
+      callback(...args)
+    }
+  }, renderPriority)
+}
+
 export const CameraLookAtSystem = () => {
   const [camera] = useEntities(activeCameras)
   const [target] = useEntities(cameraTargets)
   const set = useThree(({ set }) => set)
-  const [controls] = usePersistedControls("systems", {
-    followCamera: false
-  })
+
   const { editor } = useStore(store)
 
-  useFrame(function cameraLookAt(_, dt) {
+  useSystem(function cameraLookAt(_, dt) {
     if (editor && !controls.followCamera) {
       return
     }

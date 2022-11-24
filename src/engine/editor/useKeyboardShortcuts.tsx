@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { serialize } from "../world"
-import { store } from "./system"
+import { store } from "./Editor"
 import { useStore } from "statery"
 import { game } from "../game"
 

@@ -4,7 +4,7 @@ import React, { forwardRef, useLayoutEffect, useRef } from "react"
 import mergeRefs from "react-merge-refs"
 import { Mesh } from "three"
 import { game } from "../game"
-import { selectEntity, store } from "../editor/system"
+import { selectEntity, store } from "../editor/Editor"
 
 export const MeshComponent = forwardRef<
   Mesh,
