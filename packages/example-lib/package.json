@@ -1,0 +1,51 @@
+{
+  "name": "camera-composer",
+  "author": {
+    "name": "Hendrik Mans",
+    "email": "hendrik@mans.de",
+    "url": "https://hmans.co"
+  },
+  "description": "",
+  "version": "0.0.1",
+  "main": "dist/camera-composer.cjs.js",
+  "module": "dist/camera-composer.esm.js",
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "react/index.ts"
+    ]
+  },
+  "files": [
+    "dist/**",
+    "react/**",
+    "LICENSE",
+    "README.md"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "scripts": {
+    "build": "preconstruct build"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react",
+      [
+        "@babel/preset-typescript",
+        {
+          "isTSX": true,
+          "allExtensions": true
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "fp-ts": "^2.12.3"
+  },
+  "peerDependencies": {
+    "@react-three/fiber": "^8.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "three": "^0.143.0"
+  }
+}

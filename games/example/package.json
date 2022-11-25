@@ -1,0 +1,38 @@
+{
+  "name": "example",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@react-spring/core": "^9.4.4",
+    "@react-spring/three": "^9.4.4",
+    "@react-three/drei": "^9.21.0",
+    "@react-three/fiber": "^8.8.9",
+    "@use-gesture/react": "latest",
+    "@vinxi/editor": "workspace:^0.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-merge-refs": "^1.1.0",
+    "react-use-measure": "^2.1.1",
+    "react-use-refs": "^1.0.1",
+    "styled-components": "^5.3.5",
+    "suspend-react": "^0.0.8",
+    "three": "^0.141.0",
+    "three-stdlib": "^2.13.0",
+    "tunnel-rat": "^0.1.0",
+    "use-error-boundary": "^2.0.6",
+    "wouter": "^2.8.0-alpha.2",
+    "zustand": "^3.7.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/styled-components": "^5.1.24",
+    "@vitejs/plugin-react": "^2.0.1",
+    "leva": "^0.9.34",
+    "typescript": "^4.6.3",
+    "vite": "^3.0.7"
+  }
+}

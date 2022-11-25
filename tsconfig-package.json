@@ -11,6 +11,11 @@
     "isolatedModules": true,
     "skipLibCheck": true
   },
-  "include": ["packages/*/src/**/*"],
-  "exclude": ["**/node_modules/**/*", "**/*.spec.ts", "**/*.test.ts"]
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "**/node_modules/**/*",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
 }

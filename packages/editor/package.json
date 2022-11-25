@@ -1,0 +1,60 @@
+{
+  "name": "@vinxi/editor",
+  "author": {
+    "name": "Hendrik Mans",
+    "email": "hendrik@mans.de",
+    "url": "https://hmans.co"
+  },
+  "description": "",
+  "version": "0.0.1",
+  "main": "dist/vinxi-editor.cjs.js",
+  "module": "dist/vinxi-editor.esm.js",
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "fiber/index.ts"
+    ]
+  },
+  "files": [
+    "dist/**",
+    "fiber/**",
+    "LICENSE",
+    "README.md"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "scripts": {
+    "build": "preconstruct build"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react",
+      [
+        "@babel/preset-typescript",
+        {
+          "isTSX": true,
+          "allExtensions": true
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "@babel/core": "^7.19.6",
+    "@babel/helper-plugin-utils": "^7.20.2",
+    "fp-ts": "^2.12.3",
+    "zustand": "^3.7.1"
+  },
+  "peerDependencies": {
+    "@react-three/fiber": "^8.7.0",
+    "leva": "^0.9",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "three": "^0.143.0"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.1.20",
+    "@types/babel__helper-plugin-utils": "^7.10.0",
+    "leva": "^0.9.34"
+  }
+}

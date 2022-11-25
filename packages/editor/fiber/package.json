@@ -1,0 +1,4 @@
+{
+  "main": "dist/vinxi-editor-fiber.cjs.js",
+  "module": "dist/vinxi-editor-fiber.esm.js"
+}
