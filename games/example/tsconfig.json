@@ -15,5 +15,10 @@
     "noEmit": true,
     "jsx": "react"
   },
-  "include": ["./src", "./typings/*.d.ts", "../packages/*"]
+  "include": [
+    "./src",
+    "./typings/*.d.ts",
+    "../packages/*",
+    "../../packages/editor/src/fiber/EditorPanel.tsx"
+  ]
 }

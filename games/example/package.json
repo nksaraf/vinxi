@@ -24,6 +24,7 @@
     "three-stdlib": "^2.13.0",
     "tunnel-rat": "^0.1.0",
     "use-error-boundary": "^2.0.6",
+    "vite-dev-rpc": "^0.1.0",
     "wouter": "^2.8.0-alpha.2",
     "zustand": "^3.7.1"
   },
