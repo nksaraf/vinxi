@@ -55,7 +55,7 @@ export default function App() {
         rotation={[0, 0, -2.6328271305614925]}
         scale={[2.2026192455468485, 1.464348903812175, 1]}
       />
-      <Obj z={-1} scale={0.5} />
+      {/* <Obj z={-1} scale={0.5} /> */}
       <Obj opacity={0.8} />
       <EditorPanel />
     </Canvas>

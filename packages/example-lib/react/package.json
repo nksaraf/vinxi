@@ -1,4 +1,0 @@
-{
-  "main": "dist/camera-composer-react.cjs.js",
-  "module": "dist/camera-composer-react.esm.js"
-}

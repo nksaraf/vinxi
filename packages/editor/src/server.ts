@@ -29,7 +29,12 @@ function hattip({
     createRPCServer("vinxi", server.ws, {
       save(data) {
         console.log("hereee")
-        transform(data)
+        try {
+          transform(data)
+        } catch (e) {
+          console.log(e)
+          throw e
+        }
       }
     })
     return () => {
@@ -119,7 +124,7 @@ export default () =>
         }
         return new Response(``)
       } catch (e) {
-        console.log(e)
+        console.error(e)
         return new Response(e.stack, { status: 500 })
       }
     }

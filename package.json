@@ -1,9 +1,9 @@
 {
-  "name": "composer-suite-monorepo",
+  "name": "react-three-editor-monorepo",
   "private": true,
   "version": "1.0.0",
   "main": "index.js",
-  "author": "Hendrik Mans <hendrik@mans.de>",
+  "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "license": "MIT",
   "preconstruct": {
     "packages": [
@@ -61,7 +61,7 @@
     "typescript": "^4.9.3"
   },
   "stackblitz": {
-    "startCommand": "cd apps/vfx-composer-examples && pnpm dev"
+    "startCommand": "cd games/example && pnpm dev"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",

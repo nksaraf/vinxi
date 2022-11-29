@@ -4,10 +4,9 @@ import {
   Canvas,
   useFrame,
   editable,
-  createEditable,
   EditorPanel,
+  Editable
 } from "@vinxi/editor/fiber"
-const Box2Editable = createEditable(Box2)
 function Box1(props: any) {
   const mesh = useRef<THREE.Mesh>(null!)
   const [hovered, setHover] = useState(false)
@@ -15,10 +14,7 @@ function Box1(props: any) {
     (state) => (mesh.current.position.y = Math.sin(state.clock.elapsedTime))
   )
   return (
-    <editable.mesh
-      position={[2.7985156249999985, -0.8346864285871753, 0]}
-      rotation={[0.6632251157578453, 0, 0]}
-      scale={[2, 1, 1]}
+    <mesh
       {...props}
       ref={mesh}
       onClick={(e) => props.setActive(!props.active)}
@@ -27,8 +23,8 @@ function Box1(props: any) {
     >
       <boxGeometry />
       <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
-    </editable.mesh>
-  );
+    </mesh>
+  )
 }
 export function Box2(props: any) {
   const mesh = useRef<THREE.Mesh>(null!)
@@ -46,13 +42,13 @@ export function Box2(props: any) {
         onPointerOut={(e) => setHover(false)}
       >
         <boxGeometry />
-        <editable.meshStandardMaterial
+        <meshStandardMaterial
           color={hovered ? "green" : "blue"}
           wireframe={false}
         />
       </mesh>
     </group>
-  );
+  )
 }
 function Switcher() {
   const [active, setActive] = useState(false)
@@ -62,7 +58,7 @@ function Switcher() {
         <Box1 active={active} setActive={setActive} position={[-0.5, 0, 0]} />
       )}
       {!active && (
-        <Box2Editable
+        <Box2
           active={active}
           setActive={setActive}
           position={[0.43410156250000065, 0.6498046875000001, 0]}
@@ -79,9 +75,8 @@ export default function App() {
       <Canvas
         orthographic
         camera={{
-          zoom: 100,
+          zoom: 100
         }}
-        editor={<EditorPanel />}
       >
         <ambientLight />
         <Switcher />

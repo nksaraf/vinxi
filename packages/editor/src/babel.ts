@@ -25,7 +25,8 @@ const transformElements = [
   "directionalLight",
   "pointLight",
   "spotLight",
-  "primitive"
+  "primitive",
+  "points"
 ]
 
 const createNodeFromNullish = <T, N extends t.Node>(
@@ -129,6 +130,27 @@ export default declare<State>((api) => {
             t.jsxIdentifier("editable"),
             t.jsxIdentifier(node.name.name)
           )
+        } else if (
+          t.isJSXIdentifier(node.name) &&
+          node.name.name.match(/^[A-Z]/) &&
+          node.name.name !== "Editable" &&
+          // has an attribute called 'position' or 'rotation' or 'scale'
+          node.attributes.some(
+            (attr) =>
+              t.isJSXAttribute(attr) &&
+              (attr.name.name === "position" ||
+                attr.name.name === "rotation" ||
+                attr.name.name === "scale")
+          ) &&
+          state.get("editorFiberImport")
+        ) {
+          node.attributes.push(
+            t.jsxAttribute(
+              t.jsxIdentifier("component"),
+              t.jsxExpressionContainer(t.identifier(node.name.name))
+            )
+          )
+          node.name = t.jsxIdentifier("Editable")
         }
 
         if (!state.fileNameIdentifier) {

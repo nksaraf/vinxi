@@ -24,7 +24,7 @@ function In({ children }) {
 }
 
 export function EditorPanel() {
-  const p = useEditor((state) => state.elements)
+  const p = useEditor((state) => Object.values(state.elements))
   return (
     <>
       <In>
@@ -52,10 +52,10 @@ export function EditorPanel() {
           <pre>{JSON.stringify(Object.keys(p), null, 2)}</pre>
         </div> */}
       </In>
-      {Object.values(p).map((e) =>
+      {p.map((e) =>
         e.parentId === null ? <EntityEditor key={e.id} entity={e} /> : null
       )}
-      {Object.values(p).map((e) =>
+      {p.map((e) =>
         e.ref instanceof THREE.Object3D && e.parentId === null ? (
           <EntityTransformControls key={e.id} entity={e} />
         ) : null

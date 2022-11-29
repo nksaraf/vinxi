@@ -28,7 +28,8 @@ const getControls = (entity: EditableElement) => {
       transform: folder(
         {
           position: {
-            step: 0.5,
+            lock: true,
+            step: 0.1,
             value: entity.ref.position.toArray(),
 
             onChange: (value, path, context) => {
@@ -52,12 +53,18 @@ const getControls = (entity: EditableElement) => {
             }
           },
           rotation: {
+            lock: true,
             step: 1,
             value: entity.rotation,
+
             onChange: (value) => {
               if (!value) {
                 return
               }
+
+              value = value.map((v) =>
+                typeof v === "string" ? Number(v.substring(0, v.length - 1)) : v
+              )
 
               let rad = value.map((v) => MathUtils.degToRad(v))
               let euler = [...rad, "XYZ"]
@@ -76,13 +83,28 @@ const getControls = (entity: EditableElement) => {
           },
           scale: {
             lock: true,
-            locked: true,
-            step: 0.5,
+            step: 0.1,
             type: LevaInputs.VECTOR3D,
             value: entity.scale,
             onChange: (value) => {
               if (!value) {
                 return
+              }
+              if (typeof entity.ref?.__r3f?.memoizedProps.scale === "number") {
+                console.log(entity.ref.__r3f.memoizedProps.scale)
+                // levaStore.useStore.setState(({ data }) => ({
+                //   data: {
+                //     ...data,
+                //     [`${entity.name}.transform.scale`]: {
+                //       ...data[`${entity.name}.transform.scale`],
+                //       locked: true
+                //     }
+                //   }
+                // }))
+                levaStore.setSettingsAtPath(`${entity.name}.transform.scale`, {
+                  locked: true
+                })
+                console.log(levaStore.useStore.getState())
               }
               entity.ref.scale.fromArray(value)
               entity.transformControls$?.object?.scale.fromArray(value)
@@ -137,7 +159,9 @@ const savedProps = (get, entity: any) => {
         store.data[`${entity.name}.transform.position`].value,
         [0, 0, 0]
       )
-        ? store.data[`${entity.name}.transform.position`].value
+        ? store.data[`${entity.name}.transform.position`].value.map((v) =>
+            Number(v.toFixed(3))
+          )
         : undefined,
       rotation: !eq.array(
         store.data[`${entity.name}.transform.rotation`].value,
@@ -215,26 +239,31 @@ export const EntityEditor = memo(({ entity }: { entity: EditableElement }) => {
   useControls(
     entity.name,
     {
-      save: button((get) => {
-        let props = savedProps(get, entity)
-        let diffs = [
-          {
-            source: entity.source,
-            // value: Object.fromEntries(
-            //   Object.entries(props).filter(([key, value]) => entity.dirty[key])
-            // )
-            value: props
-          }
-        ]
-        // fetch("/__editor/write", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json"
-        //   },
-        //   body: JSON.stringify(diffs)
-        // })
-        client.save(diffs[0])
-      })
+      save: button(
+        (get) => {
+          let props = savedProps(get, entity)
+          let diffs = [
+            {
+              source: entity.source,
+              // value: Object.fromEntries(
+              //   Object.entries(props).filter(([key, value]) => entity.dirty[key])
+              // )
+              value: props
+            }
+          ]
+          // fetch("/__editor/write", {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json"
+          //   },
+          //   body: JSON.stringify(diffs)
+          // })
+          client.save(diffs[0])
+        },
+        {
+          disabled: true
+        }
+      )
     },
     {
       order: 1000

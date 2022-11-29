@@ -5,7 +5,8 @@ import React, {
   useId,
   useEffect,
   useLayoutEffect,
-  useMemo
+  useMemo,
+  useContext
 } from "react"
 import { levaStore, useControls } from "leva"
 import { mergeRefs } from "leva/plugin"
@@ -148,6 +149,21 @@ export class EditableElement<P = {}> extends EventTarget {
       }
     })
   }
+}
+
+export function Editable({ component, ...props }) {
+  console.log(component)
+  const mainC = useMemo(() => {
+    if (!memo[component]) {
+      memo[component] = createEditable(component)
+    }
+    return memo[component]
+  }, [memo, component])
+  const isEditor = useContext(EditorContext)
+  if (isEditor) {
+    return React.createElement(mainC, props)
+  }
+  return React.createElement(component, props)
 }
 
 function useRerender() {
