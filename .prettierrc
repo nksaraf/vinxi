@@ -1,0 +1,29 @@
+{
+	"trailingComma": "all",
+	"useTabs": true,
+	"plugins": ["@trivago/prettier-plugin-sort-imports"],
+	"importOrder": [
+		"^(fully-react/(.*)$)|^(fully-react$)",
+		"<THIRD_PARTY_MODULES>",
+		"^node:(.*)$",
+		"^[./]"
+	],
+	"importOrderSeparation": true,
+	"importOrderSortSpecifiers": true,
+	"overrides": [
+		{
+			"files": "**/*.md",
+			"options": {
+				"tabWidth": 2,
+				"useTabs": false
+			}
+		},
+		{
+			"files": "**/package.json",
+			"options": {
+				"tabWidth": 2,
+				"useTabs": false
+			}
+		}
+	]
+}

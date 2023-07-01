@@ -1,0 +1,18 @@
+{
+  "name": "vinxi-monorepo",
+  "private": "true",
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter \"./packages/*\" run dev",
+    "build": "pnpm -r --filter \"./packages/*\" run build",
+    "test": "pnpm -r clean:",
+    "ci": "pnpm -r --stream run ci",
+    "test:packages": "pnpm -r --stream run test",
+    "test:prettier": "prettier --check --ignore-path .gitignore --ignore-unknown . '!pnpm-lock.yaml'",
+    "format": "prettier --ignore-path .gitignore --ignore-unknown . '!pnpm-lock.yaml' --write"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "prettier": "^2.8.7",
+    "typescript": "5.1.6"
+  }
+}
