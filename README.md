@@ -1,5 +1,5 @@
 # `vinxi` (The App Framework)
-Compose full stack applications (and frameworks) using Vite, the versatile bundler. The primitive in `vinxi` is a **router**. 
+Compose full stack applications (and frameworks) using [**Vite**](https://github.com/vitejs/vite), the versatile bundler and dev server, and [**Nitro**](https://github.com/unjs/nitro), the universal production server. The primitive in `vinxi` is a **router**. 
 
 Inspired by the [Bun.App](https://bun.sh/blog/bun-bundler#sneak-peek-bun-app) API. 
 
