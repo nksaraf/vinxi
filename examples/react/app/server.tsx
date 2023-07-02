@@ -1,10 +1,10 @@
 /// <reference types="vinxi/server" />
+import { renderAsset } from "@vinxi/react";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import { eventHandler } from "vinxi/runtime/server";
 
 import App from "./app";
-import { renderAsset } from "./render-asset";
 
 export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];
@@ -30,5 +30,6 @@ export default eventHandler(async (event) => {
 		events[event] = listener;
 	};
 
+	event.node.res.setHeader("Content-Type", "text/html");
 	return stream;
 });

@@ -1,5 +1,3 @@
-import { NoHydration } from "solid-js/web";
-
 import { Counter } from "./Counter";
 import "./style.css";
 

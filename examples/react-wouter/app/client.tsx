@@ -1,4 +1,6 @@
 /// <reference types="vinxi/client" />
+import { lazyRoute } from "@vinxi/react";
+import { createAssets } from "@vinxi/react";
 import { pathToRegexp } from "path-to-regexp";
 import React, { Suspense } from "react";
 import { Root, hydrateRoot } from "react-dom/client";
@@ -7,9 +9,7 @@ import "vinxi/runtime/client";
 import { Route, Router } from "wouter";
 import makeCachedMatcher from "wouter/matcher";
 
-import { createAssets } from "./Assets";
 import App from "./app";
-import lazyRoute from "./lazy-route";
 
 const routes = fileRoutes.map((route) => ({
 	path: route.path,
@@ -30,7 +30,10 @@ const convertPathToRegexp = (path) => {
 
 const customMatcher = makeCachedMatcher(convertPathToRegexp);
 
-const Assets = createAssets();
+const Assets = createAssets(
+	import.meta.env.MANIFEST["client"].handler,
+	import.meta.env.MANIFEST["client"],
+);
 window.$root =
 	window.$root ||
 	hydrateRoot(
@@ -55,28 +58,3 @@ window.$root =
 			</Suspense>
 		</App>,
 	);
-
-if (import.meta.hot) {
-	import.meta.hot.accept((mod) => {
-		if (mod) {
-			const Assets = createAssets();
-			window.$root?.render(
-				<mod.App
-					assets={
-						<Suspense>
-							<Assets />
-						</Suspense>
-					}
-				/>,
-			);
-		}
-	});
-}
-
-export { App };
-
-declare global {
-	interface Window {
-		$root?: Root;
-	}
-}

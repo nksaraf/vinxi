@@ -1,12 +1,16 @@
 /// <reference types="vinxi/client" />
+import { createAssets } from "@vinxi/react";
 import React, { Suspense } from "react";
 import { Root, hydrateRoot } from "react-dom/client";
 import "vinxi/runtime/client";
 
-import { createAssets } from "./Assets";
 import App from "./app";
 
-const Assets = createAssets();
+const Assets = createAssets(
+	import.meta.env.MANIFEST["client"].handler,
+	import.meta.env.MANIFEST["client"],
+);
+
 window.$root =
 	window.$root ||
 	hydrateRoot(
@@ -23,7 +27,10 @@ window.$root =
 if (import.meta.hot) {
 	import.meta.hot.accept((mod) => {
 		if (mod) {
-			const Assets = createAssets();
+			const Assets = createAssets(
+				import.meta.env.MANIFEST["client"].handler,
+				import.meta.env.MANIFEST["client"],
+			);
 			window.$root?.render(
 				<mod.App
 					assets={

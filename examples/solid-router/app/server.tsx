@@ -1,6 +1,7 @@
 /// <reference types="vinxi/server" />
 import { MetaProvider, renderTags } from "@solidjs/meta";
 import { Router, Routes } from "@solidjs/router";
+import { lazyRoute, renderAsset } from "@vinxi/solid";
 import {
 	HydrationScript,
 	NoHydration,
@@ -15,8 +16,6 @@ import { eventHandler } from "vinxi/runtime/server";
 import { join } from "node:path";
 
 import App from "./app";
-import lazyRoute from "./lazy-route";
-import { renderAsset } from "./render-asset";
 
 export default eventHandler(async (event) => {
 	const events = {};

@@ -23,6 +23,9 @@ importers:
       '@picocss/pico':
         specifier: ^1.5.7
         version: 1.5.7
+      '@vinxi/react':
+        specifier: workspace:^
+        version: link:../../packages/vinxi-react
       '@vitejs/plugin-react':
         specifier: ^4.0.1
         version: 4.0.1(vite@4.3.9)
@@ -54,6 +57,9 @@ importers:
       '@picocss/pico':
         specifier: ^1.5.7
         version: 1.5.7
+      '@vinxi/react':
+        specifier: workspace:^
+        version: link:../../packages/vinxi-react
       '@vitejs/plugin-react':
         specifier: ^4.0.1
         version: 4.0.1(vite@4.3.9)
@@ -94,6 +100,9 @@ importers:
       '@solidjs/meta':
         specifier: ^0.28.5
         version: 0.28.5(solid-js@1.7.7)
+      '@vinxi/solid':
+        specifier: workspace:^
+        version: link:../../packages/vinxi-solid
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.24)
@@ -121,6 +130,9 @@ importers:
       '@solidjs/router':
         specifier: ^0.8.2
         version: 0.8.2(solid-js@1.7.7)
+      '@vinxi/solid':
+        specifier: workspace:^
+        version: link:../../packages/vinxi-solid
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.24)
@@ -200,6 +212,30 @@ importers:
       prettier:
         specifier: ^2.8.4
         version: 2.8.7
+
+  packages/vinxi-react:
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.14
+        version: 18.2.14
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      vinxi:
+        specifier: workspace:^
+        version: link:../vinxi
+
+  packages/vinxi-solid:
+    devDependencies:
+      '@solidjs/meta':
+        specifier: ^0.28.5
+        version: 0.28.5(solid-js@1.7.7)
+      solid-js:
+        specifier: ^1.7.7
+        version: 1.7.7
+      vinxi:
+        specifier: workspace:^
+        version: link:../vinxi
 
   test:
     dependencies:
@@ -1416,7 +1452,6 @@ packages:
       solid-js: '>=1.4.0'
     dependencies:
       solid-js: 1.7.7
-    dev: false
 
   /@solidjs/router@0.8.2(solid-js@1.7.7):
     resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
@@ -3289,7 +3324,6 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
-    dev: false
 
   /loupe@2.3.6:
     resolution: {integrity: sha512-RaPMZKiMy8/JruncMU5Bt6na1eftNoo++R4Y+N2FrxkDVTrGvcyzFTsaGif4QTeKESheMGegbhw6iUAq+5A8zA==}
@@ -3965,7 +3999,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
@@ -4172,7 +4205,6 @@ packages:
   /seroval@0.5.1:
     resolution: {integrity: sha512-ZfhQVB59hmIauJG5Ydynupy8KHyr5imGNtdDhbZG68Ufh1Ynkv9KOYOAABf71oVbQxJ8VkWnMHAjEHE7fWkH5g==}
     engines: {node: '>=10'}
-    dev: false
 
   /serve-placeholder@2.0.1:
     resolution: {integrity: sha512-rUzLlXk4uPFnbEaIz3SW8VISTxMuONas88nYWjAWaM2W9VDbt9tyFOr3lq8RhVOFrT3XISoBw8vni5una8qMnQ==}
@@ -4250,7 +4282,6 @@ packages:
     dependencies:
       csstype: 3.1.2
       seroval: 0.5.1
-    dev: false
 
   /solid-refresh@0.5.3(solid-js@1.7.7):
     resolution: {integrity: sha512-Otg5it5sjOdZbQZJnvo99TEBAr6J7PQ5AubZLNU6szZzg3RQQ5MX04oteBIIGDs0y2Qv8aXKm9e44V8z+UnFdw==}

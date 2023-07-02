@@ -9,7 +9,7 @@ export function manifest() {
 				define: {
 					"import.meta.env.MANIFEST": `globalThis.MANIFEST`,
 					"import.meta.env.ROUTER_NAME": JSON.stringify(router.name),
-					"import.meta.env.HANDLER": JSON.stringify(router.handler),
+					"import.meta.env.ROUTER_HANDLER": JSON.stringify(router.handler),
 					"process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
 				},
 			};

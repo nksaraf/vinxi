@@ -1,4 +1,5 @@
 /// <reference types="vinxi/server" />
+import { lazyRoute, renderAsset } from "@vinxi/react";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import fileRoutes from "vinxi/routes";
@@ -6,8 +7,6 @@ import { eventHandler } from "vinxi/runtime/server";
 import { Route, Router } from "wouter";
 
 import App from "./app";
-import lazyRoute from "./lazy-route";
-import { renderAsset } from "./render-asset";
 
 export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];

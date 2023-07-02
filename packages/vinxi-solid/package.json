@@ -1,0 +1,40 @@
+{
+  "name": "@vinxi/solid",
+  "version": "1.0.0",
+  "type": "module",
+  "author": "Nikhil Saraf <nsaraf98@gmail.com>",
+  "files": [
+    "src",
+    "*.d.ts"
+  ],
+  "types": "./index.d.ts",
+  "exports": {
+    ".": "./index.jsx",
+    "./server": "./lib/server.js",
+    "./routes": "./lib/routes.js",
+    "./client": "./lib/app-client-plugin.js",
+    "./lib/*": "./lib/*.js",
+    "./runtime/*": "./runtime/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./index.d.ts"
+      ],
+      "./client": [
+        "./client.d.ts"
+      ],
+      "./server": [
+        "./server.d.ts"
+      ],
+      "./routes": [
+        "./routes.d.ts"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@solidjs/meta": "^0.28.5",
+    "solid-js": "^1.7.7",
+    "vinxi": "workspace:^"
+  }
+}

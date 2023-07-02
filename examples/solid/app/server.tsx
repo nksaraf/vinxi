@@ -1,5 +1,6 @@
 /// <reference types="vinxi/server" />
 import { MetaProvider, renderTags } from "@solidjs/meta";
+import { renderAsset } from "@vinxi/solid";
 import {
 	HydrationScript,
 	NoHydration,
@@ -12,7 +13,6 @@ import {
 import { eventHandler } from "vinxi/runtime/server";
 
 import App from "./app";
-import { renderAsset } from "./render-asset";
 
 export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];

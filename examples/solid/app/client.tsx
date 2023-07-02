@@ -1,12 +1,15 @@
 /// <reference types="vinxi/client" />
 import { MetaProvider } from "@solidjs/meta";
+import { createAssets } from "@vinxi/solid";
 import { NoHydration, Suspense, hydrate } from "solid-js/web";
 import "vinxi/runtime/client";
 
-import { createAssets } from "./Assets";
 import App from "./app";
 
-const Assets = createAssets();
+const Assets = createAssets(
+	import.meta.env.MANIFEST["client"].handler,
+	import.meta.env.MANIFEST["client"],
+);
 
 hydrate(
 	() => (

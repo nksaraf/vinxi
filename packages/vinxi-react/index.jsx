@@ -1,14 +1,15 @@
-import { lazy } from "solid-js";
+/// <reference types="vinxi/client" />
+import React from "react";
+import { lazy } from "react";
 import { updateStyles } from "vinxi/lib/style";
 
 import { renderAsset } from "./render-asset";
 
-export const createAssets = () =>
+export { renderAsset };
+export { default as lazyRoute } from "./lazy-route";
+export const createAssets = (src, manifest) =>
 	lazy(async () => {
-		const assets = await import.meta.env.MANIFEST["client"].inputs[
-			import.meta.env.HANDLER
-		].assets();
-
+		const assets = await manifest.inputs[src].assets();
 		const styles = assets.filter((asset) => asset.tag === "style");
 
 		if (typeof window !== "undefined" && import.meta.hot) {
