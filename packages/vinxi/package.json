@@ -12,6 +12,7 @@
   "exports": {
     ".": "./lib/app.js",
     "./server": "./lib/server.js",
+    "./routes": "./lib/routes.js",
     "./client": "./lib/app-client-plugin.js",
     "./lib/*": "./lib/*.js",
     "./runtime/*": "./runtime/*.js"
@@ -26,17 +27,22 @@
       ],
       "./server": [
         "./server.d.ts"
+      ],
+      "./routes": [
+        "./routes.d.ts"
       ]
     }
   },
   "dependencies": {
     "c12": "^1.1.2",
     "chokidar": "^3.5.3",
+    "fast-glob": "^3.3.0",
     "h3": "^1.7.1",
     "http-proxy": "^1.18.1",
     "listhen": "^1.0.4",
     "mri": "^1.2.0",
     "nitropack": "^2.5.2",
+    "path-to-regexp": "^6.2.1",
     "pathe": "^1.1.1",
     "perfect-debounce": "^1.0.0",
     "rollup-plugin-visualizer": "^5.9.2",

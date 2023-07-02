@@ -13,6 +13,7 @@ async function getViteModuleNode(vite, file) {
 
 	if (!node.transformResult) {
 		await vite.transformRequest(absolutePath);
+		node = await vite.moduleGraph.getModuleByUrl(absolutePath);
 	}
 
 	return node;
@@ -38,6 +39,9 @@ async function findDeps(vite, node, deps) {
 		}
 	}
 
+	if (node.url.endsWith(".css")) {
+		return;
+	}
 	if (node.ssrTransformResult) {
 		if (node.ssrTransformResult.deps) {
 			node.ssrTransformResult.deps.forEach((url) =>

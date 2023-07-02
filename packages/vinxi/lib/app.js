@@ -36,10 +36,22 @@ export function createApp({ routers, bundlers }) {
 		},
 	);
 
-	return {
+	const app = {
 		config,
 		getRouter(name) {
 			return config.routers.find((router) => router.name === name);
 		},
 	};
+
+	if (process.argv.includes("--dev")) {
+		(async () => {
+			const { createDevServer } = await import("./dev-server.js");
+			await createDevServer(app, {
+				port: 3000,
+				dev: true,
+			});
+		})();
+	}
+
+	return app;
 }

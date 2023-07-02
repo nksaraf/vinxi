@@ -2,6 +2,7 @@ import { build, copyPublicAssets, createNitro } from "nitropack";
 import { visualizer } from "rollup-plugin-visualizer";
 
 import { manifest } from "./plugins/manifest.js";
+import { routes } from "./plugins/routes.js";
 
 export async function createBuild(app, buildConfig) {
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
@@ -32,7 +33,7 @@ export async function createBuild(app, buildConfig) {
 		],
 		handlers: [
 			{
-				route: "/",
+				route: "/**",
 				handler: ".build/api/server.js",
 			},
 		],
@@ -114,8 +115,8 @@ async function createRouterBuild(app, router) {
 }
 
 const buildPlugin = {
-	node: () => [nodeHandlerBuild()],
-	browser: () => [browserBuild()],
+	node: () => [routes(), nodeHandlerBuild()],
+	browser: () => [routes(), browserBuild()],
 };
 
 export function getEntries(router) {

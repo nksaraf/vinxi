@@ -1,5 +1,6 @@
 import { isAbsolute, join, relative } from "pathe";
 
+import { FileSystemRouter } from "../file-system-router.js";
 // import { FileSystemRouter } from '../file-system-router.js'
 import invariant from "../invariant.js";
 

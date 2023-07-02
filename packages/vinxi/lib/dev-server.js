@@ -1,11 +1,11 @@
 import { defineEventHandler, fromNodeMiddleware } from "h3";
 import { createNitro } from "nitropack";
-import { join } from "pathe";
 
 import { createDevManifest } from "./manifest/dev-server-manifest.js";
 import { createDevServer as createDevNitroServer } from "./nitro-dev.js";
 import { css } from "./plugins/css.js";
 import { manifest } from "./plugins/manifest.js";
+import { routes } from "./plugins/routes.js";
 
 export function getEntries(router) {
 	return [
@@ -53,6 +53,7 @@ async function createViteSSREventHandler(router, serveConfig) {
 		base: router.prefix,
 		appType: "custom",
 		plugins: [
+			routes(),
 			devEntries(),
 			manifest(),
 			devPlugin[router.bundler.target]?.(),
@@ -84,7 +85,7 @@ async function createViteSSREventHandler(router, serveConfig) {
 
 async function createDevRouterHandler(router, serveConfig) {
 	return {
-		router: router.prefix,
+		route: router.prefix,
 		handler: await createViteSSREventHandler(router, serveConfig),
 	};
 }

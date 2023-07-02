@@ -49,6 +49,80 @@ importers:
         specifier: ^18.2.6
         version: 18.2.6
 
+  examples/react-router:
+    dependencies:
+      '@picocss/pico':
+        specifier: ^1.5.7
+        version: 1.5.7
+      '@vitejs/plugin-react':
+        specifier: ^4.0.1
+        version: 4.0.1(vite@4.3.9)
+      autoprefixer:
+        specifier: ^10.4.14
+        version: 10.4.14(postcss@8.4.24)
+      path-to-regexp:
+        specifier: ^6.2.1
+        version: 6.2.1
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      tailwindcss:
+        specifier: ^3.3.2
+        version: 3.3.2
+      vinxi:
+        specifier: workspace:^
+        version: link:../../packages/vinxi
+      wouter:
+        specifier: ^2.11.0
+        version: 2.11.0(react@18.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.14
+        version: 18.2.14
+      '@types/react-dom':
+        specifier: ^18.2.6
+        version: 18.2.6
+
+  examples/react-wouter:
+    dependencies:
+      '@picocss/pico':
+        specifier: ^1.5.7
+        version: 1.5.7
+      '@vitejs/plugin-react':
+        specifier: ^4.0.1
+        version: 4.0.1(vite@4.3.9)
+      autoprefixer:
+        specifier: ^10.4.14
+        version: 10.4.14(postcss@8.4.24)
+      path-to-regexp:
+        specifier: ^6.2.1
+        version: 6.2.1
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      tailwindcss:
+        specifier: ^3.3.2
+        version: 3.3.2
+      vinxi:
+        specifier: workspace:^
+        version: link:../../packages/vinxi
+      wouter:
+        specifier: ^2.11.0
+        version: 2.11.0(react@18.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.14
+        version: 18.2.14
+      '@types/react-dom':
+        specifier: ^18.2.6
+        version: 18.2.6
+
   examples/solid:
     dependencies:
       '@picocss/pico':
@@ -57,18 +131,9 @@ importers:
       '@solidjs/meta':
         specifier: ^0.28.5
         version: 0.28.5(solid-js@1.7.7)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.1
-        version: 4.0.1(vite@4.3.9)
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.24)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.2.0)
       solid-js:
         specifier: ^1.7.7
         version: 1.7.7
@@ -81,13 +146,33 @@ importers:
       vite-plugin-solid:
         specifier: ^2.7.0
         version: 2.7.0(solid-js@1.7.7)(vite@4.3.9)
-    devDependencies:
-      '@types/react':
-        specifier: ^18.2.14
-        version: 18.2.14
-      '@types/react-dom':
-        specifier: ^18.2.6
-        version: 18.2.6
+
+  examples/solid-router:
+    dependencies:
+      '@picocss/pico':
+        specifier: ^1.5.7
+        version: 1.5.7
+      '@solidjs/meta':
+        specifier: ^0.28.5
+        version: 0.28.5(solid-js@1.7.7)
+      '@solidjs/router':
+        specifier: ^0.8.2
+        version: 0.8.2(solid-js@1.7.7)
+      autoprefixer:
+        specifier: ^10.4.14
+        version: 10.4.14(postcss@8.4.24)
+      solid-js:
+        specifier: ^1.7.7
+        version: 1.7.7
+      tailwindcss:
+        specifier: ^3.3.2
+        version: 3.3.2
+      vinxi:
+        specifier: workspace:^
+        version: link:../../packages/vinxi
+      vite-plugin-solid:
+        specifier: ^2.7.0
+        version: 2.7.0(solid-js@1.7.7)(vite@4.3.9)
 
   packages/vinxi:
     dependencies:
@@ -97,6 +182,9 @@ importers:
       chokidar:
         specifier: ^3.5.3
         version: 3.5.3
+      fast-glob:
+        specifier: ^3.3.0
+        version: 3.3.0
       h3:
         specifier: ^1.7.1
         version: 1.7.1
@@ -112,6 +200,9 @@ importers:
       nitropack:
         specifier: ^2.5.2
         version: 2.5.2
+      path-to-regexp:
+        specifier: ^6.2.1
+        version: 6.2.1
       pathe:
         specifier: ^1.1.1
         version: 1.1.1
@@ -1178,6 +1269,14 @@ packages:
     resolution: {integrity: sha512-52luJR6hVNMA1K8Od5OD0d8WVz/svqZG4is8lrDimiUGxdia3DzuLF+pK56dnEzbNt9cA42qVFL134U9LkC9Gg==}
     peerDependencies:
       solid-js: '>=1.4.0'
+    dependencies:
+      solid-js: 1.7.7
+    dev: false
+
+  /@solidjs/router@0.8.2(solid-js@1.7.7):
+    resolution: {integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==}
+    peerDependencies:
+      solid-js: ^1.5.3
     dependencies:
       solid-js: 1.7.7
     dev: false
@@ -2920,6 +3019,10 @@ packages:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
     dev: false
 
+  /path-to-regexp@6.2.1:
+    resolution: {integrity: sha512-JLyh7xT1kizaEvcaXOQwOc2/Yhw6KZOvPf1S8401UyLk86CU79LN3vl7ztXGm/pZ+YjoyAJ4rxmHwbkBXJX+yw==}
+    dev: false
+
   /path-type@4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
@@ -3687,6 +3790,14 @@ packages:
       picocolors: 1.0.0
     dev: false
 
+  /use-sync-external-store@1.2.0(react@18.2.0):
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: false
@@ -3790,6 +3901,15 @@ packages:
     resolution: {integrity: sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg==}
     dependencies:
       string-width: 4.2.3
+    dev: false
+
+  /wouter@2.11.0(react@18.2.0):
+    resolution: {integrity: sha512-Y2CzNCwIN8kHjR2Q10D+UAgQND6TvBNmwXxgYw5ltXjjTlL7cLDUDpCip3a927Svxrmxr6vJMcPUysFxSvriCw==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
   /wrap-ansi@7.0.0:
