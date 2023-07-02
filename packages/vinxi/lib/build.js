@@ -44,7 +44,7 @@ export async function createBuild(app, buildConfig) {
 					);
 
 					return {
-						route: router.base,
+						route: router.base.length === 1 ? "/**" : `${router.base}/**`,
 						handler: join(
 							router.build.outDir,
 							router.base,
