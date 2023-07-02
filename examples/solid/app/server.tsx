@@ -4,6 +4,7 @@ import {
 	HydrationScript,
 	NoHydration,
 	Suspense,
+	renderToStream,
 	renderToStringAsync,
 	ssr,
 	useAssets,
@@ -15,7 +16,7 @@ import { renderAsset } from "./render-asset";
 
 export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];
-	const assets = await clientManifest.inputs["./app/client.tsx"].assets();
+	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 	const events = {};
 	const tags = [];
 	function Meta() {
@@ -24,52 +25,51 @@ export default eventHandler(async (event) => {
 	}
 
 	const manifestJson = await clientManifest.json();
-	const html = await renderToStringAsync(() => (
-		<MetaProvider tags={tags}>
-			<App
-				assets={
-					<>
-						<NoHydration>
-							<Meta />
-						</NoHydration>
-						<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>
-					</>
-				}
-				scripts={
-					<>
-						<NoHydration>
-							<HydrationScript />
-							<script
-								innerHTML={`window.manifest = ${JSON.stringify(manifestJson)}`}
-							></script>
-							<script
-								type="module"
-								src={clientManifest.inputs["./app/client.tsx"].output.path}
-							/>
-						</NoHydration>
-					</>
-				}
-			/>
-		</MetaProvider>
-	));
-	return html;
-	// const stream = renderToPipeableStream(
-	// 	<App assets={<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>} />,
-	// 	{
-	// 		onAllReady: () => {
-	// 			events["end"]?.();
-	// 		},
-	// 		bootstrapModules: [clientManifest.inputs["./app/client.tsx"].output.path],
-	// 		bootstrapScriptContent: `window.manifest = ${JSON.stringify(
-	// 			await clientManifest.json(),
-	// 		)}`,
-	// 	},
-	// );
+	const stream = renderToStream(
+		() => (
+			<MetaProvider tags={tags}>
+				<App
+					assets={
+						<>
+							<NoHydration>
+								<Meta />
+							</NoHydration>
+							<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>
+						</>
+					}
+					scripts={
+						<>
+							<NoHydration>
+								<HydrationScript />
+								<script
+									innerHTML={`window.manifest = ${JSON.stringify(
+										manifestJson,
+									)}`}
+								></script>
+								<script
+									type="module"
+									src={
+										clientManifest.inputs[clientManifest.handler].output.path
+									}
+								/>
+							</NoHydration>
+						</>
+					}
+				/>
+			</MetaProvider>
+		),
+		{
+			onCompleteAll(info) {
+				events["end"]?.();
+			},
+		},
+	);
 
-	// // @ts-ignore
-	// stream.on = (event, listener) => {
-	// 	events[event] = listener;
-	// };
+	// @ts-ignore
+	stream.on = (event, listener) => {
+		events[event] = listener;
+	};
 
-	// return stream;
+	event.node.res.setHeader("Content-Type", "text/html");
+	return stream;
 });

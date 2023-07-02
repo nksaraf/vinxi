@@ -5,7 +5,7 @@ import {
 	HydrationScript,
 	NoHydration,
 	Suspense,
-	renderToStringAsync,
+	renderToStream,
 	ssr,
 	useAssets,
 } from "solid-js/web";
@@ -24,10 +24,10 @@ export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];
 	const serverManifest = import.meta.env.MANIFEST["ssr"];
 
-	const assets = await clientManifest.inputs["./app/client.tsx"].assets();
+	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 
 	const FileRoutes = () => {
-		return routes;
+		return routes as any;
 	};
 
 	const routes = fileRoutes.map((route) => {
@@ -43,66 +43,61 @@ export default eventHandler(async (event) => {
 	}
 
 	const manifestJson = await clientManifest.json();
-	const html = await renderToStringAsync(() => (
-		<MetaProvider tags={tags}>
-			<Router
-				out={{}}
-				url={join(import.meta.env.BASE_URL, event.path)}
-				base={import.meta.env.BASE_URL}
-			>
-				<App
-					assets={
-						<>
-							<NoHydration>
-								<Meta />
-							</NoHydration>
-							<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>
-						</>
-					}
-					scripts={
-						<>
-							<NoHydration>
-								<HydrationScript />
-								<script
-									innerHTML={`window.manifest = ${JSON.stringify(
-										manifestJson,
-									)}`}
-								></script>
-								<script
-									type="module"
-									src={clientManifest.inputs["./app/client.tsx"].output.path}
-								/>
-							</NoHydration>
-						</>
-					}
+	const stream = renderToStream(
+		() => (
+			<MetaProvider tags={tags}>
+				<Router
+					out={{}}
+					url={join(import.meta.env.BASE_URL, event.path)}
+					base={import.meta.env.BASE_URL}
 				>
-					<Suspense>
-						<Routes>
-							<FileRoutes />
-						</Routes>
-					</Suspense>
-				</App>
-			</Router>
-		</MetaProvider>
-	));
-	return html;
-	// const stream = renderToPipeableStream(
-	// 	<App assets={<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>} />,
-	// 	{
-	// 		onAllReady: () => {
-	// 			events["end"]?.();
-	// 		},
-	// 		bootstrapModules: [clientManifest.inputs["./app/client.tsx"].output.path],
-	// 		bootstrapScriptContent: `window.manifest = ${JSON.stringify(
-	// 			await clientManifest.json(),
-	// 		)}`,
-	// 	},
-	// );
+					<App
+						assets={
+							<>
+								<NoHydration>
+									<Meta />
+								</NoHydration>
+								<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>
+							</>
+						}
+						scripts={
+							<>
+								<NoHydration>
+									<HydrationScript />
+									<script
+										innerHTML={`window.manifest = ${JSON.stringify(
+											manifestJson,
+										)}`}
+									></script>
+									<script
+										type="module"
+										src={
+											clientManifest.inputs[clientManifest.handler].output.path
+										}
+									/>
+								</NoHydration>
+							</>
+						}
+					>
+						<Suspense>
+							<Routes>
+								<FileRoutes />
+							</Routes>
+						</Suspense>
+					</App>
+				</Router>
+			</MetaProvider>
+		),
+		{
+			onCompleteAll(info) {
+				events["end"]?.();
+			},
+		},
+	);
 
-	// // @ts-ignore
-	// stream.on = (event, listener) => {
-	// 	events[event] = listener;
-	// };
-
-	// return stream;
+	// @ts-ignore
+	stream.on = (event, listener) => {
+		events[event] = listener;
+	};
+	return stream;
 });

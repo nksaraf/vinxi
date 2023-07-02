@@ -22,7 +22,7 @@ export default eventHandler(async (event) => {
 
 	console.log(routes);
 
-	const assets = await clientManifest.inputs["./app/client.tsx"].assets();
+	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 	const events = {};
 
 	const base =
@@ -52,7 +52,9 @@ export default eventHandler(async (event) => {
 			onAllReady: () => {
 				events["end"]?.();
 			},
-			bootstrapModules: [clientManifest.inputs["./app/client.tsx"].output.path],
+			bootstrapModules: [
+				clientManifest.inputs[clientManifest.handler].output.path,
+			],
 			bootstrapScriptContent: `window.manifest = ${JSON.stringify(
 				await clientManifest.json(),
 			)}; window.base = ${JSON.stringify(base)};`,
