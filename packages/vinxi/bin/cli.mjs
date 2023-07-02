@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import mri from "mri";
 import { join, resolve } from "pathe";
+import { pathToFileURL } from "url";
 
 async function main() {
 	const args = mri(process.argv.slice(2));
@@ -8,7 +9,9 @@ async function main() {
 	const rootDir = resolve(args._[1] || ".");
 	globalThis.MANIFEST = {};
 
-	const { default: config } = await import(resolve("./app.js"));
+	const { default: config } = await import(
+		pathToFileURL(resolve("./app.js")).href
+	);
 
 	if (command === "dev") {
 		const { createDevServer } = await import("../lib/dev-server.js");
