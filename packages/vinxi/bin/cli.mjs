@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import mri from "mri";
-import { join, resolve } from "path";
+import { join, resolve } from "pathe";
 
 async function main() {
 	const args = mri(process.argv.slice(2));
