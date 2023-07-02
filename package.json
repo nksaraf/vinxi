@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "pnpm -r --parallel --filter \"./packages/*\" run dev",
     "build": "pnpm -r --filter \"./packages/*\" run build",
-    "test": "pnpm -r clean:",
+    "clean:test": "rimraf ../.fixtures",
+    "test": "pnpm --filter tests clean && pnpm --filter tests test --",
     "ci": "pnpm -r --stream run ci",
     "test:packages": "pnpm -r --stream run test",
     "test:prettier": "prettier --check --ignore-path .gitignore --ignore-unknown . '!pnpm-lock.yaml'",

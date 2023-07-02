@@ -1,8 +1,8 @@
 {
-  "name": "vinxi-tests",
+  "name": "tests",
   "type": "module",
   "scripts": {
-    "clean": "rimraf .tmp",
+    "clean": "rimraf .fixtures",
     "install:playwright": "playwright install --with-deps",
     "test": "playwright test --config ./playwright.config.ts",
     "test:unit": "vitest run"
@@ -21,14 +21,15 @@
     "get-port": "^6.1.2",
     "picocolors": "^1.0.0",
     "prettier": "^2.8.3",
-    "vinxi": "workspace:*",
     "strip-indent": "^4.0.0",
     "undici": "^5.16.0",
+    "vinxi": "workspace:*",
     "vite": "^4.1.4",
     "vitest": "^0.28.3",
     "wait-on": "^7.0.1"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "rimraf": "^5.0.1"
   }
 }

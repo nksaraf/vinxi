@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 import waitOn from "wait-on";
 
 const TMP_DIR = path.join(
-	path.dirname(path.dirname(path.dirname(fileURLToPath(import.meta.url)))),
+	path.dirname(path.dirname(fileURLToPath(import.meta.url))),
 	".fixtures",
 );
 
@@ -133,7 +133,7 @@ export async function createFixture(init: FixtureInit) {
 
 ////////////////////////////////////////////////////////////////////////////////
 export async function createFixtureProject(init: FixtureInit): Promise<string> {
-	let template = init.template ?? "template";
+	let template = init.template ?? "react";
 	let dirname = path.dirname(
 		path.dirname(path.join(fileURLToPath(import.meta.url))),
 	);
@@ -142,7 +142,7 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
 		.slice(1, info.titlePath.length - 1)
 		.map((s) => s.replace(/ /g, "-"))
 		.join("-");
-	let integrationTemplateDir = path.join(dirname, template);
+	let integrationTemplateDir = path.join(dirname, "templates", template);
 	test;
 	let projectName = `${pName}-${Math.random().toString(32).slice(2)}`;
 	let projectDir = path.join(TMP_DIR, projectName);
