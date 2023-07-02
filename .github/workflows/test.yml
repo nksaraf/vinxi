@@ -93,7 +93,7 @@ jobs:
 
       - name: 📥 Install Playwright
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter solid-start-tests install:playwright
+        run: pnpm --filter tests install:playwright
 
       - name: 👀 Run Integration Tests
         env:
