@@ -8,7 +8,7 @@ async function main() {
 	const rootDir = resolve(args._[1] || ".");
 	globalThis.MANIFEST = {};
 
-	const { default: config } = await import(join(process.cwd(), "./app.js"));
+	const { default: config } = await import(resolve("./app.js"));
 
 	if (command === "dev") {
 		const { createDevServer } = await import("../lib/dev-server.js");
