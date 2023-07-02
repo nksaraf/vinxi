@@ -16,45 +16,29 @@ test.describe("rendering", () => {
 	test.beforeAll(async () => {
 		fixture = await createFixture({
 			files: {
-				"src/root.tsx": js`
-          import { A, Meta, FileRoutes, Scripts, Body, Head, Html, Routes } from "solid-start";
-          import { Suspense } from "solid-js";
+				"app/root.tsx": js`
+						import { useState } from "react";
 
-          export default function Root() {
-            return (
-              <Html lang="en">
-                <Head>
-                  <Meta charset="utf-8" />
-                  <Meta name="viewport" content="width=device-width, initial-scale=1" />
-                </Head>
-                <Body>
-                  <nav>
-                    <A href="/">Home</A>
-                    <A href="/about">About</A>
-                  </nav>
-                  <div id="content">
-                    <h1>Root</h1>
-                    <Suspense>
-                      <Routes>
-                        <FileRoutes />
-                      </Routes>
-                    </Suspense>
-                  </div>
-                  <Scripts />
-                </Body>
-              </Html>
-            );
-          }
-        `,
-				"src/routes/index.tsx": js`
-          export default function Index() {
-            return <h2>Index</h2>;
-          }
-        `,
-				"src/routes/about.tsx": js`
-          export default function Index() {
-            return <h2>About</h2>;
-          }
+						export default function App({ assets }) {
+							const [count, setCount] = useState(0);
+							return (
+								<html lang="en">
+									<head>
+										<link rel="icon" href="/favicon.ico" />
+										{assets}
+									</head>
+									<body>
+										<section>
+											<h1 data-test-id="content">Hello from Vinxi</h1>
+											<button data-test-id="button" onClick={() => setCount(count + 1)}>
+												Click me
+											</button>
+											<span data-test-id="count">{count}</span>
+										</section>
+									</body>
+								</html>
+							);
+						}
         `,
 			},
 		});
@@ -74,91 +58,30 @@ test.describe("rendering", () => {
 		});
 	});
 
-	test("server renders matching routes", async () => {
+	test("ssr", async () => {
 		let res = await fixture.requestDocument("/");
 		expect(res.status).toBe(200);
 		expect(res.headers.get("Content-Type")).toBe("text/html");
-		console.log(await res.text());
+		expect(selectHtml(await res.text(), "[data-test-id=content]")).toBe(
+			prettyHtml(`<h1 data-test-id="content">Hello from Vinxi</h1>`),
+		);
 	});
 
-	// test("server renders matching routes", async () => {
-	//   let res = await fixture.requestDocument("/");
-	//   expect(res.status).toBe(200);
-	//   expect(res.headers.get("Content-Type")).toBe("text/html");
-	//   expect(selectHtml(await res.text(), "#content")).toBe(
-	//     prettyHtml(`
-	//   <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
-	//     <h1>Root</h1>
-	//     <!--#-->
-	//     <h2 data-hk="0-0-0-0-0-0-0-0-0-1-4-0-0-1-0-0-0">Index</h2>
-	//     <!--/-->
-	//   </div>`)
-	//   );
+	test("hydrates", async ({ page }) => {
+		let app = new PlaywrightFixture(appFixture, page);
+		await app.goto("/", true);
 
-	//   res = await fixture.requestDocument("/about");
-	//   expect(res.status).toBe(200);
-	//   expect(res.headers.get("Content-Type")).toBe("text/html");
-	//   expect(selectHtml(await res.text(), "#content")).toBe(
-	//     prettyHtml(`
-	//   <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
-	//     <h1>Root</h1>
-	//     <!--#-->
-	//     <h2 data-hk="0-0-0-0-0-0-0-0-0-1-4-0-0-1-0-0-0">About</h2>
-	//     <!--/-->
-	//   </div>`)
-	//   );
-	// });
+		expect(await app.getHtml("[data-test-id=content]")).toBe(
+			prettyHtml(`<h1 data-test-id="content">Hello from Vinxi</h1>`),
+		);
+		expect(await app.getHtml("[data-test-id=count]")).toBe(
+			prettyHtml(`<span data-test-id="count">0</span>`),
+		);
 
-	// test("hydrates", async ({ page }) => {
-	//   let app = new PlaywrightFixture(appFixture, page);
-	//   await app.goto("/", true);
-	//   expect(await app.getHtml("#content")).toBe(
-	//     prettyHtml(`
-	//       <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
-	//         <h1>Root</h1>
-	//         <!--#-->
-	//         <h2 data-hk="0-0-0-0-0-0-0-0-0-1-4-0-0-1-0-0-0">Index</h2>
-	//         <!--/-->
-	//       </div>`)
-	//   );
+		await app.clickElement("[data-test-id=button]");
 
-	//   await app.goto("/about", true);
-
-	//   expect(await app.getHtml("#content")).toBe(
-	//     prettyHtml(`
-	//       <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
-	//         <h1>Root</h1>
-	//         <!--#-->
-	//         <h2 data-hk="0-0-0-0-0-0-0-0-0-1-4-0-0-1-0-0-0">About</h2>
-	//         <!--/-->
-	//       </div>`)
-	//   );
-	// });
-
-	// test("navigates", async ({ page }) => {
-	//   let app = new PlaywrightFixture(appFixture, page);
-	//   await app.goto("/", true);
-	//   expect(await app.getHtml("#content")).toBe(
-	//     prettyHtml(`
-	//       <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
-	//         <h1>Root</h1>
-	//         <!--#-->
-	//         <h2 data-hk="0-0-0-0-0-0-0-0-0-1-4-0-0-1-0-0-0">Index</h2>
-	//         <!--/-->
-	//       </div>`)
-	//   );
-
-	//   await app.page.click("a[href='/about']");
-	//   await page.waitForSelector(`h2:has-text("About")`);
-
-	//   expect(await app.getHtml("#content")).toBe(
-	//     prettyHtml(`
-	//       <div data-hk="0-0-0-0-0-0-0-0-0-1-3" id="content">
-	//         <h1>Root</h1>
-	//         <!--#-->
-	//         <h2>About</h2>
-	//         <!--/-->
-	//       </div>`)
-	//   );
-	// });
+		expect(await app.getHtml("[data-test-id=count]")).toBe(
+			prettyHtml(`<span data-test-id="count">1</span>`),
+		);
+	});
 });

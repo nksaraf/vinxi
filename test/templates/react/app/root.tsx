@@ -10,7 +10,7 @@ export default function App({ assets }) {
 			</head>
 			<body>
 				<section>
-					<h1>Hello AgentConf with ya asdo!!!</h1>
+					<h1 data-test-id="content">Hello from Vinxi</h1>
 					<button onClick={() => setCount(count + 1)}>
 						Click me: {count}!
 					</button>

@@ -8,13 +8,13 @@ import App from "./root";
 
 export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];
-	console.log(clientManifest.handler);
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
-	const events = {};
 
 	function Assets() {
 		return <>{assets.map((asset) => renderAsset(asset))}</>;
 	}
+
+	const events = {};
 	const stream = renderToPipeableStream(
 		<App
 			assets={
