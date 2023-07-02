@@ -50,14 +50,14 @@ const devPlugin = {
 
 async function createViteSSREventHandler(router, serveConfig) {
 	const viteDevServer = await createViteServer({
-		base: router.prefix,
+		base: router.base,
 		appType: "custom",
 		plugins: [
 			routes(),
 			devEntries(),
 			manifest(),
-			devPlugin[router.bundler.target]?.(),
-			...(router.bundler?.plugins?.() || []),
+			devPlugin[router.build.target]?.(),
+			...(router.build?.plugins?.() || []),
 		],
 		router,
 
@@ -71,7 +71,7 @@ async function createViteSSREventHandler(router, serveConfig) {
 
 	router.devServer = viteDevServer;
 
-	if (router.mode === "node-handler") {
+	if (router.mode === "handler") {
 		return defineEventHandler(async (event) => {
 			const { default: handler } = await viteDevServer.ssrLoadModule(
 				"./app/server.tsx",
@@ -85,7 +85,7 @@ async function createViteSSREventHandler(router, serveConfig) {
 
 async function createDevRouterHandler(router, serveConfig) {
 	return {
-		route: router.prefix,
+		route: router.base,
 		handler: await createViteSSREventHandler(router, serveConfig),
 	};
 }
@@ -113,7 +113,7 @@ export async function createDevServer(
 				.filter((router) => router.mode === "static")
 				.map((router) => ({
 					dir: router.dir,
-					baseURL: router.prefix,
+					baseURL: router.base,
 					passthrough: true,
 				})),
 			devHandlers: [

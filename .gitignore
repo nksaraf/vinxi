@@ -5,3 +5,5 @@ node_modules
 .output
 .nitro
 .build
+playwright-report
+stats.html

@@ -16,13 +16,6 @@ export function createDevManifest(app) {
 				invariant(typeof bundlerName === "string", "Bundler name expected");
 
 				let router = app.getRouter(bundlerName);
-				invariant(
-					router.mode === "build" ||
-						router.mode === "handler" ||
-						router.mode === "spa" ||
-						router.mode === "node-handler",
-					`Router mode ${router.mode} doesn't have a manifest`,
-				);
 
 				const viteServer = router.devServer;
 				return {
@@ -84,7 +77,7 @@ export function createDevManifest(app) {
 									});
 								}
 
-								if (router.bundler.target === "browser") {
+								if (router.build.target === "browser") {
 									return {
 										async assets() {
 											return [
@@ -108,14 +101,14 @@ export function createDevManifest(app) {
 															attrs: {
 																key: "vite-client",
 																type: "module",
-																src: join(router.prefix, "@vite", "client"),
+																src: join(router.base, "@vite", "client"),
 															},
 													  }
 													: undefined,
 											].filter(Boolean);
 										},
 										output: {
-											path: join(router.prefix, "@fs", absolutePath),
+											path: join(router.base, "@fs", absolutePath),
 										},
 									};
 								} else {
@@ -140,7 +133,7 @@ export function createDevManifest(app) {
 															attrs: {
 																key: "vite-client",
 																type: "module",
-																src: join(router.prefix, "@vite", "client"),
+																src: join(router.base, "@vite", "client"),
 															},
 													  }
 													: undefined,

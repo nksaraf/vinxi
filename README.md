@@ -58,14 +58,14 @@ export default createApp({
 			name: "static",
 			build: "static-server",
 			dir: "./public",
-			prefix: "/",
+			base: "/",
 		},
 		{
 			mode: "build",
 			name: "client",
 			handler: "./app/client.tsx",
 			build: "client",
-			prefix: "/_build",
+			base: "/_build",
 		},
 		{
 			mode: "node-handler",
@@ -108,14 +108,14 @@ export default createApp({
 			name: "static",
 			build: "static-server",
 			dir: "./public",
-			prefix: "/",
+			base: "/",
 		},
 		{
 			mode: "build",
 			name: "client",
 			handler: "./app/client.tsx",
 			build: "client",
-			prefix: "/_build",
+			base: "/_build",
 		},
 		{
 			mode: "node-handler",

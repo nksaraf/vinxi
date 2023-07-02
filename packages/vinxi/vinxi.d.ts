@@ -82,7 +82,7 @@ export type BundlerConfig = {
 
 type UserRouterConfig = {
 	name: string;
-	build: string;
+	build: string | Omit<BundlerConfig, 'name'>;
 	prefix?: string;
 	bundler?: BundlerConfig;
 	index?: number;
@@ -206,7 +206,7 @@ type CreateApp = <
 	T extends BundlerConfig,
 	R extends RouterConfig<T> = RouterConfig<T>,
 >(config: {
-	bundlers: T[];
+	bundlers?: T[];
 	routers: R[];
 }) => App<T, R>;
 

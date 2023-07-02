@@ -41,8 +41,8 @@ export function createProdManifest(app) {
 								return {
 									output: {
 										path: join(
-											router.bundler.outDir,
-											router.prefix,
+											router.build.outDir,
+											router.base,
 											chunk + ".js",
 										),
 									},
@@ -72,19 +72,19 @@ export function createProdManifest(app) {
 							get(target, input) {
 								invariant(typeof input === "string", "Input expected");
 								if (
-									router.bundler.target === "node" ||
-									router.bundler.target === "node-web"
+									router.build.target === "node" ||
+									router.build.target === "node-web"
 								) {
 									return {
 										output: {
 											path: join(
-												router.bundler.outDir,
-												router.prefix,
+												router.build.outDir,
+												router.base,
 												bundlerManifest[relative(process.cwd(), input)].file,
 											),
 										},
 									};
-								} else if (router.bundler.target === "browser") {
+								} else if (router.build.target === "browser") {
 									return {
 										assets() {
 											return findAssetsInViteManifest(
@@ -95,8 +95,8 @@ export function createProdManifest(app) {
 												.map((asset) => ({
 													tag: "link",
 													attrs: {
-														href: join(router.prefix, asset),
-														key: join(router.prefix, asset),
+														href: join(router.base, asset),
+														key: join(router.base, asset),
 														rel: "stylesheet",
 														precendence: "high",
 													},
@@ -104,7 +104,7 @@ export function createProdManifest(app) {
 										},
 										output: {
 											path: join(
-												router.prefix,
+												router.base,
 												bundlerManifest[relative(process.cwd(), input)].file,
 											),
 										},

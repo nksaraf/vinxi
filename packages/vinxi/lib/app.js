@@ -2,14 +2,16 @@ import { join } from "pathe";
 
 import { resolveConfig } from "./router/node-handler.js";
 
-export function createApp({ routers, bundlers }) {
+export function createApp({ routers, bundlers = [] }) {
 	const config = {
 		bundlers,
 		routers,
 		root: process.cwd(),
 	};
 
-	config.bundlers = bundlers.map((bundler) => {
+	config.bundlers = bundlers.map(resolveBuildConfig);
+
+	function resolveBuildConfig(bundler) {
 		let outDir = bundler.outDir ? join(config.root, bundler.outDir) : undefined;
 		return {
 			target: "static",
@@ -17,12 +19,15 @@ export function createApp({ routers, bundlers }) {
 			...bundler,
 			outDir,
 		};
-	});
+	}
 
 	config.routers = routers.map((router, index) => {
 		return {
 			...resolveConfig(router, config),
-			bundler: bundlers.find((bundler) => bundler.name === router.build),
+			build:
+				typeof router.build === "string"
+					? bundlers.find((bundler) => bundler.name === router.build)
+					: resolveBuildConfig(router.build),
 			index,
 		};
 	});

@@ -1,0 +1,34 @@
+{
+  "name": "vinxi-tests",
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf .tmp",
+    "install:playwright": "playwright install --with-deps",
+    "test": "playwright test --config ./playwright.config.ts",
+    "test:unit": "vitest run"
+  },
+  "dependencies": {
+    "@playwright/test": "1.27.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@types/cross-spawn": "^6.0.2",
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^18.11.18",
+    "@types/testing-library__jest-dom": "^5.14.5",
+    "cheerio": "1.0.0-rc.12",
+    "compression": "^1.7.4",
+    "cross-spawn": "^7.0.3",
+    "fs-extra": "^11.1.0",
+    "get-port": "^6.1.2",
+    "picocolors": "^1.0.0",
+    "prettier": "^2.8.3",
+    "vinxi": "workspace:*",
+    "strip-indent": "^4.0.0",
+    "undici": "^5.16.0",
+    "vite": "^4.1.4",
+    "vitest": "^0.28.3",
+    "wait-on": "^7.0.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}

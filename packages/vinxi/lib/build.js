@@ -8,9 +8,9 @@ export async function createBuild(app, buildConfig) {
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
 	const { join } = await import("path");
 	const { fileURLToPath } = await import("url");
-	for (const bundler of app.config.bundlers) {
-		if (existsSync(bundler.outDir)) {
-			await fsPromises.rm(bundler.outDir, { recursive: true });
+	for (const router of app.config.routers) {
+		if (existsSync(router.build.outDir)) {
+			await fsPromises.rm(router.build.outDir, { recursive: true });
 		}
 	}
 
@@ -45,7 +45,7 @@ export async function createBuild(app, buildConfig) {
 				.filter((router) => router.mode === "static")
 				.map((router) => ({
 					dir: router.dir,
-					baseURL: router.prefix,
+					baseURL: router.base,
 					passthrough: true,
 				})),
 			{ dir: ".build/api/_build", baseURL: "/_build", fallthrough: true },
@@ -62,7 +62,7 @@ export async function createBuild(app, buildConfig) {
 							.map((router) => {
 								const bundlerManifest = JSON.parse(
 									readFileSync(
-										join(router.bundler.outDir, router.prefix, "manifest.json"),
+										join(router.build.outDir, router.base, "manifest.json"),
 										"utf-8",
 									),
 								);
@@ -105,18 +105,24 @@ async function createRouterBuild(app, router) {
 	await createViteBuild({
 		router,
 		plugins: [
-			buildPlugin[router.bundler.target](),
+			routerModePlugin[router.mode]?.() ?? [],
+			buildTargetPlugin[router.build.target]?.() ?? [],
 			manifest(),
-			...(router.bundler.plugins?.() ?? []),
+			...(router.build.plugins?.() ?? []),
 		],
 	});
 
 	console.log("build done");
 }
 
-const buildPlugin = {
-	node: () => [routes(), nodeHandlerBuild()],
+const buildTargetPlugin = {
+	node: () => [routes(), handerBuild()],
 	browser: () => [routes(), browserBuild()],
+};
+
+const routerModePlugin = {
+	static: () => [],
+	handler: () => [],
 };
 
 export function getEntries(router) {
@@ -129,9 +135,9 @@ export function getEntries(router) {
 /**
  * @returns {import('./vite-dev.d.ts').Plugin}
  */
-function nodeHandlerBuild() {
+function handerBuild() {
 	return {
-		name: "react-rsc:node-handler",
+		name: "react-rsc:handler",
 		async config(inlineConfig, env) {
 			if (env.command === "build") {
 				const { builtinModules } = await import("module");
@@ -151,12 +157,12 @@ function nodeHandlerBuild() {
 						target: "node18",
 						ssrEmitAssets: true,
 						outDir: join(
-							inlineConfig.router.bundler.outDir,
-							inlineConfig.router.prefix,
+							inlineConfig.router.build.outDir,
+							inlineConfig.router.base,
 						),
 						emptyOutDir: false,
 					},
-					base: inlineConfig.router.prefix,
+					base: inlineConfig.router.base,
 					publicDir: false,
 				};
 			}
@@ -182,12 +188,12 @@ function browserBuild() {
 						},
 						manifest: true,
 						outDir: join(
-							inlineConfig.router.bundler.outDir,
-							inlineConfig.router.prefix,
+							inlineConfig.router.build.outDir,
+							inlineConfig.router.base,
 						),
 						emptyOutDir: false,
 					},
-					base: inlineConfig.router.prefix,
+					base: inlineConfig.router.base,
 					publicDir: false,
 				};
 			}

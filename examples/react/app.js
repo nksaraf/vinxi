@@ -2,43 +2,35 @@ import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 
 export default createApp({
-	bundlers: [
-		{
-			name: "static-server",
-			outDir: "./.build/client",
-		},
-		{
-			name: "node-api",
-			target: "node",
-			outDir: "./.build/api",
-		},
-		{
-			name: "client",
-			target: "browser",
-			outDir: "./.build/api",
-			plugins: () => [reactRefresh()],
-		},
-	],
 	routers: [
 		{
+			name: "public",
 			mode: "static",
-			name: "static",
-			build: "static-server",
+			build: {
+				outDir: "./.build/client",
+			},
 			dir: "./public",
-			prefix: "/",
+			base: "/",
 		},
 		{
-			mode: "build",
 			name: "client",
+			mode: "build",
 			handler: "./app/client.tsx",
-			build: "client",
-			prefix: "/_build",
+			build: {
+				target: "browser",
+				outDir: "./.build/api",
+				plugins: () => [reactRefresh()],
+			},
+			base: "/_build",
 		},
 		{
-			mode: "node-handler",
+			name: "ssr",
+			mode: "handler",
 			handler: "./app/server.tsx",
-			name: "api",
-			build: "node-api",
+			build: {
+				target: "node",
+				outDir: "./.build/api",
+			},
 		},
 	],
 });

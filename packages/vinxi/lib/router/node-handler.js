@@ -7,7 +7,7 @@ import invariant from "../invariant.js";
 // export async function createNodeMiddleware(app, router, serveConfig, server) {
 //   const bunlderManifest = JSON.parse(
 //     fs.readFileSync(
-//       join(router.bundler.outDir, router.prefix, "manifest.json"),
+//       join(router.build.outDir, router.base, "manifest.json"),
 //       "utf-8"
 //     )
 //   );
@@ -18,11 +18,11 @@ import invariant from "../invariant.js";
 
 //   let middleware = async (req, res) => {
 //     const handler = await import(
-//       join(router.bundler.outDir, router.prefix, handlerAsset.file)
+//       join(router.build.outDir, router.base, handlerAsset.file)
 //     );
 //     let context = {
 //       manifest,
-//       prefix: router.prefix,
+//       base: router.base,
 //       import: (id) => import(id),
 //       router,
 //       async fetchNode(request, response) {
@@ -44,8 +44,8 @@ import invariant from "../invariant.js";
 //     }
 //   };
 
-//   if (router.prefix) {
-//     server.use(router.prefix, middleware);
+//   if (router.base) {
+//     server.use(router.base, middleware);
 //   } else {
 //     server.use(middleware);
 //   }
@@ -58,7 +58,7 @@ import invariant from "../invariant.js";
 //     );
 //     await router.worker.init();
 //     server.use(
-//       router.prefix,
+//       router.base,
 //       this.createNodeMiddleware(async (req, res, next) => {
 //         await router.worker.fetchNode(req, res, {});
 //       }, router)
@@ -89,7 +89,7 @@ import invariant from "../invariant.js";
 
 //     let context = {
 //       manifest,
-//       prefix: router.prefix,
+//       base: router.base,
 //       router,
 //       async fetchNode(request, response) {
 //         let route = app.getRouter("react-rsc");
@@ -112,8 +112,8 @@ import invariant from "../invariant.js";
 //     }
 //   }, router);
 
-//   if (router.prefix) {
-//     server.use(router.prefix, middleware);
+//   if (router.base) {
+//     server.use(router.base, middleware);
 //   } else {
 //     server.use(middleware);
 //   }
@@ -155,7 +155,7 @@ export function resolveConfig(router, appConfig) {
 	// );
 
 	return {
-		prefix: "/",
+		base: "/",
 		...router,
 		root: appConfig.root,
 		dir,
@@ -173,7 +173,7 @@ export function resolveConfig(router, appConfig) {
 //     const bundler = this.getBundler(router);
 //     const bunlderManifest = JSON.parse(
 //       fs.readFileSync(
-//         join(bundler.outDir, router.prefix, "manifest.json"),
+//         join(bundler.outDir, router.base, "manifest.json"),
 //         "utf-8"
 //       )
 //     );
@@ -184,11 +184,11 @@ export function resolveConfig(router, appConfig) {
 
 //     let middleware = async (req, res) => {
 //       const handler = await import(
-//         join(bundler.outDir, router.prefix, handlerAsset.file)
+//         join(bundler.outDir, router.base, handlerAsset.file)
 //       );
 //       let context = {
 //         manifest,
-//         prefix: router.prefix,
+//         base: router.base,
 //         import: (id) => import(id),
 //         router,
 //         async fetchNode(request, response) {
@@ -210,8 +210,8 @@ export function resolveConfig(router, appConfig) {
 //       }
 //     };
 
-//     if (router.prefix) {
-//       server.use(router.prefix, middleware);
+//     if (router.base) {
+//       server.use(router.base, middleware);
 //     } else {
 //       server.use(middleware);
 //     }
@@ -225,7 +225,7 @@ export function resolveConfig(router, appConfig) {
 //       );
 //       await router.worker.init();
 //       server.use(
-//         router.prefix,
+//         router.base,
 //         this.createNodeMiddleware(async (req, res, next) => {
 //           await router.worker.fetchNode(req, res, {});
 //         }, router)
@@ -259,7 +259,7 @@ export function resolveConfig(router, appConfig) {
 
 //       let context = {
 //         manifest,
-//         prefix: router.prefix,
+//         base: router.base,
 //         router,
 //         async fetchNode(request, response) {
 //           let route = app.getRouter("react-rsc");
@@ -282,8 +282,8 @@ export function resolveConfig(router, appConfig) {
 //       }
 //     }, router);
 
-//     if (router.prefix) {
-//       server.use(router.prefix, middleware);
+//     if (router.base) {
+//       server.use(router.base, middleware);
 //     } else {
 //       server.use(middleware);
 //     }
@@ -333,7 +333,7 @@ export function resolveConfig(router, appConfig) {
 //     );
 
 //     return {
-//       prefix: undefined,
+//       base: undefined,
 //       ...router,
 //       root: appConfig.root,
 //       dir,
@@ -374,15 +374,15 @@ export function resolveConfig(router, appConfig) {
 //             target: "node18",
 //             ssrEmitAssets: true,
 //             outDir: join(
-//               inlineConfig.bundler.outDir,
-//               inlineConfig.router.prefix
+//               inlineConfig.build.outDir,
+//               inlineConfig.router.base
 //             ),
 //             emptyOutDir: false,
 //           },
 //           define: {
 //             "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
 //           },
-//           base: inlineConfig.router.prefix,
+//           base: inlineConfig.router.base,
 //           publicDir: false,
 //         };
 //       }
