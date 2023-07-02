@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "node .output/server/index.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vinxi": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6"
+  }
+}

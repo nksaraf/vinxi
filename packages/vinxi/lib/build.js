@@ -1,4 +1,5 @@
 import { build, copyPublicAssets, createNitro } from "nitropack";
+import { relative } from "pathe";
 import { visualizer } from "rollup-plugin-visualizer";
 
 import { manifest } from "./plugins/manifest.js";
@@ -32,10 +33,25 @@ export async function createBuild(app, buildConfig) {
 			fileURLToPath(new URL("./prod-manifest.js", import.meta.url)),
 		],
 		handlers: [
-			{
-				route: "/**",
-				handler: ".build/api/server.js",
-			},
+			...app.config.routers
+				.filter((router) => router.mode === "handler")
+				.map((router) => {
+					const bundlerManifest = JSON.parse(
+						readFileSync(
+							join(router.build.outDir, router.base, "manifest.json"),
+							"utf-8",
+						),
+					);
+
+					return {
+						route: router.base,
+						handler: join(
+							router.build.outDir,
+							router.base,
+							bundlerManifest[relative(app.config.root, router.handler)].file,
+						),
+					};
+				}),
 		],
 		rollupConfig: {
 			plugins: [visualizer()],

@@ -13,6 +13,7 @@ export function createProdManifest(app) {
 				const bundlerManifest = app.config.buildManifest[routerName];
 
 				return {
+					handler: router.handler,
 					async assets() {
 						let assets = {};
 						assets[router.handler] = await this.inputs[router.handler].assets();
@@ -40,11 +41,7 @@ export function createProdManifest(app) {
 								invariant(typeof chunk === "string", "Chunk expected");
 								return {
 									output: {
-										path: join(
-											router.build.outDir,
-											router.base,
-											chunk + ".js",
-										),
+										path: join(router.build.outDir, router.base, chunk + ".js"),
 									},
 								};
 							},
@@ -71,6 +68,8 @@ export function createProdManifest(app) {
 							},
 							get(target, input) {
 								invariant(typeof input === "string", "Input expected");
+
+								const id = relative(process.cwd(), input);
 								if (
 									router.build.target === "node" ||
 									router.build.target === "node-web"
@@ -80,17 +79,14 @@ export function createProdManifest(app) {
 											path: join(
 												router.build.outDir,
 												router.base,
-												bundlerManifest[relative(process.cwd(), input)].file,
+												bundlerManifest[id].file,
 											),
 										},
 									};
 								} else if (router.build.target === "browser") {
 									return {
 										assets() {
-											return findAssetsInViteManifest(
-												bundlerManifest,
-												relative(process.cwd(), input),
-											)
+											return findAssetsInViteManifest(bundlerManifest, id)
 												.filter((asset) => asset.endsWith(".css"))
 												.map((asset) => ({
 													tag: "link",
@@ -103,10 +99,7 @@ export function createProdManifest(app) {
 												}));
 										},
 										output: {
-											path: join(
-												router.base,
-												bundlerManifest[relative(process.cwd(), input)].file,
-											),
+											path: join(router.base, bundlerManifest[id].file),
 										},
 									};
 								}

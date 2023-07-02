@@ -1,16 +1,13 @@
-/// <reference types="vinxi/client" />
 import React from "react";
 import { lazy } from "react";
 import { updateStyles } from "vinxi/lib/style";
 
 import { renderAsset } from "./render-asset";
 
-export const createAssets = () =>
+export const createAssets = (src) =>
 	lazy(async () => {
-		const assets = await import.meta.env.MANIFEST["client"].inputs[
-			import.meta.env.HANDLER
-		].assets();
-
+		const clientManifest = import.meta.env.MANIFEST["client"];
+		const assets = await clientManifest.inputs[src].assets();
 		const styles = assets.filter((asset) => asset.tag === "style");
 
 		if (typeof window !== "undefined" && import.meta.hot) {

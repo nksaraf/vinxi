@@ -265,6 +265,28 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
 
+  test/template:
+    dependencies:
+      '@vitejs/plugin-react':
+        specifier: ^4.0.1
+        version: 4.0.1(vite@4.3.9)
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      vinxi:
+        specifier: workspace:^
+        version: link:../../packages/vinxi
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.14
+        version: 18.2.14
+      '@types/react-dom':
+        specifier: ^18.2.6
+        version: 18.2.6
+
 packages:
 
   /@adobe/css-tools@4.2.0:

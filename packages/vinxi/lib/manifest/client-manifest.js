@@ -13,6 +13,7 @@ const manifest = new Proxy(
 				"Bundler name should be a string",
 			);
 			return {
+				handler: import.meta.env.HANDLER,
 				inputs: new Proxy(
 					{},
 					{

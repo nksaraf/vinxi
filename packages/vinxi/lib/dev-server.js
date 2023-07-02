@@ -74,7 +74,7 @@ async function createViteSSREventHandler(router, serveConfig) {
 	if (router.mode === "handler") {
 		return defineEventHandler(async (event) => {
 			const { default: handler } = await viteDevServer.ssrLoadModule(
-				"./app/server.tsx",
+				router.handler,
 			);
 			return handler(event);
 		});
