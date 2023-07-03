@@ -3,6 +3,7 @@ import { createNitro } from "nitropack";
 
 import { createDevManifest } from "./manifest/dev-server-manifest.js";
 import { createDevServer as createDevNitroServer } from "./nitro-dev.js";
+import { config } from "./plugins/config.js";
 import { css } from "./plugins/css.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
@@ -43,20 +44,25 @@ async function createViteServer(config) {
 	return vite.createServer(config);
 }
 
-const devPlugin = {
+const targetDevPlugin = {
 	browser: () => [css()],
 	node: () => [],
+};
+
+const routerModeDevPlugin = {
+	spa: () => [config({ appType: "spa" })],
+	handler: () => [config({ appType: "custom" })],
 };
 
 async function createViteSSREventHandler(router, serveConfig) {
 	const viteDevServer = await createViteServer({
 		base: router.base,
-		appType: "custom",
 		plugins: [
 			routes(),
 			devEntries(),
 			manifest(),
-			devPlugin[router.build.target]?.(),
+			...(targetDevPlugin[router.build.target]?.() ?? []),
+			...(routerModeDevPlugin[router.mode]?.() ?? []),
 			...(router.build?.plugins?.() || []),
 		],
 		router,
@@ -78,6 +84,8 @@ async function createViteSSREventHandler(router, serveConfig) {
 			);
 			return handler(event);
 		});
+	} else if (router.mode === "spa") {
+		return defineEventHandler(fromNodeMiddleware(viteDevServer.middlewares));
 	} else {
 		return defineEventHandler(fromNodeMiddleware(viteDevServer.middlewares));
 	}

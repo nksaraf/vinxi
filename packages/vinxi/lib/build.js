@@ -33,9 +33,8 @@ export async function createBuild(app, buildConfig) {
 			fileURLToPath(new URL("./prod-manifest.js", import.meta.url)),
 		],
 		handlers: [
-			...app.config.routers
-				.filter((router) => router.mode === "handler")
-				.map((router) => {
+			...app.config.routers.map((router) => {
+				if (router.mode === "handler") {
 					const bundlerManifest = JSON.parse(
 						readFileSync(
 							join(router.build.outDir, router.base, "manifest.json"),
@@ -51,8 +50,14 @@ export async function createBuild(app, buildConfig) {
 							bundlerManifest[relative(app.config.root, router.handler)].file,
 						),
 					};
-				}),
-		],
+				} else if (router.mode === "spa") {
+					return {
+						route: router.base.length === 1 ? "/**" : `${router.base}/**`,
+						handler: "#vinxi/spa",
+					};
+				}
+			}),
+		].filter(Boolean),
 		rollupConfig: {
 			plugins: [visualizer()],
 		},
@@ -64,7 +69,20 @@ export async function createBuild(app, buildConfig) {
 					baseURL: router.base,
 					passthrough: true,
 				})),
-			{ dir: ".build/api/_build", baseURL: "/_build", fallthrough: true },
+			...app.config.routers
+				.filter((router) => router.mode === "build")
+				.map((router) => ({
+					dir: join(router.build.outDir, router.base),
+					baseURL: router.base,
+					passthrough: true,
+				})),
+			...app.config.routers
+				.filter((router) => router.mode === "spa")
+				.map((router) => ({
+					dir: join(router.build.outDir, router.base),
+					baseURL: router.base,
+					passthrough: true,
+				})),
 		],
 		scanDirs: [],
 		appConfigFiles: [],
@@ -99,6 +117,22 @@ export async function createBuild(app, buildConfig) {
           globalThis.app = prodApp
         }
       `,
+			"#vinxi/spa": () => {
+				const router = app.config.routers.find(
+					(router) => router.mode === "spa",
+				);
+				const indexHtml = readFileSync(
+					join(router.build.outDir, router.base, "index.html"),
+					"utf-8",
+				);
+				return `
+				import { eventHandler } from 'h3'
+				const html = ${JSON.stringify(indexHtml)}
+				export default eventHandler(event => { 
+					return html
+				})
+				`;
+			},
 		},
 	});
 
