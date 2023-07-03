@@ -6,9 +6,6 @@ export default createApp({
 		{
 			name: "public",
 			mode: "static",
-			build: {
-				outDir: "./.build/client",
-			},
 			dir: "./public",
 			base: "/",
 		},
@@ -18,7 +15,6 @@ export default createApp({
 			handler: "./app/client.tsx",
 			build: {
 				target: "browser",
-				outDir: "./.build/api",
 				plugins: () => [solid({ ssr: true })],
 			},
 			base: "/_build",
@@ -29,7 +25,6 @@ export default createApp({
 			handler: "./app/server.tsx",
 			build: {
 				target: "node",
-				outDir: "./.build/api",
 				plugins: () => [solid({ ssr: true })],
 			},
 		},

@@ -1,33 +1,85 @@
-import { join } from "pathe";
+import { isAbsolute, join, relative } from "pathe";
 
-import { resolveConfig } from "./router/node-handler.js";
+import { FileSystemRouter } from "./file-system-router.js";
+import invariant from "./invariant.js";
+
+function resolveConfig(router, appConfig) {
+	let handler = relative(
+		appConfig.root,
+		router.handler
+			? isAbsolute(router.handler)
+				? router.handler
+				: join(appConfig.root, router.handler)
+			: undefined,
+	);
+
+	// invariant(handler, "No handler found for node-handler router");
+
+	let dir = router.dir
+		? isAbsolute(router.dir)
+			? router.dir
+			: join(appConfig.root, router.dir)
+		: undefined;
+
+	let routerStyle = router.style ?? "static";
+
+	// invariant(
+	// 	routerStyle !== "static" ? dir : true,
+	// 	`There should be dir provided if the router style is ${routerStyle}`,
+	// );
+
+	let fileRouter =
+		routerStyle !== "static" && router.dir
+			? new FileSystemRouter({ dir, style: router.style })
+			: undefined;
+
+	// invariant(
+	// 	fileRouter ? router.handler : true,
+	// 	"No handler found for SPA router. When `dir` is being used with `style` for file system routing, `handler` must be specified.",
+	// );
+
+	const buildConfig = router.build
+		? {
+				...router.build,
+				outDir: router.build.outDir
+					? join(appConfig.root, router.build.outDir)
+					: join(appConfig.root, ".nitro", "build", router.name),
+		  }
+		: {
+				outDir: join(appConfig.root, ".nitro", "build", router.name),
+		  };
+
+	return {
+		base: "/",
+		...router,
+		build: buildConfig,
+		root: appConfig.root,
+		dir,
+		style: routerStyle,
+		fileRouter,
+		handler,
+	};
+}
 
 export function createApp({ routers, bundlers = [] }) {
 	const config = {
-		bundlers,
 		routers,
 		root: process.cwd(),
 	};
 
-	config.bundlers = bundlers.map(resolveBuildConfig);
-
-	function resolveBuildConfig(bundler) {
-		let outDir = bundler.outDir ? join(config.root, bundler.outDir) : undefined;
-		return {
-			target: "static",
-			root: config.root,
-			...bundler,
-			outDir,
-		};
-	}
+	// function resolveBuildConfig(bundler) {
+	// 	let outDir = bundler.outDir ? join(config.root, bundler.outDir) : undefined;
+	// 	return {
+	// 		target: "static",
+	// 		root: config.root,
+	// 		...bundler,
+	// 		outDir,
+	// 	};
+	// }
 
 	config.routers = routers.map((router, index) => {
 		return {
 			...resolveConfig(router, config),
-			build:
-				typeof router.build === "string"
-					? bundlers.find((bundler) => bundler.name === router.build)
-					: resolveBuildConfig(router.build),
 			index,
 		};
 	});

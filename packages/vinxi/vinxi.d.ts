@@ -82,9 +82,8 @@ export type BundlerConfig = {
 
 type UserRouterConfig = {
 	name: string;
-	build: string | Omit<BundlerConfig, 'name'>;
-	prefix?: string;
-	bundler?: BundlerConfig;
+	build?:Omit<BundlerConfig, 'name'>;
+	base?: string;
 	index?: number;
 	devServer?: ViteDevServer;
 	root?: string;

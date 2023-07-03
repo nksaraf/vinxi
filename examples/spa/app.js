@@ -6,9 +6,6 @@ export default createApp({
 		{
 			name: "public",
 			mode: "static",
-			build: {
-				outDir: "./.build/client",
-			},
 			dir: "./public",
 			base: "/",
 		},
@@ -18,7 +15,6 @@ export default createApp({
 			handler: "./index.html",
 			build: {
 				target: "browser",
-				outDir: "./.build/api",
 				plugins: () => [reactRefresh()],
 			},
 			base: "/",
