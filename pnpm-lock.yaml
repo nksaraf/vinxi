@@ -52,6 +52,40 @@ importers:
         specifier: ^18.2.6
         version: 18.2.6
 
+  examples/react-spa:
+    dependencies:
+      '@picocss/pico':
+        specifier: ^1.5.7
+        version: 1.5.7
+      '@vinxi/react':
+        specifier: workspace:^
+        version: link:../../packages/vinxi-react
+      '@vitejs/plugin-react':
+        specifier: ^4.0.1
+        version: 4.0.1(vite@4.3.9)
+      autoprefixer:
+        specifier: ^10.4.14
+        version: 10.4.14(postcss@8.4.24)
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      tailwindcss:
+        specifier: ^3.3.2
+        version: 3.3.2
+      vinxi:
+        specifier: workspace:^
+        version: link:../../packages/vinxi
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.14
+        version: 18.2.14
+      '@types/react-dom':
+        specifier: ^18.2.6
+        version: 18.2.6
+
   examples/react-wouter:
     dependencies:
       '@picocss/pico':
@@ -148,6 +182,61 @@ importers:
       vite-plugin-solid:
         specifier: ^2.7.0
         version: 2.7.0(solid-js@1.7.7)(vite@4.3.9)
+
+  examples/solid-spa:
+    dependencies:
+      '@picocss/pico':
+        specifier: ^1.5.7
+        version: 1.5.7
+      autoprefixer:
+        specifier: ^10.4.14
+        version: 10.4.14(postcss@8.4.24)
+      solid-js:
+        specifier: ^1.7.7
+        version: 1.7.7
+      tailwindcss:
+        specifier: ^3.3.2
+        version: 3.3.2
+      vinxi:
+        specifier: workspace:^
+        version: link:../../packages/vinxi
+      vite-plugin-solid:
+        specifier: ^2.7.0
+        version: 2.7.0(solid-js@1.7.7)(vite@4.3.9)
+
+  examples/spa:
+    dependencies:
+      '@picocss/pico':
+        specifier: ^1.5.7
+        version: 1.5.7
+      '@vinxi/react':
+        specifier: workspace:^
+        version: link:../../packages/vinxi-react
+      '@vitejs/plugin-react':
+        specifier: ^4.0.1
+        version: 4.0.1(vite@4.3.9)
+      autoprefixer:
+        specifier: ^10.4.14
+        version: 10.4.14(postcss@8.4.24)
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      tailwindcss:
+        specifier: ^3.3.2
+        version: 3.3.2
+      vinxi:
+        specifier: workspace:^
+        version: link:../../packages/vinxi
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.14
+        version: 18.2.14
+      '@types/react-dom':
+        specifier: ^18.2.6
+        version: 18.2.6
 
   packages/vinxi:
     dependencies:
