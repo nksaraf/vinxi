@@ -1,4 +1,5 @@
 import { isAbsolute, join, relative } from "pathe";
+import { isMainThread } from "worker_threads";
 
 import { FileSystemRouter } from "./file-system-router.js";
 import invariant from "./invariant.js";
@@ -98,16 +99,19 @@ export function createApp({ routers, bundlers = [] }) {
 		getRouter(name) {
 			return config.routers.find((router) => router.name === name);
 		},
+		async serve() {
+			if (isMainThread) {
+				const { createDevServer } = await import("./dev-server.js");
+				await createDevServer(app, {
+					port: 3000,
+					dev: true,
+				});
+			}
+		},
 	};
 
 	if (process.argv.includes("--dev")) {
-		(async () => {
-			const { createDevServer } = await import("./dev-server.js");
-			await createDevServer(app, {
-				port: 3000,
-				dev: true,
-			});
-		})();
+		app.serve();
 	}
 
 	return app;

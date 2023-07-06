@@ -49,6 +49,7 @@
     "serve-placeholder": "^2.0.1",
     "serve-static": "^1.15.0",
     "ufo": "^1.1.2",
+    "unenv": "^1.5.1",
     "unimport": "^3.0.11",
     "unstorage": "^1.7.0",
     "vite": "^4.3.9"

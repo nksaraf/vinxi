@@ -1,6 +1,14 @@
-import { defineEventHandler, fromNodeMiddleware } from "h3";
+import { defineEventHandler, fromNodeMiddleware, toNodeListener } from "h3";
 import { createNitro } from "nitropack";
+import {
+	createCall,
+	createFetch,
+	createFetch as createLocalFetch,
+} from "unenv/runtime/fetch/index";
 
+import { isMainThread } from "node:worker_threads";
+
+import { AppWorkerClient } from "./app-worker-client.js";
 import { createDevManifest } from "./manifest/dev-server-manifest.js";
 import { createDevServer as createDevNitroServer } from "./nitro-dev.js";
 import { config } from "./plugins/config.js";
@@ -50,17 +58,37 @@ const targetDevPlugin = {
 };
 
 const routerModeDevPlugin = {
-	spa: () => [config({ appType: "spa" })],
-	handler: () => [config({ appType: "custom" })],
+	spa: () => [routes(), devEntries(), manifest(), config({ appType: "spa" })],
+	handler: () => [
+		routes(),
+		devEntries(),
+		manifest(),
+		config({ appType: "custom" }),
+	],
+	build: () => [
+		routes(),
+		devEntries(),
+		manifest(),
+		config({ appType: "custom" }),
+	],
 };
 
-async function createViteSSREventHandler(router, serveConfig) {
+async function createViteHandler(router, serveConfig) {
+	if (router.worker && isMainThread) {
+		const worker = new AppWorkerClient(
+			new URL("./app-worker.js", import.meta.url),
+		);
+		let promise;
+		return defineEventHandler(async (event) => {
+			promise ??= worker.init();
+			await promise;
+			return await fromNodeMiddleware(worker.fetchNode.bind(worker))(event);
+		});
+	}
+
 	const viteDevServer = await createViteServer({
 		base: router.base,
 		plugins: [
-			routes(),
-			devEntries(),
-			manifest(),
 			...(targetDevPlugin[router.build.target]?.() ?? []),
 			...(routerModeDevPlugin[router.mode]?.() ?? []),
 			...(router.build?.plugins?.() || []),
@@ -94,7 +122,7 @@ async function createViteSSREventHandler(router, serveConfig) {
 async function createDevRouterHandler(router, serveConfig) {
 	return {
 		route: router.base,
-		handler: await createViteSSREventHandler(router, serveConfig),
+		handler: await createViteHandler(router, serveConfig),
 	};
 }
 
@@ -134,5 +162,18 @@ export async function createDevServer(
 		});
 		const devServer = createDevNitroServer(nitro);
 		await devServer.listen(port);
+
+		// Create local fetch callers
+		const localCall = createCall(toNodeListener(devServer.app));
+		const localFetch = createLocalFetch(localCall, globalThis.fetch);
+		const $fetch = createFetch({
+			fetch: localFetch,
+			Headers,
+		});
+		// @ts-ignore
+		globalThis.$fetch = $fetch;
+		globalThis.$handle = (event) => devServer.app.handler(event);
+
+		return devServer;
 	}
 }

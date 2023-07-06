@@ -1,0 +1,19 @@
+diff --git a/dist/node/chunks/dep-e8f070e8.js b/dist/node/chunks/dep-e8f070e8.js
+index 7cb9ccd1240dfacbdc3bcc9761d3710373cb4ac8..0a021ef96b3e22d157a5fc81b23abfaa7b0f6ac8 100644
+--- a/dist/node/chunks/dep-e8f070e8.js
++++ b/dist/node/chunks/dep-e8f070e8.js
+@@ -54321,12 +54321,12 @@ async function instantiateModule(url, server, context = { global }, urlStack = [
+     };
+     urlStack = urlStack.concat(url);
+     const isCircular = (url) => urlStack.includes(url);
+-    const { isProduction, resolve: { dedupe, preserveSymlinks }, root, } = server.config;
++    const { isProduction, resolve: { dedupe, preserveSymlinks, conditions }, root, } = server.config;
+     const resolveOptions = {
+         mainFields: ['main'],
+         browserField: true,
+         conditions: [],
+-        overrideConditions: ['production', 'development'],
++        overrideConditions: [...conditions, 'production', 'development'],
+         extensions: ['.js', '.cjs', '.json'],
+         dedupe,
+         preserveSymlinks,

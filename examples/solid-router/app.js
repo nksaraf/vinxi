@@ -34,3 +34,7 @@ export default createApp({
 		},
 	],
 });
+
+export default createApp({
+	routers: [solidStart()]
+})

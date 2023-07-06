@@ -15,5 +15,10 @@
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "prettier": "^2.8.7",
     "typescript": "5.1.6"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "vite@4.3.9": "patches/vite@4.3.9.patch"
+    }
   }
 }

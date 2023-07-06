@@ -115,9 +115,12 @@ export function createDevManifest(app) {
 									return {
 										async assets() {
 											return [
-												...(await getVitePluginAssets()),
 												...Object.entries(
-													await findStylesInModuleGraph(viteServer, [input]),
+													await findStylesInModuleGraph(
+														viteServer,
+														[input],
+														true,
+													),
 												).map(([key, value]) => ({
 													tag: "style",
 													attrs: {
@@ -127,16 +130,6 @@ export function createDevManifest(app) {
 													},
 													children: value,
 												})),
-												isHandler
-													? {
-															tag: "script",
-															attrs: {
-																key: "vite-client",
-																type: "module",
-																src: join(router.base, "@vite", "client"),
-															},
-													  }
-													: undefined,
 											];
 										},
 										output: {

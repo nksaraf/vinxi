@@ -1,53 +1,58 @@
 /// <reference types="vinxi/client" />
-import { createAssets } from "@vinxi/react";
-import React, { Suspense } from "react";
+import React, { Suspense, startTransition } from "react";
 import { Root, hydrateRoot } from "react-dom/client";
 import "vinxi/runtime/client";
 
-import App from "./app";
+import { ServerComponent } from "./server-component";
 
-const Assets = createAssets(
-	import.meta.env.MANIFEST["client"].handler,
-	import.meta.env.MANIFEST["client"],
-);
+startTransition(() => {
+	hydrateRoot(document, <ServerComponent url={window.location.pathname} />);
+});
 
-window.$root =
-	window.$root ||
-	hydrateRoot(
-		document,
-		<App
-			assets={
-				<Suspense>
-					<Assets />
-				</Suspense>
-			}
-		></App>,
-	);
+// import App from "./app";
 
-if (import.meta.hot) {
-	import.meta.hot.accept((mod) => {
-		if (mod) {
-			const Assets = createAssets(
-				import.meta.env.MANIFEST["client"].handler,
-				import.meta.env.MANIFEST["client"],
-			);
-			window.$root?.render(
-				<mod.App
-					assets={
-						<Suspense>
-							<Assets />
-						</Suspense>
-					}
-				/>,
-			);
-		}
-	});
-}
+// const Assets = createAssets(
+// 	import.meta.env.MANIFEST["client"].handler,
+// 	import.meta.env.MANIFEST["client"],
+// );
 
-export { App };
+// window.$root =
+// 	window.$root ||
+// 	hydrateRoot(
+// 		document,
+// 		<App
+// 			assets={
+// 				<Suspense>
+// 					<Assets />
+// 				</Suspense>
+// 			}
+// 		></App>,
+// 	);
 
-declare global {
-	interface Window {
-		$root?: Root;
-	}
-}
+// if (import.meta.hot) {
+// 	import.meta.hot.accept((mod) => {
+// 		if (mod) {
+// 			const Assets = createAssets(
+// 				import.meta.env.MANIFEST["client"].handler,
+// 				import.meta.env.MANIFEST["client"],
+// 			);
+// 			window.$root?.render(
+// 				<mod.App
+// 					assets={
+// 						<Suspense>
+// 							<Assets />
+// 						</Suspense>
+// 					}
+// 				/>,
+// 			);
+// 		}
+// 	});
+// }
+
+// export { App };
+
+// declare global {
+// 	interface Window {
+// 		$root?: Root;
+// 	}
+// }

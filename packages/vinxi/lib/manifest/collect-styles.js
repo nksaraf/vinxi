@@ -2,24 +2,65 @@
 
 import { join, resolve } from "node:path";
 
-async function getViteModuleNode(vite, file) {
-	const absolutePath = resolve(file);
+async function getViteModuleNode(vite, file, ssr) {
+	const resolvedId = await vite.pluginContainer.resolveId(file, undefined, {
+		ssr: ssr,
+	});
 
-	let node = await vite.moduleGraph.getModuleByUrl(absolutePath);
-	if (!node) {
-		await vite.moduleGraph.ensureEntryFromUrl(absolutePath);
-		node = await vite.moduleGraph.getModuleByUrl(absolutePath);
+	if (!resolvedId) {
+		console.log("not found");
+		return;
 	}
 
-	if (!node.transformResult) {
-		await vite.transformRequest(absolutePath);
-		node = await vite.moduleGraph.getModuleByUrl(absolutePath);
-	}
+	const id = resolvedId.id;
 
-	return node;
+	const normalizedPath = resolve(id).replace(/\\/g, "/");
+
+	console.log(resolvedId);
+	try {
+		let node = await vite.moduleGraph.getModuleById(normalizedPath);
+
+		if (!node) {
+			const absolutePath = resolve(file);
+			node = await vite.moduleGraph.getModuleByUrl(normalizedPath);
+			if (!node) {
+				if (ssr) {
+					await vite.moduleGraph.ensureEntryFromUrl(normalizedPath, ssr);
+					node = await vite.moduleGraph.getModuleById(normalizedPath);
+				} else {
+					await vite.moduleGraph.ensureEntryFromUrl(normalizedPath);
+					node = await vite.moduleGraph.getModuleById(normalizedPath);
+				}
+			}
+
+			if (!node.transformResult && !ssr) {
+				await vite.transformRequest(normalizedPath);
+				node = await vite.moduleGraph.getModuleById(normalizedPath);
+			}
+
+			if (ssr && !node.ssrTransformResult) {
+				await vite.ssrLoadModule(file);
+				node = await vite.moduleGraph.getModuleById(normalizedPath);
+			}
+		} else {
+			if (!node.transformResult && !ssr) {
+				await vite.transformRequest(normalizedPath);
+				node = await vite.moduleGraph.getModuleById(normalizedPath);
+			}
+
+			if (ssr && !node.ssrTransformResult) {
+				await vite.ssrLoadModule(normalizedPath);
+				node = await vite.moduleGraph.getModuleById(normalizedPath);
+			}
+		}
+		return node;
+	} catch (e) {
+		console.error(e);
+		return null;
+	}
 }
 
-async function findDeps(vite, node, deps) {
+async function findDeps(vite, node, deps, ssr) {
 	// since `ssrTransformResult.deps` contains URLs instead of `ModuleNode`s, this process is asynchronous.
 	// instead of using `await`, we resolve all branches in parallel.
 	const branches = [];
@@ -27,12 +68,12 @@ async function findDeps(vite, node, deps) {
 	async function add(node) {
 		if (!deps.has(node)) {
 			deps.add(node);
-			await findDeps(vite, node, deps);
+			await findDeps(vite, node, deps, ssr);
 		}
 	}
 
-	async function add_by_url(url) {
-		const node = await getViteModuleNode(vite, url);
+	async function add_by_url(url, ssr) {
+		const node = await getViteModuleNode(vite, url, ssr);
 
 		if (node) {
 			await add(node);
@@ -42,18 +83,20 @@ async function findDeps(vite, node, deps) {
 	if (node.url.endsWith(".css")) {
 		return;
 	}
-	if (node.ssrTransformResult) {
+	if (ssr && node.ssrTransformResult) {
 		if (node.ssrTransformResult.deps) {
 			node.ssrTransformResult.deps.forEach((url) =>
-				branches.push(add_by_url(url)),
+				branches.push(add_by_url(url, ssr)),
 			);
 		}
 
 		// if (node.ssrTransformResult.dynamicDeps) {
 		//   node.ssrTransformResult.dynamicDeps.forEach(url => branches.push(add_by_url(url)));
 		// }
-	} else {
-		node.importedModules.forEach((node) => branches.push(add_by_url(node.url)));
+	} else if (!ssr) {
+		node.importedModules.forEach((node) =>
+			branches.push(add_by_url(node.url, ssr)),
+		);
 	}
 
 	await Promise.all(branches);
@@ -71,12 +114,14 @@ const MODULE_STYLE_ASSET_REGEX =
  * @param {*} match
  * @returns
  */
-async function findDependencies(vite, match) {
+async function findDependencies(vite, match, ssr) {
 	const deps = new Set();
 	try {
 		for (const file of match) {
-			const node = await getViteModuleNode(vite, file);
-			await findDeps(vite, node, deps);
+			const node = await getViteModuleNode(vite, file, ssr);
+			if (node) {
+				await findDeps(vite, node, deps, ssr);
+			}
 		}
 	} catch (e) {
 		console.error(e);
@@ -91,9 +136,9 @@ async function findDependencies(vite, match) {
  * @param {*} match
  * @returns
  */
-async function findStylesInModuleGraph(vite, match) {
+async function findStylesInModuleGraph(vite, match, ssr) {
 	const styles = {};
-	const dependencies = await findDependencies(vite, match);
+	const dependencies = await findDependencies(vite, match, ssr);
 
 	for (const dep of dependencies) {
 		const parsed = new URL(dep.url, "http://localhost/");
