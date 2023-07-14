@@ -41,10 +41,10 @@ export function createDevManifest(app) {
 								let isDirEntry =
 									router.dir && absolutePath.startsWith(router.dir);
 
-								invariant(
-									isHandler || isDirEntry,
-									`Could not find entry ${input} in any router with bundler ${bundlerName}`,
-								);
+								// invariant(
+								// 	isHandler || isDirEntry,
+								// 	`Could not find entry ${input} in any router with bundler ${bundlerName}`,
+								// );
 
 								async function getVitePluginAssets() {
 									const plugins = router.devServer.config.plugins.filter(

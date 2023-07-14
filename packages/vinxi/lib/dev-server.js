@@ -15,6 +15,7 @@ import { config } from "./plugins/config.js";
 import { css } from "./plugins/css.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
+import { treeShake } from "./plugins/tree-shake.js";
 
 export function getEntries(router) {
 	return [
@@ -58,18 +59,26 @@ const targetDevPlugin = {
 };
 
 const routerModeDevPlugin = {
-	spa: () => [routes(), devEntries(), manifest(), config({ appType: "spa" })],
+	spa: () => [
+		routes(),
+		devEntries(),
+		manifest(),
+		config({ appType: "spa" }),
+		treeShake(),
+	],
 	handler: () => [
 		routes(),
 		devEntries(),
 		manifest(),
 		config({ appType: "custom" }),
+		treeShake(),
 	],
 	build: () => [
 		routes(),
 		devEntries(),
 		manifest(),
 		config({ appType: "custom" }),
+		treeShake(),
 	],
 };
 
@@ -80,7 +89,7 @@ async function createViteHandler(router, serveConfig) {
 		);
 		let promise;
 		return defineEventHandler(async (event) => {
-			promise ??= worker.init();
+			promise ??= worker.init(() => {});
 			await promise;
 			return await fromNodeMiddleware(worker.fetchNode.bind(worker))(event);
 		});
@@ -177,3 +186,5 @@ export async function createDevServer(
 		return devServer;
 	}
 }
+
+

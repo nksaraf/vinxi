@@ -52,11 +52,7 @@ export function createProdManifest(app) {
 						{
 							ownKeys(target) {
 								const keys = Object.keys(bundlerManifest)
-									.filter(
-										(id) =>
-											id.match(/\.(ts|tsx|js|jsx)$/) &&
-											bundlerManifest[id].isEntry,
-									)
+									.filter((id) => bundlerManifest[id].isEntry)
 									.map((id) => id);
 								return keys;
 							},

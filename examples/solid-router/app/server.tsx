@@ -32,9 +32,12 @@ export default eventHandler(async (event) => {
 	const routes = fileRoutes.map((route) => {
 		return {
 			...route,
-			component: lazyRoute(route.component, clientManifest, serverManifest),
+			component: lazyRoute(route.$component, clientManifest, serverManifest),
+			data: route.$$data ? route.$$data.require().routeData : undefined,
 		};
 	});
+
+	console.log(routes);
 	const tags = [];
 	function Meta() {
 		useAssets(() => ssr(renderTags(tags)) as any);
@@ -98,5 +101,11 @@ export default eventHandler(async (event) => {
 	stream.on = (event, listener) => {
 		events[event] = listener;
 	};
-	return stream;
+
+	return {
+		pipe: stream.pipe.bind(stream),
+		on: (event, listener) => {
+			events[event] = listener;
+		},
+	};
 });

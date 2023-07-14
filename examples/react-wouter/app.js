@@ -1,5 +1,6 @@
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
+import { NextJSPagesFileSystemRouter } from "vinxi/file-system-router";
 
 export default createApp({
 	routers: [
@@ -13,7 +14,7 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			dir: "./app/pages",
-			style: "nextjs",
+			style: NextJSPagesFileSystemRouter,
 			handler: "./app/client.tsx",
 			build: {
 				target: "browser",
@@ -26,7 +27,7 @@ export default createApp({
 			mode: "handler",
 			handler: "./app/server.tsx",
 			dir: "./app/pages",
-			style: "nextjs",
+			style: NextJSPagesFileSystemRouter,
 			build: {
 				target: "node",
 			},

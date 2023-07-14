@@ -4,6 +4,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
+import { treeShake } from "./plugins/tree-shake.js";
 
 export async function createBuild(app, buildConfig) {
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
@@ -166,8 +167,8 @@ async function createRouterBuild(app, router) {
 }
 
 const buildTargetPlugin = {
-	node: () => [routes(), handerBuild()],
-	browser: () => [routes(), browserBuild()],
+	node: () => [routes(), handerBuild(), treeShake()],
+	browser: () => [routes(), browserBuild(), treeShake()],
 };
 
 const routerModePlugin = {
@@ -175,10 +176,21 @@ const routerModePlugin = {
 	handler: () => [],
 };
 
+function toRouteId(route) {
+	return `${route.src}?${route.pick.map((p) => `pick=${p}`).join("&")}`;
+}
+
 export function getEntries(router) {
+	console.log(router.fileRouter?.routes);
 	return [
 		router.handler,
-		...(router.fileRouter?.routes.map((r) => r.filePath) ?? []),
+		...(
+			router.fileRouter?.routes.map((r) =>
+				Object.entries(r)
+					.filter(([r, v]) => v && r.startsWith("$") && !r.startsWith("$$"))
+					.map(([, v]) => toRouteId(v)),
+			) ?? []
+		).flat(),
 	];
 }
 

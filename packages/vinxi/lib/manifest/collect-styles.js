@@ -16,7 +16,6 @@ async function getViteModuleNode(vite, file, ssr) {
 
 	const normalizedPath = resolve(id).replace(/\\/g, "/");
 
-	console.log(resolvedId);
 	try {
 		let node = await vite.moduleGraph.getModuleById(normalizedPath);
 

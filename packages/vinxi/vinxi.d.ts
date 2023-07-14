@@ -103,7 +103,8 @@ export type RouterConfig<T extends BundlerConfig = BundlerConfig> =
 					/** The directory containing the static files to serve */
 					dir?: string;
 					/** File routing style to use for the files in `dir` */
-					style?: string;
+					style?: new() => FileSystemRouter;
+
 					/** Limit the file routing to the given extensions */
 					extensions?: string[];
 			  }
@@ -113,7 +114,9 @@ export type RouterConfig<T extends BundlerConfig = BundlerConfig> =
 					/** The directory containing the static files to serve */
 					dir?: string;
 					/** File routing style to use for the files in `dir` */
-					style?: string;
+					style?: new () => FileSystemRouter;
+
+
 					/** Limit the file routing to the given extensions */
 					extensions?: string[];
 					public?: string;
@@ -124,7 +127,9 @@ export type RouterConfig<T extends BundlerConfig = BundlerConfig> =
 					/** The directory containing the static files to serve */
 					dir?: string;
 					/** File routing style to use for the files in `dir` */
-					style?: string;
+					style?: new () => FileSystemRouter;
+
+
 					/** Limit the file routing to the given extensions */
 					extensions?: string[];
 			  }
@@ -136,7 +141,7 @@ export type RouterConfig<T extends BundlerConfig = BundlerConfig> =
 					/** The directory containing the static files to serve */
 					dir?: string;
 					/** File routing style to use for the files in `dir` */
-					style?: string;
+					style?: new () => FileSystemRouter;
 					/** Limit the file routing to the given extensions */
 					extensions?: string[];
 			  }
@@ -210,3 +215,12 @@ type CreateApp = <
 }) => App<T, R>;
 
 export const createApp: CreateApp
+
+export class FileSystemRouter {
+	constructor(config: {
+		dir: string;
+		extensions?: string[];
+	});
+	routes: ({ path: string } & any)[]
+	// match(pathname: string): MatchedRoute;
+}

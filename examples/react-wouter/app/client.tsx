@@ -14,7 +14,7 @@ import App from "./app";
 const routes = fileRoutes.map((route) => ({
 	path: route.path,
 	component: lazyRoute(
-		route.component,
+		route.$component,
 		import.meta.env.MANIFEST["client"],
 		import.meta.env.MANIFEST["ssr"],
 	),

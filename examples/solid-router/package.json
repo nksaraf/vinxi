@@ -6,9 +6,11 @@
     "start": "vinxi start"
   },
   "dependencies": {
+    "@babel/core": "^7.22.8",
     "@picocss/pico": "^1.5.7",
     "@solidjs/meta": "^0.28.5",
     "@solidjs/router": "^0.8.2",
+    "@types/babel__core": "^7.20.1",
     "@vinxi/solid": "workspace:^",
     "autoprefixer": "^10.4.14",
     "solid-js": "^1.7.7",

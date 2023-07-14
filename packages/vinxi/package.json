@@ -14,6 +14,7 @@
     "./server": "./lib/server.js",
     "./routes": "./lib/routes.js",
     "./client": "./lib/app-client-plugin.js",
+    "./file-system-router": "./lib/file-system-router.js",
     "./lib/*": "./lib/*.js",
     "./runtime/*": "./runtime/*.js"
   },
@@ -25,6 +26,9 @@
       "./client": [
         "./client.d.ts"
       ],
+      "./file-system-router": [
+        "./lib/file-system-router.js"
+      ],
       "./server": [
         "./server.d.ts"
       ],
@@ -34,6 +38,7 @@
     }
   },
   "dependencies": {
+    "@babel/core": "^7.22.9",
     "c12": "^1.1.2",
     "chokidar": "^3.5.3",
     "fast-glob": "^3.3.0",

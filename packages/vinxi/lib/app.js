@@ -1,9 +1,6 @@
 import { isAbsolute, join, relative } from "pathe";
 import { isMainThread } from "worker_threads";
 
-import { FileSystemRouter } from "./file-system-router.js";
-import invariant from "./invariant.js";
-
 function resolveConfig(router, appConfig) {
 	let handler = relative(
 		appConfig.root,
@@ -29,9 +26,10 @@ function resolveConfig(router, appConfig) {
 	// 	`There should be dir provided if the router style is ${routerStyle}`,
 	// );
 
+	console.log(routerStyle, dir);
 	let fileRouter =
 		routerStyle !== "static" && router.dir
-			? new FileSystemRouter({ dir, style: router.style })
+			? new routerStyle({ dir, style: router.style })
 			: undefined;
 
 	// invariant(
@@ -62,9 +60,10 @@ function resolveConfig(router, appConfig) {
 	};
 }
 
-export function createApp({ routers, bundlers = [] }) {
+export function createApp({ routers, routerStyle }) {
 	const config = {
 		routers,
+		routerStyle,
 		root: process.cwd(),
 	};
 
