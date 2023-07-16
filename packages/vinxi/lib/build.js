@@ -1,7 +1,10 @@
 import { build, copyPublicAssets, createNitro } from "nitropack";
+import { join } from "path";
 import { relative } from "pathe";
 import { visualizer } from "rollup-plugin-visualizer";
 
+import { consola, withLogger } from "./logger.js";
+import { createSPAManifest } from "./manifest/spa-manifest.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
@@ -20,11 +23,12 @@ export async function createBuild(app, buildConfig) {
 		(router) => router.mode != "static",
 	)) {
 		// if (router.mode in routers) {
-		//   await withLogger({ requestId: router.index, router }, async () => {
-		//     await routers[router.mode].build.apply(this, [router])
-		//   })
+		await withLogger({ router, requestId: "build" }, async () => {
+			await createRouterBuild(app, router);
+
+			//     await routers[router.mode].build.apply(this, [router])
+		});
 		// }
-		await createRouterBuild(app, router);
 	}
 
 	const nitro = await createNitro({
@@ -137,6 +141,7 @@ export async function createBuild(app, buildConfig) {
 		},
 	});
 
+	nitro.logger = consola.withTag(app.config.name);
 	await copyPublicAssets(nitro);
 	await build(nitro);
 	await nitro.close();
@@ -158,22 +163,59 @@ async function createRouterBuild(app, router) {
 		plugins: [
 			routerModePlugin[router.mode]?.() ?? [],
 			buildTargetPlugin[router.build.target]?.() ?? [],
-			manifest(),
 			...(router.build.plugins?.() ?? []),
 		],
 	});
 
-	console.log("build done");
+	consola.success("build done");
 }
 
 const buildTargetPlugin = {
-	node: () => [routes(), handerBuild(), treeShake()],
-	browser: () => [routes(), browserBuild(), treeShake()],
+	node: () => [routes(), handerBuild(), treeShake(), manifest()],
+	browser: () => [routes(), browserBuild(), treeShake(), manifest()],
+};
+
+const spaManifest = () => {
+	let config;
+	let env;
+
+	return {
+		name: "spa-manifest",
+		enforce: "post",
+		config(c, e) {
+			env = e;
+		},
+		transformIndexHtml() {
+			if (env.command === "build") {
+				return [
+					{
+						tag: "script",
+						attrs: { src: join(config.router.base, "manifest.js") },
+						injectTo: "head",
+					},
+				];
+			}
+			return [];
+		},
+
+		configResolved(resolvedConfig) {
+			config = resolvedConfig;
+		},
+		async generateBundle(options, bundle) {
+			const manifest = createSPAManifest(config, bundle, options.format);
+			this.emitFile({
+				fileName: "manifest.js",
+				type: "asset",
+				source: `window.manifest = ${JSON.stringify(manifest, null, 2)}`,
+			});
+		},
+	};
 };
 
 const routerModePlugin = {
 	static: () => [],
 	handler: () => [],
+	spa: () => [spaManifest()],
 };
 
 function toRouteId(route) {
@@ -241,7 +283,6 @@ function browserBuild() {
 		async config(inlineConfig, env) {
 			if (env.command === "build") {
 				const { join } = await import("path");
-				console.log(inlineConfig);
 				return {
 					build: {
 						rollupOptions: {

@@ -9,6 +9,8 @@ import {
 import { isMainThread } from "node:worker_threads";
 
 import { AppWorkerClient } from "./app-worker-client.js";
+import { getEntries } from "./build.js";
+import { consola } from "./logger.js";
 import { createDevManifest } from "./manifest/dev-server-manifest.js";
 import { createDevServer as createDevNitroServer } from "./nitro-dev.js";
 import { config } from "./plugins/config.js";
@@ -16,13 +18,6 @@ import { css } from "./plugins/css.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
-
-export function getEntries(router) {
-	return [
-		router.handler,
-		...(router.fileRouter?.routes.map((r) => r.filePath) ?? []),
-	];
-}
 
 /**
  *
@@ -169,6 +164,9 @@ export async function createDevServer(
 				)),
 			],
 		});
+
+		nitro.logger = consola.withTag(app.config.name);
+
 		const devServer = createDevNitroServer(nitro);
 		await devServer.listen(port);
 
@@ -186,5 +184,3 @@ export async function createDevServer(
 		return devServer;
 	}
 }
-
-

@@ -60,10 +60,10 @@ function resolveConfig(router, appConfig) {
 	};
 }
 
-export function createApp({ routers, routerStyle }) {
+export function createApp({ routers, name }) {
 	const config = {
+		name: name ?? "vinxi",
 		routers,
-		routerStyle,
 		root: process.cwd(),
 	};
 
