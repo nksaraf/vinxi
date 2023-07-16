@@ -1,0 +1,30 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "dependencies": {
+    "@babel/plugin-syntax-jsx": "^7.22.5",
+    "@picocss/pico": "^1.5.7",
+    "@tanstack/react-loaders": "0.0.1-beta.108",
+    "@tanstack/react-router": "0.0.1-beta.83",
+    "@tanstack/router": "0.0.1-beta.108",
+    "@tanstack/router-devtools": "0.0.1-beta.108",
+    "@vinxi/react": "workspace:^",
+    "@vitejs/plugin-react": "^4.0.1",
+    "autoprefixer": "^10.4.14",
+    "axios": "^1.4.0",
+    "path-to-regexp": "^6.2.1",
+    "react": "0.0.0-experimental-035a41c4e-20230704",
+    "react-dom": "0.0.0-experimental-035a41c4e-20230704",
+    "tailwindcss": "^3.3.2",
+    "vinxi": "workspace:^",
+    "wouter": "^2.11.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6"
+  }
+}
