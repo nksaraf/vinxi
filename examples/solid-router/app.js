@@ -44,6 +44,10 @@ class SolidStartFileSystemRouter {
 			};
 		});
 	}
+
+	getRoutes() {
+		return this.routes;
+	}
 }
 
 export default createApp({

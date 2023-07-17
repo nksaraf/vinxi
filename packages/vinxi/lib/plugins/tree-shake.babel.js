@@ -109,15 +109,8 @@ function treeShake({ types: t }) {
 									return;
 								}
 								const specifiers = exportNamedPath.get("specifiers");
-								console.log(specifiers);
 								if (specifiers.length) {
 									specifiers.forEach((s) => {
-										console.log(
-											"specifier",
-											state.opts.pick,
-											s.node.exported.value,
-										);
-
 										if (
 											t.isIdentifier(s.node.exported)
 												? s.node.exported.name

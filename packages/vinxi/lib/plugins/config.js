@@ -1,6 +1,6 @@
-export function config(conf) {
+export function config(tag, conf) {
 	return {
-		name: "vinxi:config",
+		name: `vinxi:config:${tag}`,
 		config() {
 			return { ...conf };
 		},

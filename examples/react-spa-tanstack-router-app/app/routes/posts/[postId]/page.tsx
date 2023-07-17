@@ -1,7 +1,7 @@
 import { useLoader } from "@tanstack/react-loaders";
 import { ErrorComponent, Route, RouteOptions } from "@tanstack/router";
 
-import { NotFoundError } from "../../error";
+import { NotFoundError } from "../../../error";
 
 export const loader = async ({
 	context: { loaderClient },

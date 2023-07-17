@@ -141,13 +141,14 @@ const defineRoutes = (fileRoutes) => {
 	}
 
 	return fileRoutes
-		.sort((a, b) => a.length - b.length)
+		.sort((a, b) => a.path.length - b.path.length)
 		.reduce((prevRoutes, route) => {
 			return processRoute(prevRoutes, route, route.path, route.path);
 		}, []);
 };
 
 const routes = defineRoutes(fileRoutes);
+console.log(routes);
 
 function createRoute(route, parent) {
 	const parentRoute = new Route({

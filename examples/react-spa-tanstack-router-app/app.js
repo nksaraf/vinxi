@@ -4,7 +4,7 @@ import esbuild from "esbuild";
 import fs from "fs";
 import { join } from "path";
 import { createApp } from "vinxi";
-import { pathToRegexp, readFiles } from "vinxi/file-system-router";
+import { glob, pathToRegexp } from "vinxi/file-system-router";
 
 class TanstackFileSystemRouter {
 	routes;
@@ -15,8 +15,10 @@ class TanstackFileSystemRouter {
 	async buildRoutes() {
 		function toPath(path, config) {
 			const routePath = path
-				.slice(config.dir.length + 1)
+				.slice(config.dir.length)
 				.replace(/\.(ts|tsx|js|jsx)$/, "")
+				.replace(/\/page$/, "/")
+				.replace(/\/layout$/, "")
 				.replace(/index$/, "")
 				.replace(/\[([^\/]+)\]/g, (_, m) => {
 					if (m.length > 3 && m.startsWith("...")) {
@@ -28,11 +30,14 @@ class TanstackFileSystemRouter {
 					return `$${m}`;
 				});
 
-			return routePath?.length > 0 ? `/${routePath}` : "/";
+			return routePath?.length > 0 ? `${routePath}` : "/";
 		}
 		await init;
 		this.routes = [
-			...readFiles(this.config).map((src) => {
+			...glob(join(this.config.dir, "**/(page|layout).tsx"), {
+				absolute: true,
+			}).map((src) => {
+				console.log(src);
 				let path = toPath(src, this.config);
 				let keys = [];
 				let regex = pathToRegexp(path, keys);
@@ -97,7 +102,7 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			dir: "./app/pages",
+			dir: "./app/routes",
 			root: "./app/root.tsx",
 			style: TanstackFileSystemRouter,
 			build: {

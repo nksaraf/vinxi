@@ -39,7 +39,6 @@ export default function lazyRoute(component, clientManifest, serverManifest) {
 		} else {
 			const { default: Component } = await component.import();
 			let assets = await clientManifest.inputs?.[component.src].assets();
-			console.log(assets);
 			const Comp = (props) => {
 				return [
 					...assets.map((asset) => renderAsset(asset)),

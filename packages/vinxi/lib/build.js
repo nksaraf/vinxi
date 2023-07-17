@@ -202,7 +202,7 @@ const spaManifest = () => {
 			config = resolvedConfig;
 		},
 		async generateBundle(options, bundle) {
-			const manifest = createSPAManifest(config, bundle, options.format);
+			const manifest = await createSPAManifest(config, bundle, options.format);
 			this.emitFile({
 				fileName: "manifest.js",
 				type: "asset",
@@ -222,12 +222,11 @@ function toRouteId(route) {
 	return `${route.src}?${route.pick.map((p) => `pick=${p}`).join("&")}`;
 }
 
-export function getEntries(router) {
-	console.log(router.fileRouter?.routes);
+export async function getEntries(router) {
 	return [
 		router.handler,
 		...(
-			router.fileRouter?.routes.map((r) =>
+			(await router.fileRouter?.getRoutes()).map((r) =>
 				Object.entries(r)
 					.filter(([r, v]) => v && r.startsWith("$") && !r.startsWith("$$"))
 					.map(([, v]) => toRouteId(v)),
@@ -249,7 +248,7 @@ function handerBuild() {
 				return {
 					build: {
 						rollupOptions: {
-							input: getEntries(inlineConfig.router),
+							input: await getEntries(inlineConfig.router),
 							external: [
 								...builtinModules,
 								...builtinModules.map((m) => `node:${m}`),
@@ -286,7 +285,7 @@ function browserBuild() {
 				return {
 					build: {
 						rollupOptions: {
-							input: getEntries(inlineConfig.router),
+							input: await getEntries(inlineConfig.router),
 							treeshake: true,
 						},
 						manifest: true,

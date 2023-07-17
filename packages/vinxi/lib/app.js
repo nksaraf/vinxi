@@ -26,7 +26,6 @@ function resolveConfig(router, appConfig) {
 	// 	`There should be dir provided if the router style is ${routerStyle}`,
 	// );
 
-	console.log(routerStyle, dir);
 	let fileRouter =
 		routerStyle !== "static" && router.dir
 			? new routerStyle({ dir, style: router.style })

@@ -17,7 +17,7 @@ export function createProdManifest(app) {
 					async assets() {
 						let assets = {};
 						assets[router.handler] = await this.inputs[router.handler].assets();
-						for (const route of router.fileRouter?.routes ?? []) {
+						for (const route of (await router.fileRouter?.getRoutes()) ?? []) {
 							assets[route.filePath] = await this.inputs[
 								route.filePath
 							].assets();

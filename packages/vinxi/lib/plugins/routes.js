@@ -14,50 +14,53 @@ export function routes() {
 			root = config.root;
 			router = config.router;
 		},
-		load(id) {
+		async load(id) {
 			if (id === fileURLToPath(new URL("../routes.js", import.meta.url))) {
 				const js = jsCode();
-				const routesCode = JSON.stringify(router.fileRouter?.routes, (k, v) => {
-					if (!v) {
-						return undefined;
-					}
-
-					if (k.startsWith("$$")) {
-						const buildId = `${v.src}?${v.pick
-							.map((p) => `pick=${p}`)
-							.join("&")}`;
-
-						const refs = {};
-						for (var pick of v.pick) {
-							refs[pick] = js.addNamedImport(pick, buildId);
+				const routesCode = JSON.stringify(
+					await router.fileRouter?.getRoutes(),
+					(k, v) => {
+						if (!v) {
+							return undefined;
 						}
-						return {
-							require: `_$() => ({ ${Object.entries(refs)
-								.map(([pick, namedImport]) => `'${pick}': ${namedImport}`)
-								.join(", ")} })$_`,
-							src: isBuild ? relative(root, buildId) : buildId,
-						};
-					} else if (k.startsWith("$")) {
-						const buildId = `${v.src}?${v.pick
-							.map((p) => `pick=${p}`)
-							.join("&")}`;
-						return {
-							src: isBuild ? relative(root, buildId) : buildId,
-							build: isBuild ? `_$() => import('${buildId}')$_` : undefined,
-							import: isBuild
-								? router.build.target === "node"
-									? `_$() => import('${buildId}')$_`
-									: `_$(() => { const id = '${relative(
-											root,
-											buildId,
-									  )}'; return import(import.meta.env.MANIFEST['${
-											router.name
-									  }'].inputs[id].output.path) })$_`
-								: undefined,
-						};
-					}
-					return v;
-				});
+
+						if (k.startsWith("$$")) {
+							const buildId = `${v.src}?${v.pick
+								.map((p) => `pick=${p}`)
+								.join("&")}`;
+
+							const refs = {};
+							for (var pick of v.pick) {
+								refs[pick] = js.addNamedImport(pick, buildId);
+							}
+							return {
+								require: `_$() => ({ ${Object.entries(refs)
+									.map(([pick, namedImport]) => `'${pick}': ${namedImport}`)
+									.join(", ")} })$_`,
+								src: isBuild ? relative(root, buildId) : buildId,
+							};
+						} else if (k.startsWith("$")) {
+							const buildId = `${v.src}?${v.pick
+								.map((p) => `pick=${p}`)
+								.join("&")}`;
+							return {
+								src: isBuild ? relative(root, buildId) : buildId,
+								build: isBuild ? `_$() => import('${buildId}')$_` : undefined,
+								import: isBuild
+									? router.build.target === "node"
+										? `_$() => import('${buildId}')$_`
+										: `_$(() => { const id = '${relative(
+												root,
+												buildId,
+										  )}'; return import(import.meta.env.MANIFEST['${
+												router.name
+										  }'].inputs[id].output.path) })$_`
+									: undefined,
+							};
+						}
+						return v;
+					},
+				);
 				const routes = routesCode
 					.replaceAll('"_$(', "(")
 					.replaceAll(')$_"', ")");

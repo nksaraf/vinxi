@@ -3,6 +3,8 @@ import { pathToRegexp } from "path-to-regexp";
 import { join } from "pathe";
 
 export { pathToRegexp };
+export const glob = fg.sync.bind(fg);
+
 export function readFiles(config) {
 	return fg.sync(join(config.dir, "**/*") + ".{ts,tsx,js,jsx}", {
 		absolute: true,
@@ -47,7 +49,11 @@ export class NextJSPagesFileSystemRouter {
 		});
 	}
 
-	match(path) {
-		return this.routes.find((r) => r.regex.exec(path));
+	async getRoutes() {
+		return this.routes;
+	}
+
+	async match(path) {
+		return (await this.getRoutes()).find((r) => r.regex.exec(path));
 	}
 }

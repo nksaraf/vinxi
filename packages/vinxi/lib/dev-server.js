@@ -26,11 +26,11 @@ import { treeShake } from "./plugins/tree-shake.js";
 function devEntries() {
 	return {
 		name: "vinxi:dev-entries",
-		config(inlineConfig) {
+		async config(inlineConfig) {
 			return {
 				build: {
 					rollupOptions: {
-						input: getEntries(inlineConfig.router),
+						input: await getEntries(inlineConfig.router),
 					},
 				},
 			};
@@ -58,21 +58,21 @@ const routerModeDevPlugin = {
 		routes(),
 		devEntries(),
 		manifest(),
-		config({ appType: "spa" }),
+		config("appType", { appType: "spa" }),
 		treeShake(),
 	],
 	handler: () => [
 		routes(),
 		devEntries(),
 		manifest(),
-		config({ appType: "custom" }),
+		config("appType", { appType: "custom" }),
 		treeShake(),
 	],
 	build: () => [
 		routes(),
 		devEntries(),
 		manifest(),
-		config({ appType: "custom" }),
+		config("appType", { appType: "custom" }),
 		treeShake(),
 	],
 };
@@ -169,6 +169,15 @@ export async function createDevServer(
 
 		const devServer = createDevNitroServer(nitro);
 		await devServer.listen(port);
+
+		for (const router of app.config.routers) {
+			if (router.fileRouter) {
+				const routes = await router.fileRouter.getRoutes();
+				for (const route of routes) {
+					console.log(route.path);
+				}
+			}
+		}
 
 		// Create local fetch callers
 		const localCall = createCall(toNodeListener(devServer.app));
