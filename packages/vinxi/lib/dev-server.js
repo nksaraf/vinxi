@@ -6,6 +6,7 @@ import {
 	createFetch as createLocalFetch,
 } from "unenv/runtime/fetch/index";
 
+import { fileURLToPath } from "node:url";
 import { isMainThread } from "node:worker_threads";
 
 import { AppWorkerClient } from "./app-worker-client.js";
@@ -53,6 +54,61 @@ const targetDevPlugin = {
 	node: () => [],
 };
 
+function setupWatcher(watcher, router) {
+	watcher.on("unlink", async (path) => {
+		// path = slash(path);
+		// if (!isTarget(path, this.options)) return;
+		await router.fileRouter.removeRoute(path);
+	});
+	watcher.on("add", async (path) => {
+		// path = slash(path);
+		// if (!isTarget(path, this.options)) return;
+		// const page = this.options.dirs.find((i) =>
+		// 	path.startsWith(slash(resolve(this.root, i.dir))),
+		// );
+		await router.fileRouter.addRoute(path);
+	});
+
+	watcher.on("change", async (path) => {
+		// path = slash(path);
+		// if (!isTarget(path, this.options)) return;
+		// const page = this._pageRouteMap.get(path);
+		// if (page) await this.options.resolver.hmr?.changed?.(this, path);
+		await router.fileRouter.updateRoute(path);
+	});
+}
+
+const fileSystemWatcher = () => {
+	let config;
+	return {
+		name: "fs-watcher",
+		apply: "serve",
+		configResolved(resolvedConfig) {
+			config = resolvedConfig;
+		},
+		configureServer(server) {
+			setupWatcher(server.watcher, config.router);
+			config.router.fileRouter.update = () => {
+				const { moduleGraph } = server;
+				console.log("file system router", "update");
+				const mods = moduleGraph.getModulesByFile(
+					fileURLToPath(new URL("./routes.js", import.meta.url)),
+				);
+				if (mods) {
+					const seen = new Set();
+					mods.forEach((mod) => {
+						moduleGraph.invalidateModule(mod, seen);
+					});
+				}
+				// debug.hmr("Reload generated pages.");
+				server.ws.send({
+					type: "full-reload",
+				});
+			};
+		},
+	};
+};
+
 const routerModeDevPlugin = {
 	spa: () => [
 		routes(),
@@ -60,7 +116,9 @@ const routerModeDevPlugin = {
 		manifest(),
 		config("appType", { appType: "spa" }),
 		treeShake(),
+		fileSystemWatcher(),
 	],
+
 	handler: () => [
 		routes(),
 		devEntries(),

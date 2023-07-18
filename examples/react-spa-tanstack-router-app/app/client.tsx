@@ -14,48 +14,13 @@ import {
 } from "@tanstack/router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { lazyRoute } from "@vinxi/react";
-import axios from "axios";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import fileRoutes from "vinxi/routes";
 import "vinxi/runtime/client";
 
-import { NotFoundError } from "./error";
+import { fetchPost, fetchPosts } from "./db";
 import "./style.css";
-
-type PostType = {
-	id: string;
-	title: string;
-	body: string;
-};
-
-const fetchPosts = async () => {
-	console.log("Fetching posts...");
-	await new Promise((r) => setTimeout(r, 500));
-	return axios
-		.get<PostType[]>("https://jsonplaceholder.typicode.com/posts")
-		.then((r) => r.data.slice(0, 10));
-};
-
-const fetchPost = async (postId: string) => {
-	console.log(`Fetching post with id ${postId}...`);
-	await new Promise((r) => setTimeout(r, 500));
-	const post = await axios
-		.get<PostType>(`https://jsonplaceholder.typicode.com/posts/${postId}`)
-		.then((r) => r.data)
-		.catch((e) => {
-			if (e.response.status === 404) {
-				return null;
-			}
-			throw e;
-		});
-
-	if (!post) {
-		throw new NotFoundError(`Post with id "${postId}" not found!`);
-	}
-
-	return post;
-};
 
 const postsLoader = new Loader({
 	fn: fetchPosts,

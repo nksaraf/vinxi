@@ -2,7 +2,7 @@ import { isAbsolute, join, relative } from "pathe";
 import { isMainThread } from "worker_threads";
 
 function resolveConfig(router, appConfig) {
-	let handler = relative(
+	router.handler = relative(
 		appConfig.root,
 		router.handler
 			? isAbsolute(router.handler)
@@ -13,7 +13,7 @@ function resolveConfig(router, appConfig) {
 
 	// invariant(handler, "No handler found for node-handler router");
 
-	let dir = router.dir
+	router.dir = router.dir
 		? isAbsolute(router.dir)
 			? router.dir
 			: join(appConfig.root, router.dir)
@@ -28,7 +28,7 @@ function resolveConfig(router, appConfig) {
 
 	let fileRouter =
 		routerStyle !== "static" && router.dir
-			? new routerStyle({ dir, style: router.style })
+			? new routerStyle(router)
 			: undefined;
 
 	// invariant(
@@ -52,10 +52,8 @@ function resolveConfig(router, appConfig) {
 		...router,
 		build: buildConfig,
 		root: appConfig.root,
-		dir,
 		style: routerStyle,
 		fileRouter,
-		handler,
 	};
 }
 
