@@ -10,12 +10,12 @@ import {
 	ssr,
 	useAssets,
 } from "solid-js/web";
-import fileRoutes from "vinxi/routes";
 import { eventHandler } from "vinxi/runtime/server";
 
 import { join } from "node:path";
 
 import App from "./app";
+import { routes } from "./routes";
 
 export default eventHandler(async (event) => {
 	const events = {};
@@ -25,18 +25,20 @@ export default eventHandler(async (event) => {
 
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 
-	const FileRoutes = () => {
-		return routes as any;
-	};
-
-	const routes = fileRoutes.map((route) => {
+	function createRoute(route) {
 		return {
 			...route,
 			component: lazyRoute(route.$component, clientManifest, serverManifest),
 			data: route.$$data ? route.$$data.require().routeData : undefined,
+			children: route.children ? route.children.map(createRoute) : undefined,
 		};
-	});
+	}
 
+	const pageRoutes = routes.map(createRoute);
+
+	const FileRoutes = () => {
+		return pageRoutes as any;
+	};
 	console.log(routes);
 	const tags = [];
 	function Meta() {

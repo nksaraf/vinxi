@@ -8,18 +8,21 @@ import "vinxi/runtime/client";
 
 import App from "./app";
 
-const routes = fileRoutes.map((route) => {
-	return {
-		path: route.path,
-		component: lazyRoute(route.$component, import.meta.env.MANIFEST["client"]),
-		data: route.$$data ? route.$$data.require().routeData : null,
-	};
-});
-
 const Assets = createAssets(
 	import.meta.env.MANIFEST["client"].handler,
 	import.meta.env.MANIFEST["client"],
 );
+
+function createRoute(route) {
+	return {
+		path: route.path,
+		component: lazyRoute(route.$component, import.meta.env.MANIFEST["client"]),
+		data: route.$$data ? route.$$data.require().routeData : null,
+		children: route.children ? route.children.map(createRoute) : null,
+	};
+}
+
+const routes = fileRoutes.map(createRoute);
 
 function FileRoutes() {
 	return routes as any;

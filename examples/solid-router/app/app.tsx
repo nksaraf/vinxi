@@ -1,3 +1,4 @@
+// @refresh reload
 import { Link } from "@solidjs/router";
 import { children } from "solid-js";
 import { NoHydration } from "solid-js/web";
@@ -19,6 +20,7 @@ export default function App(props) {
 					<Link href="/abc">ABC</Link>
 					<Link href="/def">DEF</Link>
 					<Link href="/">Home</Link>
+					<Link href="/posts">Posts</Link>
 					<Counter />
 				</section>
 				{props.children}

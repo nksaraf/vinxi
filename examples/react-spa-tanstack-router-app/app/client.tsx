@@ -113,7 +113,6 @@ const defineRoutes = (fileRoutes) => {
 };
 
 const routes = defineRoutes(fileRoutes);
-console.log(routes);
 
 function createRoute(route, parent) {
 	const parentRoute = new Route({

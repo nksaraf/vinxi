@@ -17,7 +17,7 @@ export default function Hello() {
 	return (
 		<>
 			<div>Hellsas\\dasd4</div>
-			<A href="/hello">Hello</A>
+			<A href="/hello">Hello 12 3</A>
 			<Counter />
 			{/* <iframe
 				src="/_spa/hello"

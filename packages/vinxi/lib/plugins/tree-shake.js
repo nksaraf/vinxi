@@ -1,3 +1,6 @@
+import jsx from "@babel/plugin-syntax-jsx";
+import typescript from "@babel/plugin-syntax-typescript";
+
 import plugin from "./tree-shake.babel.js";
 
 export function treeShake() {
@@ -13,8 +16,8 @@ export function treeShake() {
 			const transformed = babel.transform(code, {
 				plugins: [
 					...(config.router.build?.babel?.plugins ?? []),
-					"@babel/plugin-syntax-jsx",
-					["@babel/plugin-syntax-typescript", { isTSX: true }],
+					jsx,
+					[typescript, { isTSX: true }],
 					[plugin, { pick: query.getAll("pick") }],
 				],
 			});
