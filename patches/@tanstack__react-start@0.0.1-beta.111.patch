@@ -1,0 +1,302 @@
+diff --git a/build/esm/client.js b/build/esm/client.js
+index bd4576d2a27f672631a5ed3ba554da182c67584e..4f1a47ef4667e7202e878139d936e999f4ac87a0 100644
+--- a/build/esm/client.js
++++ b/build/esm/client.js
+@@ -8,25 +8,32 @@
+  *
+  * @license MIT
+  */
+-import * as React from 'react';
+-import { RouterProvider } from '@tanstack/router';
+-import cprc from '@gisatcz/cross-package-react-context';
++import * as React from "react";
++import { RouterProvider } from "@tanstack/router";
++import cprcMod from "@gisatcz/cross-package-react-context";
++const cprc = "default" in cprcMod ? cprcMod["default"] : cprcMod;
+ 
+ function StartClient(props) {
+   const CustomRouterProvider = props.router.options.Wrap || React.Fragment;
+-  return /*#__PURE__*/React.createElement(CustomRouterProvider, null, /*#__PURE__*/React.createElement(RouterProvider, {
+-    router: props.router
+-  }));
++  return /*#__PURE__*/ React.createElement(
++    CustomRouterProvider,
++    null,
++    /*#__PURE__*/ React.createElement(RouterProvider, {
++      router: props.router,
++    })
++  );
+ }
+ function DehydrateRouter() {
+-  const dehydrated = React.useContext(cprc.getContext('TanStackRouterHydrationContext', {}));
+-  return /*#__PURE__*/React.createElement("script", {
++  const dehydrated = React.useContext(
++    cprc.getContext("TanStackRouterHydrationContext", {})
++  );
++  return /*#__PURE__*/ React.createElement("script", {
+     suppressHydrationWarning: true,
+     dangerouslySetInnerHTML: {
+       __html: `
+           window.__TSR_DEHYDRATED__ = ${JSON.stringify(dehydrated)}
+-        `
+-    }
++        `,
++    },
+   });
+ }
+ 
+diff --git a/build/esm/server.js b/build/esm/server.js
+index 12901202a1bf2d3dc0b1f2fc88ef75f4a9ec559f..4c33c9b3e55da6e51e3f165f7971256310518a95 100644
+--- a/build/esm/server.js
++++ b/build/esm/server.js
+@@ -8,19 +8,18 @@
+  *
+  * @license MIT
+  */
+-import { createMemoryHistory, RouterProvider } from '@tanstack/router';
+-import * as ReactDOMServer from 'react-dom/server';
+-import * as React from 'react';
+-import isbot from 'isbot';
+-import { PassThrough, Transform } from 'stream';
+-import cprc from '@gisatcz/cross-package-react-context';
++import { createMemoryHistory, RouterProvider } from "@tanstack/router";
++import * as ReactDOMServer from "react-dom/server";
++import * as React from "react";
++import isbot from "isbot";
++import { PassThrough, Transform } from "stream";
++import cprcMod from "@gisatcz/cross-package-react-context";
++const cprc = "default" in cprcMod ? cprcMod["default"] : cprcMod;
+ 
+ function createRequestHandler(opts) {
+-  return async ({
+-    request
+-  }) => {
++  return async ({ request }) => {
+     const fullUrl = new URL(request.url);
+-    const url = request.url.replace(fullUrl.origin, '');
++    const url = request.url.replace(fullUrl.origin, "");
+ 
+     // console.log(handlers)
+     // if (hasHandler(fullUrl.pathname)) {
+@@ -29,80 +28,103 @@ function createRequestHandler(opts) {
+     //   })
+     // }
+ 
+-    if (fullUrl.pathname.includes('.')) {
++    if (fullUrl.pathname.includes(".")) {
+       return new Response(null, {
+-        status: 404
++        status: 404,
+       });
+     }
+-    console.log('Rendering: ', url, '...');
++    console.log("Rendering: ", url, "...");
+     const history = createMemoryHistory({
+-      initialEntries: [url]
++      initialEntries: [url],
+     });
+     const router = opts.createRouter();
+     router.update({
+-      history
++      history,
+     });
+     await router.load();
+     return new Promise((resolve, reject) => {
+       let didError = false;
+       const responseStatusCode = 200;
+       const responseHeaders = new Headers({
+-        'Content-Type': 'text/html'
++        "Content-Type": "text/html",
+       });
+ 
+       // Clever way to get the right callback. Thanks Remix!
+-      const callbackName = isbot(request.headers.get('user-agent')) ? 'onAllReady' : 'onShellReady';
+-      const stream = ReactDOMServer.renderToPipeableStream( /*#__PURE__*/React.createElement(StartServer, {
+-        router: router
+-      }), {
+-        [callbackName]: () => {
+-          const body = new PassThrough();
+-          responseHeaders.set('Content-Type', 'text/html');
+-          resolve(new Response(body, {
+-            headers: responseHeaders,
+-            status: didError ? 500 : responseStatusCode
+-          }));
+-          stream.pipe(body);
+-        },
+-        onShellError: err => {
+-          reject(err);
+-        },
+-        onError: err => {
+-          didError = true;
+-          console.log(err);
++      const callbackName = isbot(request.headers.get("user-agent"))
++        ? "onAllReady"
++        : "onShellReady";
++      const stream = ReactDOMServer.renderToPipeableStream(
++        /*#__PURE__*/ React.createElement(StartServer, {
++          router: router,
++        }),
++        {
++          [callbackName]: () => {
++            const body = new PassThrough();
++            responseHeaders.set("Content-Type", "text/html");
++            resolve(
++              new Response(body, {
++                headers: responseHeaders,
++                status: didError ? 500 : responseStatusCode,
++              })
++            );
++            stream.pipe(body);
++          },
++          onShellError: (err) => {
++            reject(err);
++          },
++          onError: (err) => {
++            didError = true;
++            console.log(err);
++          },
+         }
+-      });
++      );
+       setTimeout(() => stream.abort(), 10000);
+     });
+   };
+ }
+ function StartServer(props) {
+   const Wrap = props.router.options.Wrap || React.Fragment;
+-  const hydrationContext = cprc.getContext('TanStackRouterHydrationContext', {});
+-  const hydrationCtxValue = React.useMemo(() => ({
+-    router: props.router.dehydrate(),
+-    payload: props.router.options.dehydrate?.()
+-  }), []);
++  const hydrationContext = cprc.getContext(
++    "TanStackRouterHydrationContext",
++    {}
++  );
++  const hydrationCtxValue = React.useMemo(
++    () => ({
++      router: props.router.dehydrate(),
++      payload: props.router.options.dehydrate?.(),
++    }),
++    []
++  );
+   return (
+     /*#__PURE__*/
+     // Provide the hydration context still, since `<DehydrateRouter />` needs it.
+-    React.createElement(hydrationContext.Provider, {
+-      value: hydrationCtxValue
+-    }, /*#__PURE__*/React.createElement(Wrap, null, /*#__PURE__*/React.createElement(RouterProvider, {
+-      router: props.router
+-    })))
++    React.createElement(
++      hydrationContext.Provider,
++      {
++        value: hydrationCtxValue,
++      },
++      /*#__PURE__*/ React.createElement(
++        Wrap,
++        null,
++        /*#__PURE__*/ React.createElement(RouterProvider, {
++          router: props.router,
++        })
++      )
++    )
+   );
+ }
+ function transformStreamWithRouter(router) {
+   return transformStreamHtmlCallback(async () => {
+-    const injectorPromises = router.injectedHtml.map(d => typeof d === 'function' ? d() : d);
++    const injectorPromises = router.injectedHtml.map((d) =>
++      typeof d === "function" ? d() : d
++    );
+     const injectors = await Promise.all(injectorPromises);
+     router.injectedHtml = [];
+-    return injectors.join('');
++    return injectors.join("");
+   });
+ }
+ function transformStreamHtmlCallback(injector) {
+-  let leftover = '';
++  let leftover = "";
+   return new Transform({
+     transform(chunk, encoding, callback) {
+       let chunkString = leftover + chunk.toString();
+@@ -112,44 +134,50 @@ function transformStreamHtmlCallback(injector) {
+       const patternHtml = /(<\/html>)/;
+       const bodyMatch = chunkString.match(patternBody);
+       const htmlMatch = chunkString.match(patternHtml);
+-      injector().then(html => {
+-        // If a </body></html> sequence was found
+-        if (bodyMatch && htmlMatch && bodyMatch.index < htmlMatch.index) {
+-          const bodyIndex = bodyMatch.index + bodyMatch[0].length;
+-          const htmlIndex = htmlMatch.index + htmlMatch[0].length;
+-
+-          // Add the arbitrary HTML before the closing body tag
+-          const processed = chunkString.slice(0, bodyIndex) + html + chunkString.slice(bodyIndex, htmlIndex) + chunkString.slice(htmlIndex);
+-          this.push(processed);
+-          leftover = '';
+-        } else {
+-          // For all other closing tags, add the arbitrary HTML after them
+-          const pattern = /(<\/[a-zA-Z][\w:.-]*?>)/g;
+-          let result;
+-          let lastIndex = 0;
+-          while ((result = pattern.exec(chunkString)) !== null) {
+-            lastIndex = result.index + result[0].length;
+-          }
++      injector()
++        .then((html) => {
++          // If a </body></html> sequence was found
++          if (bodyMatch && htmlMatch && bodyMatch.index < htmlMatch.index) {
++            const bodyIndex = bodyMatch.index + bodyMatch[0].length;
++            const htmlIndex = htmlMatch.index + htmlMatch[0].length;
+ 
+-          // If a closing tag was found, add the arbitrary HTML and send it through
+-          if (lastIndex > 0) {
+-            const processed = chunkString.slice(0, lastIndex) + html;
++            // Add the arbitrary HTML before the closing body tag
++            const processed =
++              chunkString.slice(0, bodyIndex) +
++              html +
++              chunkString.slice(bodyIndex, htmlIndex) +
++              chunkString.slice(htmlIndex);
+             this.push(processed);
+-            leftover = chunkString.slice(lastIndex);
++            leftover = "";
+           } else {
+-            // If no closing tag was found, store the chunk to process with the next one
+-            leftover = chunkString;
++            // For all other closing tags, add the arbitrary HTML after them
++            const pattern = /(<\/[a-zA-Z][\w:.-]*?>)/g;
++            let result;
++            let lastIndex = 0;
++            while ((result = pattern.exec(chunkString)) !== null) {
++              lastIndex = result.index + result[0].length;
++            }
++
++            // If a closing tag was found, add the arbitrary HTML and send it through
++            if (lastIndex > 0) {
++              const processed = chunkString.slice(0, lastIndex) + html;
++              this.push(processed);
++              leftover = chunkString.slice(lastIndex);
++            } else {
++              // If no closing tag was found, store the chunk to process with the next one
++              leftover = chunkString;
++            }
+           }
+-        }
+-        callback();
+-      }).catch(callback);
++          callback();
++        })
++        .catch(callback);
+     },
+     flush(callback) {
+       if (leftover) {
+         this.push(leftover);
+       }
+       callback();
+-    }
++    },
+   });
+ }
+ 

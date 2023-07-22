@@ -99,7 +99,7 @@ export function createApp({ routers, name }) {
 			if (isMainThread) {
 				const { createDevServer } = await import("./dev-server.js");
 				await createDevServer(app, {
-					port: 3000,
+					port: Number(process.env.PORT ?? 3000),
 					dev: true,
 				});
 			}

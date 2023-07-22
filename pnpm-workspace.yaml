@@ -1,6 +1,7 @@
 packages:
   - "packages/**"
   - "examples/**"
+  - "apps/**"
   - "test/**"
   - "!**/.tmp/**"
 options:

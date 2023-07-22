@@ -87,24 +87,26 @@ const fileSystemWatcher = () => {
 			config = resolvedConfig;
 		},
 		configureServer(server) {
-			setupWatcher(server.watcher, config.router);
-			config.router.fileRouter.update = () => {
-				const { moduleGraph } = server;
-				console.log("file system router", "update");
-				const mods = moduleGraph.getModulesByFile(
-					fileURLToPath(new URL("./routes.js", import.meta.url)),
-				);
-				if (mods) {
-					const seen = new Set();
-					mods.forEach((mod) => {
-						moduleGraph.invalidateModule(mod, seen);
+			if (config.router.fileRouter) {
+				setupWatcher(server.watcher, config.router);
+				config.router.fileRouter.update = () => {
+					const { moduleGraph } = server;
+					console.log("file system router", "update");
+					const mods = moduleGraph.getModulesByFile(
+						fileURLToPath(new URL("./routes.js", import.meta.url)),
+					);
+					if (mods) {
+						const seen = new Set();
+						mods.forEach((mod) => {
+							moduleGraph.invalidateModule(mod, seen);
+						});
+					}
+					// debug.hmr("Reload generated pages.");
+					server.ws.send({
+						type: "full-reload",
 					});
-				}
-				// debug.hmr("Reload generated pages.");
-				server.ws.send({
-					type: "full-reload",
-				});
-			};
+				};
+			}
 		},
 	};
 };
@@ -116,7 +118,7 @@ const routerModeDevPlugin = {
 		manifest(),
 		config("appType", { appType: "spa" }),
 		treeShake(),
-		fileSystemWatcher(),
+		// fileSystemWatcher(),
 	],
 
 	handler: () => [

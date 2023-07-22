@@ -226,7 +226,7 @@ export async function getEntries(router) {
 	return [
 		router.handler,
 		...(
-			(await router.fileRouter?.getRoutes()).map((r) =>
+			(await router.fileRouter?.getRoutes())?.map((r) =>
 				Object.entries(r)
 					.filter(([r, v]) => v && r.startsWith("$") && !r.startsWith("$$"))
 					.map(([, v]) => toRouteId(v)),

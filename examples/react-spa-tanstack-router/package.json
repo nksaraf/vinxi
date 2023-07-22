@@ -7,10 +7,9 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.7",
-    "@tanstack/react-loaders": "0.0.1-beta.108",
-    "@tanstack/react-router": "0.0.1-beta.83",
-    "@tanstack/router": "0.0.1-beta.108",
-    "@tanstack/router-devtools": "0.0.1-beta.108",
+    "@tanstack/react-loaders": "0.0.1-beta.109",
+    "@tanstack/router": "0.0.1-beta.111",
+    "@tanstack/router-devtools": "0.0.1-beta.111",
     "@vinxi/react": "workspace:^",
     "@vitejs/plugin-react": "^4.0.1",
     "autoprefixer": "^10.4.14",
