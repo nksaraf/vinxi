@@ -13,7 +13,9 @@ const manifest = new Proxy(
 				"Bundler name should be a string",
 			);
 			return {
-				handler: import.meta.env.ROUTER_HANDLER,
+				handler: import.meta.env.DEV
+					? join(import.meta.env.CWD, import.meta.env.ROUTER_HANDLER)
+					: import.meta.env.ROUTER_HANDLER,
 				inputs: new Proxy(
 					{},
 					{

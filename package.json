@@ -5,6 +5,7 @@
     "dev": "pnpm -r --parallel --filter \"./packages/*\" run dev",
     "build": "pnpm -r --filter \"./packages/*\" run build",
     "clean:test": "rimraf ../.fixtures",
+    "clean": "rm -rf **/*/.{nitro,output}",
     "test": "pnpm --filter tests clean && pnpm --filter tests test --",
     "ci": "pnpm -r --stream run ci",
     "test:packages": "pnpm -r --stream run test",
@@ -21,5 +22,8 @@
       "vite@4.3.9": "patches/vite@4.3.9.patch",
       "@tanstack/react-start@0.0.1-beta.111": "patches/@tanstack__react-start@0.0.1-beta.111.patch"
     }
+  },
+  "dependencies": {
+    "rimraf": "^5.0.1"
   }
 }

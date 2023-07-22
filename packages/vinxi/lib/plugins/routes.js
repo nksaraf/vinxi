@@ -14,7 +14,8 @@ export function routes() {
 			root = config.root;
 			router = config.router;
 		},
-		async load(id) {
+		async load(url) {
+			const [id, query] = url.split("?");
 			if (id === fileURLToPath(new URL("../routes.js", import.meta.url))) {
 				const js = jsCode();
 				const routesCode = JSON.stringify(

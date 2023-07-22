@@ -10,6 +10,7 @@ export function manifest() {
 					"import.meta.env.MANIFEST": `globalThis.MANIFEST`,
 					"import.meta.env.ROUTER_NAME": JSON.stringify(router.name),
 					"import.meta.env.ROUTER_HANDLER": JSON.stringify(router.handler),
+					"import.meta.env.CWD": JSON.stringify(router.root),
 					"process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
 				},
 			};

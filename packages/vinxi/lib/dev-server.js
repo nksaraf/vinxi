@@ -116,7 +116,15 @@ const routerModeDevPlugin = {
 		routes(),
 		devEntries(),
 		manifest(),
-		config("appType", { appType: "spa" }),
+		config("appType", {
+			appType: "spa",
+			ssr: {
+				noExternal: ["vinxi"],
+			},
+			optimizeDeps: {
+				exclude: ["vinxi"],
+			},
+		}),
 		treeShake(),
 		// fileSystemWatcher(),
 	],
@@ -125,14 +133,31 @@ const routerModeDevPlugin = {
 		routes(),
 		devEntries(),
 		manifest(),
-		config("appType", { appType: "custom" }),
+		config("appType", {
+			appType: "custom",
+			ssr: {
+				noExternal: ["vinxi"],
+			},
+			optimizeDeps: {
+				disabled: true,
+			},
+		}),
 		treeShake(),
 	],
 	build: () => [
 		routes(),
 		devEntries(),
 		manifest(),
-		config("appType", { appType: "custom" }),
+		config("appType", {
+			appType: "custom",
+			ssr: {
+				noExternal: ["vinxi"],
+			},
+			optimizeDeps: {
+				force: true,
+				exclude: ["vinxi"],
+			},
+		}),
 		treeShake(),
 	],
 };
@@ -244,7 +269,7 @@ export async function createDevServer(
 		const localFetch = createLocalFetch(localCall, globalThis.fetch);
 		const $fetch = createFetch({
 			fetch: localFetch,
-			Headers,
+			// Headers,
 		});
 		// @ts-ignore
 		globalThis.$fetch = $fetch;

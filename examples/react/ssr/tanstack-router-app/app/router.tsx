@@ -4,8 +4,8 @@ import { RootRoute } from "@tanstack/router";
 import { lazyRoute } from "@vinxi/react";
 import fileRoutes from "vinxi/routes";
 
-import Root from "./Root";
 import { createLoaderClient } from "./loaderClient";
+import Root from "./root";
 
 const createNestedRoutes = (fileRoutes) => {
 	function processRoute(routes, route, id, full) {

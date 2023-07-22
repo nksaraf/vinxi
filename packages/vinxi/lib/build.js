@@ -5,6 +5,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 
 import { consola, withLogger } from "./logger.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
+import { config } from "./plugins/config.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
@@ -33,6 +34,7 @@ export async function createBuild(app, buildConfig) {
 
 	const nitro = await createNitro({
 		dev: false,
+		preset: process.env.TARGET ?? process.env.NITRO_PRESET,
 		plugins: [
 			"#app-manifest",
 			fileURLToPath(new URL("./prod-manifest.js", import.meta.url)),
@@ -214,8 +216,30 @@ const spaManifest = () => {
 
 const routerModePlugin = {
 	static: () => [],
-	handler: () => [],
-	spa: () => [spaManifest()],
+	handler: () => [
+		config("appType", {
+			appType: "custom",
+			ssr: {
+				noExternal: ["vinxi"],
+			},
+			optimizeDeps: {
+				disabled: true,
+			},
+		}),
+	],
+	spa: () => [
+		spaManifest(),
+		config("appType", {
+			appType: "custom",
+			ssr: {
+				noExternal: ["vinxi"],
+			},
+			optimizeDeps: {
+				force: true,
+				exclude: ["vinxi"],
+			},
+		}),
+	],
 };
 
 function toRouteId(route) {

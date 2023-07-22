@@ -73,7 +73,6 @@ export default createApp({
 			mode: "build",
 			handler: "./app/client.tsx",
 			dir: "./app/routes",
-			root: "./app/root.tsx",
 			style: TanstackFileSystemRouter,
 			build: {
 				target: "browser",
@@ -85,20 +84,10 @@ export default createApp({
 			mode: "handler",
 			handler: "./app/server.tsx",
 			dir: "./app/routes",
-			root: "./app/root.tsx",
 			style: TanstackFileSystemRouter,
 			build: {
 				target: "node",
-				plugins: () => [
-					reactRefresh(),
-					// config("ssr-no-external", {
-					// 	ssr: {
-					// 		noExternal: [
-					// 			"/node_modules/@gisatcz/cross-package-react-context/dist/index.js",
-					// 		],
-					// 	},
-					// }),
-				],
+				plugins: () => [reactRefresh()],
 			},
 		},
 	],
