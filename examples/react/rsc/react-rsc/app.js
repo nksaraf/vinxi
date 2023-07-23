@@ -1,6 +1,7 @@
 import reactRefresh from "@vitejs/plugin-react";
 import serverComponent from "react-server-dom-vite/plugin";
 import { createApp } from "vinxi";
+import { virtual } from "vinxi/lib/plugins/virtual";
 
 function hash(str) {
 	let hash = 0;
@@ -65,7 +66,12 @@ function serverComponents() {
 						},
 						ssr: {
 							noExternal: true,
-							external: ["react", "react-dom", "react/jsx-dev-runtime", "react-server-dom-vite"],
+							external: [
+								"react",
+								"react-dom",
+								"react/jsx-dev-runtime",
+								"react-server-dom-vite",
+							],
 						},
 					};
 				}
@@ -147,7 +153,12 @@ function clientComponents() {
 			} else {
 				return {
 					optimizeDeps: {
-						include: ["react-server-dom-vite/client", "react", "react-dom"],
+						include: [
+							"react-server-dom-vite/client",
+							"react-server-dom-vite/runtime",
+							"react",
+							"react-dom",
+						],
 					},
 					ssr: {
 						external: ["react", "react-dom", "react-server-dom-vite"],
@@ -165,6 +176,25 @@ function clientComponents() {
 			}
 		},
 	};
+}
+
+function viteServer() {
+	let router;
+	return [
+		{
+			configResolved(config) {
+				router = config.router;
+			},
+			name: "vite-dev-server",
+			configureServer(server) {
+				globalThis.viteServers ??= {};
+				globalThis.viteServers[router.name] = server;
+			},
+		},
+		virtual({
+			"#vite-dev-server": () => `export default viteServers['${router.name}']`,
+		}),
+	];
 }
 
 export default createApp({
@@ -202,7 +232,7 @@ export default createApp({
 			handler: "./app/server.tsx",
 			build: {
 				target: "node",
-				plugins: () => [reactRefresh(), clientComponents()],
+				plugins: () => [reactRefresh(), viteServer(), clientComponents()],
 			},
 		},
 	],

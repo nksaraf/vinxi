@@ -6,6 +6,52 @@ import { eventHandler } from "vinxi/runtime/server";
 import App from "./app";
 
 export default eventHandler(async (event) => {
+	if (event.node.req.method === "POST") {
+		const {
+			renderToPipeableStream,
+			decodeReply,
+			decodeReplyFromBusboy,
+			decodeAction,
+		} = await import("react-server-dom-vite/server");
+		const serverReference = event.node.req.headers["rsc-action"];
+		if (serverReference) {
+			// This is the client-side case
+			const [filepath, name] = serverReference.split("#");
+			const action = (
+				await import(
+					import.meta.env.MANIFEST["rsc"].inputs[filepath].output.path
+				)
+			)[name];
+			// Validate that this is actually a function we intended to expose and
+			// not the client trying to invoke arbitrary functions. In a real app,
+			// you'd have a manifest verifying this before even importing it.
+			if (action.$$typeof !== Symbol.for("react.server.reference")) {
+				throw new Error("Invalid action");
+			}
+
+			let args;
+			// if (req.is('multipart/form-data')) {
+			//   // Use busboy to streamingly parse the reply from form-data.
+			//   const bb = busboy({headers: req.headers});
+			//   const reply = decodeReplyFromBusboy(bb, moduleBasePath);
+			//   req.pipe(bb);
+			//   args = await reply;
+			// } else {
+			args = await decodeReply(event.node.req);
+			// }
+			const result = action.apply(null, args);
+			try {
+				// Wait for any mutations
+				await result;
+			} catch (x) {
+				// We handle the error on the client
+			}
+			// Refresh the client and return the value
+			return {};
+		} else {
+			throw new Error("Invalid request");
+		}
+	}
 	const reactServerManifest = import.meta.env.MANIFEST["rsc"];
 	const serverAssets = await reactServerManifest.inputs[
 		reactServerManifest.handler

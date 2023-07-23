@@ -1,8 +1,10 @@
 /// <reference types="vinxi/server" />
+import viteServer from "#vite-dev-server";
 import { renderAsset } from "@vinxi/react";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import * as ReactServerDOM from "react-server-dom-vite/client";
+import { createModuleLoader } from "react-server-dom-vite/runtime";
 import { H3Event, eventHandler, fetchWithEvent } from "vinxi/runtime/server";
 
 import { Readable, Writable } from "node:stream";
@@ -10,6 +12,8 @@ import { Readable, Writable } from "node:stream";
 import App from "./app";
 
 export default eventHandler(async (event) => {
+	globalThis.__vite__ = createModuleLoader(viteServer);
+
 	const readable = new Readable({
 		objectMode: true,
 	});
