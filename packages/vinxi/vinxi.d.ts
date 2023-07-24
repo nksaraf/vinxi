@@ -1,5 +1,6 @@
 import { InlineConfig, ViteDevServer } from "vite";
 
+export type { PluginOption } from 'vite'
 export type HandlerContext = {
 	manifest: {
 		[key: string]: {
