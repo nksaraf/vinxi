@@ -93,6 +93,7 @@ export async function createBuild(app, buildConfig) {
 		],
 		scanDirs: [],
 		appConfigFiles: [],
+		imports: false,
 		virtual: {
 			"#app-manifest": `
         const appConfig = ${JSON.stringify(app.config)}
