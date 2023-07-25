@@ -20,6 +20,7 @@ async function main() {
 			port: 3000,
 		});
 	} else if (command === "build") {
+		process.env.NODE_ENV = "production";
 		const { createBuild } = await import("../lib/build.js");
 		await createBuild(config, {});
 	}

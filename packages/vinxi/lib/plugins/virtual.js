@@ -11,9 +11,17 @@ export function virtual(modules, cache = {}) {
 		_modules.set(resolve(id), mod);
 	}
 
+	let config;
+	let env;
+
 	return {
 		name: "virtual",
-
+		configResolved(_config) {
+			config = _config;
+		},
+		config(config, _env) {
+			env = _env;
+		},
 		resolveId(id, importer) {
 			if (id in modules) {
 				return PREFIX + id;
@@ -44,7 +52,10 @@ export function virtual(modules, cache = {}) {
 
 			let m = _modules.get(idNoPrefix);
 			if (typeof m === "function") {
-				m = await m();
+				m = await m({
+					env,
+					config,
+				});
 			}
 
 			cache[id.replace(PREFIX, "")] = m;

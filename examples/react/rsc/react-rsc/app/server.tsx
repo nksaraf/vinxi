@@ -1,18 +1,32 @@
 /// <reference types="vinxi/server" />
 import viteServer from "#vite-dev-server";
 import { renderAsset } from "@vinxi/react";
+import * as ReactServerDOM from "@vinxi/react-server-dom-vite/client";
+import { createModuleLoader } from "@vinxi/react-server-dom-vite/runtime";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
-import * as ReactServerDOM from "react-server-dom-vite/client";
-import { createModuleLoader } from "react-server-dom-vite/runtime";
 import { H3Event, eventHandler, fetchWithEvent } from "vinxi/runtime/server";
 
 import { Readable, Writable } from "node:stream";
 
-import App from "./app";
+const modulePromiseCache = new Map();
 
 export default eventHandler(async (event) => {
-	globalThis.__vite__ = createModuleLoader(viteServer);
+	globalThis.__vite__ = createModuleLoader(
+		import.meta.env.DEV
+			? viteServer
+			: {
+					loadModule: async (id) => {
+						if (globalThis.$$chunks[id + ".js"]) {
+							return globalThis.$$chunks[id + ".js"];
+						}
+						console.log(id);
+						return await import(
+							import.meta.env.MANIFEST["ssr"].chunks[id].output.path
+						);
+					},
+			  },
+	);
 
 	const readable = new Readable({
 		objectMode: true,
@@ -61,7 +75,9 @@ export default eventHandler(async (event) => {
 			clientManifest?.inputs[clientManifest.handler].output.path,
 		].filter(Boolean) as string[],
 		bootstrapScriptContent: `
-			window.base = "${import.meta.env.BASE_URL}";`,
+			window.base = "${import.meta.env.BASE_URL}"; window.manifest= ${JSON.stringify(
+			await import.meta.env.MANIFEST["client"].json(),
+		)}`,
 
 		// 	{
 		onAllReady: () => {

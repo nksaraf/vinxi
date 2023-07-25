@@ -1,6 +1,6 @@
 import { renderAsset } from "@vinxi/react";
+import * as RSDV from "@vinxi/react-server-dom-vite/server";
 import React, { Suspense } from "react";
-import { renderToPipeableStream } from "react-server-dom-vite/server";
 import { eventHandler } from "vinxi/runtime/server";
 
 import App from "./app";
@@ -12,7 +12,7 @@ export default eventHandler(async (event) => {
 			decodeReply,
 			decodeReplyFromBusboy,
 			decodeAction,
-		} = await import("react-server-dom-vite/server");
+		} = await import("@vinxi/react-server-dom-vite/server");
 		const serverReference = event.node.req.headers["rsc-action"];
 		if (serverReference) {
 			// This is the client-side case
@@ -60,7 +60,7 @@ export default eventHandler(async (event) => {
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 
 	const events = {};
-	const stream = renderToPipeableStream(
+	const stream = RSDV.renderToPipeableStream(
 		<App
 			assets={
 				<Suspense>

@@ -3,6 +3,10 @@
 import { join, resolve } from "node:path";
 
 async function getViteModuleNode(vite, file, ssr) {
+	if (file.startsWith("node:")) {
+		return null;
+	}
+
 	const resolvedId = await vite.pluginContainer.resolveId(file, undefined, {
 		ssr: ssr,
 	});

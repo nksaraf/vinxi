@@ -37,33 +37,51 @@ export async function createBuild(app, buildConfig) {
 		preset: process.env.TARGET ?? process.env.NITRO_PRESET,
 		plugins: [
 			"#app-manifest",
+			"#app-handle",
 			fileURLToPath(new URL("./prod-manifest.js", import.meta.url)),
+			"#extra-chunks",
 		],
 		handlers: [
-			...app.config.routers.map((router) => {
-				if (router.mode === "handler") {
-					const bundlerManifest = JSON.parse(
-						readFileSync(
-							join(router.build.outDir, router.base, "manifest.json"),
-							"utf-8",
-						),
-					);
+			...app.config.routers
+				.map((router) => {
+					if (router.mode === "handler") {
+						const bundlerManifest = JSON.parse(
+							readFileSync(
+								join(router.build.outDir, router.base, "manifest.json"),
+								"utf-8",
+							),
+						);
 
-					return {
-						route: router.base.length === 1 ? "/**" : `${router.base}/**`,
-						handler: join(
+						const handler = join(
 							router.build.outDir,
 							router.base,
 							bundlerManifest[relative(app.config.root, router.handler)].file,
-						),
-					};
-				} else if (router.mode === "spa") {
-					return {
-						route: router.base.length === 1 ? "/**" : `${router.base}/**`,
-						handler: "#vinxi/spa",
-					};
-				}
-			}),
+						);
+
+						return [
+							{
+								route: router.base.length === 1 ? "/" : `${router.base}`,
+								handler,
+							},
+							{
+								route: router.base.length === 1 ? "/**" : `${router.base}/**`,
+								handler,
+							},
+						];
+					} else if (router.mode === "spa") {
+						return [
+							{
+								route: router.base.length === 1 ? "/" : `${router.base}`,
+								handler: "#vinxi/spa",
+							},
+							{
+								route: router.base.length === 1 ? "/**" : `${router.base}/**`,
+								handler: "#vinxi/spa",
+							},
+						];
+					}
+				})
+				.flat(),
 		].filter(Boolean),
 		rollupConfig: {
 			plugins: [visualizer()],
@@ -90,11 +108,73 @@ export async function createBuild(app, buildConfig) {
 					baseURL: router.base,
 					passthrough: true,
 				})),
+			...app.config.routers
+				.filter((router) => router.mode === "handler")
+				.map((router) => ({
+					dir: join(router.build.outDir, router.base, "assets"),
+					baseURL: join(router.base, "assets"),
+					passthrough: true,
+				})),
 		],
 		scanDirs: [],
 		appConfigFiles: [],
 		imports: false,
 		virtual: {
+			"#app-handle": `
+			import { defineEventHandler, fromNodeMiddleware, toNodeListener } from "h3";
+			import {
+				createCall,
+				createFetch,
+				createFetch as createLocalFetch,
+			} from "unenv/runtime/fetch/index";
+
+			export default function plugin(app) {
+				globalThis.$fetch = createFetch({
+					fetch: app.localFetch,
+				});
+				globalThis.$handle = (event) => app.h3App.handler(event);
+			}
+			`,
+			"#extra-chunks": () => {
+				const chunks = app.config.routers
+					.filter(
+						(router) => router.mode !== "static" && router.mode !== "build",
+					)
+					.map((router) => {
+						const bundlerManifest = JSON.parse(
+							readFileSync(
+								join(router.build.outDir, router.base, "manifest.json"),
+								"utf-8",
+							),
+						);
+
+						const chunks = Object.entries(bundlerManifest)
+							.filter(
+								([name, chunk]) => chunk.isEntry && name !== router.handler,
+							)
+							.map(([name, chunk]) => {
+								return `import * as mod from '${join(
+									router.build.outDir,
+									router.base,
+									chunk.file,
+								)}';
+						chunks['${chunk.file}'] = mod
+						`;
+							})
+							.join("\n");
+
+						return chunks;
+
+						// return [router.name, bundlerManifest];
+					});
+				return `
+				const chunks = {};
+				${chunks.join("\n")}
+				export default function app() {
+					globalThis.$$chunks = chunks
+				}
+			`;
+			},
 			"#app-manifest": `
         const appConfig = ${JSON.stringify(app.config)}
 				const buildManifest = ${JSON.stringify(
@@ -153,7 +233,7 @@ export async function createBuild(app, buildConfig) {
 
 /**
  *
- * @param {import("vite").InlineConfig & { router: any }} config
+ * @param {import("vite").InlineConfig & { router: any; app: any }} config
  */
 async function createViteBuild(config) {
 	const vite = await import("vite");
@@ -163,6 +243,7 @@ async function createViteBuild(config) {
 async function createRouterBuild(app, router) {
 	await createViteBuild({
 		router,
+		app,
 		plugins: [
 			routerModePlugin[router.mode]?.() ?? [],
 			buildTargetPlugin[router.build.target]?.() ?? [],
@@ -318,6 +399,7 @@ function browserBuild() {
 							inlineConfig.router.build.outDir,
 							inlineConfig.router.base,
 						),
+						target: "esnext",
 						emptyOutDir: false,
 					},
 					base: inlineConfig.router.base,

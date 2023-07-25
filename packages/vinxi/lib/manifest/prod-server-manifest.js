@@ -71,6 +71,19 @@ export function createProdManifest(app) {
 									router.build.target === "node-web"
 								) {
 									return {
+										assets() {
+											return findAssetsInViteManifest(bundlerManifest, id)
+												.filter((asset) => asset.endsWith(".css"))
+												.map((asset) => ({
+													tag: "link",
+													attrs: {
+														href: join(router.base, asset),
+														key: join(router.base, asset),
+														rel: "stylesheet",
+														precendence: "high",
+													},
+												}));
+										},
 										output: {
 											path: join(
 												router.build.outDir,

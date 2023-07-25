@@ -1,5 +1,7 @@
+import serverComponent from "@vinxi/react-server-dom-vite/plugin";
 import reactRefresh from "@vitejs/plugin-react";
-import serverComponent from "react-server-dom-vite/plugin";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { createApp } from "vinxi";
 import { virtual } from "vinxi/lib/plugins/virtual";
 
@@ -70,7 +72,7 @@ function serverComponents() {
 								"react",
 								"react-dom",
 								"react/jsx-dev-runtime",
-								"react-server-dom-vite",
+								"@vinxi/react-server-dom-vite",
 							],
 						},
 					};
@@ -92,7 +94,7 @@ function serverComponents() {
 
 /**
  *
- * @returns {import('vite').Plugin}
+ * @returns {import('vinxi').PluginOption}
  */
 function clientComponents() {
 	let isBuild;
@@ -103,14 +105,25 @@ function clientComponents() {
 			isBuild = env.command === "build";
 			// @ts-ignore
 			const router = config.router;
+			// @ts-ignore
+			const app = config.app;
 
 			if (isBuild) {
+				const rscRouter = app.getRouter("rsc");
+
 				const reactServerManifest = JSON.parse(
-					readFileSync(".build/rsc/_rsc/react-server-manifest.json", "utf-8"),
+					readFileSync(
+						join(
+							rscRouter.build.outDir,
+							rscRouter.base,
+							"react-server-manifest.json",
+						),
+						"utf-8",
+					),
 				);
 
 				input = {
-					entry: getEntries(router)[0],
+					entry: router.handler,
 					...Object.fromEntries(
 						reactServerManifest.client.map((key) => {
 							return [hash(key), key];
@@ -118,12 +131,30 @@ function clientComponents() {
 					),
 				};
 
+				console.log(input);
+
 				return {
 					ssr: {
-						external: ["react", "react-dom", "react-server-dom-vite"],
+						external: ["react", "react-dom", "@vinxi/react-server-dom-vite"],
 					},
+					optimizeDeps: {
+						include: [
+							"@vinxi/react-server-dom-vite",
+							"react-server-dom-vite",
+							"react",
+							"react-dom",
+						],
+					}, // optimizeDeps: {
+					// 	include: [
+					// 		"@vinxi/react-server-dom-vite/client.browser",
+					// 		"@vinxi/react-server-dom-vite/runtime",
+					// 		"react",
+					// 		"react-dom",
+					// 	],
+					// },
 					build: {
 						rollupOptions: {
+							
 							// preserve the export names of the server actions in chunks
 							treeshake: true,
 							// required otherwise rollup will remove the exports since they are not used
@@ -154,14 +185,19 @@ function clientComponents() {
 				return {
 					optimizeDeps: {
 						include: [
-							"react-server-dom-vite/client",
-							"react-server-dom-vite/runtime",
+							"@vinxi/react-server-dom-vite",
+							"react-server-dom-vite",
 							"react",
 							"react-dom",
 						],
 					},
 					ssr: {
-						external: ["react", "react-dom", "react-server-dom-vite"],
+						external: [
+							"react",
+							"react-dom",
+							"@vinxi/react-server-dom-vite",
+							"react-server-dom-vite",
+						],
 					},
 				};
 			}
@@ -169,9 +205,9 @@ function clientComponents() {
 
 		configResolved(config) {
 			if (isBuild) {
-				const reactServerManifest = JSON.parse(
-					readFileSync(".build/rsc/_rsc/react-server-manifest.json", "utf-8"),
-				);
+				// const reactServerManifest = JSON.parse(
+				// 	readFileSync(".build/rsc/_rsc/react-server-manifest.json", "utf-8"),
+				// );
 				config.build.rollupOptions.input = input;
 			}
 		},
@@ -192,7 +228,10 @@ function viteServer() {
 			},
 		},
 		virtual({
-			"#vite-dev-server": () => `export default viteServers['${router.name}']`,
+			"#vite-dev-server": ({ env }) =>
+				env.command === "build"
+					? `export default undefined`
+					: `export default viteServers['${router.name}']`,
 		}),
 	];
 }
@@ -206,16 +245,6 @@ export default createApp({
 			base: "/",
 		},
 		{
-			name: "client",
-			mode: "build",
-			handler: "./app/client.tsx",
-			build: {
-				target: "browser",
-				plugins: () => [reactRefresh(), clientComponents()],
-			},
-			base: "/_build",
-		},
-		{
 			name: "rsc",
 			worker: true,
 			mode: "handler",
@@ -225,6 +254,16 @@ export default createApp({
 				target: "node",
 				plugins: () => [serverComponents()],
 			},
+		},
+		{
+			name: "client",
+			mode: "build",
+			handler: "./app/client.tsx",
+			build: {
+				target: "browser",
+				plugins: () => [reactRefresh(), clientComponents()],
+			},
+			base: "/_build",
 		},
 		{
 			name: "ssr",

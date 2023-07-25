@@ -41,7 +41,7 @@ function devEntries() {
 
 /**
  *
- * @param {import('vite').UserConfig & { router: any }} config
+ * @param {import('vite').UserConfig & { router: any; app: any }} config
  * @returns
  */
 async function createViteServer(config) {
@@ -162,7 +162,7 @@ const routerModeDevPlugin = {
 	],
 };
 
-async function createViteHandler(router, serveConfig) {
+async function createViteHandler(app, router, serveConfig) {
 	if (router.worker && isMainThread) {
 		const worker = new AppWorkerClient(
 			new URL("./app-worker.js", import.meta.url),
@@ -183,7 +183,7 @@ async function createViteHandler(router, serveConfig) {
 			...(router.build?.plugins?.() || []),
 		],
 		router,
-
+		app,
 		server: {
 			middlewareMode: true,
 			hmr: {
@@ -208,10 +208,10 @@ async function createViteHandler(router, serveConfig) {
 	}
 }
 
-async function createDevRouterHandler(router, serveConfig) {
+async function createDevRouterHandler(app, router, serveConfig) {
 	return {
 		route: router.base,
-		handler: await createViteHandler(router, serveConfig),
+		handler: await createViteHandler(app, router, serveConfig),
 	};
 }
 
@@ -245,7 +245,7 @@ export async function createDevServer(
 				...(await Promise.all(
 					app.config.routers
 						.filter((router) => router.mode != "static")
-						.map((router) => createDevRouterHandler(router, serveConfig)),
+						.map((router) => createDevRouterHandler(app,router, serveConfig)),
 				)),
 			],
 		});
