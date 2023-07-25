@@ -30,7 +30,7 @@ importers:
         specifier: 5.1.6
         version: 5.1.6
 
-  examples/react/rsc/react-rsc:
+  examples/react/rsc/client:
     dependencies:
       '@picocss/pico':
         specifier: ^1.5.7
@@ -64,7 +64,7 @@ importers:
         specifier: ^18.2.6
         version: 18.2.6
 
-  examples/react/rsc/react-rsc/react-server-dom-vite:
+  examples/react/rsc/client/react-server-dom-vite:
     dependencies:
       acorn-loose:
         specifier: ^8.3.0
@@ -79,7 +79,44 @@ importers:
         specifier: ^4.3.9
         version: 4.3.9(patch_hash=vtyqdrd2rn7nzuduoqhhzurwua)(@types/node@18.14.0)
 
-  examples/react/rsc/react-rsc/react-server-dom-vite/esm: {}
+  examples/react/rsc/client/react-server-dom-vite/esm: {}
+
+  examples/react/rsc/react-rsc:
+    dependencies:
+      '@picocss/pico':
+        specifier: ^1.5.7
+        version: 1.5.7
+      '@vinxi/react':
+        specifier: workspace:^
+        version: link:../../../../packages/vinxi-react
+      '@vinxi/react-server-dom-vite':
+        specifier: ^0.0.2
+        version: 0.0.2(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)(vite@4.3.9)
+      '@vitejs/plugin-react':
+        specifier: ^4.0.1
+        version: 4.0.1(vite@4.3.9)
+      autoprefixer:
+        specifier: ^10.4.14
+        version: 10.4.14(postcss@8.4.27)
+      react:
+        specifier: 0.0.0-experimental-035a41c4e-20230704
+        version: 0.0.0-experimental-035a41c4e-20230704
+      react-dom:
+        specifier: 0.0.0-experimental-035a41c4e-20230704
+        version: 0.0.0-experimental-035a41c4e-20230704(react@0.0.0-experimental-035a41c4e-20230704)
+      tailwindcss:
+        specifier: ^3.3.2
+        version: 3.3.2
+      vinxi:
+        specifier: workspace:^
+        version: link:../../../../packages/vinxi
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.14
+        version: 18.2.14
+      '@types/react-dom':
+        specifier: ^18.2.6
+        version: 18.2.6
 
   examples/react/spa/basic:
     dependencies:
@@ -2061,6 +2098,20 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    dev: false
+
+  /@vinxi/react-server-dom-vite@0.0.2(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)(vite@4.3.9):
+    resolution: {integrity: sha512-WjZLy1DmYnFd5Gb0SwdGCMSlKjZuWr3UuQ0TeutP5tXyuYsgjV4xmvLxY5jJkuW+hwekLlk/98M27E0WkH4+Nw==}
+    engines: {node: '>=0.10.0'}
+    peerDependencies:
+      react: 0.0.0-experimental-035a41c4e-20230704
+      react-dom: 0.0.0-experimental-035a41c4e-20230704
+      vite: ^4.3.9
+    dependencies:
+      acorn-loose: 8.3.0
+      react: 0.0.0-experimental-035a41c4e-20230704
+      react-dom: 0.0.0-experimental-035a41c4e-20230704(react@0.0.0-experimental-035a41c4e-20230704)
+      vite: 4.3.9(patch_hash=vtyqdrd2rn7nzuduoqhhzurwua)(@types/node@18.14.0)
     dev: false
 
   /@vitejs/plugin-react@3.1.0(vite@4.3.9):
