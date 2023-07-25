@@ -38,6 +38,9 @@ importers:
       '@vinxi/react':
         specifier: workspace:^
         version: link:../../../../packages/vinxi-react
+      '@vinxi/react-server-dom-vite':
+        specifier: ^0.0.2
+        version: 0.0.2(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)(vite@4.3.9)
       '@vitejs/plugin-react':
         specifier: ^4.0.1
         version: 4.0.1(vite@4.3.9)

@@ -7,16 +7,12 @@ import "vinxi/runtime/client";
 import { ServerComponent } from "./server-component";
 
 globalThis.__vite__ = createModuleLoader({
-	loadModule: import.meta.env.DEV
-		? async (id) => {
-				return import(
-					/* @vite-ignore */ import.meta.env.MANIFEST["client"].inputs[id]
-						.output.path
-				);
-		  }
-		: async (id) => {
-				return import("/_build/" + id + ".js");
-		  },
+	loadModule: async (id) => {
+		return import(
+			/* @vite-ignore */ import.meta.env.MANIFEST["client"].chunks[id].output
+				.path
+		);
+	},
 });
 
 startTransition(() => {

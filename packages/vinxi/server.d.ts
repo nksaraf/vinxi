@@ -1,12 +1,12 @@
 /// <reference types="vite/client" />
 
 declare interface Window {
-	manifest: any;
+	MANIFEST: any;
 }
 
 interface ImportMetaEnv {
 	// more env variables...
-	readonly manifest: any;
+	readonly MANIFEST: any;
 }
 
 interface ImportMeta {

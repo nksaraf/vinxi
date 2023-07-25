@@ -26,6 +26,32 @@ export function createDevManifest(app) {
 						return {};
 					},
 					handler: router.handler,
+					chunks: new Proxy(
+						{},
+						{
+							get(target, chunk) {
+								invariant(typeof chunk === "string", "Chunk expected");
+								let absolutePath = isAbsolute(chunk)
+									? chunk
+									: join(app.config.root, chunk);
+
+								let relativePath = relative(app.config.root, chunk);
+								if (router.build.target === "browser") {
+									return {
+										output: {
+											path: join(router.base, "@fs", absolutePath),
+										},
+									};
+								} else {
+									return {
+										output: {
+											path: absolutePath,
+										},
+									};
+								}
+							},
+						},
+					),
 					inputs: new Proxy(
 						{},
 						{

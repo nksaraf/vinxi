@@ -16,6 +16,22 @@ const manifest = new Proxy(
 				handler: import.meta.env.DEV
 					? join(import.meta.env.CWD, import.meta.env.ROUTER_HANDLER)
 					: import.meta.env.ROUTER_HANDLER,
+				chunks: new Proxy(
+					{},
+					{
+						get(target, chunk) {
+							invariant(typeof chunk === "string", "Chunk expected");
+							let outputPath = import.meta.env.DEV
+								? join(import.meta.env.BASE_URL, "@fs", chunk)
+								: join(import.meta.env.BASE_URL, chunk + ".js");
+							return {
+								output: {
+									path: outputPath,
+								},
+							};
+						},
+					},
+				),
 				inputs: new Proxy(
 					{},
 					{
