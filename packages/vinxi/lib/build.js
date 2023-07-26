@@ -237,7 +237,7 @@ export async function createBuild(app, buildConfig) {
  */
 async function createViteBuild(config) {
 	const vite = await import("vite");
-	return await vite.build(config);
+	return await vite.build({ ...config, configFile: false });
 }
 
 async function createRouterBuild(app, router) {

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Counter } from "./Counter";
-import { sayHello } from "./actions";
+import { getStore, sayHello } from "./actions";
 import "./style.css";
 
 export default function App({ assets }) {
@@ -15,6 +15,8 @@ export default function App({ assets }) {
 				<section>
 					<h1>Hello AgentConf with ya asdo!!!</h1>
 					<div>Hello World</div>
+
+					{getStore()}
 					<Counter onChange={sayHello} />
 				</section>
 			</body>

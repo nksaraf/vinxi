@@ -131,8 +131,6 @@ function clientComponents() {
 					),
 				};
 
-				console.log(input);
-
 				return {
 					ssr: {
 						external: ["react", "react-dom", "@vinxi/react-server-dom-vite"],
@@ -154,7 +152,6 @@ function clientComponents() {
 					// },
 					build: {
 						rollupOptions: {
-							
 							// preserve the export names of the server actions in chunks
 							treeshake: true,
 							// required otherwise rollup will remove the exports since they are not used

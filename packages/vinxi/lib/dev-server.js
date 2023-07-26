@@ -41,7 +41,7 @@ function devEntries() {
 
 /**
  *
- * @param {import('vite').UserConfig & { router: any; app: any }} config
+ * @param {import('vite').InlineConfig & { router: any; app: any }} config
  * @returns
  */
 async function createViteServer(config) {
@@ -171,11 +171,12 @@ async function createViteHandler(app, router, serveConfig) {
 		return defineEventHandler(async (event) => {
 			promise ??= worker.init(() => {});
 			await promise;
-			return await fromNodeMiddleware(worker.fetchNode.bind(worker))(event);
+			return await worker.handle(event);
 		});
 	}
 
 	const viteDevServer = await createViteServer({
+		configFile: false,
 		base: router.base,
 		plugins: [
 			...(targetDevPlugin[router.build.target]?.() ?? []),
@@ -245,7 +246,7 @@ export async function createDevServer(
 				...(await Promise.all(
 					app.config.routers
 						.filter((router) => router.mode != "static")
-						.map((router) => createDevRouterHandler(app,router, serveConfig)),
+						.map((router) => createDevRouterHandler(app, router, serveConfig)),
 				)),
 			],
 		});

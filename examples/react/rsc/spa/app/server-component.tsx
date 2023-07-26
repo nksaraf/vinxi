@@ -1,4 +1,7 @@
-import { createFromFetch } from "@vinxi/react-server-dom-vite/client";
+import {
+	createFromFetch,
+	encodeReply,
+} from "@vinxi/react-server-dom-vite/client";
 import * as React from "react";
 import { startTransition, use, useState } from "react";
 import ReactDOM from "react-dom/client";
@@ -41,22 +44,22 @@ export const serverElementCache = /*#__PURE__*/ new Map<
 >();
 
 async function callServer(id, args) {
-	const response = fetch("/", {
+	const response = fetch("/_rsc", {
 		method: "POST",
 		headers: {
 			Accept: "text/x-component",
 			"rsc-action": id,
 		},
-		// body: await encodeReply(args),
+		body: await encodeReply(args),
 	});
-	const { returnValue, root } = await createFromFetch(response, {
+	const root = await createFromFetch(response, {
 		callServer,
 	});
 	// Refresh the tree with the new RSC payload.
 	startTransition(() => {
 		updateRoot(root);
 	});
-	return returnValue;
+	// return returnValue;
 }
 
 export function useServerElement(url: string) {

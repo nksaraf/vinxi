@@ -32,7 +32,7 @@ export default eventHandler(async (event) => {
 		objectMode: true,
 	});
 	readable._read = () => {};
-	readable.headers = {};
+	readable.headers = event.node.req.headers;
 
 	const writableStream = new Writable({
 		write(chunk, encoding, callback) {

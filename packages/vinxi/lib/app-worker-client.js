@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { Readable } from "node:stream";
+import { Readable, Writable } from "node:stream";
 import { ReadableStream } from "node:stream/web";
 import { Worker } from "node:worker_threads";
 
@@ -152,6 +152,95 @@ export class AppWorkerClient {
 				id,
 			}),
 		);
+
+		let responses = this.responses;
+		const readable = new Readable({
+			objectMode: true,
+		});
+		readable._read = () => {};
+
+		responses.set(id, ({ chunk, data }) => {
+			if (chunk === "end") {
+				res.end();
+				responses.delete(id);
+			} else if (chunk === "$header") {
+				console.log("header", data);
+				res.setHeader(data.key, data.value);
+			} else if (chunk) {
+				res.write(chunk);
+			}
+		});
+
+		return readable;
+	}
+
+	/**
+	 *
+	 * @param {import('h3').H3Event} event
+	 * @returns
+	 */
+	handle(event) {
+		const { req, res } = event.node;
+		invariant(this.worker, "Worker is not initialize");
+		const id = Math.random() + "";
+		const worker = this.worker;
+		worker.postMessage(
+			JSON.stringify({
+				// component,
+				// props,
+				req: {
+					method: req.method,
+					url: req.url,
+					headers: req.headers,
+				},
+				type: "handle",
+				id,
+			}),
+		);
+
+		const writableStream = new Writable({
+			write(chunk, encoding, callback) {
+				worker.postMessage(
+					JSON.stringify({
+						chunk: new TextDecoder().decode(chunk),
+						type: "body",
+						id: id,
+					}),
+				);
+				callback();
+			},
+		});
+
+		writableStream.on("finish", () => {
+			worker.postMessage(
+				JSON.stringify({
+					chunk: "end",
+					type: "body",
+					id,
+				}),
+			);
+		});
+
+		// req.on("data", (chunk) => {
+		// 	this.worker.postMessage(
+		// 		JSON.stringify({
+		// 			chunk,
+		// 			type: "body",
+		// 			id,
+		// 		}),
+		// 	);
+		// });
+
+		// req.on("end", () => {
+		// 	this.worker.postMessage(
+		// 		JSON.stringify({
+		// 			type: "body-end",
+		// 			id,
+		// 		}),
+		// 	);
+		// });
+
+		req.pipe(writableStream);
 
 		let responses = this.responses;
 		const readable = new Readable({

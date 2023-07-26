@@ -38,7 +38,20 @@ export default eventHandler(async (event) => {
 			//   req.pipe(bb);
 			//   args = await reply;
 			// } else {
-			args = await decodeReply(event.node.req);
+			const text = await new Promise((resolve) => {
+				const requestBody = [];
+				event.node.req.on("data", (chunks) => {
+					console.log(chunks);
+					requestBody.push(chunks);
+				});
+				event.node.req.on("end", () => {
+					resolve(requestBody.join(""));
+				});
+			});
+			console.log(text);
+
+			args = await decodeReply(text);
+			console.log(args, action);
 			// }
 			const result = action.apply(null, args);
 			try {
@@ -48,25 +61,26 @@ export default eventHandler(async (event) => {
 				// We handle the error on the client
 			}
 			// Refresh the client and return the value
-			return {};
+			// return {};
 		} else {
 			throw new Error("Invalid request");
 		}
 	}
+	console.log("rendering");
 	const reactServerManifest = import.meta.env.MANIFEST["rsc"];
-	const serverAssets = await reactServerManifest.inputs[
-		reactServerManifest.handler
-	].assets();
+	// const serverAssets = await reactServerManifest.inputs[
+	// 	reactServerManifest.handler
+	// ].assets();
 	const clientManifest = import.meta.env.MANIFEST["client"];
-	const assets = await clientManifest.inputs[clientManifest.handler].assets();
+	// const assets = await clientManifest.inputs[clientManifest.handler].assets();
 
 	const events = {};
 	const stream = renderToPipeableStream(
 		<App
 			assets={
 				<Suspense>
-					{serverAssets.map((m) => renderAsset(m))}
-					{assets.map((m) => renderAsset(m))}
+					{/* {serverAssets.map((m) => renderAsset(m))} */}
+					{/* {assets.map((m) => renderAsset(m))} */}
 				</Suspense>
 			}
 		/>,

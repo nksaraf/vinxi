@@ -1,4 +1,7 @@
-import { createFromFetch } from "@vinxi/react-server-dom-vite/client";
+import {
+	createFromFetch,
+	encodeReply,
+} from "@vinxi/react-server-dom-vite/client";
 import * as React from "react";
 import { startTransition, use, useState } from "react";
 
@@ -46,7 +49,7 @@ async function callServer(id, args) {
 			Accept: "text/x-component",
 			"rsc-action": id,
 		},
-		// body: await encodeReply(args),
+		body: await encodeReply(args),
 	});
 	const { returnValue, root } = await createFromFetch(response, {
 		callServer,

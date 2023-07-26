@@ -37,7 +37,19 @@ export default eventHandler(async (event) => {
 			//   req.pipe(bb);
 			//   args = await reply;
 			// } else {
-			args = await decodeReply(event.node.req);
+			const text = await new Promise((resolve) => {
+				const requestBody = [];
+				event.node.req.on("data", (chunks) => {
+					requestBody.push(chunks);
+				});
+				event.node.req.on("end", () => {
+					resolve(Buffer.concat(requestBody).toString());
+				});
+			});
+			console.log(text);
+
+			args = await decodeReply(text);
+			console.log(args);
 			// }
 			const result = action.apply(null, args);
 			try {
