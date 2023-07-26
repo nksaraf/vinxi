@@ -104,10 +104,16 @@ export function createApp({ routers, name }) {
 				});
 			}
 		},
+		async build() {
+			const { createBuild } = await import("./build.js");
+			await createBuild(app);
+		},
 	};
 
 	if (process.argv.includes("--dev")) {
 		app.serve();
+	} else if (process.argv.includes("--build")) {
+		app.build();
 	}
 
 	return app;

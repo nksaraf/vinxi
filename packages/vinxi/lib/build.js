@@ -36,10 +36,10 @@ export async function createBuild(app, buildConfig) {
 		dev: false,
 		preset: process.env.TARGET ?? process.env.NITRO_PRESET,
 		plugins: [
-			"#app-manifest",
-			"#app-handle",
-			fileURLToPath(new URL("./prod-manifest.js", import.meta.url)),
-			"#extra-chunks",
+			"#prod-app",
+			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
+			fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
+			// "#extra-chunks",
 		],
 		handlers: [
 			...app.config.routers
@@ -120,62 +120,47 @@ export async function createBuild(app, buildConfig) {
 		appConfigFiles: [],
 		imports: false,
 		virtual: {
-			"#app-handle": `
-			import { defineEventHandler, fromNodeMiddleware, toNodeListener } from "h3";
-			import {
-				createCall,
-				createFetch,
-				createFetch as createLocalFetch,
-			} from "unenv/runtime/fetch/index";
+			// "#extra-chunks": () => {
+			// 	const chunks = app.config.routers
+			// 		.filter(
+			// 			(router) => router.mode !== "static" && router.mode !== "build",
+			// 		)
+			// 		.map((router) => {
+			// 			const bundlerManifest = JSON.parse(
+			// 				readFileSync(
+			// 					join(router.build.outDir, router.base, "manifest.json"),
+			// 					"utf-8",
+			// 				),
+			// 			);
 
-			export default function plugin(app) {
-				globalThis.$fetch = createFetch({
-					fetch: app.localFetch,
-				});
-				globalThis.$handle = (event) => app.h3App.handler(event);
-			}
-			`,
-			"#extra-chunks": () => {
-				const chunks = app.config.routers
-					.filter(
-						(router) => router.mode !== "static" && router.mode !== "build",
-					)
-					.map((router) => {
-						const bundlerManifest = JSON.parse(
-							readFileSync(
-								join(router.build.outDir, router.base, "manifest.json"),
-								"utf-8",
-							),
-						);
+			// 			const chunks = Object.entries(bundlerManifest)
+			// 				.filter(
+			// 					([name, chunk]) => chunk.isEntry && name !== router.handler,
+			// 				)
+			// 				.map(([name, chunk]) => {
+			// 					return `import * as mod from '${join(
+			// 						router.build.outDir,
+			// 						router.base,
+			// 						chunk.file,
+			// 					)}';
+			// 			chunks['${chunk.file}'] = mod
+			// 			`;
+			// 				})
+			// 				.join("\n");
 
-						const chunks = Object.entries(bundlerManifest)
-							.filter(
-								([name, chunk]) => chunk.isEntry && name !== router.handler,
-							)
-							.map(([name, chunk]) => {
-								return `import * as mod from '${join(
-									router.build.outDir,
-									router.base,
-									chunk.file,
-								)}';
-						chunks['${chunk.file}'] = mod
-						`;
-							})
-							.join("\n");
+			// 			return chunks;
 
-						return chunks;
-
-						// return [router.name, bundlerManifest];
-					});
-				return `
-				const chunks = {};
-				${chunks.join("\n")}
-				export default function app() {
-					globalThis.$$chunks = chunks
-				}
-			`;
-			},
-			"#app-manifest": `
+			// 			// return [router.name, bundlerManifest];
+			// 		});
+			// 	return `
+			// 	const chunks = {};
+			// 	${chunks.join("\n")}
+			// 	export default function app() {
+			// 		globalThis.$$chunks = chunks
+			// 	}
+			// `;
+			// },
+			"#prod-app": `
         const appConfig = ${JSON.stringify(app.config)}
 				const buildManifest = ${JSON.stringify(
 					Object.fromEntries(
@@ -192,6 +177,7 @@ export async function createBuild(app, buildConfig) {
 							}),
 					),
 				)}
+
         function createProdApp(appConfig) {
           return {
             config: { ...appConfig, buildManifest },
@@ -200,6 +186,7 @@ export async function createBuild(app, buildConfig) {
             }
           }
         }
+
         export default function plugin(app) {
           const prodApp = createProdApp(appConfig)
           globalThis.app = prodApp

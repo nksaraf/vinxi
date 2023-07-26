@@ -229,8 +229,6 @@ export async function createDevServer(
 	};
 
 	if (dev) {
-		const manifest = createDevManifest(app);
-		globalThis.MANIFEST = manifest;
 		const nitro = await createNitro({
 			rootDir: "",
 			dev: true,
@@ -253,8 +251,8 @@ export async function createDevServer(
 
 		nitro.logger = consola.withTag(app.config.name);
 
-		const devServer = createDevNitroServer(nitro);
-		await devServer.listen(port);
+		const devApp = createDevNitroServer(nitro);
+		await devApp.listen(port);
 
 		for (const router of app.config.routers) {
 			if (router.fileRouter) {
@@ -265,17 +263,18 @@ export async function createDevServer(
 			}
 		}
 
-		// Create local fetch callers
-		const localCall = createCall(toNodeListener(devServer.app));
-		const localFetch = createLocalFetch(localCall, globalThis.fetch);
-		const $fetch = createFetch({
-			fetch: localFetch,
-			// Headers,
-		});
-		// @ts-ignore
-		globalThis.$fetch = $fetch;
-		globalThis.$handle = (event) => devServer.app.handler(event);
+		globalThis.app = app;
 
-		return devServer;
+		const plugins = [
+			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
+			fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
+		];
+
+		for (const plugin of plugins) {
+			const { default: pluginFn } = await import(plugin);
+			await pluginFn(devApp);
+		}
+
+		return devApp;
 	}
 }

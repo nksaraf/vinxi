@@ -225,10 +225,8 @@ class AppWorker {
 						);
 					});
 
-					console.log(this.server.app);
-
 					const event = new H3Event(readable, writableStream);
-					await this.server.app.handler(event);
+					await this.server.h3App.handler(event);
 					// tranformStream.on("end", () => {
 					//   console.log("ending");
 					//   parentPort?.postMessage(

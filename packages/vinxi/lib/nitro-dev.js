@@ -11,6 +11,11 @@ import { resolve } from "pathe";
 import { servePlaceholder } from "serve-placeholder";
 import serveStatic from "serve-static";
 import { joinURL } from "ufo";
+import {
+	createCall,
+	createFetch,
+	createFetch as createLocalFetch,
+} from "unenv/runtime/fetch/index";
 
 import { accessSync } from "node:fs";
 
@@ -225,10 +230,16 @@ export function createDevServer(nitro) {
 	}
 	nitro.hooks.hook("close", close);
 
+	// Create local fetch callers
+	const localCall = createCall(toNodeListener(app));
+	const localFetch = createLocalFetch(localCall, globalThis.fetch);
+
 	return {
 		// reload,
 		listen: _listen,
-		app,
+		h3App: app,
+		localCall,
+		localFetch,
 		close,
 		// watcher,
 	};
