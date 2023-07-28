@@ -8,3 +8,4 @@ node_modules
 playwright-report
 stats.html
 .fixtures
+*.code-workspace
