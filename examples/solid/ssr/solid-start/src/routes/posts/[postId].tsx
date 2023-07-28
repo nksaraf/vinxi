@@ -1,7 +1,7 @@
 import { useParams } from "@solidjs/router";
 import { Suspense, createResource } from "solid-js";
 
-import { fetchPost } from "../../db";
+import { fetchPost } from "../../lib/db";
 
 export default function Page() {
 	const params = useParams();

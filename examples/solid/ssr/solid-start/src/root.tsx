@@ -2,7 +2,7 @@
 import { A } from "@solidjs/router";
 
 import { Counter } from "./Counter";
-import "./style.css";
+import "./root.css";
 
 export default function App(props) {
 	return (

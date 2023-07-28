@@ -1,26 +1,7 @@
 import { A, Outlet } from "@solidjs/router";
 import { For, Suspense, createResource } from "solid-js";
 
-import { fetchPosts } from "../db";
-
-// export const loader = async ({ context }) => {
-// 	const postsLoader = context.loaderClient.loaders.posts;
-
-// 	await postsLoader.load();
-
-// 	return () =>
-// 		useLoader({
-// 			loader: postsLoader,
-// 		});
-// };
-
-// export function ErrorBoundary({ error }) {
-// 	return <ErrorComponent error={error} />;
-// }
-
-// export function Loading() {
-// 	return <div>Loading</div>;
-// }
+import { fetchPosts } from "../lib/db";
 
 export default function Page({ useLoader }) {
 	const [postsLoader] = createResource(() => fetchPosts());

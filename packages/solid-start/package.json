@@ -1,0 +1,49 @@
+{
+  "name": "solid-start",
+  "version": "0.0.2",
+  "type": "module",
+  "author": "Nikhil Saraf <nsaraf98@gmail.com>",
+  "files": [
+    "src",
+    "*.d.ts"
+  ],
+  "types": "./index.d.ts",
+  "exports": {
+    ".": "./index.js",
+    "./entry-server": "./entry-server/index.tsx",
+    "./entry-client": "./entry-client/index.tsx",
+    "./root": "./root/index.tsx",
+    "./client": "./lib/app-client-plugin.js",
+    "./lib/*": "./lib/*.js",
+    "./runtime/*": "./runtime/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./index.d.ts"
+      ],
+      "./root": [
+        "./root/index.tsx"
+      ],
+      "./entry-server": [
+        "./entry-server/index.tsx"
+      ],
+      "./entry-client": [
+        "./entry-client/index.tsx"
+      ],
+      "./routes": [
+        "./routes.d.ts"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@solidjs/meta": "^0.28.5",
+    "@solidjs/router": "^0.8.2",
+    "@vinxi/solid": "workspace:^",
+    "solid-js": "^1.7.8",
+    "vinxi": "workspace:^"
+  },
+  "dependencies": {
+    "vite-plugin-solid": "^2.7.0"
+  }
+}

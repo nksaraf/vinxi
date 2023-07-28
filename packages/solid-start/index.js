@@ -1,10 +1,11 @@
-import fs from "fs";
+import { join } from "path";
 import { createApp } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
 	cleanPath,
 } from "vinxi/file-system-router";
+import { config } from "vinxi/lib/plugins/config";
 import solid from "vite-plugin-solid";
 
 class SolidStartFileSystemRouter extends BaseFileSystemRouter {
@@ -47,8 +48,7 @@ class SolidStartFileSystemRouter extends BaseFileSystemRouter {
 		};
 	}
 }
-
-function createSolidStartApp({ client = {}, server = {} } = {}) {
+export function defineConfig({} = {}) {
 	return createApp({
 		routers: [
 			{
@@ -69,6 +69,13 @@ function createSolidStartApp({ client = {}, server = {} } = {}) {
 						solid({
 							ssr: true,
 						}),
+						config("root", {
+							resolve: {
+								alias: {
+									"#start/root": join(process.cwd(), "src", "root.tsx"),
+								},
+							},
+						}),
 					],
 				},
 				base: "/_build",
@@ -81,11 +88,18 @@ function createSolidStartApp({ client = {}, server = {} } = {}) {
 				style: SolidStartFileSystemRouter,
 				build: {
 					target: "node",
-					plugins: () => [solid({ ssr: true })],
+					plugins: () => [
+						solid({ ssr: true }),
+						config("root", {
+							resolve: {
+								alias: {
+									"#start/root": join(process.cwd(), "src", "root.tsx"),
+								},
+							},
+						}),
+					],
 				},
 			},
 		],
 	});
 }
-
-export default createSolidStartApp();

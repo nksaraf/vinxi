@@ -30,7 +30,7 @@ importers:
         specifier: 5.1.6
         version: 5.1.6
 
-  examples/react/rsc/client:
+  examples/react/rsc/spa:
     dependencies:
       '@picocss/pico':
         specifier: ^1.5.7
@@ -67,24 +67,7 @@ importers:
         specifier: ^18.2.6
         version: 18.2.6
 
-  examples/react/rsc/client/react-server-dom-vite:
-    dependencies:
-      acorn-loose:
-        specifier: ^8.3.0
-        version: 8.3.0
-      react:
-        specifier: 0.0.0-experimental-035a41c4e-20230704
-        version: 0.0.0-experimental-035a41c4e-20230704
-      react-dom:
-        specifier: 0.0.0-experimental-035a41c4e-20230704
-        version: 0.0.0-experimental-035a41c4e-20230704(react@0.0.0-experimental-035a41c4e-20230704)
-      vite:
-        specifier: ^4.3.9
-        version: 4.3.9(patch_hash=vtyqdrd2rn7nzuduoqhhzurwua)(@types/node@18.14.0)
-
-  examples/react/rsc/client/react-server-dom-vite/esm: {}
-
-  examples/react/rsc/react-rsc:
+  examples/react/rsc/ssr:
     dependencies:
       '@picocss/pico':
         specifier: ^1.5.7
@@ -501,6 +484,37 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
 
+  examples/solid/ssr/solid-start:
+    dependencies:
+      '@picocss/pico':
+        specifier: ^1.5.7
+        version: 1.5.7
+      '@solidjs/meta':
+        specifier: ^0.28.5
+        version: 0.28.5(solid-js@1.7.8)
+      '@solidjs/router':
+        specifier: ^0.8.2
+        version: 0.8.2(solid-js@1.7.8)
+      autoprefixer:
+        specifier: ^10.4.14
+        version: 10.4.14(postcss@8.4.27)
+      solid-js:
+        specifier: ^1.7.8
+        version: 1.7.8
+      solid-start:
+        specifier: workspace:^
+        version: link:../../../../packages/solid-start
+      tailwindcss:
+        specifier: ^3.3.2
+        version: 3.3.2
+      vinxi:
+        specifier: workspace:^
+        version: link:../../../../packages/vinxi
+    devDependencies:
+      axios:
+        specifier: ^1.4.0
+        version: 1.4.0
+
   examples/vanilla/spa:
     dependencies:
       '@picocss/pico':
@@ -515,6 +529,28 @@ importers:
       vinxi:
         specifier: workspace:^
         version: link:../../../packages/vinxi
+
+  packages/solid-start:
+    dependencies:
+      vite-plugin-solid:
+        specifier: ^2.7.0
+        version: 2.7.0(solid-js@1.7.8)(vite@4.3.9)
+    devDependencies:
+      '@solidjs/meta':
+        specifier: ^0.28.5
+        version: 0.28.5(solid-js@1.7.8)
+      '@solidjs/router':
+        specifier: ^0.8.2
+        version: 0.8.2(solid-js@1.7.8)
+      '@vinxi/solid':
+        specifier: workspace:^
+        version: link:../vinxi-solid
+      solid-js:
+        specifier: ^1.7.8
+        version: 1.7.8
+      vinxi:
+        specifier: workspace:^
+        version: link:../vinxi
 
   packages/vinxi:
     dependencies:
@@ -1801,7 +1837,6 @@ packages:
       solid-js: ^1.5.3
     dependencies:
       solid-js: 1.7.8
-    dev: false
 
   /@tanstack/bling@0.0.3(vite@4.3.9):
     resolution: {integrity: sha512-6cmmp3cX9e9DZEkJ7F9vwEaU5RmjNYWcY69A1cx4FyGsuNryqumXCWuVItBsrIM0npqqCRa09BQ+y45LxiL6ng==}
