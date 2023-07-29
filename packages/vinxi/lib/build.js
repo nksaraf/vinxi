@@ -10,13 +10,20 @@ import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
 
+/**
+ *
+ * @param {import('./app.js').App} app
+ * @param {*} buildConfig
+ */
 export async function createBuild(app, buildConfig) {
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
 	const { join } = await import("path");
 	const { fileURLToPath } = await import("url");
 	for (const router of app.config.routers) {
-		if (existsSync(router.build.outDir)) {
-			await fsPromises.rm(router.build.outDir, { recursive: true });
+		if ("build" in router) {
+			if (existsSync(router.build.outDir)) {
+				await fsPromises.rm(router.build.outDir, { recursive: true });
+			}
 		}
 	}
 
@@ -33,12 +40,24 @@ export async function createBuild(app, buildConfig) {
 	}
 
 	const nitro = await createNitro({
+		...app.config.server,
 		dev: false,
-		preset: process.env.TARGET ?? process.env.NITRO_PRESET,
+		preset:
+			process.env.TARGET ??
+			process.env.NITRO_PRESET ??
+			app.config.server.preset,
 		plugins: [
 			"#prod-app",
 			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
 			fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
+			...app.config.routers
+				.map((router) =>
+					router.mode === "handler"
+						? router.build.server?.middleware ?? []
+						: [],
+				)
+				.flat(),
+			...(app.config.server.plugins ?? []),
 			// "#extra-chunks",
 		],
 		handlers: [
@@ -82,10 +101,8 @@ export async function createBuild(app, buildConfig) {
 					}
 				})
 				.flat(),
+			...(app.config.server.handlers ?? []),
 		].filter(Boolean),
-		rollupConfig: {
-			plugins: [visualizer()],
-		},
 		publicAssets: [
 			...app.config.routers
 				.filter((router) => router.mode === "static")
@@ -96,85 +113,52 @@ export async function createBuild(app, buildConfig) {
 				})),
 			...app.config.routers
 				.filter((router) => router.mode === "build")
-				.map((router) => ({
+				.map((/** @type {import("./app.js").BuildRouterSchema} */ router) => ({
 					dir: join(router.build.outDir, router.base),
 					baseURL: router.base,
 					passthrough: true,
 				})),
 			...app.config.routers
 				.filter((router) => router.mode === "spa")
-				.map((router) => ({
+				.map((/** @type {import("./app.js").SPARouterSchema} */ router) => ({
 					dir: join(router.build.outDir, router.base),
 					baseURL: router.base,
 					passthrough: true,
 				})),
 			...app.config.routers
 				.filter((router) => router.mode === "handler")
-				.map((router) => ({
-					dir: join(router.build.outDir, router.base, "assets"),
-					baseURL: join(router.base, "assets"),
-					passthrough: true,
-				})),
+				.map(
+					(/** @type {import("./app.js").HandlerRouterSchema} */ router) => ({
+						dir: join(router.build.outDir, router.base, "assets"),
+						baseURL: join(router.base, "assets"),
+						passthrough: true,
+					}),
+				),
+			...(app.config.server.publicAssets ?? []),
 		],
 		scanDirs: [],
 		appConfigFiles: [],
 		imports: false,
 		virtual: {
-			// "#extra-chunks": () => {
-			// 	const chunks = app.config.routers
-			// 		.filter(
-			// 			(router) => router.mode !== "static" && router.mode !== "build",
-			// 		)
-			// 		.map((router) => {
-			// 			const bundlerManifest = JSON.parse(
-			// 				readFileSync(
-			// 					join(router.build.outDir, router.base, "manifest.json"),
-			// 					"utf-8",
-			// 				),
-			// 			);
-
-			// 			const chunks = Object.entries(bundlerManifest)
-			// 				.filter(
-			// 					([name, chunk]) => chunk.isEntry && name !== router.handler,
-			// 				)
-			// 				.map(([name, chunk]) => {
-			// 					return `import * as mod from '${join(
-			// 						router.build.outDir,
-			// 						router.base,
-			// 						chunk.file,
-			// 					)}';
-			// 			chunks['${chunk.file}'] = mod
-			// 			`;
-			// 				})
-			// 				.join("\n");
-
-			// 			return chunks;
-
-			// 			// return [router.name, bundlerManifest];
-			// 		});
-			// 	return `
-			// 	const chunks = {};
-			// 	${chunks.join("\n")}
-			// 	export default function app() {
-			// 		globalThis.$$chunks = chunks
-			// 	}
-			// `;
-			// },
 			"#prod-app": `
         const appConfig = ${JSON.stringify(app.config)}
 				const buildManifest = ${JSON.stringify(
 					Object.fromEntries(
 						app.config.routers
 							.filter((router) => router.mode !== "static")
-							.map((router) => {
-								const bundlerManifest = JSON.parse(
-									readFileSync(
-										join(router.build.outDir, router.base, "manifest.json"),
-										"utf-8",
-									),
-								);
-								return [router.name, bundlerManifest];
-							}),
+							.map(
+								(
+									/** @type {Exclude<import("./app.js").RouterSchema, import("./app.js").StaticRouterSchema>} */ router,
+								) => {
+									const bundlerManifest = JSON.parse(
+										readFileSync(
+											join(router.build.outDir, router.base, "manifest.json"),
+											"utf-8",
+										),
+									);
+									return [router.name, bundlerManifest];
+								},
+							),
 					),
 				)}
 
@@ -193,6 +177,7 @@ export async function createBuild(app, buildConfig) {
         }
       `,
 			"#vinxi/spa": () => {
+				/** @type {import('./app.js').SPARouterSchema} */
 				const router = app.config.routers.find(
 					(router) => router.mode === "spa",
 				);
@@ -201,16 +186,34 @@ export async function createBuild(app, buildConfig) {
 					"utf-8",
 				);
 				return `
-				import { eventHandler } from 'h3'
+				import { eventHandler } from 'vinxi/runtime/server'
 				const html = ${JSON.stringify(indexHtml)}
 				export default eventHandler(event => { 
 					return html
 				})
 				`;
 			},
+			...Object.fromEntries(
+				app.config.routers
+					.map((router) =>
+						router.mode === "handler"
+							? Object.entries(router.build.server?.virtual ?? {}).map(
+									([k, v]) => [k, typeof v === "function" ? () => v(app) : v],
+							  )
+							: [],
+					)
+					.flat(),
+			),
+			...(Object.fromEntries(
+				Object.entries(app.config.server?.virtual ?? {}).map(([k, v]) => [
+					k,
+					typeof v === "function" ? () => v(app) : v,
+				]),
+			) ?? {}),
 		},
 	});
 
+	console.log(nitro.options.virtual);
 	nitro.logger = consola.withTag(app.config.name);
 	await copyPublicAssets(nitro);
 	await build(nitro);
@@ -285,6 +288,21 @@ const spaManifest = () => {
 
 const routerModePlugin = {
 	static: () => [],
+	build: () => [
+		config("appType", {
+			appType: "custom",
+			ssr: {
+				noExternal: ["vinxi"],
+			},
+			optimizeDeps: {
+				force: true,
+				exclude: ["vinxi"],
+			},
+			define: {
+				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
+			},
+		}),
+	],
 	handler: () => [
 		config("appType", {
 			appType: "custom",
@@ -293,6 +311,9 @@ const routerModePlugin = {
 			},
 			optimizeDeps: {
 				disabled: true,
+			},
+			define: {
+				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},
 		}),
 	],
@@ -306,6 +327,9 @@ const routerModePlugin = {
 			optimizeDeps: {
 				force: true,
 				exclude: ["vinxi"],
+			},
+			define: {
+				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},
 		}),
 	],

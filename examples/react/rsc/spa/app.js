@@ -5,6 +5,8 @@ import { join } from "path";
 import { createApp } from "vinxi";
 import { virtual } from "vinxi/lib/plugins/virtual";
 
+import { builtinModules } from "node:module";
+
 function hash(str) {
 	let hash = 0;
 
@@ -20,7 +22,7 @@ function serverComponents() {
 	const clientModules = new Set();
 	return [
 		serverComponent({
-			hash,
+			hash: (e) => `c_${hash(e)}`,
 			onServerReference(reference) {
 				serverModules.add(reference);
 			},
@@ -44,6 +46,36 @@ function serverComponents() {
 			config(inlineConfig, env) {
 				if (env.command === "build") {
 					return {
+						build: {
+							rollupOptions: {
+								onwarn: (warning, warn) => {
+									// suppress warnings about source map issues for now
+									// these are caused originally by rollup trying to complain about directives
+									// in the middle of the files
+									// TODO: fix source map issues
+									if (warning.code === "SOURCEMAP_ERROR") {
+										return;
+									}
+								},
+								output: {
+									// preserve the export names of the server actions in chunks
+									minifyInternalExports: false,
+									manualChunks: (chunk) => {
+										console.log("manula chunks", chunk);
+										// server references should be emitted as separate chunks
+										// so that we can load them individually when server actions
+										// are called. we need to do this in manualChunks because we don't
+										// want to run a preanalysis pass just to identify these
+										if (serverModules.has(chunk)) {
+											return `c_${hash(chunk)}`;
+										}
+									},
+									// we want to control the chunk names so that we can load them
+									// individually when server actions are called
+									chunkFileNames: "[name].js",
+								},
+							},
+						},
 						resolve: {
 							conditions: [
 								"node",
@@ -126,7 +158,7 @@ function clientComponents() {
 					entry: router.handler,
 					...Object.fromEntries(
 						reactServerManifest.client.map((key) => {
-							return [hash(key), key];
+							return [`c_${hash(key)}`, key];
 						}),
 					),
 				};
@@ -236,12 +268,33 @@ function viteServer() {
 }
 
 export default createApp({
+	server: {
+		externals: {
+			// traceOptions: {
+			// 	conditions: ["import", "default"],
+			// },
+			inline: ["h3", "h3-nightly"],
+		},
+		plugins: ["#extra-chunks"],
+		virtual: {
+			"#extra-chunks": (app) => {
+				const rscChunks = getChunks(app, "rsc");
+
+				return `
+						 const chunks = {};
+						 ${rscChunks}
+						 export default function app() {
+							 globalThis.$$chunks = chunks
+						 }
+					`;
+			},
+		},
+	},
 	routers: [
 		{
 			name: "public",
 			mode: "static",
 			dir: "./public",
-			base: "/",
 		},
 		{
 			name: "rsc",
@@ -264,14 +317,30 @@ export default createApp({
 			},
 			base: "/",
 		},
-		// {
-		// 	name: "ssr",
-		// 	mode: "handler",
-		// 	handler: "./app/server.tsx",
-		// 	build: {
-		// 		target: "node",
-		// 		plugins: () => [reactRefresh(), viteServer(), clientComponents()],
-		// 	},
-		// },
 	],
 });
+function getChunks(app, routerName) {
+	const router = app.getRouter(routerName);
+	const bundlerManifest = JSON.parse(
+		readFileSync(
+			join(router.build.outDir, router.base, "manifest.json"),
+			"utf-8",
+		),
+	);
+
+	const chunks = Object.entries(bundlerManifest)
+		.filter(
+			([name, chunk]) => chunk.file.startsWith("c_") && name !== router.handler,
+		)
+		.map(([name, chunk]) => {
+			return `import * as mod from '${join(
+				router.build.outDir,
+				router.base,
+				chunk.file,
+			)}';
+								 chunks['${chunk.file}'] = mod
+								 `;
+		})
+		.join("\n");
+	return chunks;
+}

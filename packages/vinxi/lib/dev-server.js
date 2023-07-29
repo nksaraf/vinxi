@@ -124,6 +124,9 @@ const routerModeDevPlugin = {
 			optimizeDeps: {
 				exclude: ["vinxi"],
 			},
+			define: {
+				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
+			},
 		}),
 		treeShake(),
 		// fileSystemWatcher(),
@@ -141,6 +144,9 @@ const routerModeDevPlugin = {
 			optimizeDeps: {
 				disabled: true,
 			},
+			define: {
+				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
+			},
 		}),
 		treeShake(),
 	],
@@ -156,6 +162,9 @@ const routerModeDevPlugin = {
 			optimizeDeps: {
 				force: true,
 				exclude: ["vinxi"],
+			},
+			define: {
+				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},
 		}),
 		treeShake(),
@@ -216,6 +225,12 @@ async function createDevRouterHandler(app, router, serveConfig) {
 	};
 }
 
+/**
+ *
+ * @param {import('./app.js').App} app
+ * @param {{ port?: number; dev?: boolean; ws?: { port?: number } }} param1
+ * @returns
+ */
 export async function createDevServer(
 	app,
 	{ port = 3000, dev = false, ws: { port: wsPort = 16000 } = {} },
@@ -230,16 +245,20 @@ export async function createDevServer(
 
 	if (dev) {
 		const nitro = await createNitro({
+			...app.config.server,
 			rootDir: "",
 			dev: true,
 			preset: "nitro-dev",
-			publicAssets: app.config.routers
-				.filter((router) => router.mode === "static")
-				.map((router) => ({
-					dir: router.dir,
-					baseURL: router.base,
-					passthrough: true,
-				})),
+			publicAssets: [
+				...app.config.routers
+					.filter((router) => router.mode === "static")
+					.map((router) => ({
+						dir: router.dir,
+						baseURL: router.base,
+						passthrough: true,
+					})),
+				...(app.config.server.publicAssets ?? []),
+			],
 			devHandlers: [
 				...(await Promise.all(
 					app.config.routers
@@ -247,6 +266,7 @@ export async function createDevServer(
 						.map((router) => createDevRouterHandler(app, router, serveConfig)),
 				)),
 			],
+			handlers: [...(app.config.server.handlers ?? [])],
 		});
 
 		nitro.logger = consola.withTag(app.config.name);
@@ -255,7 +275,7 @@ export async function createDevServer(
 		await devApp.listen(port);
 
 		for (const router of app.config.routers) {
-			if (router.fileRouter) {
+			if ("fileRouter" in router && router.fileRouter) {
 				const routes = await router.fileRouter.getRoutes();
 				for (const route of routes) {
 					console.log(route.path);

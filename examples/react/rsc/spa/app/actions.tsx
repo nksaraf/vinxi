@@ -8,6 +8,5 @@ export function sayHello() {
 }
 
 export function getStore() {
-	console.log("getStore", store);
 	return store.count;
 }

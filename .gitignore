@@ -9,3 +9,7 @@ playwright-report
 stats.html
 .fixtures
 *.code-workspace
+
+# Local Netlify folder
+.netlify
+dist

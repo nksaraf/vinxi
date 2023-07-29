@@ -1,20 +1,86 @@
-import {
-	StartServer,
-	transformStreamWithRouter,
-} from "@tanstack/react-start/server";
+import { StartServer } from "@tanstack/react-start/server";
 import { createMemoryHistory } from "@tanstack/router";
 import { renderAsset } from "@vinxi/react";
 import isbot from "isbot";
-import ReactDOMServer, { PipeableStream } from "react-dom/server";
-import { eventHandler } from "vinxi/runtime/server";
+import ReactDOMServer, { PipeableStream } from "react-dom/server.edge";
+import { eventHandler, sendStream } from "vinxi/runtime/server";
 
-// index.js
-// import "./fetch-polyfill";
+import { Readable, Transform } from "node:stream";
+
 import { createRouter } from "./router";
 
-type ReactReadableStream = ReadableStream<Uint8Array> & {
-	allReady?: Promise<void> | undefined;
-};
+function encodeText(input: string) {
+	return new TextEncoder().encode(input);
+}
+
+function decodeText(input: Uint8Array | undefined, textDecoder: TextDecoder) {
+	return textDecoder.decode(input, { stream: true });
+}
+
+export function transformReadableStreamWithRouter(router) {
+	return createHeadInsertionTransformStream(async () => {
+		const injectorPromises = router.injectedHtml.map((d) =>
+			typeof d === "function" ? d() : d,
+		);
+		const injectors = await Promise.all(injectorPromises);
+		router.injectedHtml = [];
+		return injectors.join("");
+	});
+}
+
+const queueTask =
+	process.env.TARGET === "vercel-edge" ? globalThis.setTimeout : setImmediate;
+console.log(process.env.TARGET);
+
+function createHeadInsertionTransformStream(
+	insert: () => Promise<string>,
+): TransformStream<Uint8Array, Uint8Array> {
+	let inserted = false;
+	let freezing = false;
+	const textDecoder = new TextDecoder();
+
+	return new TransformStream({
+		async transform(chunk, controller) {
+			// While react is flushing chunks, we don't apply insertions
+			if (freezing) {
+				controller.enqueue(chunk);
+				return;
+			}
+
+			const insertion = await insert();
+			if (inserted) {
+				controller.enqueue(encodeText(insertion));
+				controller.enqueue(chunk);
+				freezing = true;
+			} else {
+				const content = decodeText(chunk, textDecoder);
+				const index = content.indexOf("</head>");
+				if (index !== -1) {
+					const insertedHeadContent =
+						content.slice(0, index) + insertion + content.slice(index);
+					controller.enqueue(encodeText(insertedHeadContent));
+					freezing = true;
+					inserted = true;
+				}
+			}
+
+			if (!inserted) {
+				controller.enqueue(chunk);
+			} else {
+				queueTask(() => {
+					freezing = false;
+				});
+			}
+		},
+		async flush(controller) {
+			// Check before closing if there's anything remaining to insert.
+			const insertion = await insert();
+			if (insertion) {
+				controller.enqueue(encodeText(insertion));
+			}
+		},
+	});
+}
 
 export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];
@@ -32,7 +98,17 @@ export default eventHandler(async (event) => {
 		history: memoryHistory,
 		context: {
 			...router.context,
-			assets: <>{assets.map((asset) => renderAsset(asset))}</>,
+			assets: (
+				<>
+					{assets.map((asset) => renderAsset(asset))}
+					{import.meta.env.DEV ? (
+						<script
+							type="module"
+							src={clientManifest.inputs[clientManifest.handler].output.path}
+						/>
+					) : null}
+				</>
+			),
 			// head: opts.head,
 		},
 	});
@@ -44,44 +120,48 @@ export default eventHandler(async (event) => {
 	// Track errors
 	let didError = false;
 
-	// Clever way to get the right callback. Thanks Remix!
-	const callbackName = isbot(event.node.req.headers["user-agent"])
-		? "onAllReady"
-		: "onShellReady";
-
 	// Render the app to a readable stream
-	let stream!: PipeableStream;
+	let stream!: ReadableStream;
 
-	await new Promise<void>(async (resolve) => {
-		stream = ReactDOMServer.renderToPipeableStream(
-			<StartServer router={router} />,
-			{
-				bootstrapModules: [
-					clientManifest.inputs[clientManifest.handler].output.path,
-				],
-				bootstrapScriptContent: `window.manifest = ${JSON.stringify(
-					await clientManifest.json(),
-				)}; window.base = ${JSON.stringify("/")};`,
-				[callbackName]: () => {
-					event.node.res.statusCode = didError ? 500 : 200;
-					event.node.res.setHeader("Content-Type", "text/html");
-					resolve();
-				},
-				onError: (err) => {
-					didError = true;
-					console.log(err);
-				},
+	// await new Promise<void>(async (resolve) => {
+	// 	console.log("rendering");
+	stream = await ReactDOMServer.renderToReadableStream(
+		<StartServer router={router} />,
+		{
+			bootstrapModules: import.meta.env.PROD
+				? [clientManifest.inputs[clientManifest.handler].output.path]
+				: undefined,
+			bootstrapScriptContent: `window.manifest = ${JSON.stringify(
+				await clientManifest.json(),
+			)}; window.base = ${JSON.stringify("/")};`,
+			// [callbackName]: () => {
+			// 	console.log("doneeee");
+			// 	resolve();
+			// 	event.node.res.statusCode = didError ? 500 : 200;
+			// 	event.node.res.setHeader("Content-Type", "text/html");
+			// },
+			onError: (err) => {
+				didError = true;
+				console.log(err);
 			},
-		);
-	});
-
-	// Add our Router transform to the stream
-	const transforms = [transformStreamWithRouter(router)];
-
-	const transformedStream = transforms.reduce(
-		(stream, transform) => stream.pipe(transform as any),
-		stream,
+		},
 	);
+	// });
 
-	return transformedStream;
+	if (isbot(event.node.req.headers["user-agent"])) {
+		// @ts-ignore
+		await stream.allReady;
+	}
+
+	// // Add our Router transform to the stream
+	const transforms = [transformReadableStreamWithRouter(router)];
+
+	for (const transform of transforms) {
+		stream = stream.pipeThrough(transform);
+	}
+
+	event.node.res.statusCode = didError ? 500 : 200;
+	event.node.res.setHeader("Content-Type", "text/html");
+
+	return stream;
 });

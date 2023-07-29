@@ -1,6 +1,6 @@
 import { InlineConfig, ViteDevServer } from "vite";
 
-export type { PluginOption } from 'vite'
+export type { PluginOption } from "vite";
 export type HandlerContext = {
 	manifest: {
 		[key: string]: {
@@ -83,7 +83,7 @@ export type BundlerConfig = {
 
 type UserRouterConfig = {
 	name: string;
-	build?:Omit<BundlerConfig, 'name'>;
+	build?: Omit<BundlerConfig, "name">;
 	base?: string;
 	index?: number;
 	devServer?: ViteDevServer;
@@ -104,7 +104,7 @@ export type RouterConfig<T extends BundlerConfig = BundlerConfig> =
 					/** The directory containing the static files to serve */
 					dir?: string;
 					/** File routing style to use for the files in `dir` */
-					style?: new() => FileSystemRouter;
+					style?: new () => FileSystemRouter;
 
 					/** Limit the file routing to the given extensions */
 					extensions?: string[];
@@ -117,7 +117,6 @@ export type RouterConfig<T extends BundlerConfig = BundlerConfig> =
 					/** File routing style to use for the files in `dir` */
 					style?: new () => FileSystemRouter;
 
-
 					/** Limit the file routing to the given extensions */
 					extensions?: string[];
 					public?: string;
@@ -129,7 +128,6 @@ export type RouterConfig<T extends BundlerConfig = BundlerConfig> =
 					dir?: string;
 					/** File routing style to use for the files in `dir` */
 					style?: new () => FileSystemRouter;
-
 
 					/** Limit the file routing to the given extensions */
 					extensions?: string[];
@@ -215,13 +213,10 @@ type CreateApp = <
 	routers: R[];
 }) => App<T, R>;
 
-export const createApp: CreateApp
+export { createApp } from "./lib/app";
 
 export class FileSystemRouter {
-	constructor(config: {
-		dir: string;
-		extensions?: string[];
-	});
-	routes: ({ path: string } & any)[]
+	constructor(config: { dir: string; extensions?: string[] });
+	routes: ({ path: string } & any)[];
 	// match(pathname: string): MatchedRoute;
 }

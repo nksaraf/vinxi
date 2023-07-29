@@ -62,6 +62,14 @@ class TanstackFileSystemRouter extends BaseFileSystemRouter {
 }
 
 export default createApp({
+	server: {
+		externals: {
+			traceOptions: {
+				conditions: ["default"],
+			},
+			inline: ["h3"],
+		},
+	},
 	routers: [
 		{
 			name: "public",

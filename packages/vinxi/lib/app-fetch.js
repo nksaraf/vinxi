@@ -7,9 +7,6 @@ import {
 
 export default function plugin(app) {
 	// @ts-ignore
-	globalThis.$fetch = createFetch({
-		// @ts-ignore
-		fetch: app.localFetch,
-	});
+	// globalThis.$fetch = createFetch(app.localCall);
 	globalThis.$handle = (event) => app.h3App.handler(event);
 }

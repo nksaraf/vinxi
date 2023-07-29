@@ -17,7 +17,21 @@ const router = createRouter(import.meta.env.MANIFEST["client"], undefined);
 router.update({
 	context: {
 		...router.context,
-		assets: <Assets />,
+		assets: (
+			<>
+				<Assets />
+				{import.meta.env.DEV ? (
+					<script
+						src={
+							import.meta.env.MANIFEST["client"].inputs[
+								import.meta.env.MANIFEST["client"].handler
+							].output.path
+						}
+						type="module"
+					/>
+				) : null}
+			</>
+		),
 	},
 });
 router.hydrate();

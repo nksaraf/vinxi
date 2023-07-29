@@ -268,6 +268,40 @@ export default createApp({
 			handler: "./app/server.tsx",
 			build: {
 				target: "node",
+				serverPlugins: () => [
+					(app) => {
+						const router = app.getRoute("rsc");
+						const bundlerManifest = JSON.parse(
+							readFileSync(
+								join(router.build.outDir, router.base, "manifest.json"),
+								"utf-8",
+							),
+						);
+
+						const chunks = Object.entries(bundlerManifest)
+							.filter(
+								([name, chunk]) => chunk.isEntry && name !== router.handler,
+							)
+							.map(([name, chunk]) => {
+								return `import * as mod from '${join(
+									router.build.outDir,
+									router.base,
+									chunk.file,
+								)}';
+						 			chunks['${chunk.file}'] = mod
+						 			`;
+							})
+							.join("\n");
+
+						return `
+						 	const chunks = {};
+						 	${chunks}
+						 	export default function app() {
+						 		globalThis.$$chunks = chunks
+						 	}
+						`;
+					},
+				],
 				plugins: () => [reactRefresh(), viteServer(), clientComponents()],
 			},
 		},

@@ -64,15 +64,14 @@ export function createProdManifest(app) {
 							},
 							get(target, input) {
 								invariant(typeof input === "string", "Input expected");
-
-								const id = relative(process.cwd(), input);
+								const id = input;
 								if (
 									router.build.target === "node" ||
 									router.build.target === "node-web"
 								) {
 									return {
 										assets() {
-											return findAssetsInViteManifest(bundlerManifest, id)
+											return findAssetsInViteManifest(bundlerManifest, input)
 												.filter((asset) => asset.endsWith(".css"))
 												.map((asset) => ({
 													tag: "link",

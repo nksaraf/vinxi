@@ -23,6 +23,10 @@
       "@tanstack/react-start@0.0.1-beta.111": "patches/@tanstack__react-start@0.0.1-beta.111.patch"
     }
   },
+  "resolutions": {
+    "h3": "npm:h3-nightly@latest",
+    "nitropack": "npm:nitropack-edge@latest"
+  },
   "dependencies": {
     "rimraf": "^5.0.1"
   }

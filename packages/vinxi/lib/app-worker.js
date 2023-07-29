@@ -191,6 +191,7 @@ class AppWorker {
 
 					this.bodies[rest.id] = readable;
 
+					const responseHeaders = {};
 					const writableStream = new Writable({
 						write(chunk, encoding, callback) {
 							parentPort?.postMessage(
@@ -202,8 +203,12 @@ class AppWorker {
 							callback();
 						},
 					});
+					writableStream.socket = {};
+					writableStream.getHeader = (header) => {
+						return responseHeaders[header];
+					};
 					writableStream.setHeader = (header, value) => {
-						console.log(header, value);
+						responseHeaders[header] = value;
 						parentPort?.postMessage(
 							JSON.stringify({
 								chunk: "$header",

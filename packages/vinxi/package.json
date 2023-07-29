@@ -54,7 +54,7 @@
     "listhen": "^1.0.4",
     "micromatch": "^4.0.5",
     "mri": "^1.2.0",
-    "nitropack": "^2.5.2",
+    "nitropack": "2.5.2",
     "path-to-regexp": "^6.2.1",
     "pathe": "^1.1.1",
     "perfect-debounce": "^1.0.0",
@@ -65,7 +65,8 @@
     "unenv": "^1.5.1",
     "unimport": "^3.0.11",
     "unstorage": "^1.7.0",
-    "vite": "4.3.9"
+    "vite": "4.3.9",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/node": "^18.14.0",

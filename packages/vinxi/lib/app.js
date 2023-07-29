@@ -1,5 +1,9 @@
 import { isAbsolute, join, relative } from "pathe";
 import { isMainThread } from "worker_threads";
+import * as v from "zod";
+
+import { BaseFileSystemRouter } from "./file-system-router.js";
+import invariant, { InvariantError } from "./invariant.js";
 
 function resolveConfig(router, appConfig) {
 	router.handler = relative(
@@ -57,10 +61,115 @@ function resolveConfig(router, appConfig) {
 	};
 }
 
-export function createApp({ routers, name }) {
+/** @typedef {"static" | "build" | "spa" | "handler"} RouterModes  */
+/** @type {[RouterModes, ...RouterModes[]]} */
+const routerModes = ["static", "build", "spa", "handler"];
+
+const staticRouterSchema = v.object({
+	name: v.string(),
+	base: v.string().default("/"),
+	mode: v.literal("static"),
+	dir: v.optional(v.string()),
+});
+
+/** @typedef {v.infer<typeof staticRouterSchema>} StaticRouterSchema */
+
+const buildRouterSchema = v.object({
+	name: v.string(),
+	base: v.string().default("/"),
+	mode: v.literal("build"),
+	dir: v.optional(v.string()),
+	handler: v.string(),
+	style: v.custom((value) => value !== null),
+	build: v.object({
+		outDir: v.string().optional(),
+		target: v.literal("browser"),
+		plugins: v.custom((value) => typeof value === "function"),
+	}),
+});
+
+/** @typedef {v.infer<typeof buildRouterSchema>} BuildRouterSchema */
+
+const handlerRouterSchema = v.object({
+	name: v.string(),
+	base: v.string().default("/"),
+
+	mode: v.literal("handler"),
+	dir: v.optional(v.string()),
+
+	worker: v.optional(v.boolean()),
+	handler: v.string(),
+	style: v.custom((value) => value !== null),
+	build: v.object({
+		server: v.optional(
+			v.object({
+				middleware: v.array(v.string()),
+				virtual: v.object({}),
+			}),
+		),
+		outDir: v.string().optional(),
+		target: v.literal("node"),
+		plugins: v.custom((value) => typeof value === "function"),
+	}),
+});
+
+/** @typedef {v.infer<typeof handlerRouterSchema>} HandlerRouterSchema */
+
+const spaRouterSchema = v.object({
+	name: v.string(),
+	base: v.string().default("/"),
+
+	mode: v.literal("spa"),
+	dir: v.optional(v.string()),
+	style: v.custom((value) => value !== null),
+	handler: v.string(),
+	build: v.object({
+		outDir: v.string().optional(),
+		target: v.literal("browser"),
+		plugins: v.custom((value) => typeof value === "function"),
+		// plugins: v.special((value) => typeof value === "function"),
+	}),
+});
+
+/** @typedef {v.infer<typeof spaRouterSchema>} SPARouterSchema */
+
+const routerSchema = {
+	static: staticRouterSchema,
+	build: buildRouterSchema,
+	spa: spaRouterSchema,
+	handler: handlerRouterSchema,
+};
+
+/** @typedef {(HandlerRouterSchema | BuildRouterSchema | SPARouterSchema | StaticRouterSchema) & { fileRouter?: import('../vinxi.d.ts').FileSystemRouter }} RouterSchema  */
+/** @typedef {{ routers: RouterSchema[]; name?: string; server?: import('nitropack').NitroConfig }} AppOptions */
+
+/**
+ *
+ * @param {AppOptions} param0
+ * @returns {App}
+ */
+export function createApp({ routers, name = "app", server = {} }) {
+	routers = routers.map((router) => {
+		invariant(
+			router.mode in routerSchema,
+			`Invalid router mode ${router.mode}`,
+		);
+		const result = routerSchema[router.mode].safeParse(router);
+		if (result.success !== true) {
+			const issues = result.error.issues.map((issue) => {
+				return issue.path.map((p) => p).join(".") + " " + issue.message;
+			});
+			throw new InvariantError(
+				`Errors in router configuration: ${router.name}\n${issues.join("\n")}`,
+			);
+		}
+		return result.data;
+	});
+
 	const config = {
 		name: name ?? "vinxi",
 		routers,
+		server,
 		root: process.cwd(),
 	};
 
@@ -118,3 +227,5 @@ export function createApp({ routers, name }) {
 
 	return app;
 }
+
+/** @typedef {{ config: { name: string; server: import('nitropack').NitroConfig; routers: RouterSchema[]; root: string } }} App */

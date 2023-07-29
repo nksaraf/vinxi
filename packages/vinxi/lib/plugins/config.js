@@ -1,8 +1,8 @@
 /**
- * 
- * @param {string} tag 
- * @param {import('vite').UserConfig} conf 
- * @returns 
+ *
+ * @param {string} tag
+ * @param {import('vite').InlineConfig} conf
+ * @returns
  */
 export function config(tag, conf) {
 	return {
