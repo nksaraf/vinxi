@@ -25,6 +25,8 @@ function resolveConfig(router, appConfig) {
 
 	let routerStyle = router.style ?? "static";
 
+	router.extensions = router.extensions ?? ["js", "jsx", "ts", "tsx"];
+
 	// invariant(
 	// 	routerStyle !== "static" ? dir : true,
 	// 	`There should be dir provided if the router style is ${routerStyle}`,
@@ -81,6 +83,7 @@ const buildRouterSchema = v.object({
 	dir: v.optional(v.string()),
 	handler: v.string(),
 	style: v.custom((value) => value !== null),
+	extensions: v.array(v.string()).optional(),
 	build: v.object({
 		outDir: v.string().optional(),
 		target: v.literal("browser"),
@@ -96,6 +99,7 @@ const handlerRouterSchema = v.object({
 
 	mode: v.literal("handler"),
 	dir: v.optional(v.string()),
+	extensions: v.array(v.string()).optional(),
 
 	worker: v.optional(v.boolean()),
 	handler: v.string(),
@@ -118,6 +122,7 @@ const handlerRouterSchema = v.object({
 const spaRouterSchema = v.object({
 	name: v.string(),
 	base: v.string().default("/"),
+	extensions: v.array(v.string()).optional(),
 
 	mode: v.literal("spa"),
 	dir: v.optional(v.string()),

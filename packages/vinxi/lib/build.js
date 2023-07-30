@@ -237,7 +237,7 @@ async function createRouterBuild(app, router) {
 		plugins: [
 			routerModePlugin[router.mode]?.() ?? [],
 			buildTargetPlugin[router.build.target]?.() ?? [],
-			...(router.build.plugins?.() ?? []),
+			...((await router.build.plugins?.()) ?? []),
 		],
 	});
 

@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"rootDir": "./src/",
+		"outDir": "./dist/",
+		"target": "ES2015",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"esModuleInterop": true,
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"preserveWatchOutput": true,
+		"strict": false,
+		"skipLibCheck": true
+	}
+}

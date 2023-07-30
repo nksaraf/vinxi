@@ -12,7 +12,9 @@ export { pathToRegexp };
 export const glob = (path) => fg.sync(path, { absolute: true });
 
 export function cleanPath(src, config) {
-	return src.slice(config.dir.length).replace(/\.(ts|tsx|js|jsx)$/, "");
+	return src
+		.slice(config.dir.length)
+		.replace(new RegExp(`\.(${config.extensions.join("|")})$`), "");
 }
 
 export function analyzeModule(src) {
@@ -34,7 +36,9 @@ export class BaseFileSystemRouter {
 	}
 
 	glob() {
-		return join(this.config.dir, "**/*") + ".{ts,tsx,js,jsx}";
+		return (
+			join(this.config.dir, "**/*") + `.{${this.config.extensions.join(",")}}`
+		);
 	}
 
 	/**
@@ -75,6 +79,10 @@ export class BaseFileSystemRouter {
 	toRoute(src) {
 		let path = this.toPath(src);
 
+		if (!path) {
+			return null;
+		}
+
 		const [_, exports] = analyzeModule(src);
 
 		if (!exports.find((e) => e.n === "default")) {
@@ -103,8 +111,11 @@ export class BaseFileSystemRouter {
 
 	addRoute(src) {
 		if (this.isRoute(src)) {
-			this._addRoute(this.toRoute(src));
-			this.update?.();
+			const route = this.toRoute(src);
+			if (route) {
+				this._addRoute(route);
+				this.update?.();
+			}
 		}
 	}
 
@@ -117,6 +128,9 @@ export class BaseFileSystemRouter {
 	removeRoute(src) {
 		if (this.isRoute(src)) {
 			const path = this.toPath(src);
+			if (!path) {
+				return;
+			}
 			this.routes = this.routes.filter((r) => r.path !== path);
 			this.update?.();
 		}

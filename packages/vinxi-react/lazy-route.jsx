@@ -1,4 +1,4 @@
-import React, { useInsertionEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { Fragment, createElement, forwardRef, lazy } from "react";
 import { cleanupStyles, updateStyles } from "vinxi/lib/style";
 
@@ -40,7 +40,7 @@ export default function lazyRoute(
 			}
 
 			const Comp = forwardRef((props, ref) => {
-				useInsertionEffect(() => {
+				useLayoutEffect(() => {
 					return () => {
 						// remove style tags added by vite when a CSS file is imported
 						cleanupStyles(styles);

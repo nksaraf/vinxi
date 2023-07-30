@@ -75,7 +75,8 @@ export function treeShake() {
 		async transform(code, id) {
 			const [path, queryString] = id.split("?");
 			const query = new URLSearchParams(queryString);
-			if (query.has("pick")) {
+			const ext = path.split(".").pop();
+			if (query.has("pick") && ["js", "jsx", "ts", "tsx"].includes(ext)) {
 				const transformed = await transform(id, code);
 
 				cache[path] ??= {};

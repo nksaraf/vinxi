@@ -5,8 +5,11 @@ import {
 	analyzeModule,
 	cleanPath,
 } from "vinxi/file-system-router";
+import pkg from "vite-plugin-mdx";
 
-class TanstackFileSystemRouter extends BaseFileSystemRouter {
+const { default: mdx } = pkg;
+
+class WouterFileSystemRouter extends BaseFileSystemRouter {
 	toPath(src) {
 		const routePath = cleanPath(src, this.config)
 			// remove the initial slash
@@ -17,9 +20,9 @@ class TanstackFileSystemRouter extends BaseFileSystemRouter {
 					return `*${m.slice(3)}`;
 				}
 				if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
-					return `$${m.slice(1, -1)}?`;
+					return `:${m.slice(1, -1)}?`;
 				}
-				return `$${m}`;
+				return `:${m}`;
 			});
 
 		return routePath?.length > 0 ? `/${routePath}` : "/";
@@ -27,28 +30,16 @@ class TanstackFileSystemRouter extends BaseFileSystemRouter {
 
 	toRoute(src) {
 		let path = this.toPath(src);
+		console.log({ src, path });
+		if (src.endsWith(".mdx")) {
+		}
 
-		const [_, exports] = analyzeModule(src);
-		const hasLoader = exports.find((e) => e.n === "loader");
-		const hasErrorBoundary = exports.find((e) => e.n === "ErrorBoundary");
-		const hasLoading = exports.find((e) => e.n === "Loading");
-		const hasConfig = exports.find((e) => e.n === "config");
+		// const [_, exports] = analyzeModule(src);
 		return {
 			$component: {
 				src: src,
-				pick: ["default", "$css"],
+				pick: src.endsWith(".mdx") ? [] : ["default", "$css"],
 			},
-			$error: hasErrorBoundary
-				? { src: src, pick: ["ErrorBoundary"] }
-				: undefined,
-			$loading: hasLoading ? { src: src, pick: ["Loading"] } : undefined,
-			$$loader: hasLoader
-				? {
-						src: src,
-						pick: ["loader"],
-				  }
-				: undefined,
-			$$config: hasConfig ? { src: src, pick: ["config"] } : undefined,
 			path,
 			filePath: src,
 		};
@@ -56,6 +47,11 @@ class TanstackFileSystemRouter extends BaseFileSystemRouter {
 }
 
 export default createApp({
+	server: {
+		externals: {
+			inline: ["h3", "h3-nightly"],
+		},
+	},
 	routers: [
 		{
 			name: "public",
@@ -67,10 +63,16 @@ export default createApp({
 			mode: "spa",
 			handler: "./index.html",
 			dir: "./app/pages",
-			style: TanstackFileSystemRouter,
+			style: WouterFileSystemRouter,
+			extensions: ["js", "jsx", "ts", "tsx", "mdx"],
 			build: {
 				target: "browser",
-				plugins: () => [reactRefresh()],
+				plugins: async () => [
+					reactRefresh({}),
+					mdx({
+						providerImportSource: "@mdx-js/react",
+					}),
+				],
 			},
 		},
 	],

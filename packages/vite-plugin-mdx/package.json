@@ -1,0 +1,52 @@
+{
+  "name": "vite-plugin-mdx",
+  "version": "3.6.0",
+  "type": "module",
+  "scripts": {
+    "// User Scripts": "",
+    "dev": "pnpm run tsc:watch",
+    "build": "pnpm run tsc:once",
+    "// TypeScript": "",
+    "tsc:watch": "tsc --build --watch",
+    "tsc:once": "tsc --build",
+    "// Release": "",
+    "prepublishOnly": "pnpm run build",
+    "release": "npm version patch && npm publish && git push && git push --tags",
+    "// Remove caches": "",
+    "clean": "git clean -Xdff"
+  },
+  "main": "dist/index.cjs",
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "@mdx-js/mdx": "<2",
+    "vite": "<3"
+  },
+  "dependencies": {
+    "@alloc/quick-lru": "^5.2.0",
+    "esbuild": "0.18.7",
+    "resolve": "^1.20.0",
+    "unified": "^9.2.1"
+  },
+  "devDependencies": {
+    "@mdx-js/mdx": "2.3.0",
+    "@types/es-module-lexer": "^0.3.0",
+    "@types/mdast": "^3.0.10",
+    "@types/node": "^14.14.22",
+    "@types/resolve": "^1.20.0",
+    "@types/unist": "^2.0.6",
+    "typescript": "^5.1.6",
+    "vite": "^4.3.9"
+  },
+  "description": "Vite plugin for MDX",
+  "license": "MIT",
+  "repository": "https://github.com/brillout/vite-plugin-mdx",
+  "keywords": [
+    "vite",
+    "mdx"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

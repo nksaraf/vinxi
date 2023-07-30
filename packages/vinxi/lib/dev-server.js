@@ -30,9 +30,9 @@ function devEntries() {
 		async config(inlineConfig) {
 			return {
 				build: {
-					rollupOptions: {
-						input: await getEntries(inlineConfig.router),
-					},
+					// rollupOptions: {
+					// input: await getEntries(inlineConfig.router),
+					// },
 				},
 			};
 		},
@@ -190,7 +190,7 @@ async function createViteHandler(app, router, serveConfig) {
 		plugins: [
 			...(targetDevPlugin[router.build.target]?.() ?? []),
 			...(routerModeDevPlugin[router.mode]?.() ?? []),
-			...(router.build?.plugins?.() || []),
+			...((await router.build?.plugins?.()) || []),
 		],
 		router,
 		app,
