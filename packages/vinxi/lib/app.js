@@ -87,7 +87,7 @@ const buildRouterSchema = v.object({
 	build: v.object({
 		outDir: v.string().optional(),
 		target: v.literal("browser"),
-		plugins: v.custom((value) => typeof value === "function"),
+		plugins: v.optional(v.custom((value) => typeof value === "function")),
 	}),
 });
 
@@ -113,7 +113,7 @@ const handlerRouterSchema = v.object({
 		),
 		outDir: v.string().optional(),
 		target: v.literal("node"),
-		plugins: v.custom((value) => typeof value === "function"),
+		plugins: v.optional(v.custom((value) => typeof value === "function")),
 	}),
 });
 
@@ -131,7 +131,8 @@ const spaRouterSchema = v.object({
 	build: v.object({
 		outDir: v.string().optional(),
 		target: v.literal("browser"),
-		plugins: v.custom((value) => typeof value === "function"),
+		plugins: v.optional(v.custom((value) => typeof value === "function")),
+
 		// plugins: v.special((value) => typeof value === "function"),
 	}),
 });

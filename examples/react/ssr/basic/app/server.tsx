@@ -10,20 +10,22 @@ export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 	const events = {};
-	const stream = renderToPipeableStream(
-		<App assets={<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>} />,
-		{
-			onAllReady: () => {
-				events["end"]?.();
+	const stream = await new Promise(async (resolve) => {
+		const stream = renderToPipeableStream(
+			<App assets={<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>} />,
+			{
+				onShellReady() {
+					resolve(stream);
+				},
+				bootstrapModules: [
+					clientManifest.inputs[clientManifest.handler].output.path,
+				],
+				bootstrapScriptContent: `window.manifest = ${JSON.stringify(
+					await clientManifest.json(),
+				)}`,
 			},
-			bootstrapModules: [
-				clientManifest.inputs[clientManifest.handler].output.path,
-			],
-			bootstrapScriptContent: `window.manifest = ${JSON.stringify(
-				await clientManifest.json(),
-			)}`,
-		},
-	);
+		);
+	});
 
 	// @ts-ignore
 	stream.on = (event, listener) => {

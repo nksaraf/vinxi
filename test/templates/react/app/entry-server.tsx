@@ -1,40 +1,31 @@
 /// <reference types="vinxi/server" />
+import { renderAsset } from "@vinxi/react";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import { eventHandler } from "vinxi/runtime/server";
 
-import { renderAsset } from "./render-asset";
 import App from "./root";
 
 export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
-
-	function Assets() {
-		return <>{assets.map((asset) => renderAsset(asset))}</>;
-	}
-
 	const events = {};
-	const stream = renderToPipeableStream(
-		<App
-			assets={
-				<Suspense>
-					<Assets />
-				</Suspense>
-			}
-		/>,
-		{
-			onAllReady: () => {
-				events["end"]?.();
+	const stream = await new Promise(async (resolve) => {
+		const stream = renderToPipeableStream(
+			<App assets={<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>} />,
+			{
+				onShellReady() {
+					resolve(stream);
+				},
+				bootstrapModules: [
+					clientManifest.inputs[clientManifest.handler].output.path,
+				],
+				bootstrapScriptContent: `window.manifest = ${JSON.stringify(
+					await clientManifest.json(),
+				)}`,
 			},
-			bootstrapModules: [
-				clientManifest.inputs[clientManifest.handler].output.path,
-			],
-			bootstrapScriptContent: `window.manifest = ${JSON.stringify(
-				await clientManifest.json(),
-			)}`,
-		},
-	);
+		);
+	});
 
 	// @ts-ignore
 	stream.on = (event, listener) => {
@@ -42,6 +33,5 @@ export default eventHandler(async (event) => {
 	};
 
 	event.node.res.setHeader("Content-Type", "text/html");
-
 	return stream;
 });

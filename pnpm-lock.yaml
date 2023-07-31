@@ -825,6 +825,9 @@ importers:
 
   test/templates/react:
     dependencies:
+      '@vinxi/react':
+        specifier: workspace:^
+        version: link:../../../packages/vinxi-react
       '@vitejs/plugin-react':
         specifier: ^4.0.1
         version: 4.0.1(vite@4.3.9)
