@@ -17,7 +17,7 @@ async function main() {
 		const { createDevServer } = await import("../lib/dev-server.js");
 		await createDevServer(config, {
 			dev: true,
-			port: 3000,
+			port: Number(process.env.PORT ?? 3000),
 		});
 	} else if (command === "build") {
 		process.env.NODE_ENV = "production";

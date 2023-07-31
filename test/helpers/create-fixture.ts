@@ -33,8 +33,97 @@ export function json(value: object) {
 	return JSON.stringify(value, null, 2);
 }
 
+export async function createDevFixture(init: FixtureInit) {
+	let projectDir = await createFixtureProject(init);
+
+	let ip = "localhost";
+	let port = await getPort();
+	let proc = spawn("npm", ["run", "dev"], {
+		cwd: projectDir,
+		env: {
+			...process.env,
+			PORT: `${port}`,
+			IP: ip,
+		},
+	});
+
+	proc.stdout?.pipe(process.stdout);
+	proc.stderr?.pipe(process.stderr);
+
+	await waitOn(
+		{
+			resources: [`http://${ip}:${port}/favicon.ico`],
+			validateStatus: function (status) {
+				return status >= 200 && status < 310; // default if not provided
+			},
+		},
+		undefined,
+	);
+
+	let getStaticHTML = async () => {
+		let text = await readFile(
+			path.join(projectDir, "dist", "client", "index.html"),
+			"utf8",
+		);
+		return new Response(text, {
+			headers: {
+				"content-type": "text/html",
+			},
+		});
+	};
+
+	let requestDocument = async (href: string, init?: RequestInit) => {
+		let url = new URL(href, `http://${ip}:${port}`);
+		let request = new Request(url, init);
+		try {
+			return await fetch(request);
+		} catch (err) {
+			console.error(err);
+			return new Response(err.message, {
+				status: 500,
+			});
+		}
+	};
+
+	let postDocument = async (href: string, data: URLSearchParams | FormData) => {
+		return await requestDocument(href, {
+			method: "POST",
+			body: data,
+			headers: {
+				"Content-Type":
+					data instanceof URLSearchParams
+						? "application/x-www-form-urlencoded"
+						: "multipart/form-data",
+			},
+		});
+	};
+
+	let getBrowserAsset = async (asset: string) => {
+		return await fse.readFile(
+			path.join(projectDir, "public", asset.replace(/^\//, "")),
+			"utf8",
+		);
+	};
+
+	return {
+		projectDir,
+		requestDocument,
+		postDocument,
+		getBrowserAsset,
+		createServer: async () => {
+			return {
+				serverUrl: `http://${ip}:${port}`,
+				close: async () => {
+					proc.kill();
+				},
+			};
+		},
+	};
+}
+
 export async function createFixture(init: FixtureInit) {
 	let projectDir = await createFixtureProject(init);
+	await build(projectDir, init.buildStdio);
 	let buildPath = path.resolve(projectDir, ".output", "server", "index.mjs");
 	if (!fse.existsSync(buildPath)) {
 		throw new Error(
@@ -151,7 +240,6 @@ export async function createFixtureProject(init: FixtureInit): Promise<string> {
 	await fse.copy(integrationTemplateDir, projectDir);
 
 	await writeTestFiles(init, projectDir);
-	await build(projectDir, init.buildStdio);
 
 	return projectDir;
 }
