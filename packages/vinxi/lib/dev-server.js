@@ -286,8 +286,8 @@ export async function createDevServer(
 		globalThis.app = app;
 
 		const plugins = [
-			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
-			fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
+			new URL("./app-fetch.js", import.meta.url).href,
+			new URL("./app-manifest.js", import.meta.url).href,
 		];
 
 		for (const plugin of plugins) {
