@@ -47,11 +47,6 @@ class WouterFileSystemRouter extends BaseFileSystemRouter {
 }
 
 export default createApp({
-	server: {
-		externals: {
-			inline: ["h3", "h3-nightly"],
-		},
-	},
 	routers: [
 		{
 			name: "public",
