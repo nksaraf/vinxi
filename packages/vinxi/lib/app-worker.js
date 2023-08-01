@@ -1,3 +1,4 @@
+import { loadConfig } from "c12";
 import { H3Event } from "h3";
 
 import { AsyncLocalStorage } from "node:async_hooks";
@@ -81,48 +82,11 @@ class AppWorker {
 						});
 					}
 
-					const readable = new Readable({ objectMode: true });
-					readable._read = () => {};
+					const req = createIncomingMessage();
 
-					readable.url = "/_rsc/";
+					const res = createServerResponse(rest);
 
-					const writableStream = new Writable({
-						write(chunk, encoding, callback) {
-							parentPort?.postMessage(
-								JSON.stringify({
-									chunk: new TextDecoder().decode(chunk),
-									id: rest.id,
-								}),
-							);
-							callback();
-						},
-					});
-					writableStream.setHeader = (header, value) => {
-						console.log(header, value);
-						parentPort?.postMessage(
-							JSON.stringify({
-								chunk: "$header",
-								data: {
-									key: header,
-									value,
-								},
-								id: rest.id,
-							}),
-						);
-					};
-
-					writableStream.on("finish", () => {
-						parentPort?.postMessage(
-							JSON.stringify({
-								chunk: "end",
-								id: rest.id,
-							}),
-						);
-					});
-
-					console.log(this.server.app);
-
-					const event = new H3Event(readable, writableStream);
+					const event = new H3Event(req, res);
 					await this.server.app.handler(event);
 					// tranformStream.on("end", () => {
 					//   console.log("ending");
@@ -166,7 +130,9 @@ class AppWorker {
 				const {
 					req: { url, method, headers },
 				} = rest;
-				const { default: app } = await import(join(process.cwd(), "./app.js"));
+				const { config: app } = await loadConfig({
+					name: "app",
+				});
 
 				try {
 					if (!this.server) {
@@ -181,56 +147,11 @@ class AppWorker {
 					}
 
 					this.bodies ??= {};
+					const req = createIncomingMessage(url, method, headers);
+					this.bodies[rest.id] = req;
+					const res = createServerResponse(rest.id);
 
-					const readable = new Readable({ objectMode: true });
-					readable._read = () => {};
-
-					readable.url = "/_rsc" + url;
-					readable.method = method;
-					readable.headers = headers;
-
-					this.bodies[rest.id] = readable;
-
-					const responseHeaders = {};
-					const writableStream = new Writable({
-						write(chunk, encoding, callback) {
-							parentPort?.postMessage(
-								JSON.stringify({
-									chunk: new TextDecoder().decode(chunk),
-									id: rest.id,
-								}),
-							);
-							callback();
-						},
-					});
-					writableStream.socket = {};
-					writableStream.getHeader = (header) => {
-						return responseHeaders[header];
-					};
-					writableStream.setHeader = (header, value) => {
-						responseHeaders[header] = value;
-						parentPort?.postMessage(
-							JSON.stringify({
-								chunk: "$header",
-								data: {
-									key: header,
-									value,
-								},
-								id: rest.id,
-							}),
-						);
-					};
-
-					writableStream.on("finish", () => {
-						parentPort?.postMessage(
-							JSON.stringify({
-								chunk: "end",
-								id: rest.id,
-							}),
-						);
-					});
-
-					const event = new H3Event(readable, writableStream);
+					const event = new H3Event(req, res);
 					await this.server.h3App.handler(event);
 					// tranformStream.on("end", () => {
 					//   console.log("ending");
@@ -264,3 +185,59 @@ invariant(parentPort, "parentPort is not defined");
 
 const appWorker = new AppWorker(parentPort);
 appWorker.listen();
+
+function createServerResponse(id) {
+	const responseHeaders = {};
+	const writableStream = new Writable({
+		write(chunk, encoding, callback) {
+			parentPort?.postMessage(
+				JSON.stringify({
+					chunk: new TextDecoder().decode(chunk),
+					id,
+				}),
+			);
+			callback();
+		},
+	});
+	writableStream.socket = {};
+	writableStream.getHeader = (header) => {
+		return responseHeaders[header];
+	};
+	writableStream.setHeader = (header, value) => {
+		responseHeaders[header] = value;
+		parentPort?.postMessage(
+			JSON.stringify({
+				chunk: "$header",
+				data: {
+					key: header,
+					value,
+				},
+				id,
+			}),
+		);
+	};
+
+	writableStream.on("finish", () => {
+		parentPort?.postMessage(
+			JSON.stringify({
+				chunk: "end",
+				id,
+			}),
+		);
+	});
+	return writableStream;
+}
+
+/**
+ *
+ * @returns {import('node:http').IncomingMessage}
+ */
+function createIncomingMessage(url, method, headers) {
+	const readable = new Readable({ objectMode: true });
+	readable._read = () => {};
+
+	readable.url = "/_rsc" + url;
+	readable.method = method;
+	readable.headers = headers;
+	return readable;
+}

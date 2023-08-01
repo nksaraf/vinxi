@@ -269,6 +269,7 @@ export async function createDevServer(
 			handlers: [...(app.config.server.handlers ?? [])],
 		});
 
+		nitro.options.appConfigFiles = [];
 		nitro.logger = consola.withTag(app.config.name);
 
 		const devApp = createDevNitroServer(nitro);

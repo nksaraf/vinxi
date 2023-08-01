@@ -55,6 +55,7 @@
     "micromatch": "^4.0.5",
     "mri": "^1.2.0",
     "nitropack": "npm:nitropack-edge@2.6.0-28180270.6217581",
+    "node-fetch-native": "^1.2.0",
     "path-to-regexp": "^6.2.1",
     "pathe": "^1.1.1",
     "perfect-debounce": "^1.0.0",

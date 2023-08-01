@@ -46,6 +46,17 @@ export async function createBuild(app, buildConfig) {
 			process.env.TARGET ??
 			process.env.NITRO_PRESET ??
 			app.config.server.preset,
+		alias: {
+			"node-fetch-native/polyfill": fileURLToPath(
+				new URL(
+					"../node_modules/node-fetch-native/dist/polyfill.mjs",
+					import.meta.url,
+				),
+			),
+		},
+		// externals: {
+		// 	inline: ["node-fetch-native/polyfill"],
+		// },
 		plugins: [
 			"#prod-app",
 			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
@@ -177,20 +188,24 @@ export async function createBuild(app, buildConfig) {
         }
       `,
 			"#vinxi/spa": () => {
-				/** @type {import('./app.js').SPARouterSchema} */
 				const router = app.config.routers.find(
 					(router) => router.mode === "spa",
 				);
+
+				if (!("build" in router)) {
+					return;
+				}
+
 				const indexHtml = readFileSync(
 					join(router.build.outDir, router.base, "index.html"),
 					"utf-8",
 				);
 				return `
-				import { eventHandler } from 'vinxi/runtime/server'
-				const html = ${JSON.stringify(indexHtml)}
-				export default eventHandler(event => { 
-					return html
-				})
+					import { eventHandler } from 'vinxi/runtime/server'
+					const html = ${JSON.stringify(indexHtml)}
+					export default eventHandler(event => { 
+						return html
+					})
 				`;
 			},
 			...Object.fromEntries(
@@ -207,13 +222,14 @@ export async function createBuild(app, buildConfig) {
 			...(Object.fromEntries(
 				Object.entries(app.config.server?.virtual ?? {}).map(([k, v]) => [
 					k,
+					// @ts-ignore
 					typeof v === "function" ? () => v(app) : v,
 				]),
 			) ?? {}),
 		},
 	});
 
-	console.log(nitro.options.virtual);
+	nitro.options.appConfigFiles = [];
 	nitro.logger = consola.withTag(app.config.name);
 	await copyPublicAssets(nitro);
 	await build(nitro);

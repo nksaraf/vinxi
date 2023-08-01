@@ -148,6 +148,7 @@ const routerSchema = {
 
 /** @typedef {(HandlerRouterSchema | BuildRouterSchema | SPARouterSchema | StaticRouterSchema) & { fileRouter?: import('../vinxi.d.ts').FileSystemRouter }} RouterSchema  */
 /** @typedef {{ routers: RouterSchema[]; name?: string; server?: import('nitropack').NitroConfig }} AppOptions */
+/** @typedef {{ config: { name: string; server: import('nitropack').NitroConfig; routers: RouterSchema[]; root: string } }} App */
 
 /**
  *
@@ -179,31 +180,12 @@ export function createApp({ routers, name = "app", server = {} }) {
 		root: process.cwd(),
 	};
 
-	// function resolveBuildConfig(bundler) {
-	// 	let outDir = bundler.outDir ? join(config.root, bundler.outDir) : undefined;
-	// 	return {
-	// 		target: "static",
-	// 		root: config.root,
-	// 		...bundler,
-	// 		outDir,
-	// 	};
-	// }
-
 	config.routers = routers.map((router, index) => {
 		return {
 			...resolveConfig(router, config),
 			index,
 		};
 	});
-
-	globalThis.MANIFEST = new Proxy(
-		{},
-		{
-			get(target, prop) {
-				throw new Error("Manifest not yet ready");
-			},
-		},
-	);
 
 	const app = {
 		config,
@@ -233,5 +215,3 @@ export function createApp({ routers, name = "app", server = {} }) {
 
 	return app;
 }
-
-/** @typedef {{ config: { name: string; server: import('nitropack').NitroConfig; routers: RouterSchema[]; root: string } }} App */

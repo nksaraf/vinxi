@@ -217,6 +217,6 @@ export { createApp } from "./lib/app";
 
 export class FileSystemRouter {
 	constructor(config: { dir: string; extensions?: string[] });
-	routes: ({ path: string } & any)[];
+	getRoutes(): ({ path: string } & any)[];
 	// match(pathname: string): MatchedRoute;
 }

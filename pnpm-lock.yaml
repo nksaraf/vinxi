@@ -697,12 +697,18 @@ importers:
       micromatch:
         specifier: ^4.0.5
         version: 4.0.5
+      minimist:
+        specifier: ^1.2.8
+        version: 1.2.8
       mri:
         specifier: ^1.2.0
         version: 1.2.0
       nitropack:
         specifier: npm:nitropack-edge@2.6.0-28180270.6217581
         version: /nitropack-edge@2.6.0-28180270.6217581
+      node-fetch-native:
+        specifier: ^1.2.0
+        version: 1.2.0
       path-to-regexp:
         specifier: ^6.2.1
         version: 6.2.1
