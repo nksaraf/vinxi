@@ -126,10 +126,6 @@ export function createDevServer(nitro) {
 	// App
 	const app = createApp();
 
-	// Dev-only handlers
-	for (const handler of nitro.options.devHandlers) {
-		app.use(handler.route || "/", handler.handler);
-	}
 	// Debugging endpoint to view vfs
 	// app.use("/_vfs", createVFSHandler(nitro));
 
@@ -140,6 +136,11 @@ export function createDevServer(nitro) {
 		if (!asset.fallthrough) {
 			app.use(url, fromNodeMiddleware(servePlaceholder()));
 		}
+	}
+
+	// Dev-only handlers
+	for (const handler of nitro.options.devHandlers) {
+		app.use(handler.route || "/", handler.handler);
 	}
 
 	// User defined dev proxy
