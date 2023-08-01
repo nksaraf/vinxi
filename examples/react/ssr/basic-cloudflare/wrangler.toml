@@ -1,0 +1,11 @@
+name = "test-vinxi"
+main = "./.output/server/index.mjs"
+workers_dev = true
+compatibility_date = "2022-11-29"
+kv_namespaces = [
+  { binding = "KV", id = "1df7638ef05a4250ac741e45ca7fd195", preview_id = "a3ede4a964d14238affdf4fbcfd39ff3" }
+]
+compatibility_flags = [ "streams_enable_constructors" ]
+[site]
+bucket = ".output/public"
+
