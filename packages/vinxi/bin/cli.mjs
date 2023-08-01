@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import { loadConfig } from "c12";
 import mri from "mri";
-import { join, resolve } from "pathe";
-import { pathToFileURL } from "url";
+import { resolve } from "pathe";
+
+import { loadApp } from "../lib/load-app.js";
 
 async function main() {
 	const args = mri(process.argv.slice(2));
@@ -11,21 +11,7 @@ async function main() {
 
 	const configFile = args.config;
 	globalThis.MANIFEST = {};
-
-	/** @type {{ config: import("../lib/app.js").App }}*/
-	const { config: app } = await loadConfig(
-		configFile
-			? {
-					configFile,
-			  }
-			: {
-					name: "app",
-			  },
-	);
-
-	if (!app.config) {
-		throw new Error("No config found");
-	}
+	const app = await loadApp(configFile);
 
 	if (command === "dev") {
 		const { createDevServer } = await import("../lib/dev-server.js");

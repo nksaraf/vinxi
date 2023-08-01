@@ -11,6 +11,7 @@
     "solid-js": "^1.7.8",
     "tailwindcss": "^3.3.2",
     "vinxi": "workspace:^",
+    "vite": "^4.4.8",
     "vite-plugin-solid": "^2.7.0"
   }
 }

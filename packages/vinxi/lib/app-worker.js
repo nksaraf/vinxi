@@ -10,6 +10,7 @@ import { parentPort } from "node:worker_threads";
 
 import { createDevServer } from "./dev-server.js";
 import invariant from "./invariant.js";
+import { loadApp } from "./load-app.js";
 
 /**
  *
@@ -130,9 +131,7 @@ class AppWorker {
 				const {
 					req: { url, method, headers },
 				} = rest;
-				const { config: app } = await loadConfig({
-					name: "app",
-				});
+				const app = await loadApp();
 
 				try {
 					if (!this.server) {

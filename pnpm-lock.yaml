@@ -517,9 +517,12 @@ importers:
       vinxi:
         specifier: workspace:^
         version: link:../../../../packages/vinxi
+      vite:
+        specifier: ^4.4.8
+        version: 4.4.8
       vite-plugin-solid:
         specifier: ^2.7.0
-        version: 2.7.0(solid-js@1.7.8)(vite@4.3.9)
+        version: 2.7.0(solid-js@1.7.8)(vite@4.4.8)
 
   examples/solid/ssr/basic:
     dependencies:
@@ -697,9 +700,6 @@ importers:
       micromatch:
         specifier: ^4.0.5
         version: 4.0.5
-      minimist:
-        specifier: ^1.2.8
-        version: 1.2.8
       mri:
         specifier: ^1.2.0
         version: 1.2.0
@@ -7151,6 +7151,25 @@ packages:
       - supports-color
     dev: false
 
+  /vite-plugin-solid@2.7.0(solid-js@1.7.8)(vite@4.4.8):
+    resolution: {integrity: sha512-avp/Jl5zOp/Itfo67xtDB2O61U7idviaIp4mLsjhCa13PjKNasz+IID0jYTyqUp9SFx6/PmBr6v4KgDppqompg==}
+    peerDependencies:
+      solid-js: ^1.7.2
+      vite: ^3.0.0 || ^4.0.0
+    dependencies:
+      '@babel/core': 7.22.9
+      '@babel/preset-typescript': 7.22.5(@babel/core@7.22.9)
+      '@types/babel__core': 7.20.1
+      babel-preset-solid: 1.7.7(@babel/core@7.22.9)
+      merge-anything: 5.1.7
+      solid-js: 1.7.8
+      solid-refresh: 0.5.3(solid-js@1.7.8)
+      vite: 4.4.8
+      vitefu: 0.2.4(vite@4.4.8)
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /vite@4.3.9(patch_hash=vtyqdrd2rn7nzuduoqhhzurwua)(@types/node@14.14.22):
     resolution: {integrity: sha512-qsTNZjO9NoJNW7KnOrgYwczm0WctJ8m/yqYAMAK9Lxt4SoySUfS5S8ia9K7JHpa3KEeMfyF8LoJ3c5NeBJy6pg==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -7218,6 +7237,41 @@ packages:
     dev: false
     patched: true
 
+  /vite@4.4.8:
+    resolution: {integrity: sha512-LONawOUUjxQridNWGQlNizfKH89qPigK36XhMI7COMGztz8KNY0JHim7/xDd71CZwGT4HtSRgI7Hy+RlhG0Gvg==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      esbuild: 0.18.17
+      postcss: 8.4.27
+      rollup: 3.27.0
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: false
+
   /vitefu@0.2.4(vite@4.3.9):
     resolution: {integrity: sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==}
     peerDependencies:
@@ -7227,6 +7281,17 @@ packages:
         optional: true
     dependencies:
       vite: 4.3.9(patch_hash=vtyqdrd2rn7nzuduoqhhzurwua)(@types/node@14.14.22)
+    dev: false
+
+  /vitefu@0.2.4(vite@4.4.8):
+    resolution: {integrity: sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0
+    peerDependenciesMeta:
+      vite:
+        optional: true
+    dependencies:
+      vite: 4.4.8
     dev: false
 
   /vitest@0.28.3:
