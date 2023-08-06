@@ -86,7 +86,7 @@ export async function createBuild(app, buildConfig) {
 							router.build.outDir,
 							router.base,
 							bundlerManifest[relative(app.config.root, router.handler)].file,
-						);
+						).replace(/\\/g, "\\\\");
 
 						return [
 							{
