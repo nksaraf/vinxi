@@ -50,9 +50,6 @@ export default eventHandler(async (event) => {
 			</Router>
 		</App>,
 		{
-			onAllReady: () => {
-				events["end"]?.();
-			},
 			bootstrapModules: [
 				clientManifest.inputs[clientManifest.handler].output.path,
 			],
@@ -62,6 +59,8 @@ export default eventHandler(async (event) => {
 		},
 	);
 
+	// @ts-ignore
+	stream._read = () => {};
 	// @ts-ignore
 	stream.on = (event, listener) => {
 		events[event] = listener;

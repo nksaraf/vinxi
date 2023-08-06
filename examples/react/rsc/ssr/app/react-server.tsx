@@ -84,10 +84,11 @@ export default eventHandler(async (event) => {
 	);
 
 	// @ts-ignore
+	stream._read = () => {};
+	// @ts-ignore
 	stream.on = (event, listener) => {
 		events[event] = listener;
 	};
-
 	event.node.res.setHeader("Content-Type", "text/x-component");
 	event.node.res.setHeader("Router", "rsc");
 	return stream;

@@ -56,17 +56,16 @@ export default eventHandler(async (event) => {
 
 	console.log("element", element);
 
-	const stream = await renderToPipeableStream(element, {
+	const stream = renderToPipeableStream(element, {
 		bootstrapModules: [
 			clientManifest?.inputs[clientManifest.handler].output.path,
 		].filter(Boolean) as string[],
 		bootstrapScriptContent: `
 			window.base = "${import.meta.env.BASE_URL}";`,
-
 		// 	{
-		onAllReady: () => {
-			events["end"]?.();
-		},
+		// onAllReady: () => {
+		// 	events["end"]?.();
+		// },
 		// 		bootstrapModules: [
 		// 			clientManifest.inputs[clientManifest.handler].output.path,
 		// 		],
