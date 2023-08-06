@@ -1,3 +1,4 @@
+import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro } from "nitropack";
 import { join } from "path";
 import { relative } from "pathe";
@@ -9,6 +10,8 @@ import { config } from "./plugins/config.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
+
+const require = createRequire(import.meta.url);
 
 /**
  *
@@ -47,11 +50,8 @@ export async function createBuild(app, buildConfig) {
 			process.env.NITRO_PRESET ??
 			app.config.server.preset,
 		alias: {
-			"node-fetch-native/polyfill": fileURLToPath(
-				new URL(
-					"../node_modules/node-fetch-native/dist/polyfill.mjs",
-					import.meta.url,
-				),
+			"node-fetch-native/polyfill": require.resolve(
+				"node-fetch-native/polyfill",
 			),
 		},
 		// externals: {

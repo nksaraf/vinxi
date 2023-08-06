@@ -47,16 +47,15 @@ export function routes() {
 							return {
 								src: isBuild ? relative(root, buildId) : buildId,
 								build: isBuild ? `_$() => import('${buildId}')$_` : undefined,
-								import: isBuild
-									? router.build.target === "node"
+								import:
+									router.build.target === "node"
 										? `_$() => import('${buildId}')$_`
 										: `_$(() => { const id = '${relative(
 												root,
 												buildId,
 										  )}'; return import(import.meta.env.MANIFEST['${
 												router.name
-										  }'].inputs[id].output.path) })$_`
-									: undefined,
+										  }'].inputs[id].output.path) })$_`,
 							};
 						}
 						return v;
