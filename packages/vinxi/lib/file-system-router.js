@@ -4,6 +4,7 @@ import esbuild from "esbuild";
 import fg from "fast-glob";
 import fs from "fs";
 import micromatch from "micromatch";
+import os from "os";
 import { join } from "path";
 import { pathToRegexp } from "path-to-regexp";
 
@@ -36,9 +37,13 @@ export class BaseFileSystemRouter {
 	}
 
 	glob() {
-		return (
-			join(this.config.dir, "**/*") + `.{${this.config.extensions.join(",")}}`
-		);
+		if (os.platform() === "win32") {
+			return fg.convertPathToPattern(this.config.dir + "//**//*");
+		} else {
+			return (
+				join(this.config.dir, "**/*") + `.{${this.config.extensions.join(",")}}`
+			);
+		}
 	}
 
 	/**
