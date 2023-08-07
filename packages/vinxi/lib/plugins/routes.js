@@ -16,7 +16,13 @@ export function routes() {
 		},
 		async load(url) {
 			const [id, query] = url.split("?");
-			if (id === fileURLToPath(new URL("../routes.js", import.meta.url))) {
+			if (
+				id ===
+				fileURLToPath(new URL("../routes.js", import.meta.url)).replace(
+					"\\",
+					"/",
+				)
+			) {
 				const js = jsCode();
 				const routesCode = JSON.stringify(
 					await router.fileRouter?.getRoutes(),
