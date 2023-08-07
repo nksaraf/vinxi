@@ -43,8 +43,8 @@ export const serverElementCache = /*#__PURE__*/ new Map<
 	React.Thenable<JSX.Element>
 >();
 
-async function callServer(id, args) {
-	const response = fetch("/_rsc", {
+export async function fetchServerAction(base, id, args) {
+	const response = fetch(base, {
 		method: "POST",
 		headers: {
 			Accept: "text/x-component",
@@ -52,16 +52,24 @@ async function callServer(id, args) {
 		},
 		body: await encodeReply(args),
 	});
-	const root = await createFromFetch(response, {
+
+	return await createFromFetch(response, {
 		callServer,
 	});
-	// Refresh the tree with the new RSC payload.
-	startTransition(() => {
-		updateRoot(root);
-	});
-	// return returnValue;
 }
 
+export function createCallServer(base) {
+	return async function callServer(id, args) {
+		const root = await fetchServerAction(base, id, args);
+		// Refresh the tree with the new RSC payload.
+		startTransition(() => {
+			updateRoot(root);
+		});
+		// return returnValue;
+	};
+}
+
+const callServer = createCallServer("/_rsc");
 export function useServerElement(url: string) {
 	if (!serverElementCache.has(url)) {
 		serverElementCache.set(

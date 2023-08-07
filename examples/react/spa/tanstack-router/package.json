@@ -12,6 +12,7 @@
     "@tanstack/router-devtools": "0.0.1-beta.111",
     "@vinxi/react": "workspace:^",
     "@vitejs/plugin-react": "^4.0.1",
+    "acorn-loose": "^8.3.0",
     "autoprefixer": "^10.4.14",
     "axios": "^1.4.0",
     "react": "0.0.0-experimental-035a41c4e-20230704",

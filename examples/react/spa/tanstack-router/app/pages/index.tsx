@@ -1,7 +1,10 @@
 import { Link } from "@tanstack/router";
 import React from "react";
 
+import { sayHello } from "../actions";
 import "./hello.css";
+
+console.log(await sayHello());
 
 function Counter() {
 	const [count, setCount] = React.useState(0);

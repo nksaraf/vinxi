@@ -1,9 +1,10 @@
-import serverComponent from "@vinxi/react-server-dom-vite/plugin";
 import reactRefresh from "@vitejs/plugin-react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import { createApp } from "vinxi";
 import { virtual } from "vinxi/lib/plugins/virtual";
+
+import serverComponent from "./plugin";
 
 function hash(str) {
 	let hash = 0;
@@ -21,6 +22,7 @@ function serverComponents() {
 	return [
 		serverComponent({
 			hash: (e) => `c_${hash(e)}`,
+			runtime: "@vinxi/react-server-dom-vite/runtime",
 			onServerReference(reference) {
 				serverModules.add(reference);
 			},
@@ -243,6 +245,135 @@ function clientComponents() {
 	};
 }
 
+/**
+ *
+ * @returns {import('vinxi').PluginOption}
+ */
+function serverAction() {
+	let isBuild;
+	let input;
+	return {
+		name: "server-action-components",
+		config(config, env) {
+			isBuild = env.command === "build";
+			// @ts-ignore
+			const router = config.router;
+			// @ts-ignore
+			const app = config.app;
+
+			if (isBuild) {
+				const rscRouter = app.getRouter("client");
+
+				const reactClientManifest = JSON.parse(
+					readFileSync(
+						join(
+							rscRouter.build.outDir,
+							rscRouter.base,
+							"react-client-manifest.json",
+						),
+						"utf-8",
+					),
+				);
+
+				input = {
+					entry: router.handler,
+					...Object.fromEntries(
+						reactClientManifest.server.map((key) => {
+							return [`c_${hash(key)}`, key];
+						}),
+					),
+				};
+
+				console.log(input);
+
+				return {
+					build: {
+						rollupOptions: {
+							output: {
+								chunkFileNames: "[name].js",
+							},
+							treeshake: true,
+						},
+					},
+					resolve: {
+						conditions: [
+							"node",
+							"import",
+							"react-server",
+							process.env.NODE_ENV,
+						],
+					},
+					ssr: {
+						noExternal: true,
+					},
+					// 	include: [
+					// 		"@vinxi/react-server-dom-vite/client.browser",
+					// 		"@vinxi/react-server-dom-vite/runtime",
+					// 		"react",
+					// 		"react-dom",
+					// 	],
+					// },
+					// build: {
+					// 	rollupOptions: {
+					// 		// preserve the export names of the server actions in chunks
+					// 		treeshake: true,
+					// 		// required otherwise rollup will remove the exports since they are not used
+					// 		// by the other entries
+					// 		preserveEntrySignatures: "exports-only",
+					// 		// manualChunks: (chunk) => {
+					// 		//   // server references should be emitted as separate chunks
+					// 		//   // so that we can load them individually when server actions
+					// 		//   // are called. we need to do this in manualChunks because we don't
+					// 		//   // want to run a preanalysis pass just to identify these
+					// 		//   // if (serverModules.has(chunk)) {
+					// 		//   //   return `${hash(chunk)}`;
+					// 		//   // }
+					// 		// },
+					// 		// we want to control the chunk names so that we can load them
+					// 		// individually when server actions are called
+					// 		// chunkFileNames: "[name].js",
+					// 		output: {
+					// 			minifyInternalExports: false,
+					// 			entryFileNames: (chunk) => {
+					// 				return chunk.name + ".js";
+					// 			},
+					// 		},
+					// 	},
+					// },
+				};
+			} else {
+				return {
+					// optimizeDeps: {
+					// 	include: [
+					// 		"@vinxi/react-server-dom-vite",
+					// 		"react-server-dom-vite",
+					// 		"react",
+					// 		"react-dom",
+					// 	],
+					// },
+					// ssr: {
+					// 	external: [
+					// 		"react",
+					// 		"react-dom",
+					// 		"@vinxi/react-server-dom-vite",
+					// 		"react-server-dom-vite",
+					// 	],
+					// },
+				};
+			}
+		},
+
+		configResolved(config) {
+			if (isBuild) {
+				// const reactServerManifest = JSON.parse(
+				// 	readFileSync(".build/rsc/_rsc/react-server-manifest.json", "utf-8"),
+				// );
+				config.build.rollupOptions.input = input;
+			}
+		},
+	};
+}
+
 function viteServer() {
 	let router;
 	return [
@@ -265,21 +396,47 @@ function viteServer() {
 	];
 }
 
+function client() {
+	const serverModules = new Set();
+	const clientModules = new Set();
+	return [
+		serverComponent({
+			hash: (e) => `c_${hash(e)}`,
+			runtime: "@vinxi/react-server-dom-vite/runtime",
+			onServerReference(reference) {
+				serverModules.add(reference);
+			},
+			onClientReference(reference) {
+				clientModules.add(reference);
+			},
+		}),
+		{
+			name: "clientttt",
+			generateBundle() {
+				this.emitFile({
+					fileName: "react-client-manifest.json",
+					type: "asset",
+					source: JSON.stringify({
+						server: [...serverModules],
+						client: [...clientModules],
+					}),
+				});
+			},
+		},
+	];
+}
+
 export default createApp({
 	server: {
-		externals: {
-			// traceOptions: {
-			// 	conditions: ["import", "default"],
-			// },
-			inline: ["h3", "h3-nightly"],
-		},
 		plugins: ["#extra-chunks"],
 		virtual: {
 			"#extra-chunks": (app) => {
-				const rscChunks = getChunks(app, "rsc");
+				const serverChunks = getChunks(app, "server", 0);
+				const rscChunks = getChunks(app, "rsc", 1);
 
 				return `
 						 const chunks = {};
+						 ${serverChunks}
 						 ${rscChunks}
 						 export default function app() {
 							 globalThis.$$chunks = chunks
@@ -311,13 +468,25 @@ export default createApp({
 			handler: "./index.html",
 			build: {
 				target: "browser",
-				plugins: () => [reactRefresh(), clientComponents()],
+				plugins: () => [client(), reactRefresh(), clientComponents()],
 			},
 			base: "/",
 		},
+		{
+			name: "server",
+			worker: true,
+			mode: "handler",
+			base: "/_server",
+			handler: "./app/server-action.tsx",
+			build: {
+				target: "node",
+				plugins: () => [serverAction()],
+			},
+		},
 	],
 });
-function getChunks(app, routerName) {
+
+function getChunks(app, routerName, modIndex) {
 	const router = app.getRouter(routerName);
 	const bundlerManifest = JSON.parse(
 		readFileSync(
@@ -330,13 +499,13 @@ function getChunks(app, routerName) {
 		.filter(
 			([name, chunk]) => chunk.file.startsWith("c_") && name !== router.handler,
 		)
-		.map(([name, chunk]) => {
-			return `import * as mod from '${join(
+		.map(([name, chunk], index) => {
+			return `import * as mod_${index}_${modIndex} from '${join(
 				router.build.outDir,
 				router.base,
 				chunk.file,
 			)}';
-								 chunks['${chunk.file}'] = mod
+								 chunks['${chunk.file}'] = mod_${index}_${modIndex}
 								 `;
 		})
 		.join("\n");

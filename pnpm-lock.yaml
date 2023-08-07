@@ -44,6 +44,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.0.1
         version: 4.0.1(vite@4.4.8)
+      acorn-loose:
+        specifier: ^8.3.0
+        version: 8.3.0
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
@@ -207,6 +210,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.0.1
         version: 4.0.1(vite@4.4.8)
+      acorn-loose:
+        specifier: ^8.3.0
+        version: 8.3.0
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
@@ -908,6 +914,21 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.6
         version: 18.2.6
+
+  vendor/react-server-dom-vite:
+    dependencies:
+      acorn-loose:
+        specifier: ^8.3.0
+        version: 8.3.0
+      react:
+        specifier: 0.0.0-experimental-035a41c4e-20230704
+        version: 0.0.0-experimental-035a41c4e-20230704
+      react-dom:
+        specifier: 0.0.0-experimental-035a41c4e-20230704
+        version: 0.0.0-experimental-035a41c4e-20230704(react@0.0.0-experimental-035a41c4e-20230704)
+      vite:
+        specifier: ^4.3.9
+        version: 4.3.9(patch_hash=vtyqdrd2rn7nzuduoqhhzurwua)
 
 packages:
 
@@ -7138,6 +7159,39 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
+
+  /vite@4.3.9(patch_hash=vtyqdrd2rn7nzuduoqhhzurwua):
+    resolution: {integrity: sha512-qsTNZjO9NoJNW7KnOrgYwczm0WctJ8m/yqYAMAK9Lxt4SoySUfS5S8ia9K7JHpa3KEeMfyF8LoJ3c5NeBJy6pg==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      esbuild: 0.17.19
+      postcss: 8.4.27
+      rollup: 3.27.0
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: false
+    patched: true
 
   /vite@4.3.9(patch_hash=vtyqdrd2rn7nzuduoqhhzurwua)(@types/node@14.14.22):
     resolution: {integrity: sha512-qsTNZjO9NoJNW7KnOrgYwczm0WctJ8m/yqYAMAK9Lxt4SoySUfS5S8ia9K7JHpa3KEeMfyF8LoJ3c5NeBJy6pg==}

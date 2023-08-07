@@ -211,6 +211,7 @@ if (!rootElement.innerHTML) {
 	root.render(
 		<StrictMode>
 			<LoaderClientProvider loaderClient={loaderClient}>
+				{/* <DehydratedRouter /> */}
 				<RouterProvider router={router} />
 			</LoaderClientProvider>
 		</StrictMode>,
