@@ -15,7 +15,6 @@
     ".": "./lib/app.js",
     "./server": "./lib/server.js",
     "./routes": "./lib/routes.js",
-    "./client": "./lib/app-client-plugin.js",
     "./file-system-router": "./lib/file-system-router.js",
     "./lib/*": "./lib/*.js",
     "./runtime/*": "./runtime/*.js"
