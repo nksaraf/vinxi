@@ -263,6 +263,8 @@ export async function createDevServer(
 				...(await Promise.all(
 					app.config.routers
 						.filter((router) => router.mode != "static")
+
+						.sort((a, b) => b.base.length - a.base.length)
 						.map((router) => createDevRouterHandler(app, router, serveConfig)),
 				)),
 			],

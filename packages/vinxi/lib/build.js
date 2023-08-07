@@ -256,7 +256,6 @@ async function createRouterBuild(app, router) {
 			...((await router.build.plugins?.()) ?? []),
 		],
 	});
-
 	consola.success("build done");
 }
 
