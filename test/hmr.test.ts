@@ -125,4 +125,45 @@ test.describe("rendering", () => {
 			prettyHtml(`<button data-test-id="button">Click me again</button>`),
 		);
 	});
+
+	test("hmr api", async () => {
+		let res = await fixture.requestDocument("/api/hello");
+		expect(res.status).toBe(200);
+		expect(res.headers.get("Content-Type")).toBe("text/html");
+		expect(await res.text()).toBe("Hello world");
+
+		await fixture.updateFile(
+			"app/api/hello.ts",
+			js`export default function handler(event) {
+				return "Hello world too";
+			}`,
+		);
+
+		await new Promise((r) => setTimeout(r, 1000));
+
+		res = await fixture.requestDocument("/api/hello");
+		expect(res.status).toBe(200);
+		expect(res.headers.get("Content-Type")).toBe("text/html");
+		expect(await res.text()).toBe("Hello world too");
+
+		await fixture.updateFile(
+			"app/api/new.ts",
+			js`export default function handler(event) {
+				return "Hello new";
+			}`,
+		);
+
+		await new Promise((r) => setTimeout(r, 1000));
+
+		res = await fixture.requestDocument("/api/new");
+		expect(res.status).toBe(200);
+		expect(res.headers.get("Content-Type")).toBe("text/html");
+		expect(await res.text()).toBe("Hello new");
+
+		await fixture.deleteFile("app/api/new.ts");
+
+		await new Promise((r) => setTimeout(r, 1000));
+		res = await fixture.requestDocument("/api/new");
+		expect(res.status).toBe(404);
+	});
 });

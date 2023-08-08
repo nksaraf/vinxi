@@ -19,32 +19,7 @@ test.describe("rendering", () => {
 
 	test.beforeAll(async () => {
 		fixture = await createDevFixture({
-			files: {
-				"app/root.tsx": js`
-						import { useState } from "react";
-
-						export default function App({ assets }) {
-							const [count, setCount] = useState(0);
-							return (
-								<html lang="en">
-									<head>
-										<link rel="icon" href="/favicon.ico" />
-										{assets}
-									</head>
-									<body>
-										<section>
-											<h1 data-test-id="content">Hello from Vinxi</h1>
-											<button data-test-id="button" onClick={() => setCount(count + 1)}>
-												Click me
-											</button>
-											<span data-test-id="count">{count}</span>
-										</section>
-									</body>
-								</html>
-							);
-						}
-        `,
-			},
+			files: {},
 		});
 
 		appFixture = await fixture.createServer();
@@ -87,5 +62,12 @@ test.describe("rendering", () => {
 		expect(await app.getHtml("[data-test-id=count]")).toBe(
 			prettyHtml(`<span data-test-id="count">1</span>`),
 		);
+	});
+
+	test("api", async () => {
+		let res = await fixture.requestDocument("/api/hello");
+		expect(res.status).toBe(200);
+		expect(res.headers.get("Content-Type")).toBe("text/html");
+		expect(await res.text()).toBe("Hello world");
 	});
 });
