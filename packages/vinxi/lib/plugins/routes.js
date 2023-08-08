@@ -18,7 +18,7 @@ export function routes() {
 			const [id, query] = url.split("?");
 			if (
 				id ===
-				fileURLToPath(new URL("../routes.js", import.meta.url)).replace(
+				fileURLToPath(new URL("../routes.js", import.meta.url)).replaceAll(
 					"\\",
 					"/",
 				)
