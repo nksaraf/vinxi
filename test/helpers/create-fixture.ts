@@ -22,6 +22,7 @@ interface FixtureInit {
 }
 
 export type Fixture = Awaited<ReturnType<typeof createFixture>>;
+export type DevFixture = Awaited<ReturnType<typeof createDevFixture>>;
 export type AppFixture = Awaited<
 	ReturnType<Awaited<ReturnType<typeof createFixture>>["createServer"]>
 >;
@@ -105,11 +106,44 @@ export async function createDevFixture(init: FixtureInit) {
 		);
 	};
 
+	const cache = new Map<string, string | null>();
+
 	return {
 		projectDir,
 		requestDocument,
 		postDocument,
 		getBrowserAsset,
+		reset: async () => {
+			for (const [filename, prevValue] of cache.entries()) {
+				if (prevValue === null) {
+					await fse.remove(path.join(projectDir, filename));
+				} else {
+					await fse.writeFile(path.join(projectDir, filename), prevValue);
+				}
+			}
+			// await fse.remove(projectDir);
+			// projectDir = await createFixtureProject(init);
+		},
+		deleteFile: async (filename: string) => {
+			if (!cache.has(filename)) {
+				cache.set(filename, null);
+			}
+
+			await fse.remove(path.join(projectDir, filename));
+		},
+		updateFile: async (filename: string, content: string) => {
+			const prevValue = (await fse.exists(path.join(projectDir, filename)))
+				? await fse.readFile(path.join(projectDir, filename), {
+						encoding: "utf8",
+				  })
+				: null;
+
+			if (!cache.has(filename)) {
+				cache.set(filename, prevValue);
+			}
+
+			await fse.writeFile(path.join(projectDir, filename), content);
+		},
 		createServer: async () => {
 			return {
 				serverUrl: `http://${ip}:${port}`,

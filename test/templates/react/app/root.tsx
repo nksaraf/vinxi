@@ -1,7 +1,8 @@
 import React from "react";
 
+import { Counter } from "./Counter";
+
 export default function App({ assets }) {
-	const [count, setCount] = React.useState(0);
 	return (
 		<html lang="en">
 			<head>
@@ -11,9 +12,7 @@ export default function App({ assets }) {
 			<body>
 				<section>
 					<h1 data-test-id="content">Hello from Vinxi</h1>
-					<button onClick={() => setCount(count + 1)}>
-						Click me: {count}!
-					</button>
+					<Counter />
 				</section>
 			</body>
 		</html>

@@ -8,6 +8,7 @@
   "dependencies": {
     "@vinxi/react": "workspace:^",
     "@vitejs/plugin-react": "^4.0.1",
+    "path-to-regexp": "^6.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "vinxi": "workspace:^"

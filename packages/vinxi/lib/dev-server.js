@@ -1,3 +1,4 @@
+import getPort from "get-port";
 import { defineEventHandler, fromNodeMiddleware, toNodeListener } from "h3";
 import { createNitro } from "nitropack";
 import {
@@ -149,6 +150,7 @@ const routerModeDevPlugin = {
 			},
 		}),
 		treeShake(),
+		fileSystemWatcher(),
 	],
 	build: () => [
 		routes(),
@@ -197,7 +199,7 @@ async function createViteHandler(app, router, serveConfig) {
 		server: {
 			middlewareMode: true,
 			hmr: {
-				port: serveConfig.ws.port + router.index,
+				port: await getPort({ port: serveConfig.ws.port + router.index }),
 			},
 		},
 	});
@@ -233,7 +235,7 @@ async function createDevRouterHandler(app, router, serveConfig) {
  */
 export async function createDevServer(
 	app,
-	{ port = 3000, dev = false, ws: { port: wsPort = 16000 } = {} },
+	{ port = 3000, dev = false, ws: { port: wsPort = null } = {} },
 ) {
 	const serveConfig = {
 		port,
