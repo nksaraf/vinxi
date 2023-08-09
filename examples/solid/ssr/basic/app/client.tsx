@@ -4,7 +4,10 @@ import { createAssets } from "@vinxi/solid";
 import { NoHydration, Suspense, hydrate } from "solid-js/web";
 import "vinxi/runtime/client";
 
+import { sayHello } from "./actions";
 import App from "./app";
+
+console.log(await sayHello());
 
 const Assets = createAssets(
 	import.meta.env.MANIFEST["client"].handler,

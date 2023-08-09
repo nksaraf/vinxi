@@ -1,7 +1,14 @@
+import { references } from "@vinxi/plugin-references";
 import { createApp } from "vinxi";
 import solid from "vite-plugin-solid";
 
 export default createApp({
+	server: {
+		plugins: [references.serverPlugin],
+		virtual: {
+			[references.serverPlugin]: references.serverPluginModule,
+		},
+	},
 	routers: [
 		{
 			name: "public",
@@ -15,7 +22,7 @@ export default createApp({
 			handler: "./app/client.tsx",
 			build: {
 				target: "browser",
-				plugins: () => [solid({ ssr: true })],
+				plugins: () => [references.clientRouterPlugin(), solid({ ssr: true })],
 			},
 			base: "/_build",
 		},
@@ -28,5 +35,6 @@ export default createApp({
 				plugins: () => [solid({ ssr: true })],
 			},
 		},
+		references.serverRouter(),
 	],
 });

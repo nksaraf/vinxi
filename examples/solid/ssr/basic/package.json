@@ -8,6 +8,7 @@
   "dependencies": {
     "@picocss/pico": "^1.5.7",
     "@solidjs/meta": "^0.28.5",
+    "@vinxi/plugin-references": "workspace:^",
     "@vinxi/solid": "workspace:^",
     "autoprefixer": "^10.4.14",
     "solid-js": "^1.7.8",
