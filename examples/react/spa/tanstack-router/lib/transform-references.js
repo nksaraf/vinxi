@@ -9,7 +9,7 @@
 import { parse } from "acorn-loose";
 import { readFileSync } from "fs";
 
-export default function serverComponents({
+export default function transformReferences({
 	hash = (str) => str,
 	onClientReference = (ref) => {},
 	onServerReference = (ref) => {},

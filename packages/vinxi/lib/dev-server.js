@@ -1,19 +1,12 @@
 import getPort from "get-port";
-import { defineEventHandler, fromNodeMiddleware, toNodeListener } from "h3";
+import { defineEventHandler, fromNodeMiddleware } from "h3";
 import { createNitro } from "nitropack";
-import {
-	createCall,
-	createFetch,
-	createFetch as createLocalFetch,
-} from "unenv/runtime/fetch/index";
 
 import { fileURLToPath } from "node:url";
 import { isMainThread } from "node:worker_threads";
 
 import { AppWorkerClient } from "./app-worker-client.js";
-import { getEntries } from "./build.js";
 import { consola } from "./logger.js";
-import { createDevManifest } from "./manifest/dev-server-manifest.js";
 import { createDevServer as createDevNitroServer } from "./nitro-dev.js";
 import { config } from "./plugins/config.js";
 import { css } from "./plugins/css.js";
@@ -113,7 +106,7 @@ const fileSystemWatcher = () => {
 };
 
 const routerModeDevPlugin = {
-	spa: () => [
+	spa: (router) => [
 		routes(),
 		devEntries(),
 		manifest(),
@@ -130,9 +123,9 @@ const routerModeDevPlugin = {
 			},
 		}),
 		treeShake(),
-		// fileSystemWatcher(),
+		router.fileRouter ? fileSystemWatcher() : null,
 	],
-	handler: () => [
+	handler: (router) => [
 		routes(),
 		devEntries(),
 		manifest(),
@@ -149,9 +142,9 @@ const routerModeDevPlugin = {
 			},
 		}),
 		treeShake(),
-		fileSystemWatcher(),
+		router.fileRouter ? fileSystemWatcher() : null,
 	],
-	build: () => [
+	build: (router) => [
 		routes(),
 		devEntries(),
 		manifest(),
@@ -169,6 +162,7 @@ const routerModeDevPlugin = {
 			},
 		}),
 		treeShake(),
+		router.fileRouter ? fileSystemWatcher() : null,
 	],
 };
 
@@ -189,9 +183,9 @@ async function createViteHandler(app, router, serveConfig) {
 		configFile: false,
 		base: router.base,
 		plugins: [
-			...(targetDevPlugin[router.build.target]?.() ?? []),
-			...(routerModeDevPlugin[router.mode]?.() ?? []),
-			...((await router.build?.plugins?.()) || []),
+			...(targetDevPlugin[router.build.target]?.(router).filter(Boolean) ?? []),
+			...(routerModeDevPlugin[router.mode]?.(router).filter(Boolean) ?? []),
+			...((await router.build?.plugins?.(router)).filter(Boolean) || []),
 		],
 		router,
 		app,
