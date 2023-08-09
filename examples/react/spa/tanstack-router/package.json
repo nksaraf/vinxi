@@ -10,6 +10,7 @@
     "@tanstack/react-loaders": "0.0.1-beta.109",
     "@tanstack/router": "0.0.1-beta.111",
     "@tanstack/router-devtools": "0.0.1-beta.111",
+    "@vinxi/plugin-references": "workspace:^",
     "@vinxi/react": "workspace:^",
     "@vitejs/plugin-react": "^4.0.1",
     "acorn-loose": "^8.3.0",

@@ -204,6 +204,9 @@ importers:
       '@tanstack/router-devtools':
         specifier: 0.0.1-beta.111
         version: 0.0.1-beta.111(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)
+      '@vinxi/plugin-references':
+        specifier: workspace:^
+        version: link:../../../../packages/vinxi-references
       '@vinxi/react':
         specifier: workspace:^
         version: link:../../../../packages/vinxi-react
@@ -633,6 +636,9 @@ importers:
       '@picocss/pico':
         specifier: ^1.5.7
         version: 1.5.7
+      '@vinxi/plugin-references':
+        specifier: workspace:^
+        version: link:../../../packages/vinxi-references
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
@@ -772,6 +778,12 @@ importers:
         version: 0.0.0-experimental-035a41c4e-20230704
       vinxi:
         specifier: workspace:^
+        version: link:../vinxi
+
+  packages/vinxi-references:
+    devDependencies:
+      vinxi:
+        specifier: workspace:*
         version: link:../vinxi
 
   packages/vinxi-solid:

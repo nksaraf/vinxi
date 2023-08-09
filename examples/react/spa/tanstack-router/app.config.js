@@ -1,8 +1,8 @@
+import { references } from "@vinxi/plugin-references";
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 
 import { TanstackFileRouter } from "./lib/file-router.js";
-import { references } from "./lib/references-plugin.js";
 
 export default createApp({
 	server: {
@@ -25,7 +25,7 @@ export default createApp({
 			style: TanstackFileRouter,
 			build: {
 				target: "browser",
-				plugins: () => [references.clientRouter(), reactRefresh()],
+				plugins: () => [references.clientRouterPlugin(), reactRefresh()],
 			},
 			base: "/",
 		},
@@ -36,7 +36,7 @@ export default createApp({
 			handler: "./app/entry-server.tsx",
 			build: {
 				target: "node",
-				plugins: () => [references.serverRouter()],
+				plugins: () => [references.serverRouterPlugin()],
 			},
 		},
 	],

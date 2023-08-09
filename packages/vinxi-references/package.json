@@ -1,0 +1,28 @@
+{
+  "name": "@vinxi/plugin-references",
+  "version": "0.0.5",
+  "type": "module",
+  "author": "Nikhil Saraf <nsaraf98@gmail.com>",
+  "files": [
+    "*.js",
+    "*.d.ts"
+  ],
+  "types": "./index.d.ts",
+  "exports": {
+    ".": "./index.js",
+    "./*": "./*.js"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./index.d.ts"
+      ]
+    }
+  },
+  "devDependencies": {
+    "vinxi": "workspace:*"
+  },
+  "peerDependencies": {
+    "vinxi": "^0.0.1"
+  }
+}

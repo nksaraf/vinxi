@@ -1,4 +1,5 @@
 import invariant from "vinxi/lib/invariant";
+import { eventHandler } from "vinxi/runtime/server";
 
 async function loadModule(id) {
 	if (import.meta.env.DEV) {
@@ -16,7 +17,7 @@ async function loadModule(id) {
 	);
 }
 
-export async function handleServerAction(event) {
+export default eventHandler(async function handleServerAction(event) {
 	invariant(event.request.method === "POST", "Invalid method");
 
 	const serverReference = event.node.req.headers["server-action"];
@@ -54,4 +55,4 @@ export async function handleServerAction(event) {
 	} else {
 		throw new Error("Invalid request");
 	}
-}
+});

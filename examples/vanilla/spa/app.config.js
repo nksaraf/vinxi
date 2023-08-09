@@ -1,7 +1,14 @@
+import { references } from "@vinxi/plugin-references";
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 
 export default createApp({
+	server: {
+		plugins: [references.serverPlugin],
+		virtual: {
+			[references.serverPlugin]: references.serverPluginModule,
+		},
+	},
 	routers: [
 		{
 			name: "public",
@@ -14,8 +21,9 @@ export default createApp({
 			handler: "./index.html",
 			build: {
 				target: "browser",
-				plugins: () => [reactRefresh()],
+				plugins: () => [references.clientRouterPlugin(), reactRefresh()],
 			},
 		},
+		references.serverRouter(),
 	],
 });

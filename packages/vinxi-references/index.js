@@ -153,6 +153,16 @@ export const references = {
 	serverPlugin,
 	serverPluginModule,
 	transformReferences,
-	clientRouter: client,
-	serverRouter: server,
+	clientRouterPlugin: client,
+	serverRouterPlugin: server,
+	serverRouter: () => ({
+		name: "server",
+		mode: "handler",
+		base: "/_server",
+		handler: fileURLToPath(new URL("./server.js", import.meta.url)),
+		build: {
+			target: "node",
+			plugins: () => [references.serverRouterPlugin()],
+		},
+	}),
 };

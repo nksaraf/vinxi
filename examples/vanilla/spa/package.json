@@ -7,9 +7,9 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.7",
+    "@vinxi/plugin-references": "workspace:^",
     "autoprefixer": "^10.4.14",
     "tailwindcss": "^3.3.2",
     "vinxi": "workspace:^"
-  },
-  "devDependencies": {}
+  }
 }
