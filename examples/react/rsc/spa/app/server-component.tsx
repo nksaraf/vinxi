@@ -1,10 +1,9 @@
-import {
-	createFromFetch,
-	encodeReply,
-} from "@vinxi/react-server-dom-vite/client";
+import { createFromFetch } from "@vinxi/react-server-dom-vite/client";
 import * as React from "react";
 import { startTransition, use, useState } from "react";
 import ReactDOM from "react-dom/client";
+
+import { fetchServerAction } from "./fetchServerAction";
 
 let updateRoot;
 declare global {
@@ -43,24 +42,9 @@ export const serverElementCache = /*#__PURE__*/ new Map<
 	React.Thenable<JSX.Element>
 >();
 
-export async function fetchServerAction(base, id, args) {
-	const response = fetch(base, {
-		method: "POST",
-		headers: {
-			Accept: "text/x-component",
-			"rsc-action": id,
-		},
-		body: await encodeReply(args),
-	});
-
-	return await createFromFetch(response, {
-		callServer,
-	});
-}
-
 export function createCallServer(base) {
 	return async function callServer(id, args) {
-		const root = await fetchServerAction(base, id, args);
+		const root = await fetchServerAction(base, id, args, callServer);
 		// Refresh the tree with the new RSC payload.
 		startTransition(() => {
 			updateRoot(root);

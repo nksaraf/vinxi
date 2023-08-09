@@ -4,17 +4,15 @@ import React, { Suspense, startTransition } from "react";
 import { Root, createRoot, hydrateRoot } from "react-dom/client";
 import "vinxi/runtime/client";
 
-import { sayHello } from "./actions";
-import { fetchServerAction } from "./fetchServerAction";
-import { ServerComponent, createCallServer } from "./server-component";
+import { ServerComponent } from "./server-component";
 
-document.addEventListener("click", async (e) => {
-	console.log(sayHello, "hello");
+// document.addEventListener("click", async (e) => {
+// 	console.log(sayHello, "hello");
 
-	const result = await fetchServerAction("/_server", sayHello["$$id"], []);
-	console.log(result);
-	// sayHello();
-});
+// 	const result = await fetchServerAction("/_server", sayHello["$$id"], []);
+// 	console.log(result);
+// 	// sayHello();
+// });
 
 globalThis.__vite__ = createModuleLoader({
 	loadModule: async (id) => {

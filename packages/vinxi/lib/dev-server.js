@@ -132,7 +132,6 @@ const routerModeDevPlugin = {
 		treeShake(),
 		// fileSystemWatcher(),
 	],
-
 	handler: () => [
 		routes(),
 		devEntries(),
