@@ -35,6 +35,9 @@ importers:
       '@picocss/pico':
         specifier: ^1.5.7
         version: 1.5.7
+      '@vinxi/plugin-references':
+        specifier: workspace:^
+        version: link:../../../../packages/vinxi-references
       '@vinxi/react':
         specifier: workspace:^
         version: link:../../../../packages/vinxi-react
@@ -784,6 +787,10 @@ importers:
         version: link:../vinxi
 
   packages/vinxi-references:
+    dependencies:
+      acorn-loose:
+        specifier: ^8.3.0
+        version: 8.3.0
     devDependencies:
       vinxi:
         specifier: workspace:*

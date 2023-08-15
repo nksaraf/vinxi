@@ -1,7 +1,7 @@
 import { renderAsset } from "@vinxi/react";
 import { renderToPipeableStream } from "@vinxi/react-server-dom-vite/server";
-import React, { Suspense } from "react";
-import { eventHandler, sendStream } from "vinxi/runtime/server";
+import { Suspense } from "react";
+import { eventHandler } from "vinxi/runtime/server";
 
 import App from "./app";
 
@@ -28,6 +28,7 @@ export default eventHandler(async (event) => {
 			decodeReplyFromBusboy,
 			decodeAction,
 		} = await import("@vinxi/react-server-dom-vite/server");
+		console.log(event.node.req.headers);
 		const serverReference = event.node.req.headers["rsc-action"];
 		if (serverReference) {
 			// This is the client-side case

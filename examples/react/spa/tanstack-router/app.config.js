@@ -8,7 +8,9 @@ export default createApp({
 	server: {
 		plugins: [references.serverPlugin],
 		virtual: {
-			[references.serverPlugin]: references.serverPluginModule,
+			[references.serverPlugin]: references.serverPluginModule({
+				routers: ["server"],
+			}),
 		},
 	},
 	routers: [

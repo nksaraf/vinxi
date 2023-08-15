@@ -1,58 +1,80 @@
-import invariant from "vinxi/lib/invariant";
-import { eventHandler } from "vinxi/runtime/server";
+import { readFileSync } from "fs";
+import { join } from "path";
 
-async function loadModule(id) {
-	if (import.meta.env.DEV) {
-		console.log(import.meta.env.MANIFEST["server"].chunks[id].output.path);
-		return await import(
-			import.meta.env.MANIFEST["server"].chunks[id].output.path
-		);
-	}
+import { CLIENT_REFERENCES_MANIFEST, hash } from "./constants.js";
 
-	if (globalThis.$$chunks[id + ".js"]) {
-		return globalThis.$$chunks[id + ".js"];
-	}
-	return await import(
-		import.meta.env.MANIFEST["server"].chunks[id].output.path
-	);
+/**
+ *
+ * @returns {import('vinxi').PluginOption}
+ */
+export function server({
+	client = "client",
+	resolve = {
+		conditions: [],
+	},
+	manifest = CLIENT_REFERENCES_MANIFEST,
+} = {}) {
+	let isBuild;
+	let input;
+	return {
+		name: "server-references",
+		config(config, env) {
+			isBuild = env.command === "build";
+			// @ts-ignore
+			const router = config.router;
+			// @ts-ignore
+			const app = config.app;
+
+			if (isBuild) {
+				const rscRouter = app.getRouter(client);
+
+				const reactClientManifest = JSON.parse(
+					readFileSync(
+						join(rscRouter.build.outDir, rscRouter.base, manifest),
+						"utf-8",
+					),
+				);
+
+				input = {
+					entry: router.handler,
+					...Object.fromEntries(
+						reactClientManifest.server.map((key) => {
+							return [`c_${hash(key)}`, key];
+						}),
+					),
+				};
+
+				return {
+					build: {
+						rollupOptions: {
+							output: {
+								chunkFileNames: "[name].js",
+							},
+							treeshake: true,
+						},
+					},
+					resolve: {
+						conditions: [
+							"node",
+							"import",
+							...(resolve.conditions ?? []),
+							process.env.NODE_ENV,
+						],
+					},
+					ssr: {
+						noExternal: true,
+					},
+				};
+			}
+		},
+
+		configResolved(config) {
+			if (isBuild) {
+				// const reactServerManifest = JSON.parse(
+				// 	readFileSync(".build/rsc/_rsc/react-server-manifest.json", "utf-8"),
+				// );
+				config.build.rollupOptions.input = input;
+			}
+		},
+	};
 }
-
-export default eventHandler(async function handleServerAction(event) {
-	invariant(event.request.method === "POST", "Invalid method");
-
-	const serverReference = event.node.req.headers["server-action"];
-	if (serverReference) {
-		// This is the client-side case
-		const [filepath, name] = serverReference.split("#");
-		const action = (await loadModule(filepath))[name];
-		// Validate that this is actually a function we intended to expose and
-		// not the client trying to invoke arbitrary functions. In a real app,
-		// you'd have a manifest verifying this before even importing it.
-		// if (action.$$typeof !== Symbol.for("react.server.reference")) {
-		// 	throw new Error("Invalid action");
-		// }
-		const result = action.apply(null, await event.request.json());
-		try {
-			// Wait for any mutations
-			const response = await result;
-			// const stream = renderToPipeableStream(result);
-			// // @ts-ignore
-			// stream._read = () => {};
-			// // @ts-ignore
-			// stream.on = (event, listener) => {
-			// 	events[event] = listener;
-			// };
-			event.node.res.setHeader("Content-Type", "application/json");
-			event.node.res.setHeader("Router", "server");
-			console.log(response);
-
-			return JSON.stringify(response ?? null);
-		} catch (x) {
-			// We handle the error on the client
-		}
-		// Refresh the client and return the value
-		// return {};
-	} else {
-		throw new Error("Invalid request");
-	}
-});

@@ -24,5 +24,8 @@
   },
   "peerDependencies": {
     "vinxi": "^0.0.1"
+  },
+  "dependencies": {
+    "acorn-loose": "^8.3.0"
   }
 }

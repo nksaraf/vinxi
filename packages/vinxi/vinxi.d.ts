@@ -215,6 +215,8 @@ type CreateApp = <
 
 export { createApp } from "./lib/app";
 
+export type { ViteDevServer as DevServer } from "vite";
+
 export class FileSystemRouter {
 	constructor(config: { dir: string; extensions?: string[] });
 	getRoutes(): ({ path: string } & any)[];

@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.7",
+    "@vinxi/plugin-references": "workspace:^",
     "@vinxi/react": "workspace:^",
     "@vinxi/react-server-dom-vite": "^0.0.2",
     "@vitejs/plugin-react": "^4.0.1",
