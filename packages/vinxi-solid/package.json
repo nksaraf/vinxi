@@ -1,10 +1,12 @@
 {
   "name": "@vinxi/solid",
-  "version": "0.0.2",
+  "version": "0.0.7",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
     "src",
+    "*.jsx",
+    "*.js",
     "*.d.ts"
   ],
   "types": "./index.d.ts",
