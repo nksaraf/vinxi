@@ -1,5 +1,5 @@
 import invariant from "vinxi/lib/invariant";
-import { eventHandler } from "vinxi/runtime/server";
+import { eventHandler, toWebRequest } from "vinxi/runtime/server";
 
 async function loadModule(id) {
 	if (import.meta.env.DEV) {
@@ -18,7 +18,7 @@ async function loadModule(id) {
 }
 
 export default eventHandler(async function handleServerAction(event) {
-	invariant(event.request.method === "POST", "Invalid method");
+	invariant(event.method === "POST", "Invalid method");
 
 	const serverReference = event.node.req.headers["server-action"];
 	if (serverReference) {
@@ -31,7 +31,7 @@ export default eventHandler(async function handleServerAction(event) {
 		// if (action.$$typeof !== Symbol.for("react.server.reference")) {
 		// 	throw new Error("Invalid action");
 		// }
-		const result = action.apply(null, await event.request.json());
+		const result = action.apply(null, await toWebRequest(event).json());
 		try {
 			// Wait for any mutations
 			const response = await result;
