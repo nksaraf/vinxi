@@ -1,6 +1,6 @@
 import { pathToRegexp } from "path-to-regexp";
 import fileRoutes from "vinxi/routes";
-import { H3Event, eventHandler } from "vinxi/runtime/server";
+import { H3Event, eventHandler, toWebRequest } from "vinxi/runtime/server";
 
 const routes = [
 	...fileRoutes.map((route) => ({
@@ -28,7 +28,7 @@ function createRouter(routes) {
 	return {
 		async handle(event) {
 			for (const route of builtRoutes) {
-				const url = new URL(event.request.url);
+				const url = new URL(toWebRequest(event).url);
 				const path = url.pathname.replace(import.meta.env.BASE_URL, "");
 
 				const match = route.regexp.exec(path);

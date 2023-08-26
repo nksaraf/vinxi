@@ -183,9 +183,13 @@ async function createViteHandler(app, router, serveConfig) {
 		configFile: false,
 		base: router.base,
 		plugins: [
-			...(targetDevPlugin[router.build.target]?.(router).filter(Boolean) ?? []),
-			...(routerModeDevPlugin[router.mode]?.(router).filter(Boolean) ?? []),
-			...((await router.build?.plugins?.(router)).filter(Boolean) || []),
+			...((targetDevPlugin[router.build.target]?.(router) ?? []).filter(
+				Boolean,
+			) ?? []),
+			...((routerModeDevPlugin[router.mode]?.(router) ?? []).filter(Boolean) ??
+				[]),
+			...(((await router.build?.plugins?.(router)) ?? []).filter(Boolean) ||
+				[]),
 		],
 		router,
 		app,
