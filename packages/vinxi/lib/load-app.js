@@ -13,15 +13,27 @@ export async function loadApp(configFile = undefined) {
 		configFile
 			? {
 					configFile,
+					jitiOptions: {
+						esmResolve: true,
+						nativeModules: ["acorn"],
+					},
 			  }
 			: {
 					name: "app",
+					jitiOptions: {
+						esmResolve: true,
+						nativeModules: ["acorn"],
+					},
 			  },
 	);
 
 	if (!app.config) {
 		const { config } = await loadConfig({
 			name: "vite",
+			jitiOptions: {
+				esmResolve: true,
+				nativeModules: ["acorn"],
+			},
 		});
 
 		if (config.config) {

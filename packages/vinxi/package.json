@@ -1,6 +1,6 @@
 {
   "name": "vinxi",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
@@ -29,6 +29,9 @@
       ],
       "./file-system-router": [
         "./file-system-router.d.ts"
+      ],
+      "./lib/plugins/config": [
+        "./lib/plugins/config.js"
       ],
       "./server": [
         "./server.d.ts"

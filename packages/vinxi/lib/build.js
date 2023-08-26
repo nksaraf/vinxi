@@ -2,8 +2,8 @@ import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro } from "nitropack";
 import { join } from "path";
 import { relative } from "pathe";
-import { visualizer } from "rollup-plugin-visualizer";
 
+import { mkdir } from "fs/promises";
 import { consola, withLogger } from "./logger.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
 import { config } from "./plugins/config.js";
@@ -50,6 +50,9 @@ export async function createBuild(app, buildConfig) {
 			process.env.NITRO_PRESET ??
 			app.config.server.preset,
 		alias: {
+			/**
+			 * These
+			 */
 			"node-fetch-native/polyfill": require.resolve(
 				"node-fetch-native/polyfill",
 			),
@@ -236,6 +239,10 @@ export async function createBuild(app, buildConfig) {
 	nitro.options.appConfigFiles = [];
 	nitro.logger = consola.withTag(app.config.name);
 	await copyPublicAssets(nitro);
+
+	console.log(nitro)
+
+	await mkdir(join(nitro.options.output.serverDir), { recursive: true })
 	await build(nitro);
 	await nitro.close();
 	process.exit(0);
