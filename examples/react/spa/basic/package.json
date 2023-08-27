@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@vinxi/react": "0.0.8",
+    "@vinxi/react": "0.0.9",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.15",
     "react": "0.0.0-experimental-035a41c4e-20230704",

@@ -12,7 +12,7 @@
     "@mdx-js/react": "^2.3.0",
     "@mdx-js/rollup": "^2.3.0",
     "@picocss/pico": "^1.5.10",
-    "@vinxi/react": "0.0.8",
+    "@vinxi/react": "0.0.9",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.15",
     "path-to-regexp": "^6.2.1",

@@ -1,5 +1,11 @@
 # @vinxi/react
 
+## 0.0.9
+
+### Patch Changes
+
+- ec37a2e: test bump
+
 ## 0.0.8
 
 ### Patch Changes

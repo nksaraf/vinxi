@@ -13,7 +13,7 @@
     "@tanstack/react-loaders": "0.0.1-beta.109",
     "@tanstack/router": "0.0.1-beta.111",
     "@tanstack/router-devtools": "0.0.1-beta.111",
-    "@vinxi/react": "0.0.8",
+    "@vinxi/react": "0.0.9",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.15",
     "axios": "^1.5.0",
