@@ -1,5 +1,11 @@
 # @vinxi/router
 
+## 0.0.4
+
+### Patch Changes
+
+- 082c8f6: fix: add default config param to routers
+
 ## 0.0.3
 
 ### Patch Changes
