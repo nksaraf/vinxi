@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "example-rsc-ssr",
   "private": true,
   "type": "module",
   "version": null,

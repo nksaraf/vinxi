@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "react-ssr-basic-cloudflare",
   "type": "module",
   "private": true,
   "version": null,
