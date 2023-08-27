@@ -20,7 +20,7 @@
     }
   },
   "devDependencies": {
-    "vinxi": "*"
+    "vinxi": "^0.0.21"
   },
   "peerDependencies": {
     "vinxi": "^0.0.1"

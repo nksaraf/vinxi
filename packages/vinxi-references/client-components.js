@@ -9,7 +9,7 @@ import { SERVER_REFERENCES_MANIFEST, hash } from "./constants.js";
  */
 export function clientComponents({
 	server = "rsc",
-	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom-vite"],
+	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom"],
 	manifest = SERVER_REFERENCES_MANIFEST,
 } = {}) {
 	let isBuild;

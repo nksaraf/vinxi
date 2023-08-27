@@ -13,11 +13,12 @@ export function client({
 		transformReferences({
 			hash: (e) => `c_${hash(e)}`,
 			runtime,
-			onServerReference(reference) {
-				serverModules.add(reference);
-			},
-			onClientReference(reference) {
-				clientModules.add(reference);
+			onReference(type, reference) {
+				if (type === "server") {
+					serverModules.add(reference);
+				} else {
+					clientModules.add(reference);
+				}
 			},
 		}),
 		{

@@ -194,7 +194,7 @@ var proxyHandlers = {
     throw new Error('Cannot assign to a client module from a server module.');
   }
 };
-function createClientReference(moduleId, name) {
+function createClientReference(fn, moduleId, name) {
   var clientReference = Object.defineProperties({}, {
     $$typeof: {
       value: CLIENT_REFERENCE

@@ -5,8 +5,8 @@ export function serverComponents({
 	resolve = {
 		conditions: ["react-server"],
 	},
-	runtime = "@vinxi/react-server-dom-vite/runtime",
-	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom-vite"],
+	runtime = "@vinxi/react-server-dom/runtime",
+	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom"],
 	manifest = SERVER_REFERENCES_MANIFEST,
 	transforms = undefined,
 } = {}) {
@@ -41,7 +41,7 @@ export function buildServerComponents({
 	resolve = {
 		conditions: ["react-server"],
 	},
-	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom-vite"],
+	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom"],
 	manifest = SERVER_REFERENCES_MANIFEST,
 	modules = {
 		server: new Set(),
