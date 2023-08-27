@@ -35,8 +35,8 @@
     }
   },
   "devDependencies": {
-    "@solidjs/meta": "^0.28.5",
-    "solid-js": "^1.7.8",
+    "@solidjs/meta": "^0.28.6",
+    "solid-js": "^1.7.11",
     "vinxi": "workspace:^"
   }
 }
