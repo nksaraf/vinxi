@@ -8,9 +8,9 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@vinxi/plugin-references": "0.0.12",
+    "@vinxi/plugin-references": "0.0.13",
     "autoprefixer": "^10.4.15",
     "tailwindcss": "^3.3.3",
-    "vinxi": "0.0.22"
+    "vinxi": "0.0.23"
   }
 }
