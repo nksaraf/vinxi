@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/solid-start",
-  "version": "0.0.3",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
@@ -40,9 +40,9 @@
   "devDependencies": {
     "@solidjs/meta": "^0.28.6",
     "@solidjs/router": "^0.8.3",
-    "@vinxi/solid": "workspace:^",
+    "@vinxi/solid": "0.0.9",
     "solid-js": "^1.7.11",
-    "vinxi": "workspace:^"
+    "vinxi": "0.0.23"
   },
   "dependencies": {
     "vite-plugin-solid": "^2.7.0"

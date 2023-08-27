@@ -7,12 +7,12 @@
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
-    "@vinxi/react": "workspace:^",
+    "@vinxi/react": "0.0.7",
     "@vitejs/plugin-react": "^4.0.4",
     "path-to-regexp": "^6.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vinxi": "workspace:^"
+    "vinxi": "0.0.23"
   },
   "devDependencies": {
     "@types/react": "^18.2.21",
