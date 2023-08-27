@@ -1,7 +1,7 @@
 import {
 	createFromFetch,
 	encodeReply,
-} from "@vinxi/react-server-dom-vite/client";
+} from "@vinxi/react-server-dom/client";
 
 export async function fetchServerAction(
 	base,
@@ -15,7 +15,7 @@ export async function fetchServerAction(
 		method: "POST",
 		headers: {
 			Accept: "text/x-component",
-			"rsc-action": id,
+			"server-action": id,
 		},
 		body: await encodeReply(args),
 	});

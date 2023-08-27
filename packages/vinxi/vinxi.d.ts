@@ -222,3 +222,5 @@ export class FileSystemRouter {
 	getRoutes(): ({ path: string } & any)[];
 	// match(pathname: string): MatchedRoute;
 }
+
+export { RouterSchema } from "./lib/app";

@@ -13,8 +13,8 @@
     "format": "prettier --ignore-path .gitignore --ignore-unknown . '!pnpm-lock.yaml' --write"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-    "prettier": "^2.8.7",
+    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "prettier": "^2.8.8",
     "typescript": "5.1.6"
   },
   "pnpm": {
@@ -24,6 +24,7 @@
     }
   },
   "dependencies": {
+    "@changesets/cli": "^2.26.2",
     "rimraf": "^5.0.1"
   }
 }

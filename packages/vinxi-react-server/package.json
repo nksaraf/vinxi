@@ -1,0 +1,45 @@
+{
+  "name": "@vinxi/react-server",
+  "version": "0.0.6",
+  "type": "module",
+  "author": "Nikhil Saraf <nsaraf98@gmail.com>",
+  "files": [
+    "*.jsx",
+    "invariant.js",
+    "*.d.ts"
+  ],
+  "types": "./index.d.ts",
+  "exports": {
+    ".": "./index.js",
+    "./runtime": "./runtime.cjs",
+    "./server": "./server.cjs",
+    "./*": "./*.js"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./index.d.ts"
+      ],
+      "./client": [
+        "./client.d.ts"
+      ],
+      "./server": [
+        "./server.d.ts"
+      ],
+      "./routes": [
+        "./routes.d.ts"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.21",
+    "react": "0.0.0-experimental-035a41c4e-20230704",
+    "vinxi": "workspace:^"
+  },
+  "dependencies": {
+    "@vinxi/plugin-references": "workspace:^",
+    "@vinxi/react": "workspace:^",
+    "@vinxi/react-server-dom": "^0.0.3",
+    "@vitejs/plugin-react": "^4.0.4"
+  }
+}

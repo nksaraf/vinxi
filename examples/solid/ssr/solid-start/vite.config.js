@@ -1,3 +1,3 @@
-import { defineConfig } from "solid-start";
+import { defineConfig } from "@vinxi/solid-start";
 
 export default defineConfig();

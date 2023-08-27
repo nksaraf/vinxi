@@ -1,5 +1,6 @@
 {
-  "type": "module",
+  "name": "app",
+  "private": true,
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",

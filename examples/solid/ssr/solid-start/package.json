@@ -1,5 +1,6 @@
 {
-  "type": "module",
+  "name": "app",
+  "private": true,
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
@@ -11,7 +12,7 @@
     "@solidjs/router": "^0.8.3",
     "autoprefixer": "^10.4.15",
     "solid-js": "^1.7.11",
-    "solid-start": "workspace:^",
+    "@vinxi/solid-start": "workspace:^",
     "tailwindcss": "^3.3.3",
     "vinxi": "workspace:^"
   },

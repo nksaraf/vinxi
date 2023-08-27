@@ -1,6 +1,7 @@
 {
-  "name": "solid-start",
+  "name": "@vinxi/solid-start",
   "version": "0.0.2",
+  "private": true,
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [

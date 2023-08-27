@@ -1,8 +1,8 @@
 /// <reference types="vinxi/server" />
 import viteServer from "#vite-dev-server";
 import { renderAsset } from "@vinxi/react";
-import * as ReactServerDOM from "@vinxi/react-server-dom-vite/client";
-import { createModuleLoader } from "@vinxi/react-server-dom-vite/runtime";
+import * as ReactServerDOM from "@vinxi/react-server-dom/client";
+import { createModuleLoader } from "@vinxi/react-server-dom/runtime";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import { H3Event, eventHandler, fetchWithEvent } from "vinxi/runtime/server";

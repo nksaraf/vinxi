@@ -1,5 +1,5 @@
 import { renderAsset } from "@vinxi/react";
-import * as RSDV from "@vinxi/react-server-dom-vite/server";
+import * as RSDV from "@vinxi/react-server-dom/server";
 import React, { Suspense } from "react";
 import { eventHandler } from "vinxi/runtime/server";
 
@@ -12,8 +12,8 @@ export default eventHandler(async (event) => {
 			decodeReply,
 			decodeReplyFromBusboy,
 			decodeAction,
-		} = await import("@vinxi/react-server-dom-vite/server");
-		const serverReference = event.node.req.headers["rsc-action"];
+		} = await import("@vinxi/react-server-dom/server");
+		const serverReference = event.node.req.headers["server-action"];
 		if (serverReference) {
 			// This is the client-side case
 			const [filepath, name] = serverReference.split("#");

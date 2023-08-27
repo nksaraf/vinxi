@@ -1,4 +1,4 @@
-import serverComponent from "@vinxi/react-server-dom-vite/plugin";
+import serverComponent from "@vinxi/react-server-dom/plugin";
 import reactRefresh from "@vitejs/plugin-react";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -72,7 +72,7 @@ function serverComponents() {
 								"react",
 								"react-dom",
 								"react/jsx-dev-runtime",
-								"@vinxi/react-server-dom-vite",
+								"@vinxi/react-server-dom",
 							],
 						},
 					};
@@ -133,19 +133,19 @@ function clientComponents() {
 
 				return {
 					ssr: {
-						external: ["react", "react-dom", "@vinxi/react-server-dom-vite"],
+						external: ["react", "react-dom", "@vinxi/react-server-dom"],
 					},
 					optimizeDeps: {
 						include: [
-							"@vinxi/react-server-dom-vite",
+							"@vinxi/react-server-dom",
 							"react-server-dom-vite",
 							"react",
 							"react-dom",
 						],
 					}, // optimizeDeps: {
 					// 	include: [
-					// 		"@vinxi/react-server-dom-vite/client.browser",
-					// 		"@vinxi/react-server-dom-vite/runtime",
+					// 		"@vinxi/react-server-dom/client.browser",
+					// 		"@vinxi/react-server-dom/runtime",
 					// 		"react",
 					// 		"react-dom",
 					// 	],
@@ -182,7 +182,7 @@ function clientComponents() {
 				return {
 					optimizeDeps: {
 						include: [
-							"@vinxi/react-server-dom-vite",
+							"@vinxi/react-server-dom",
 							"react-server-dom-vite",
 							"react",
 							"react-dom",
@@ -192,7 +192,7 @@ function clientComponents() {
 						external: [
 							"react",
 							"react-dom",
-							"@vinxi/react-server-dom-vite",
+							"@vinxi/react-server-dom",
 							"react-server-dom-vite",
 						],
 					},

@@ -1,4 +1,4 @@
-import { createFromFetch } from "@vinxi/react-server-dom-vite/client";
+import { createFromFetch } from "@vinxi/react-server-dom/client";
 import * as React from "react";
 import { startTransition, use, useState } from "react";
 import ReactDOM from "react-dom/client";

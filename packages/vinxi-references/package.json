@@ -23,7 +23,7 @@
     "vinxi": "^0.0.21"
   },
   "peerDependencies": {
-    "vinxi": "^0.0.1"
+    "vinxi": "^0.0.21"
   },
   "dependencies": {
     "acorn": "^8.10.0",

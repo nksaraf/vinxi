@@ -1,3 +1,4 @@
+import pkg from "@vinxi/plugin-mdx";
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 import {
@@ -5,7 +6,6 @@ import {
 	analyzeModule,
 	cleanPath,
 } from "vinxi/file-system-router";
-import pkg from "vite-plugin-mdx";
 
 const { default: mdx } = pkg;
 

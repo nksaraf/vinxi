@@ -1,5 +1,5 @@
 /// <reference types="vinxi/client" />
-import { createModuleLoader } from "@vinxi/react-server-dom-vite/runtime";
+import { createModuleLoader } from "@vinxi/react-server-dom/runtime";
 import React, { Suspense, startTransition } from "react";
 import { Root, createRoot, hydrateRoot } from "react-dom/client";
 import "vinxi/runtime/client";

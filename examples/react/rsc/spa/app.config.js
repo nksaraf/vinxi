@@ -35,7 +35,9 @@ export default createApp({
 			build: {
 				target: "browser",
 				plugins: () => [
-					references.clientRouterPlugin(),
+					references.clientRouterPlugin({
+						runtime: "@vinxi/react-server-dom/runtime",
+					}),
 					reactRefresh(),
 					references.clientComponents(),
 				],

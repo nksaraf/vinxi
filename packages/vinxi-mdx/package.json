@@ -1,5 +1,5 @@
 {
-  "name": "vite-plugin-mdx",
+  "name": "@vinxi/plugin-mdx",
   "version": "3.6.0",
   "type": "module",
   "scripts": {

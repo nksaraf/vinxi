@@ -1,5 +1,6 @@
 {
-  "type": "module",
+  "name": "app",
+  "private": true,
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
@@ -7,14 +8,14 @@
   },
   "dependencies": {
     "@vinxi/react": "workspace:^",
-    "@vitejs/plugin-react": "^4.0.1",
+    "@vitejs/plugin-react": "^4.0.4",
     "path-to-regexp": "^6.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "vinxi": "workspace:^"
   },
   "devDependencies": {
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6"
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7"
   }
 }
