@@ -1,5 +1,11 @@
 # @vinxi/router
 
+## 0.0.3
+
+### Patch Changes
+
+- a34be9e: add static and spa routers
+
 ## 0.0.2
 
 ### Patch Changes
