@@ -15,9 +15,14 @@
     "vite-tsconfig-paths": "^4.2.0"
   },
   "exports": {
-    "./api": "./api.js"
+    "./api": "./api.js",
+    "./static": "./static.js",
+    "./spa": "./spa.js"
   },
   "peerDependencies": {
+    "vinxi": "0.0.24"
+  },
+  "devDependencies": {
     "vinxi": "0.0.24"
   }
 }

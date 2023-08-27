@@ -46,8 +46,14 @@ class APIFileSystemRouter extends BaseFileSystemRouter {
 	}
 }
 
+/**
+ *
+ * @param {{ plugins?: () => import('vinxi').PluginOption[]; dir?: string; style?: any; base?: string; handler?: string }} param0
+ * @returns {import('vinxi').RouterSchema}
+ */
 export function apiRouter({
 	dir = "./app/api/routes",
+	style = APIFileSystemRouter,
 	base = "/api",
 	handler = fileURLToPath(new URL("./handler.js", import.meta.url)),
 	plugins = () => [],
@@ -57,7 +63,7 @@ export function apiRouter({
 		mode: "handler",
 		base,
 		dir,
-		style: APIFileSystemRouter,
+		style,
 		handler,
 		build: {
 			target: "server",

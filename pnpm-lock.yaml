@@ -39,7 +39,7 @@ importers:
         specifier: ^1.5.10
         version: 1.5.10
       '@vinxi/react-server':
-        specifier: 0.0.10
+        specifier: 0.0.11
         version: link:../../../../packages/vinxi-react-server
       '@vinxi/react-server-dom':
         specifier: 0.0.3
@@ -57,7 +57,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -73,7 +73,7 @@ importers:
         specifier: ^1.5.10
         version: 1.5.10
       '@vinxi/plugin-references':
-        specifier: 0.0.13
+        specifier: 0.0.14
         version: link:../../../../packages/vinxi-references
       '@vinxi/react':
         specifier: 0.0.9
@@ -100,7 +100,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -137,7 +137,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -171,7 +171,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -217,7 +217,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
       wouter:
         specifier: ^2.11.0
@@ -245,7 +245,7 @@ importers:
         specifier: 0.0.1-beta.111
         version: 0.0.1-beta.111(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)
       '@vinxi/plugin-references':
-        specifier: 0.0.13
+        specifier: 0.0.14
         version: link:../../../../packages/vinxi-references
       '@vinxi/react':
         specifier: 0.0.9
@@ -272,7 +272,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -318,7 +318,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -365,7 +365,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
 
   examples/react/ssr/basic:
@@ -392,7 +392,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -444,7 +444,7 @@ importers:
         specifier: ^1.7.4
         version: 1.7.4
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
       ws:
         specifier: ^8.13.0
@@ -499,7 +499,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -536,7 +536,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
       wouter:
         specifier: ^2.11.0
@@ -564,7 +564,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
       vite:
         specifier: ^4.4.9
@@ -582,7 +582,7 @@ importers:
         specifier: ^0.28.6
         version: 0.28.6(solid-js@1.7.11)
       '@vinxi/plugin-references':
-        specifier: 0.0.13
+        specifier: 0.0.14
         version: link:../../../../packages/vinxi-references
       '@vinxi/solid':
         specifier: 0.0.9
@@ -597,7 +597,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
       vite-plugin-solid:
         specifier: ^2.7.0
@@ -633,7 +633,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
       vite-plugin-solid:
         specifier: ^2.7.0
@@ -667,7 +667,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../../packages/vinxi
     devDependencies:
       axios:
@@ -680,7 +680,7 @@ importers:
         specifier: ^1.5.10
         version: 1.5.10
       '@vinxi/plugin-references':
-        specifier: 0.0.13
+        specifier: 0.0.14
         version: link:../../../packages/vinxi-references
       autoprefixer:
         specifier: ^10.4.15
@@ -689,7 +689,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../packages/vinxi
 
   frameworks/solid-start:
@@ -711,7 +711,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../packages/vinxi
 
   packages/vinxi:
@@ -863,13 +863,13 @@ importers:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../vinxi
 
   packages/vinxi-react-server:
     dependencies:
       '@vinxi/plugin-references':
-        specifier: 0.0.13
+        specifier: 0.0.14
         version: link:../vinxi-references
       '@vinxi/react':
         specifier: 0.0.9
@@ -888,7 +888,7 @@ importers:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../vinxi
 
   packages/vinxi-references:
@@ -913,7 +913,7 @@ importers:
         version: 0.23.4
     devDependencies:
       vinxi:
-        specifier: ^0.0.23
+        specifier: ^0.0.24
         version: link:../vinxi
 
   packages/vinxi-router:
@@ -924,6 +924,10 @@ importers:
       vite-tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0(typescript@5.1.6)
+    devDependencies:
+      vinxi:
+        specifier: 0.0.24
+        version: link:../vinxi
 
   packages/vinxi-solid:
     devDependencies:
@@ -934,7 +938,7 @@ importers:
         specifier: ^1.7.11
         version: 1.7.11
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../vinxi
 
   test:
@@ -986,7 +990,7 @@ importers:
         version: 5.23.0
       vinxi:
         specifier: 0.0.23
-        version: link:../packages/vinxi
+        version: 0.0.23(@types/node@18.17.11)
       vite:
         specifier: 4.3.9
         version: 4.3.9(patch_hash=vtyqdrd2rn7nzuduoqhhzurwua)(@types/node@18.17.11)
@@ -1022,7 +1026,7 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
       vinxi:
-        specifier: 0.0.23
+        specifier: 0.0.24
         version: link:../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -8661,6 +8665,64 @@ packages:
       is-buffer: 2.0.5
       unist-util-stringify-position: 3.0.3
       vfile-message: 3.1.4
+
+  /vinxi@0.0.23(@types/node@18.17.11):
+    resolution: {integrity: sha512-kInABUiwAvRmEqBilCIoKz0zrccjWbIaaKGvVk91rTG8//94Hob3qcJcY2jmgJfwH7iGZTxqAYstuFZw2DuRHA==}
+    hasBin: true
+    dependencies:
+      '@babel/core': 7.22.11
+      '@babel/plugin-syntax-jsx': 7.22.5(@babel/core@7.22.11)
+      '@babel/plugin-syntax-typescript': 7.22.5(@babel/core@7.22.11)
+      c12: 1.4.2
+      chokidar: 3.5.3
+      consola: 3.2.3
+      defu: 6.1.2
+      es-module-lexer: 1.3.0
+      esbuild: 0.18.20
+      fast-glob: 3.3.1
+      get-port: 6.1.2
+      h3: 1.8.0
+      http-proxy: 1.18.1
+      listhen: 1.4.1
+      micromatch: 4.0.5
+      mri: 1.2.0
+      nitropack: 2.6.1
+      node-fetch-native: 1.4.0
+      path-to-regexp: 6.2.1
+      pathe: 1.1.1
+      perfect-debounce: 1.0.0
+      rollup-plugin-visualizer: 5.9.2(rollup@3.28.1)
+      serve-placeholder: 2.0.1
+      serve-static: 1.15.0
+      ufo: 1.3.0
+      unenv: 1.7.4
+      unimport: 3.2.0(rollup@3.28.1)
+      unstorage: 1.9.0
+      vite: 4.3.9(patch_hash=vtyqdrd2rn7nzuduoqhhzurwua)(@types/node@18.17.11)
+      zod: 3.22.2
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@planetscale/database'
+      - '@types/node'
+      - '@upstash/redis'
+      - '@vercel/kv'
+      - debug
+      - encoding
+      - idb-keyval
+      - less
+      - rollup
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+    dev: false
 
   /vite-node@0.28.5(@types/node@18.17.11):
     resolution: {integrity: sha512-LmXb9saMGlrMZbXTvOveJKwMTBTNUH66c8rJnQ0ZPNX+myPEol64+szRzXtV5ORb0Hb/91yq+/D3oERoyAt6LA==}
