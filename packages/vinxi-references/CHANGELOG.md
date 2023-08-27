@@ -1,5 +1,13 @@
 # @vinxi/plugin-references
 
+## 0.0.14
+
+### Patch Changes
+
+- 47abc3c: change "node" target to "server"
+- Updated dependencies [47abc3c]
+  - vinxi@0.0.24
+
 ## 0.0.13
 
 ### Patch Changes

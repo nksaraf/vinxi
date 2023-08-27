@@ -1,5 +1,13 @@
 # @vinxi/react-server
 
+## 0.0.11
+
+### Patch Changes
+
+- 47abc3c: change "node" target to "server"
+- Updated dependencies [47abc3c]
+  - @vinxi/plugin-references@0.0.14
+
 ## 0.0.10
 
 ### Patch Changes

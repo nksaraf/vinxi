@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.0.24
+
+### Patch Changes
+
+- 47abc3c: change "node" target to "server"
+
 ## 0.0.23
 
 ### Patch Changes
