@@ -1,7 +1,8 @@
 {
   "name": "app",
   "private": true,
-  "version": "0.0.1",
+  "type": "module",
+  "version": null,
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
