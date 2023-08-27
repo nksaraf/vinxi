@@ -23,10 +23,10 @@ export function routes() {
 					"/",
 				)
 			) {
-				console.log(router.name, 'routers')
+				console.log(router.name, "routers");
 				const js = jsCode();
 				const routesCode = JSON.stringify(
-					await router.fileRouter?.getRoutes() ?? [],
+					(await router.fileRouter?.getRoutes()) ?? [],
 					(k, v) => {
 						if (!v) {
 							return undefined;
@@ -55,7 +55,7 @@ export function routes() {
 								src: isBuild ? relative(root, buildId) : buildId,
 								build: isBuild ? `_$() => import('${buildId}')$_` : undefined,
 								import:
-									router.build.target === "node"
+									router.build.target === "server"
 										? `_$() => import('${buildId}')$_`
 										: `_$(() => { const id = '${relative(
 												root,
@@ -72,7 +72,7 @@ export function routes() {
 					.replaceAll('"_$(', "(")
 					.replaceAll(')$_"', ")");
 
-					console.log(routes)
+				console.log(routes);
 				const code = `${js.getImportStatements()}
 				export default ${routes}`;
 				return code;

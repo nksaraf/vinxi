@@ -57,7 +57,7 @@ export default createApp({
 			dir: "./app/api",
 			style: APIFileSystemRouter,
 			build: {
-				target: "node",
+				target: "server",
 				// plugins: () => [reactRefresh()],
 			},
 			base: "/api",
@@ -77,7 +77,7 @@ export default createApp({
 			mode: "handler",
 			handler: "./app/entry-server.tsx",
 			build: {
-				target: "node",
+				target: "server",
 			},
 		},
 	],

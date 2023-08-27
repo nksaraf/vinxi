@@ -29,7 +29,7 @@ export default createApp({
 			dir: "./app/pages",
 			style: NextJSPagesFileSystemRouter,
 			build: {
-				target: "node",
+				target: "server",
 			},
 		},
 	],

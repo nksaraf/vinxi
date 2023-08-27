@@ -21,7 +21,7 @@ export const references = {
 		base: "/_server",
 		handler: fileURLToPath(new URL("./server-handler.js", import.meta.url)),
 		build: {
-			target: "node",
+			target: "server",
 			plugins: () => [server()],
 		},
 	}),

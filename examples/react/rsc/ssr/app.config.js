@@ -248,7 +248,7 @@ export default createApp({
 			base: "/_rsc",
 			handler: "./app/react-server.tsx",
 			build: {
-				target: "node",
+				target: "server",
 				plugins: () => [serverComponents()],
 			},
 		},
@@ -267,7 +267,7 @@ export default createApp({
 			mode: "handler",
 			handler: "./app/server.tsx",
 			build: {
-				target: "node",
+				target: "server",
 				serverPlugins: () => [
 					(app) => {
 						const router = app.getRoute("rsc");

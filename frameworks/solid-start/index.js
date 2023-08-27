@@ -87,7 +87,7 @@ export function defineConfig({} = {}) {
 				dir: "./src/routes",
 				style: SolidStartFileSystemRouter,
 				build: {
-					target: "node",
+					target: "server",
 					plugins: () => [
 						solid({ ssr: true }),
 						config("root", {

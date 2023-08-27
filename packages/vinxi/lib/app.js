@@ -112,7 +112,7 @@ const handlerRouterSchema = v.object({
 			}),
 		),
 		outDir: v.string().optional(),
-		target: v.literal("node"),
+		target: v.literal("server"),
 		plugins: v.optional(v.custom((value) => typeof value === "function")),
 	}),
 });

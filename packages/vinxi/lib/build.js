@@ -1,9 +1,9 @@
+import { mkdir } from "fs/promises";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro } from "nitropack";
 import { join } from "path";
 import { relative } from "pathe";
 
-import { mkdir } from "fs/promises";
 import { consola, withLogger } from "./logger.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
 import { config } from "./plugins/config.js";
@@ -240,9 +240,9 @@ export async function createBuild(app, buildConfig) {
 	nitro.logger = consola.withTag(app.config.name);
 	await copyPublicAssets(nitro);
 
-	console.log(nitro)
+	console.log(nitro);
 
-	await mkdir(join(nitro.options.output.serverDir), { recursive: true })
+	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
 	await build(nitro);
 	await nitro.close();
 	process.exit(0);
@@ -271,7 +271,7 @@ async function createRouterBuild(app, router) {
 }
 
 const buildTargetPlugin = {
-	node: () => [routes(), handerBuild(), treeShake(), manifest()],
+	server: () => [routes(), handerBuild(), treeShake(), manifest()],
 	browser: () => [routes(), browserBuild(), treeShake(), manifest()],
 };
 

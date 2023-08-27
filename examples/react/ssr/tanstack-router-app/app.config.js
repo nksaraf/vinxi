@@ -94,7 +94,7 @@ export default createApp({
 			dir: "./app/routes",
 			style: TanstackFileSystemRouter,
 			build: {
-				target: "node",
+				target: "server",
 				plugins: () => [reactRefresh()],
 			},
 		},

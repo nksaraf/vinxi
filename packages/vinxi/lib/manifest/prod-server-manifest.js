@@ -65,10 +65,7 @@ export function createProdManifest(app) {
 							get(target, input) {
 								invariant(typeof input === "string", "Input expected");
 								const id = input;
-								if (
-									router.build.target === "node" ||
-									router.build.target === "node-web"
-								) {
+								if (router.build.target === "server") {
 									return {
 										assets() {
 											return findAssetsInViteManifest(bundlerManifest, input)

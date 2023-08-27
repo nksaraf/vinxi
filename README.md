@@ -59,7 +59,7 @@ export default createApp({
 			mode: "handler",
 			handler: "./app/server.tsx",
 			build: {
-				target: "node",
+				target: "server",
 			},
 		},
 	],
@@ -95,7 +95,7 @@ export default createApp({
 			mode: "handler",
 			handler: "./app/server.tsx",
 			build: {
-				target: "node",
+				target: "server",
 				plugins: () => [solid({ ssr: true })],
 			},
 		},

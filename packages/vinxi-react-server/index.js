@@ -29,7 +29,7 @@ export function defineConfig() {
 				handler: fileURLToPath(new URL("./react-server.js", import.meta.url)),
 
 				build: {
-					target: "node",
+					target: "server",
 					plugins: () => [
 						config("alias", {
 							resolve: {
@@ -70,7 +70,7 @@ export function defineConfig() {
 				base: "/_server",
 				handler: fileURLToPath(new URL("./server-action.js", import.meta.url)),
 				build: {
-					target: "node",
+					target: "server",
 					plugins: () => [
 						config("alias", {
 							resolve: {

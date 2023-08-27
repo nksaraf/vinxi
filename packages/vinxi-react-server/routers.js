@@ -23,7 +23,7 @@ export function reactServerRouter() {
 		base: "/_rsc",
 		handler: "./app/react-server.tsx",
 		build: {
-			target: "node",
+			target: "server",
 			plugins: () => [references.serverComponents(), reactRefresh()],
 		},
 	};
@@ -60,7 +60,7 @@ export function serverActionRouter() {
 		base: "/_server",
 		handler: "./app/server-action.tsx",
 		build: {
-			target: "node",
+			target: "server",
 			plugins: () => [
 				references.serverRouterPlugin({
 					resolve: {

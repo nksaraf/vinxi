@@ -1,0 +1,23 @@
+{
+  "name": "@vinxi/router",
+  "version": "0.0.1",
+  "description": "",
+  "module": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "path-to-regexp": "^6.2.1",
+    "vite-tsconfig-paths": "^4.2.0"
+  },
+  "exports": {
+    "./api": "./api.js"
+  },
+  "peerDependencies": {
+    "vinxi": "0.0.23"
+  }
+}

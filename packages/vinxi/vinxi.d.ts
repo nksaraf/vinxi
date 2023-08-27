@@ -66,7 +66,7 @@ export type BundlerConfig = {
 	 * - `node-web`: `handler`
 	 * - null: `static`
 	 */
-	target?: "browser" | "node" | "node-web" | "static";
+	target?: "browser" | "server" | "static";
 
 	/**
 	 * Output directory for the bundle

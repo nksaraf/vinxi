@@ -20,7 +20,7 @@ export const references = {
 		base: "/_server",
 		handler: fileURLToPath(new URL("./server.js", import.meta.url)),
 		build: {
-			target: "node",
+			target: "server",
 			plugins: () => [references.serverRouterPlugin()],
 		},
 	}),

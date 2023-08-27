@@ -79,7 +79,7 @@ export default createApp({
 			dir: "./app/pages",
 			style: SolidStartFileSystemRouter,
 			build: {
-				target: "node",
+				target: "server",
 				plugins: () => [solid({ ssr: true })],
 			},
 		},

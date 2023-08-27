@@ -37,7 +37,7 @@ export default createApp({
 			base: "/_server",
 			handler: "./app/entry-server.tsx",
 			build: {
-				target: "node",
+				target: "server",
 				plugins: () => [references.serverRouterPlugin()],
 			},
 		},

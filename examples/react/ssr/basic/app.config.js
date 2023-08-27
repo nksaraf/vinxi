@@ -24,7 +24,7 @@ export default createApp({
 			mode: "handler",
 			handler: "./app/server.tsx",
 			build: {
-				target: "node",
+				target: "server",
 			},
 		},
 	],
