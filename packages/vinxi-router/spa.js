@@ -10,7 +10,7 @@ export function spaRouter({
 	plugins = () => [],
 	dir = undefined,
 	style = undefined,
-}) {
+} = {}) {
 	return {
 		name: "client",
 		mode: "spa",

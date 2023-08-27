@@ -57,7 +57,7 @@ export function apiRouter({
 	base = "/api",
 	handler = fileURLToPath(new URL("./handler.js", import.meta.url)),
 	plugins = () => [],
-}) {
+} = {}) {
 	return {
 		name: "api",
 		mode: "handler",

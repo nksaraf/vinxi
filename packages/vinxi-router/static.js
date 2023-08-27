@@ -2,7 +2,7 @@
  *
  * @returns {import('vinxi').RouterSchema}
  */
-export function publicDir() {
+export function publicDir({} = {}) {
 	return {
 		name: "public",
 		mode: "static",
