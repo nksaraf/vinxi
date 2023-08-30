@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.0.25
+
+### Patch Changes
+
+- 552d8ca: added spa mode with js/ts handler that will server render your html file during dev and build
+
 ## 0.0.24
 
 ### Patch Changes

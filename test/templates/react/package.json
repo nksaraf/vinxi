@@ -14,7 +14,7 @@
     "path-to-regexp": "^6.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vinxi": "0.0.24"
+    "vinxi": "0.0.25"
   },
   "devDependencies": {
     "@types/react": "^18.2.21",
