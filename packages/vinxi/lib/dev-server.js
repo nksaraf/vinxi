@@ -1,11 +1,12 @@
 import getPort from "get-port";
-import { defineEventHandler, fromNodeMiddleware } from "h3";
+import { H3Event, createApp, defineEventHandler, fromNodeMiddleware } from "h3";
 import { createNitro } from "nitropack";
 
 import { fileURLToPath } from "node:url";
 import { isMainThread } from "node:worker_threads";
 
 import { AppWorkerClient } from "./app-worker-client.js";
+import { createServerResponse } from "./http-stream.js";
 import { consola } from "./logger.js";
 import { createDevServer as createDevNitroServer } from "./nitro-dev.js";
 import { config } from "./plugins/config.js";
@@ -168,14 +169,14 @@ const routerModeDevPlugin = {
 
 async function createViteHandler(app, router, serveConfig) {
 	if (router.worker && isMainThread) {
-		const worker = new AppWorkerClient(
-			new URL("./app-worker.js", import.meta.url),
-		);
-		let promise;
+		if (!router.appWorker) {
+			router.appWorker = new AppWorkerClient(
+				new URL("./app-worker.js", import.meta.url),
+			);
+		}
 		return defineEventHandler(async (event) => {
-			promise ??= worker.init(() => {});
-			await promise;
-			return await worker.handle(event);
+			await router.appWorker.init(() => {});
+			await router.appWorker.handle(event);
 		});
 	}
 
@@ -211,7 +212,58 @@ async function createViteHandler(app, router, serveConfig) {
 			return handler(event);
 		});
 	} else if (router.mode === "spa") {
-		return defineEventHandler(fromNodeMiddleware(viteDevServer.middlewares));
+		if (router.handler.endsWith(".html")) {
+			console.log(viteDevServer.middlewares.stack);
+			return defineEventHandler(fromNodeMiddleware(viteDevServer.middlewares));
+		} else {
+			viteDevServer.middlewares.stack = viteDevServer.middlewares.stack.filter(
+				(m) =>
+					![
+						"viteIndexHtmlMiddleware",
+						"viteHtmlFallbackMiddleware",
+						"vite404Middleware",
+					].includes(m.handle.name),
+			);
+			const viteHandler = fromNodeMiddleware(viteDevServer.middlewares);
+
+			return defineEventHandler(async (event) => {
+				const response = await viteHandler(event);
+				if (event.handled) {
+					console.log("handled", response, event.node.res);
+					return;
+				}
+				const { default: handler } = await viteDevServer.ssrLoadModule(
+					router.handler,
+				);
+
+				let html = "";
+				const textDecoder = new TextDecoder();
+				const smallApp = createApp();
+				smallApp.use(handler);
+				const text = await new Promise(async (resolve, reject) => {
+					await smallApp.handler(
+						new H3Event(
+							event.node.req,
+							createServerResponse("html", {
+								onChunk: (chunk) => {
+									html += textDecoder.decode(chunk);
+								},
+								onFinish: () => {
+									resolve(html);
+								},
+							}),
+						),
+					);
+				});
+
+				const transformedHtml = await viteDevServer.transformIndexHtml(
+					event.node.req.url,
+					text,
+				);
+
+				return transformedHtml;
+			});
+		}
 	} else {
 		return defineEventHandler(fromNodeMiddleware(viteDevServer.middlewares));
 	}

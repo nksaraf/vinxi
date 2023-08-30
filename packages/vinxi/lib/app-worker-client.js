@@ -60,6 +60,9 @@ export class AppWorkerClient {
   //  * @param {() => void} onReload
    */
 	async init(onReload) {
+		if (this.worker) {
+			return;
+		}
 		this.worker = new Worker(this.url, {
 			execArgv: ["--conditions", "react-server"],
 			env: {
@@ -106,76 +109,6 @@ export class AppWorkerClient {
 
 	/**
 	 *
-	 * @param {string} component
-	 * @param {any} props
-	 * @returns {globalThis.ReadableStream}
-	 */
-	renderToReadableStream(component, props) {
-		invariant(this.worker, "Worker is not initialize");
-		const id = Math.random() + "";
-		this.worker.postMessage(
-			JSON.stringify({
-				component,
-				props,
-				type: "render",
-				id,
-			}),
-		);
-
-		let responses = this.responses;
-		let encoder = new TextEncoder();
-
-		return new ReadableStream({
-			start(controller) {
-				responses.set(id, ({ chunk }) => {
-					if (chunk === "end") {
-						controller.close();
-						responses.delete(id);
-						return;
-					}
-
-					if (chunk) controller.enqueue(encoder.encode(chunk));
-				});
-			},
-		});
-	}
-
-	// create a nodejs Readable stream from post messages from worker
-	fetchNode(req, res) {
-		invariant(this.worker, "Worker is not initialize");
-		const id = Math.random() + "";
-		this.worker.postMessage(
-			JSON.stringify({
-				// component,
-				// props,
-				type: "fetch",
-				id,
-			}),
-		);
-
-		let responses = this.responses;
-		const readable = new Readable({
-			objectMode: true,
-		});
-		readable._read = () => {};
-
-		responses.set(id, ({ chunk, data }) => {
-			if (chunk === "end") {
-				res.end();
-				responses.delete(id);
-			} else if (chunk === "$header") {
-				console.log("header", data);
-				res.setHeader(data.key, data.value);
-			} else if (chunk) {
-				res.write(chunk);
-			}
-		});
-
-		return readable;
-	}
-
-	/**
-	 *
 	 * @param {import('h3').H3Event} event
 	 * @returns
 	 */
@@ -184,10 +117,9 @@ export class AppWorkerClient {
 		invariant(this.worker, "Worker is not initialize");
 		const id = Math.random() + "";
 		const worker = this.worker;
+
 		worker.postMessage(
 			JSON.stringify({
-				// component,
-				// props,
 				req: {
 					method: req.method,
 					url: req.url,
@@ -198,6 +130,7 @@ export class AppWorkerClient {
 			}),
 		);
 
+		// WritableStream to transport request body to worker.
 		const writableStream = new Writable({
 			write(chunk, encoding, callback) {
 				worker.postMessage(
@@ -221,32 +154,10 @@ export class AppWorkerClient {
 			);
 		});
 
-		// req.on("data", (chunk) => {
-		// 	this.worker.postMessage(
-		// 		JSON.stringify({
-		// 			chunk,
-		// 			type: "body",
-		// 			id,
-		// 		}),
-		// 	);
-		// });
-
-		// req.on("end", () => {
-		// 	this.worker.postMessage(
-		// 		JSON.stringify({
-		// 			type: "body-end",
-		// 			id,
-		// 		}),
-		// 	);
-		// });
-
+		// Pipe the request body to the writable stream.
 		req.pipe(writableStream);
 
 		let responses = this.responses;
-		const readable = new Readable({
-			objectMode: true,
-		});
-		readable._read = () => {};
 
 		responses.set(id, ({ chunk, data }) => {
 			if (chunk === "end") {
@@ -260,59 +171,11 @@ export class AppWorkerClient {
 			}
 		});
 
-		return readable;
+		event._handled = true;
+
+		return null;
 	}
 
-	fetch() {
-		invariant(this.worker, "Worker is not initialize");
-		const id = Math.random() + "";
-		this.worker.postMessage(
-			JSON.stringify({
-				// component,
-				// props,
-				type: "fetch",
-				id,
-			}),
-		);
-
-		let responses = this.responses;
-		let encoder = new TextEncoder();
-
-		new Readable();
-
-		return new ReadableStream({
-			start(controller) {
-				responses.set(id, ({ chunk }) => {
-					if (chunk === "end") {
-						controller.close();
-						responses.delete(id);
-						return;
-					}
-
-					if (chunk) controller.enqueue(encoder.encode(chunk));
-				});
-			},
-		});
-	}
-
-	build() {
-		let responses = this.responses;
-		return new Promise((resolve) => {
-			invariant(this.worker, "Worker is not initialized");
-			const id = Math.random() + "";
-			responses.set(id, ({ status }) => {
-				if (status === "built") {
-					resolve("");
-				}
-			});
-			this.worker.postMessage(
-				JSON.stringify({
-					type: "build",
-					id,
-				}),
-			);
-		});
-	}
 	close() {
 		if (this.worker) {
 			this.worker.unref();

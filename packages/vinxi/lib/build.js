@@ -1,9 +1,19 @@
-import { mkdir } from "fs/promises";
+import { mkdir, rm, writeFile } from "fs/promises";
+import {
+	H3Event,
+	createApp,
+	eventHandler,
+	fromNodeMiddleware,
+	toNodeListener,
+} from "h3";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro } from "nitropack";
 import { join } from "path";
 import { relative } from "pathe";
 
+import { writeFileSync } from "node:fs";
+
+import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import { consola, withLogger } from "./logger.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
 import { config } from "./plugins/config.js";
@@ -158,8 +168,22 @@ export async function createBuild(app, buildConfig) {
 		appConfigFiles: [],
 		imports: false,
 		virtual: {
-			"#prod-app": `
-        const appConfig = ${JSON.stringify(app.config)}
+			"#prod-app": () => {
+				const config = {
+					...app.config,
+					routers: app.config.routers.map((router) => {
+						if (router.mode === "spa" && !router.handler.endsWith(".html")) {
+							return {
+								...router,
+								handler: "index.html",
+							};
+						}
+
+						return router;
+					}),
+				};
+				return `
+        const appConfig = ${JSON.stringify(config)}
 				const buildManifest = ${JSON.stringify(
 					Object.fromEntries(
 						app.config.routers
@@ -193,7 +217,8 @@ export async function createBuild(app, buildConfig) {
           const prodApp = createProdApp(appConfig)
           globalThis.app = prodApp
         }
-      `,
+      `;
+			},
 			"#vinxi/spa": () => {
 				const router = app.config.routers.find(
 					(router) => router.mode === "spa",
@@ -240,7 +265,9 @@ export async function createBuild(app, buildConfig) {
 	nitro.logger = consola.withTag(app.config.name);
 	await copyPublicAssets(nitro);
 
-	console.log(nitro);
+	if (existsSync(join(nitro.options.output.serverDir))) {
+		await rm(join(nitro.options.output.serverDir), { recursive: true });
+	}
 
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
 	await build(nitro);
@@ -250,7 +277,7 @@ export async function createBuild(app, buildConfig) {
 
 /**
  *
- * @param {import("vite").InlineConfig & { router: any; app: any }} config
+ * @param {import("vite").InlineConfig & { router?: any; app: any }} config
  */
 async function createViteBuild(config) {
 	const vite = await import("vite");
@@ -258,15 +285,67 @@ async function createViteBuild(config) {
 }
 
 async function createRouterBuild(app, router) {
+	let buildRouter = router;
+	if (router.mode === "spa" && !router.handler.endsWith(".html")) {
+		await createViteBuild({
+			app: app,
+			build: {
+				ssr: true,
+				ssrManifest: true,
+				rollupOptions: {
+					input: { handler: router.handler },
+				},
+				target: "esnext",
+				outDir: join(router.build.outDir + "_entry"),
+			},
+		});
+
+		const render = await import(
+			join(router.build.outDir + "_entry", "handler.js")
+		);
+
+		const smallApp = createApp();
+		smallApp.use(render.default);
+		let html = "";
+		const textDecoder = new TextDecoder();
+		const text = await new Promise(async (resolve, reject) => {
+			await smallApp.handler(
+				new H3Event(
+					createIncomingMessage("/", "GET", {}),
+					createServerResponse("html", {
+						onChunk: (chunk) => {
+							html += textDecoder.decode(chunk);
+						},
+						onFinish: () => {
+							resolve(html);
+						},
+					}),
+				),
+			);
+		});
+
+		writeFileSync(join(process.cwd(), "index.html"), text);
+
+		buildRouter = {
+			...router,
+			handler: join(process.cwd(), "index.html"),
+		};
+	}
+
 	await createViteBuild({
-		router,
+		router: buildRouter,
 		app,
 		plugins: [
-			routerModePlugin[router.mode]?.() ?? [],
-			buildTargetPlugin[router.build.target]?.() ?? [],
-			...((await router.build.plugins?.()) ?? []),
+			routerModePlugin[buildRouter.mode]?.() ?? [],
+			buildTargetPlugin[buildRouter.build.target]?.() ?? [],
+			...((await buildRouter.build.plugins?.()) ?? []),
 		],
 	});
+
+	if (router.mode === "spa" && !router.handler.endsWith(".html")) {
+		await rm(join(process.cwd(), "index.html"));
+	}
+
 	consola.success("build done");
 }
 
