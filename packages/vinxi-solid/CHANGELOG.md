@@ -1,5 +1,11 @@
 # @vinxi/solid
 
+## 0.0.10
+
+### Patch Changes
+
+- d976c1a: fix: proper script asset support
+
 ## 0.0.9
 
 ### Patch Changes
