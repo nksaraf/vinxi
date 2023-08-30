@@ -4,6 +4,13 @@
 
 ### Patch Changes
 
+- Updated dependencies [97e7639]
+  - @vinxi/solid@0.0.11
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [d976c1a]
   - @vinxi/solid@0.0.10
 

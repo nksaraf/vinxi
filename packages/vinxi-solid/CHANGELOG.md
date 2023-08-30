@@ -1,5 +1,11 @@
 # @vinxi/solid
 
+## 0.0.11
+
+### Patch Changes
+
+- 97e7639: fix script tag not closed by solid-meta
+
 ## 0.0.10
 
 ### Patch Changes
