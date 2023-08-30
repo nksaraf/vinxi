@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.0.27
+
+### Patch Changes
+
+- 7803042: fix: add types for createMiddleware
+
 ## 0.0.26
 
 ### Patch Changes

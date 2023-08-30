@@ -4,6 +4,14 @@
 
 ### Patch Changes
 
+- Updated dependencies [7803042]
+  - vinxi@0.0.27
+  - @vinxi/react-server@0.0.14
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [2b17e0d]
   - vinxi@0.0.26
   - @vinxi/react-server@0.0.13
