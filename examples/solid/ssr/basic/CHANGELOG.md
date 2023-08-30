@@ -4,6 +4,14 @@
 
 ### Patch Changes
 
+- Updated dependencies [2b17e0d]
+  - vinxi@0.0.26
+  - @vinxi/plugin-references@0.0.16
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [97e7639]
   - @vinxi/solid@0.0.11
 

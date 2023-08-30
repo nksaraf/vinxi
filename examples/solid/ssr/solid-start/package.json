@@ -16,7 +16,7 @@
     "solid-js": "^1.7.11",
     "@vinxi/solid-start": "workspace:^",
     "tailwindcss": "^3.3.3",
-    "vinxi": "0.0.25"
+    "vinxi": "0.0.26"
   },
   "devDependencies": {
     "axios": "^1.5.0"

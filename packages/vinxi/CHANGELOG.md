@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.0.26
+
+### Patch Changes
+
+- 2b17e0d: add createMiddleware API
+
 ## 0.0.25
 
 ### Patch Changes
