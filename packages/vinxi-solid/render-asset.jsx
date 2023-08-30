@@ -19,7 +19,9 @@ const assetMap = {
 	link: (props) => <Link {...props.attrs} />,
 	script: (props) => {
 		return props.attrs.src ? (
-			<Script {...props.attrs} id={props.key}></Script>
+			<Script {...props.attrs} id={props.key}>
+				{" "}
+			</Script>
 		) : null;
 	},
 };
