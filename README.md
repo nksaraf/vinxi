@@ -27,7 +27,7 @@ The surface layer we are intending to tackle:
 
 ```bash
 npm install vinxi
-touch app.conig.js
+touch app.config.js
 echo `import { createApp } from 'vinxi'; export default createApp({});` > app.config.js
 npx vinxi dev
 ```
