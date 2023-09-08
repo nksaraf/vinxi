@@ -23,12 +23,15 @@ The surface layer we are intending to tackle:
 6. Not to abstract away the platforms. Let people use what they want to the fullest
 7. Have little opinion about how the app should be authored or structured
 
-## How to run
+## Try it out
 
 ```bash
-npm install
-node app.js --dev
+npm install vinxi
+touch app.conig.js
+echo `import { createApp } from 'vinxi'; export default createApp({});` > app.config.js
+npx vinxi dev
 ```
+
 
 ### React SSR
 
