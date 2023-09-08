@@ -155,7 +155,9 @@ const routerSchema = {
  * @param {AppOptions} param0
  * @returns {App}
  */
-export function createApp({ routers, name = "app", server = {} }) {
+export function createApp({ routers = [], name = "app", server = {} }) {
+	invariant(routers.length === 0, `No router specified`);
+	
 	routers = routers.map((router) => {
 		invariant(
 			router.mode in routerSchema,
