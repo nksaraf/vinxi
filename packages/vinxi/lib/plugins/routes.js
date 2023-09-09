@@ -1,4 +1,4 @@
-import { relative } from "node:path";
+import { relative } from "pathe";
 import { fileURLToPath } from "node:url";
 
 export function routes() {

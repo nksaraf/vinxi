@@ -1,6 +1,6 @@
 "use strict";
 
-import { join, resolve } from "node:path";
+import { join, resolve } from "pathe";
 
 async function getViteModuleNode(vite, file, ssr) {
 	if (file.startsWith("node:")) {
@@ -18,7 +18,7 @@ async function getViteModuleNode(vite, file, ssr) {
 
 	const id = resolvedId.id;
 
-	const normalizedPath = resolve(id).replace(/\\/g, "/");
+	const normalizedPath = resolve(id);
 
 	try {
 		let node = await vite.moduleGraph.getModuleById(normalizedPath);

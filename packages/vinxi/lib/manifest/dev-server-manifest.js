@@ -45,7 +45,7 @@ export function createDevManifest(app) {
 								} else {
 									return {
 										output: {
-											path: absolutePath,
+											path: join(router.base, "@fs", absolutePath),
 										},
 									};
 								}
@@ -161,7 +161,7 @@ export function createDevManifest(app) {
 											];
 										},
 										output: {
-											path: absolutePath,
+											path: join(router.base, "@fs", absolutePath),
 										},
 									};
 								}
