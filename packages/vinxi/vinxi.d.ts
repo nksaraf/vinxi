@@ -208,12 +208,12 @@ export type RouterMode<T extends RouterConfig["mode"]> = {
 type CreateApp = <
 	T extends BundlerConfig,
 	R extends RouterConfig<T> = RouterConfig<T>,
->(config: {
+>(config?: {
 	bundlers?: T[];
 	routers: R[];
 }) => App<T, R>;
 
-export { createApp } from "./lib/app";
+export const createApp: CreateApp;
 
 export type { ViteDevServer as DevServer } from "vite";
 

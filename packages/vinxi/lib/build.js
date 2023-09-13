@@ -294,6 +294,7 @@ async function createRouterBuild(app, router) {
 				ssrManifest: true,
 				rollupOptions: {
 					input: { handler: router.handler },
+					external: ["h3"],
 				},
 				target: "esnext",
 				outDir: join(router.build.outDir + "_entry"),
@@ -399,6 +400,11 @@ const routerModePlugin = {
 			ssr: {
 				noExternal: ["vinxi"],
 			},
+			build: {
+				rollupOptions: {
+					external: ["h3"],
+				},
+			},
 			optimizeDeps: {
 				force: true,
 				exclude: ["vinxi"],
@@ -414,6 +420,11 @@ const routerModePlugin = {
 			ssr: {
 				noExternal: ["vinxi"],
 			},
+			build: {
+				rollupOptions: {
+					external: ["h3"],
+				},
+			},
 			optimizeDeps: {
 				disabled: true,
 			},
@@ -428,6 +439,11 @@ const routerModePlugin = {
 			appType: "custom",
 			ssr: {
 				noExternal: ["vinxi"],
+			},
+			build: {
+				rollupOptions: {
+					external: ["h3"],
+				},
 			},
 			optimizeDeps: {
 				force: true,
