@@ -3,6 +3,8 @@ packages:
   - "examples/**"
   - "frameworks/**"
   - "test/**"
+  - "docs/**"
+  - 'talks/**'
   - "!**/.tmp/**"
 options:
   prefer-workspace-packages: true

@@ -13,3 +13,7 @@ stats.html
 # Local Netlify folder
 .netlify
 dist
+
+docs/.vitepress/dist
+docs/.vitepress/cache
+.vitepress
