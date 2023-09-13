@@ -1,5 +1,11 @@
 # @vinxi/plugin-mdx
 
+## 3.6.3
+
+### Patch Changes
+
+- b674d5d: changed old peer dependencies for @mdx-js/mdx, vite
+
 ## 3.6.2
 
 ### Patch Changes
