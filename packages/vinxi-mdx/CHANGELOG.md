@@ -1,5 +1,11 @@
 # @vinxi/plugin-mdx
 
+## 3.6.5
+
+### Patch Changes
+
+- 524ab4c: fix cjs build
+
 ## 3.6.4
 
 ### Patch Changes
