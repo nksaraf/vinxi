@@ -9,6 +9,7 @@
     "// TypeScript": "",
     "tsc:watch": "tsc --build --watch",
     "tsc:once": "tsc --build",
+    "build:cjs": "esbuild --bundle --platform=node --external:esbuild --external:vite --external:@mdx-js/mdx src/index.ts > dist/index.cjs",
     "// Release": "",
     "prepublishOnly": "pnpm run build",
     "release": "npm version patch && npm publish && git push && git push --tags",
