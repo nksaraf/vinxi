@@ -6,6 +6,7 @@ import {
 	analyzeModule,
 	cleanPath,
 } from "vinxi/file-system-router";
+import inspect from "vite-plugin-inspect";
 
 const { default: mdx } = pkg;
 
@@ -62,11 +63,13 @@ export default createApp({
 			extensions: ["js", "jsx", "ts", "tsx", "mdx"],
 			build: {
 				target: "browser",
-				plugins: async () => [
-					reactRefresh({}),
-					mdx({
+				plugins: () => [
+					mdx.withImports({
+						react: "React",
+					})({
 						providerImportSource: "@mdx-js/react",
 					}),
+					reactRefresh({}),
 				],
 			},
 		},
