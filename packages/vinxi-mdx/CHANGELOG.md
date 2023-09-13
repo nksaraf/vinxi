@@ -1,5 +1,11 @@
 # @vinxi/plugin-mdx
 
+## 3.6.4
+
+### Patch Changes
+
+- 5c965d5: respect mdxOptions.jsx in mdx plugin
+
 ## 3.6.3
 
 ### Patch Changes
