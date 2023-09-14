@@ -18,6 +18,7 @@ export function server({
 	let input;
 	return {
 		name: "server-references",
+		enforce: "post",
 		config(config, env) {
 			isBuild = env.command === "build";
 			// @ts-ignore

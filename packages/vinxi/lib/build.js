@@ -20,6 +20,7 @@ import { config } from "./plugins/config.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
+import { virtual } from "./plugins/virtual.js";
 
 const require = createRequire(import.meta.url);
 
@@ -333,6 +334,8 @@ async function createRouterBuild(app, router) {
 		};
 	}
 
+	console.log(`building router ${router.name} in ${router.mode} mode`);
+
 	await createViteBuild({
 		router: buildRouter,
 		app,
@@ -395,6 +398,17 @@ const spaManifest = () => {
 const routerModePlugin = {
 	static: () => [],
 	build: () => [
+		virtual(
+			{
+				"#vinxi/handler": ({ config }) => {
+					return `import * as mod from "${join(
+						config.router.root,
+						config.router.handler,
+					)}"; export default mod['default']`;
+				},
+			},
+			"handler",
+		),
 		config("appType", {
 			appType: "custom",
 			ssr: {
@@ -415,6 +429,25 @@ const routerModePlugin = {
 		}),
 	],
 	handler: () => [
+		virtual(
+			{
+				"#vinxi/handler": ({ config }) => {
+					console.log("hereee", config);
+					if (config.router.middleware) {
+						return `
+					import middleware from "${join(config.router.root, config.router.middleware)}";
+					import handler from "${join(config.router.root, config.router.handler)}";
+					import { eventHandler } from "vinxi/runtime/server";
+					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler});`;
+					}
+					return `import handler from "${join(
+						config.router.root,
+						config.router.handler,
+					)}"; export default handler;`;
+				},
+			},
+			"handler",
+		),
 		config("appType", {
 			appType: "custom",
 			ssr: {

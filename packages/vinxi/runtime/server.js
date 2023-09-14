@@ -1,16 +1,13 @@
-import { createAppEventHandler } from "h3";
-
 export * from "h3";
 
-export function createMiddleware(getHandler) {
-	return (app) => {
-		const prevHandler = createAppEventHandler([...app.h3App.stack], {});
-		const handler = getHandler({ forward: (event) => prevHandler(event) });
+export function setContext(event, key, value) {
+	event.context[key] = value;
+}
 
-		app.h3App.stack.unshift({
-			route: "/",
-			match: undefined,
-			handler: handler,
-		});
-	};
+export function getContext(event, key, value) {
+	return event.context[key];
+}
+
+export function defineMiddleware(options) {
+	return options;
 }

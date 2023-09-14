@@ -15,14 +15,16 @@ export const references = {
 	serverRouterPlugin: server,
 	clientComponents,
 	serverComponents,
-	serverRouter: () => ({
+	serverRouter: (overrides) => ({
 		name: "server",
 		mode: "handler",
 		base: "/_server",
 		handler: fileURLToPath(new URL("./server-handler.js", import.meta.url)),
+		...(overrides ?? {}),
 		build: {
 			target: "server",
-			plugins: () => [server()],
+			...(overrides?.build ?? {}),
+			plugins: () => [server(), ...(overrides?.build?.plugins?.() ?? [])],
 		},
 	}),
 };

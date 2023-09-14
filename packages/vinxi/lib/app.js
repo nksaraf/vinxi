@@ -15,6 +15,14 @@ function resolveConfig(router, appConfig) {
 			: undefined,
 	);
 
+	router.middleware = router.middleware
+		? relative(
+				appConfig.root,
+				isAbsolute(router.middleware)
+					? router.middleware
+					: join(appConfig.root, router.middleware),
+		  )
+		: undefined;
 	// invariant(handler, "No handler found for node-handler router");
 
 	router.dir = router.dir
@@ -103,6 +111,7 @@ const handlerRouterSchema = v.object({
 
 	worker: v.optional(v.boolean()),
 	handler: v.string(),
+	middleware: v.optional(v.string()),
 	style: v.custom((value) => value !== null),
 	build: v.object({
 		server: v.optional(

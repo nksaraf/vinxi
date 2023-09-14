@@ -2,6 +2,7 @@ import getPort from "get-port";
 import { H3Event, createApp, defineEventHandler, fromNodeMiddleware } from "h3";
 import { createNitro } from "nitropack";
 
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isMainThread } from "node:worker_threads";
 
@@ -14,6 +15,7 @@ import { css } from "./plugins/css.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
+import { virtual } from "./plugins/virtual.js";
 
 /**
  *
@@ -127,6 +129,21 @@ const routerModeDevPlugin = {
 		router.fileRouter ? fileSystemWatcher() : null,
 	],
 	handler: (router) => [
+		virtual({
+			"#vinxi/handler": ({ config }) => {
+				if (config.router.middleware) {
+					return `
+					import middleware from "${join(config.router.root, config.router.middleware)}";
+					import handler from "${join(config.router.root, config.router.handler)}"; 
+					import { eventHandler } from "vinxi/runtime/server";
+					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler});`;
+				}
+				return `import handler from "${join(
+					config.router.root,
+					config.router.handler,
+				)}"; export default handler;`;
+			},
+		}),
 		routes(),
 		devEntries(),
 		manifest(),
@@ -146,6 +163,17 @@ const routerModeDevPlugin = {
 		router.fileRouter ? fileSystemWatcher() : null,
 	],
 	build: (router) => [
+		virtual(
+			{
+				"#vinxi/handler": ({ config }) => {
+					return `import * as mod from "${join(
+						config.router.root,
+						config.router.handler,
+					)}"; export default mod['default']`;
+				},
+			},
+			"handler",
+		),
 		routes(),
 		devEntries(),
 		manifest(),
@@ -320,13 +348,14 @@ export async function createDevServer(
 				)),
 			],
 			handlers: [...(app.config.server.handlers ?? [])],
+			plugins: [...(app.config.server.plugins ?? [])],
 		});
 
 		nitro.options.appConfigFiles = [];
 		nitro.logger = consola.withTag(app.config.name);
 
 		const devApp = createDevNitroServer(nitro);
-		await devApp.listen(port);
+		await devApp.listen(port, {});
 
 		for (const router of app.config.routers) {
 			if ("fileRouter" in router && router.fileRouter) {

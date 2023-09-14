@@ -2,7 +2,7 @@ import { dirname, resolve } from "pathe";
 
 const PREFIX = "\0virtual:";
 
-export function virtual(modules, cache = {}) {
+export function virtual(modules, name = "", cache = {}) {
 	const _modules = new Map();
 
 	for (const [id, mod] of Object.entries(modules)) {
@@ -15,7 +15,7 @@ export function virtual(modules, cache = {}) {
 	let env;
 
 	return {
-		name: "virtual",
+		name: `virtual:${name}`,
 		configResolved(_config) {
 			config = _config;
 		},
@@ -23,6 +23,7 @@ export function virtual(modules, cache = {}) {
 			env = _env;
 		},
 		resolveId(id, importer) {
+			console.log(id);
 			if (id in modules) {
 				return PREFIX + id;
 			}
