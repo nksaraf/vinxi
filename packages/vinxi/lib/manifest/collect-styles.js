@@ -1,9 +1,10 @@
 "use strict";
 
+import { isBuiltin } from "node:module";
 import { join, resolve } from "node:path";
 
 async function getViteModuleNode(vite, file, ssr) {
-	if (file.startsWith("node:")) {
+	if (file.startsWith("node:") || isBuiltin(file)) {
 		return null;
 	}
 
