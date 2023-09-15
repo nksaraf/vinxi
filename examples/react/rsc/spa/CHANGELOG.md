@@ -4,6 +4,14 @@
 
 ### Patch Changes
 
+- Updated dependencies [8058084]
+  - vinxi@0.0.29
+  - @vinxi/plugin-references@0.0.19
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [b934e84]
 - Updated dependencies [17693dc]
 - Updated dependencies [d6305b8]

@@ -13,7 +13,7 @@
     "@tanstack/react-loaders": "0.0.1-beta.109",
     "@tanstack/router": "0.0.1-beta.111",
     "@tanstack/router-devtools": "0.0.1-beta.111",
-    "@vinxi/plugin-references": "0.0.18",
+    "@vinxi/plugin-references": "0.0.19",
     "@vinxi/react": "0.0.9",
     "@vitejs/plugin-react": "^4.0.4",
     "acorn-loose": "^8.3.0",
@@ -22,7 +22,7 @@
     "react": "0.0.0-experimental-035a41c4e-20230704",
     "react-dom": "0.0.0-experimental-035a41c4e-20230704",
     "tailwindcss": "^3.3.3",
-    "vinxi": "0.0.28"
+    "vinxi": "0.0.29"
   },
   "devDependencies": {
     "@types/react": "^18.2.21",

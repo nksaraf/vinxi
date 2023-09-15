@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.0.29
+
+### Patch Changes
+
+- 8058084: fix bug in style collector related to node builtins
+
 ## 0.0.28
 
 ### Patch Changes
