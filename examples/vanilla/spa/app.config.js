@@ -24,6 +24,8 @@ export default createApp({
 				plugins: () => [references.clientRouterPlugin(), reactRefresh()],
 			},
 		},
-		references.serverRouter(),
+		references.serverRouter({
+			middleware: "./app/middleware.tsx",
+		}),
 	],
 });

@@ -66,6 +66,8 @@ export function createProdManifest(app) {
 								invariant(typeof input === "string", "Input expected");
 								const id = input;
 								if (router.build.target === "server") {
+									const id =
+										input === router.handler ? "virtual:#vinxi/handler" : input;
 									return {
 										assets() {
 											return findAssetsInViteManifest(bundlerManifest, input)
@@ -89,6 +91,8 @@ export function createProdManifest(app) {
 										},
 									};
 								} else if (router.build.target === "browser") {
+									const id =
+										input === router.handler ? "virtual:#vinxi/handler" : input;
 									return {
 										assets() {
 											return findAssetsInViteManifest(bundlerManifest, id)

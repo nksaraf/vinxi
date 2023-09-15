@@ -22,6 +22,7 @@ export default createApp({
 		{
 			name: "ssr",
 			mode: "handler",
+			middleware: "./app/middleware.tsx",
 			handler: "./app/server.tsx",
 			build: {
 				target: "server",
