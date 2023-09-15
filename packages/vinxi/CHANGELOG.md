@@ -1,5 +1,16 @@
 # vinxi
 
+## 0.0.28
+
+### Patch Changes
+
+- b934e84: bump listhen version to 1.5.0
+- 17693dc: remove console logs
+- d6305b8: start middleware API
+- cb91c48: fixes to middleware PAI
+- 085116d: externalize h3 from vite builds so its only included once in the final server build
+- f1ee5b8: finish middleware API
+
 ## 0.0.27
 
 ### Patch Changes

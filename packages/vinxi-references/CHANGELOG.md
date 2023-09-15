@@ -1,5 +1,19 @@
 # @vinxi/plugin-references
 
+## 0.0.18
+
+### Patch Changes
+
+- 17693dc: remove console logs
+- d6305b8: start middleware API
+- Updated dependencies [b934e84]
+- Updated dependencies [17693dc]
+- Updated dependencies [d6305b8]
+- Updated dependencies [cb91c48]
+- Updated dependencies [085116d]
+- Updated dependencies [f1ee5b8]
+  - vinxi@0.0.28
+
 ## 0.0.17
 
 ### Patch Changes

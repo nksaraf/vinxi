@@ -1,5 +1,14 @@
 # @vinxi/react-server
 
+## 0.0.15
+
+### Patch Changes
+
+- 17693dc: remove console logs
+- Updated dependencies [17693dc]
+- Updated dependencies [d6305b8]
+  - @vinxi/plugin-references@0.0.18
+
 ## 0.0.14
 
 ### Patch Changes

@@ -4,6 +4,18 @@
 
 ### Patch Changes
 
+- Updated dependencies [b934e84]
+- Updated dependencies [17693dc]
+- Updated dependencies [d6305b8]
+- Updated dependencies [cb91c48]
+- Updated dependencies [085116d]
+- Updated dependencies [f1ee5b8]
+  - vinxi@0.0.28
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [524ab4c]
   - @vinxi/plugin-mdx@3.6.5
 
