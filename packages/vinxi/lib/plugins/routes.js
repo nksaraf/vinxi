@@ -23,7 +23,6 @@ export function routes() {
 					"/",
 				)
 			) {
-				console.log(router.name, "routers");
 				const js = jsCode();
 				const routesCode = JSON.stringify(
 					(await router.fileRouter?.getRoutes()) ?? [],
@@ -72,7 +71,6 @@ export function routes() {
 					.replaceAll('"_$(', "(")
 					.replaceAll(')$_"', ")");
 
-				console.log(routes);
 				const code = `${js.getImportStatements()}
 				export default ${routes}`;
 				return code;

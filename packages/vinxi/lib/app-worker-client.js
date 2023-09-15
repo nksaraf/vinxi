@@ -80,7 +80,6 @@ export class AppWorkerClient {
 			invariant(this.worker, "Worker is not initialize");
 			this.worker.once("message", (event) => {
 				if (event === "ready") {
-					console.log("rsc worker ready");
 					resolve(undefined);
 				} else {
 					reject(new Error("rsc worker failed to start"));
@@ -164,7 +163,6 @@ export class AppWorkerClient {
 				res.end();
 				responses.delete(id);
 			} else if (chunk === "$header") {
-				console.log("header", data);
 				res.setHeader(data.key, data.value);
 			} else if (chunk) {
 				res.write(chunk);

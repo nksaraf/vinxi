@@ -436,7 +436,6 @@ const routerModePlugin = {
 		virtual(
 			{
 				"#vinxi/handler": ({ config }) => {
-					console.log("hereee", config);
 					if (config.router.middleware) {
 						return `
 					import middleware from "${join(config.router.root, config.router.middleware)}";
@@ -499,7 +498,7 @@ function toRouteId(route) {
 
 export async function getEntries(router) {
 	return [
-		router.handler,
+		router.handler.endsWith(".html") ? router.handler : "#vinxi/handler",
 		...(
 			(await router.fileRouter?.getRoutes())?.map((r) =>
 				Object.entries(r)
@@ -520,10 +519,11 @@ function handerBuild() {
 			if (env.command === "build") {
 				const { builtinModules } = await import("module");
 				const { join } = await import("path");
+				const input = await getEntries(inlineConfig.router);
 				return {
 					build: {
 						rollupOptions: {
-							input: await getEntries(inlineConfig.router),
+							input,
 							external: [
 								...builtinModules,
 								...builtinModules.map((m) => `node:${m}`),

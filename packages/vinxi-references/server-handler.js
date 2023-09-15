@@ -3,7 +3,6 @@ import { eventHandler, toWebRequest } from "vinxi/runtime/server";
 
 async function loadModule(id) {
 	if (import.meta.env.DEV) {
-		console.log(import.meta.env.MANIFEST["server"].chunks[id].output.path);
 		return await import(
 			import.meta.env.MANIFEST["server"].chunks[id].output.path
 		);
@@ -44,7 +43,6 @@ export default eventHandler(async function handleServerAction(event) {
 			// };
 			event.node.res.setHeader("Content-Type", "application/json");
 			event.node.res.setHeader("Router", "server");
-			console.log(response);
 
 			return JSON.stringify(response ?? null);
 		} catch (x) {

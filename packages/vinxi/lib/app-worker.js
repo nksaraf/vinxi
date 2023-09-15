@@ -68,7 +68,6 @@ class AppWorker {
 		const { type, ...rest } = JSON.parse(message);
 		switch (type) {
 			case "body": {
-				console.log(rest);
 				const { id, chunk } = rest;
 
 				const body = this.bodies[id];

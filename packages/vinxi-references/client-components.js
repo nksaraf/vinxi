@@ -42,8 +42,6 @@ export function clientComponents({
 					),
 				};
 
-				console.log(input);
-
 				return {
 					ssr: {
 						external: transpileDeps,

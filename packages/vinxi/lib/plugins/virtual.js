@@ -23,7 +23,6 @@ export function virtual(modules, name = "", cache = {}) {
 			env = _env;
 		},
 		resolveId(id, importer) {
-			console.log(id);
 			if (id in modules) {
 				return PREFIX + id;
 			}

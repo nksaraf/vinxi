@@ -88,7 +88,6 @@ const fileSystemWatcher = () => {
 				setupWatcher(server.watcher, config.router);
 				config.router.fileRouter.update = () => {
 					const { moduleGraph } = server;
-					console.log("file system router", "update");
 					const mods = moduleGraph.getModulesByFile(
 						fileURLToPath(new URL("./routes.js", import.meta.url)),
 					);
@@ -241,7 +240,6 @@ async function createViteHandler(app, router, serveConfig) {
 		});
 	} else if (router.mode === "spa") {
 		if (router.handler.endsWith(".html")) {
-			console.log(viteDevServer.middlewares.stack);
 			return defineEventHandler(fromNodeMiddleware(viteDevServer.middlewares));
 		} else {
 			viteDevServer.middlewares.stack = viteDevServer.middlewares.stack.filter(
@@ -257,7 +255,6 @@ async function createViteHandler(app, router, serveConfig) {
 			return defineEventHandler(async (event) => {
 				const response = await viteHandler(event);
 				if (event.handled) {
-					console.log("handled", response, event.node.res);
 					return;
 				}
 				const { default: handler } = await viteDevServer.ssrLoadModule(
