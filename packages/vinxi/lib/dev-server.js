@@ -235,7 +235,7 @@ async function createViteHandler(app, router, serveConfig) {
 	if (router.mode === "handler") {
 		return defineEventHandler(async (event) => {
 			const { default: handler } = await viteDevServer.ssrLoadModule(
-				router.handler,
+				"#vinxi/handler",
 			);
 			return handler(event);
 		});

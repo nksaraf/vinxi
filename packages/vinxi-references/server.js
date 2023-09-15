@@ -37,7 +37,7 @@ export function server({
 				);
 
 				input = {
-					entry: router.handler,
+					entry: "#vinxi/handler",
 					...Object.fromEntries(
 						reactClientManifest.server.map((key) => {
 							return [`c_${hash(key)}`, key];

@@ -103,7 +103,11 @@ export async function createBuild(app, buildConfig) {
 						const handler = join(
 							router.build.outDir,
 							router.base,
-							bundlerManifest[relative(app.config.root, router.handler)].file,
+							bundlerManifest[
+								"virtual:#vinxi/handler" in bundlerManifest
+									? "virtual:#vinxi/handler"
+									: relative(app.config.root, router.handler)
+							].file,
 						).replace(/\\/g, "\\\\");
 
 						return [
