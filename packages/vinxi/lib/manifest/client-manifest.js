@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-/// <reference types="../../client" />
+/// <reference types="./client" />
 import { join } from "pathe";
 
 import { invariant } from "../invariant";

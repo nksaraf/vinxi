@@ -20,7 +20,7 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			build: {
+			compile: {
 				target: "browser",
 				plugins: () => [references.clientRouterPlugin(), solid({ ssr: true })],
 			},
@@ -30,7 +30,7 @@ export default createApp({
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			build: {
+			compile: {
 				target: "server",
 				plugins: () => [solid({ ssr: true })],
 			},

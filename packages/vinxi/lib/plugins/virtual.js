@@ -2,6 +2,13 @@ import { dirname, resolve } from "pathe";
 
 const PREFIX = "\0virtual:";
 
+/**
+ *
+ * @param {{ [key: string] : any }} modules
+ * @param {string} name
+ * @param {any} cache
+ * @returns {import('../vite-dev.d.ts').Plugin}
+ */
 export function virtual(modules, name = "", cache = {}) {
 	const _modules = new Map();
 

@@ -17,7 +17,7 @@ export function createProdManifest(app) {
 					async assets() {
 						let assets = {};
 						assets[router.handler] = await this.inputs[router.handler].assets();
-						for (const route of (await router.fileRouter?.getRoutes()) ?? []) {
+						for (const route of (await router.compiled?.getRoutes()) ?? []) {
 							assets[route.filePath] = await this.inputs[
 								route.filePath
 							].assets();
@@ -41,7 +41,11 @@ export function createProdManifest(app) {
 								invariant(typeof chunk === "string", "Chunk expected");
 								return {
 									output: {
-										path: join(router.build.outDir, router.base, chunk + ".js"),
+										path: join(
+											router.compile.outDir,
+											router.base,
+											chunk + ".js",
+										),
 									},
 								};
 							},
@@ -65,7 +69,7 @@ export function createProdManifest(app) {
 							get(target, input) {
 								invariant(typeof input === "string", "Input expected");
 								const id = input;
-								if (router.build.target === "server") {
+								if (router.compile.target === "server") {
 									const id =
 										input === router.handler ? "virtual:#vinxi/handler" : input;
 									return {
@@ -84,13 +88,13 @@ export function createProdManifest(app) {
 										},
 										output: {
 											path: join(
-												router.build.outDir,
+												router.compile.outDir,
 												router.base,
 												bundlerManifest[id].file,
 											),
 										},
 									};
-								} else if (router.build.target === "browser") {
+								} else if (router.compile.target === "browser") {
 									const id =
 										input === router.handler && !input.endsWith(".html")
 											? "virtual:#vinxi/handler"

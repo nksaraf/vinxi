@@ -2,6 +2,7 @@
 
 declare interface Window {
 	MANIFEST: any;
+	manifest: any;
 }
 
 interface ImportMetaEnv {

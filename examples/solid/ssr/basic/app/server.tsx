@@ -17,7 +17,6 @@ import App from "./app";
 export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
-	const events = {};
 	const tags = [];
 	function Meta() {
 		useAssets(() => ssr(renderTags(tags)) as any);
@@ -25,50 +24,34 @@ export default eventHandler(async (event) => {
 	}
 
 	const manifestJson = await clientManifest.json();
-	const stream = renderToStream(
-		() => (
-			<MetaProvider tags={tags}>
-				<App
-					assets={
-						<>
-							<NoHydration>
-								<Meta />
-							</NoHydration>
-							<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>
-						</>
-					}
-					scripts={
-						<>
-							<NoHydration>
-								<HydrationScript />
-								<script
-									innerHTML={`window.manifest = ${JSON.stringify(
-										manifestJson,
-									)}`}
-								></script>
-								<script
-									type="module"
-									src={
-										clientManifest.inputs[clientManifest.handler].output.path
-									}
-								/>
-							</NoHydration>
-						</>
-					}
-				/>
-			</MetaProvider>
-		),
-		{
-			onCompleteAll(info) {
-				events["end"]?.();
-			},
-		},
-	);
-
-	// @ts-ignore
-	stream.on = (event, listener) => {
-		events[event] = listener;
-	};
+	const stream = renderToStream(() => (
+		<MetaProvider tags={tags}>
+			<App
+				assets={
+					<>
+						<NoHydration>
+							<Meta />
+						</NoHydration>
+						<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>
+					</>
+				}
+				scripts={
+					<>
+						<NoHydration>
+							<HydrationScript />
+							<script
+								innerHTML={`window.manifest = ${JSON.stringify(manifestJson)}`}
+							></script>
+							<script
+								type="module"
+								src={clientManifest.inputs[clientManifest.handler].output.path}
+							/>
+						</NoHydration>
+					</>
+				}
+			/>
+		</MetaProvider>
+	));
 
 	event.node.res.setHeader("Content-Type", "text/html");
 	return stream;

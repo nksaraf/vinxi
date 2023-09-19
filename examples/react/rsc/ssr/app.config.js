@@ -150,7 +150,7 @@ function clientComponents() {
 					// 		"react-dom",
 					// 	],
 					// },
-					build: {
+					compile: {
 						rollupOptions: {
 							// preserve the export names of the server actions in chunks
 							treeshake: true,
@@ -247,7 +247,7 @@ export default createApp({
 			mode: "handler",
 			base: "/_rsc",
 			handler: "./app/react-server.tsx",
-			build: {
+			compile: {
 				target: "server",
 				plugins: () => [serverComponents()],
 			},
@@ -256,7 +256,7 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			build: {
+			compile: {
 				target: "browser",
 				plugins: () => [reactRefresh(), clientComponents()],
 			},
@@ -266,7 +266,7 @@ export default createApp({
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			build: {
+			compile: {
 				target: "server",
 				serverPlugins: () => [
 					(app) => {

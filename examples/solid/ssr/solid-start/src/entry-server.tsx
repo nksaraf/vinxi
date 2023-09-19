@@ -1,3 +1,3 @@
-import { StartServer, createHandler } from "solid-start/entry-server";
+import { StartServer, createHandler } from "@vinxi/solid-start/entry-server";
 
 export default createHandler((context) => <StartServer context={context} />);

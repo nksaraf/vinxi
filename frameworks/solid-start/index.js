@@ -1,15 +1,16 @@
 import { join } from "path";
-import { createApp } from "vinxi";
+import { createApp, resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
 	cleanPath,
 } from "vinxi/file-system-router";
-import { config } from "vinxi/lib/plugins/config";
+import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
 
 class SolidStartFileSystemRouter extends BaseFileSystemRouter {
 	toPath(src) {
+		console.log(src);
 		const routePath = cleanPath(src, this.config)
 			// remove the initial slash
 			.slice(1)
@@ -48,6 +49,19 @@ class SolidStartFileSystemRouter extends BaseFileSystemRouter {
 		};
 	}
 }
+
+function solidStartFileSystemRouter(config) {
+	return (router, app) =>
+		new SolidStartFileSystemRouter(
+			{
+				dir: resolve.absolute(config.dir, router, app),
+				extensions: ["tsx", "ts", "jsx", "js"],
+			},
+			router,
+			app,
+		);
+}
+
 export function defineConfig({} = {}) {
 	return createApp({
 		routers: [
@@ -61,9 +75,10 @@ export function defineConfig({} = {}) {
 				name: "client",
 				mode: "build",
 				handler: "./src/entry-client.tsx",
-				style: SolidStartFileSystemRouter,
-				dir: "./src/routes",
-				build: {
+				style: solidStartFileSystemRouter({
+					dir: "./src/routes",
+				}),
+				compile: {
 					target: "browser",
 					plugins: () => [
 						solid({
@@ -84,9 +99,10 @@ export function defineConfig({} = {}) {
 				name: "ssr",
 				mode: "handler",
 				handler: "./src/entry-server.tsx",
-				dir: "./src/routes",
-				style: SolidStartFileSystemRouter,
-				build: {
+				style: solidStartFileSystemRouter({
+					dir: "./src/routes",
+				}),
+				compile: {
 					target: "server",
 					plugins: () => [
 						solid({ ssr: true }),

@@ -16,7 +16,7 @@ export default createApp({
 			dir: "./app/pages",
 			style: NextJSPagesFileSystemRouter,
 			handler: "./app/client.tsx",
-			build: {
+			compile: {
 				target: "browser",
 				plugins: () => [reactRefresh()],
 			},
@@ -28,7 +28,7 @@ export default createApp({
 			handler: "./app/server.tsx",
 			dir: "./app/pages",
 			style: NextJSPagesFileSystemRouter,
-			build: {
+			compile: {
 				target: "server",
 			},
 		},

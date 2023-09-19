@@ -23,7 +23,7 @@ export default createApp({
 			mode: "handler",
 			base: "/_rsc",
 			handler: "./app/react-server.tsx",
-			build: {
+			compile: {
 				target: "server",
 				plugins: () => [references.serverComponents(), reactRefresh()],
 			},
@@ -32,7 +32,7 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.ts",
-			build: {
+			compile: {
 				target: "browser",
 				plugins: () => [
 					references.clientRouterPlugin({
@@ -50,7 +50,7 @@ export default createApp({
 			mode: "handler",
 			base: "/_server",
 			handler: "./app/server-action.tsx",
-			build: {
+			compile: {
 				target: "server",
 				plugins: () => [
 					references.serverRouterPlugin({

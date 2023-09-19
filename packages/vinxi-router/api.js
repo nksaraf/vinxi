@@ -3,7 +3,7 @@ import {
 	analyzeModule,
 	cleanPath,
 } from "vinxi/file-system-router";
-import { config } from "vinxi/lib/plugins/config";
+import { config } from "vinxi/plugins/config";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 import { fileURLToPath } from "node:url";

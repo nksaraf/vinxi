@@ -55,7 +55,7 @@ function setupWatcher(watcher, router) {
 	watcher.on("unlink", async (path) => {
 		// path = slash(path);
 		// if (!isTarget(path, this.options)) return;
-		await router.fileRouter.removeRoute(path);
+		await router.compiled.removeRoute(path);
 	});
 	watcher.on("add", async (path) => {
 		// path = slash(path);
@@ -63,7 +63,7 @@ function setupWatcher(watcher, router) {
 		// const page = this.options.dirs.find((i) =>
 		// 	path.startsWith(slash(resolve(this.root, i.dir))),
 		// );
-		await router.fileRouter.addRoute(path);
+		await router.compiled.addRoute(path);
 	});
 
 	watcher.on("change", async (path) => {
@@ -71,7 +71,7 @@ function setupWatcher(watcher, router) {
 		// if (!isTarget(path, this.options)) return;
 		// const page = this._pageRouteMap.get(path);
 		// if (page) await this.options.resolver.hmr?.changed?.(this, path);
-		await router.fileRouter.updateRoute(path);
+		await router.compiled.updateRoute(path);
 	});
 }
 
@@ -86,7 +86,7 @@ const fileSystemWatcher = () => {
 		configureServer(server) {
 			if (config.router.fileRouter) {
 				setupWatcher(server.watcher, config.router);
-				config.router.fileRouter.update = () => {
+				config.router.compiled.update = () => {
 					const { moduleGraph } = server;
 					const mods = moduleGraph.getModulesByFile(
 						fileURLToPath(new URL("./routes.js", import.meta.url)),
@@ -211,12 +211,12 @@ async function createViteHandler(app, router, serveConfig) {
 		configFile: false,
 		base: router.base,
 		plugins: [
-			...((targetDevPlugin[router.build.target]?.(router) ?? []).filter(
+			...((targetDevPlugin[router.compile.target]?.(router) ?? []).filter(
 				Boolean,
 			) ?? []),
 			...((routerModeDevPlugin[router.mode]?.(router) ?? []).filter(Boolean) ??
 				[]),
-			...(((await router.build?.plugins?.(router)) ?? []).filter(Boolean) ||
+			...(((await router.compile?.plugins?.(router)) ?? []).filter(Boolean) ||
 				[]),
 		],
 		router,
@@ -248,6 +248,7 @@ async function createViteHandler(app, router, serveConfig) {
 						"viteIndexHtmlMiddleware",
 						"viteHtmlFallbackMiddleware",
 						"vite404Middleware",
+						// @ts-expect-error
 					].includes(m.handle.name),
 			);
 			const viteHandler = fromNodeMiddleware(viteDevServer.middlewares);
@@ -328,11 +329,13 @@ export async function createDevServer(
 			publicAssets: [
 				...app.config.routers
 					.filter((router) => router.mode === "static")
-					.map((router) => ({
-						dir: router.dir,
-						baseURL: router.base,
-						passthrough: true,
-					})),
+					.map(
+						(/** @type {import("./app.js").StaticRouterSchema} */ router) => ({
+							dir: router.dir,
+							baseURL: router.base,
+							passthrough: true,
+						}),
+					),
 				...(app.config.server.publicAssets ?? []),
 			],
 			devHandlers: [
@@ -355,8 +358,8 @@ export async function createDevServer(
 		await devApp.listen(port, {});
 
 		for (const router of app.config.routers) {
-			if ("fileRouter" in router && router.fileRouter) {
-				const routes = await router.fileRouter.getRoutes();
+			if ("compiled" in router && router.compiled) {
+				const routes = await router.compiled.getRoutes();
 				for (const route of routes) {
 					console.log(route.path);
 				}

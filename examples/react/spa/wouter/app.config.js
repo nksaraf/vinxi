@@ -1,5 +1,5 @@
 import reactRefresh from "@vitejs/plugin-react";
-import { createApp } from "vinxi";
+import { createApp, resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
@@ -39,6 +39,19 @@ class WouterFileSystemRouter extends BaseFileSystemRouter {
 		};
 	}
 }
+
+function wouterFileRouter(config) {
+	return (router, app) =>
+		new WouterFileSystemRouter(
+			{
+				dir: resolve.absolute(config.dir, router, app),
+				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"],
+			},
+			router,
+			app,
+		);
+}
+
 export default createApp({
 	routers: [
 		{
@@ -50,9 +63,10 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			dir: "./app/pages",
-			style: WouterFileSystemRouter,
-			build: {
+			style: wouterFileRouter({
+				dir: "./app/pages",
+			}),
+			compile: {
 				target: "browser",
 				plugins: () => [reactRefresh()],
 			},

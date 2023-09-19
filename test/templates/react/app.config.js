@@ -1,6 +1,6 @@
 import reactRefresh from "@vitejs/plugin-react";
 import { join } from "path";
-import { createApp } from "vinxi";
+import { createApp, resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
@@ -54,9 +54,16 @@ export default createApp({
 			name: "api",
 			mode: "handler",
 			handler: "./app/api.ts",
-			dir: "./app/api",
-			style: APIFileSystemRouter,
-			build: {
+			style: (router, app) =>
+				new APIFileSystemRouter(
+					{
+						dir: resolve.absolute("./app/api", router, app),
+						extensions: ["js", "ts", "tsx", "jsx"],
+					},
+					router,
+					app,
+				),
+			compile: {
 				target: "server",
 				// plugins: () => [reactRefresh()],
 			},
@@ -66,7 +73,7 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/entry-client.tsx",
-			build: {
+			compile: {
 				target: "browser",
 				plugins: () => [reactRefresh()],
 			},
@@ -76,7 +83,7 @@ export default createApp({
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/entry-server.tsx",
-			build: {
+			compile: {
 				target: "server",
 			},
 		},

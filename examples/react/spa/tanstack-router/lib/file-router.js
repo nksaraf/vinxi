@@ -1,3 +1,4 @@
+import { resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
@@ -51,4 +52,16 @@ export class TanstackFileRouter extends BaseFileSystemRouter {
 			filePath: src,
 		};
 	}
+}
+
+export function tanstackFileRouter(config) {
+	return (router, app) =>
+		new TanstackFileRouter(
+			{
+				dir: resolve.absolute(config.dir, router, app),
+				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"],
+			},
+			router,
+			app,
+		);
 }
