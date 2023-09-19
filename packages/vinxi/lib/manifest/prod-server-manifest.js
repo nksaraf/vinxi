@@ -70,7 +70,7 @@ export function createProdManifest(app) {
 										input === router.handler ? "virtual:#vinxi/handler" : input;
 									return {
 										assets() {
-											return findAssetsInViteManifest(bundlerManifest, input)
+											return findAssetsInViteManifest(bundlerManifest, id)
 												.filter((asset) => asset.endsWith(".css"))
 												.map((asset) => ({
 													tag: "link",
@@ -92,7 +92,9 @@ export function createProdManifest(app) {
 									};
 								} else if (router.build.target === "browser") {
 									const id =
-										input === router.handler ? "virtual:#vinxi/handler" : input;
+										input === router.handler && !input.endsWith(".html")
+											? "virtual:#vinxi/handler"
+											: input;
 									return {
 										assets() {
 											return findAssetsInViteManifest(bundlerManifest, id)
