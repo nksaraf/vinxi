@@ -45,7 +45,7 @@ function wouterFileRouter(config) {
 	return (router, app) =>
 		new WouterFileSystemRouter(
 			{
-				dir: resolve.absolute(config.dir, router, app),
+				dir: resolve.absolute(config.dir, router.root),
 				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx", "mdx"],
 			},
 			router,
@@ -64,18 +64,16 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			style: wouterFileRouter({ dir: "./app/pages" }),
-			compile: {
-				target: "browser",
-				plugins: () => [
-					mdx.withImports({
-						react: "React",
-					})({
-						providerImportSource: "@mdx-js/react",
-					}),
-					reactRefresh({}),
-				],
-			},
+			routes: wouterFileRouter({ dir: "./app/pages" }),
+			target: "browser",
+			plugins: () => [
+				mdx.withImports({
+					react: "React",
+				})({
+					providerImportSource: "@mdx-js/react",
+				}),
+				reactRefresh({}),
+			],
 		},
 	],
 });

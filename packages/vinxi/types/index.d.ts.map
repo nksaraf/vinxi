@@ -3,22 +3,24 @@
 	"file": "index.d.ts",
 	"names": [
 		"createApp",
-		"RouterSchema",
-		"AppOptions",
-		"RouterModes",
-		"StaticRouterSchema",
-		"CompiledRouter",
-		"RouterStyleFn",
 		"BuildRouterSchema",
+		"StaticRouterSchema",
 		"HandlerRouterSchema",
 		"SPARouterSchema",
+		"RouterSchema",
+		"RouterSchemaInput",
+		"AppOptions",
+		"Internals",
+		"CompiledRouter",
+		"RouterStyleFn",
+		"AppWorkerClient",
 		"relativeAppPath",
 		"cleanPath",
 		"analyzeModule",
 		"glob",
 		"BaseFileSystemRouter",
 		"FileSystemRouterConfig",
-		"routes",
+		"Route",
 		"setContext",
 		"getContext",
 		"defineMiddleware",
@@ -27,13 +29,14 @@
 		"cleanupStyles",
 		"config",
 		"Plugin",
-		"virtual"
+		"virtual",
+		"ViteConfig"
 	],
 	"sources": [
 		"../lib/app.js",
+		"../lib/app-worker-client.js",
 		"../lib/resolve.js",
 		"../lib/file-system-router.js",
-		"../lib/routes.js",
 		"../runtime/server.js",
 		"../runtime/style.js",
 		"../lib/plugins/config.js",
@@ -51,5 +54,5 @@
 		null,
 		null
 	],
-	"mappings": ";;iBA4JgBA,SAASA;aAT8FC,YAAYA;;;aACfC,UAAUA;;;;;;;;;;;;;;;;;aAhFxEC,WAAWA;aAYfC,kBAAkBA;aAkBrBC,cAAcA;;;aACYC,aAAaA;aACLC,iBAAiBA;;;aAqBfC,mBAAmBA;;;aAiBtBC,eAAeA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;UCjI/EC,eAAeA;;;;;;;;;;;iBCKfC,SAASA;;iBAQTC,aAAaA;iBAVhBC,IAAIA;cAqBJC,oBAAoBA;;;;;;;;;;;;;;;;;;;;;;;;;;;aAbqBC,sBAAsBA;;;;MF+H2Cd,YAAYA;;;MACfC,UAAUA;;;;;;MApE5EE,kBAAkBA;MAkBrBC,cAAcA;;;MACYC,aAAaA;MACLC,iBAAiBA;;;MAqBfC,mBAAmBA;;;MAiBtBC,eAAeA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;cGrIlFO,MAAMA;;;;;;;;;iBCHHC,UAAUA;iBAIVC,UAAUA;iBAIVC,gBAAgBA;;;;iBCVhBC,YAAYA;iBAeZC,YAAYA;iBAcZC,aAAaA;;;;;iBCvBbC,MAAMA;WCCLC,MAAMA;;;;;;;;;;;iBCIPC,OAAOA;;;WDJND,MAAMA"
+	"mappings": ";;iBAiLgBA,SAASA;aAvG8GC,iBAAiBA;;;;;;;aAC7BC,kBAAkBA;;;;;;aACJC,mBAAmBA;;;;;;;aACvBC,eAAeA;;;;;;;aACpDC,YAAYA;aACqDC,iBAAiBA;aACzDC,UAAUA;;;;;;;;;;;;;;;;;aAtEgBC,SAASA;;;;;aAC/FC,cAAcA;;;aACEC,aAAaA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;QCiC7EC,eAAeA;;;;;;;;;;;;;;;;UC1BZC,eAAeA;;;;;;;;;;;;iBCSfC,SAASA;;iBAWTC,aAAaA;iBAtBhBC,IAAIA;cAiCJC,oBAAoBA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;aA/BoBC,sBAAsBA;;;;aACrCC,KAAKA;;;MHsD4FjB,iBAAiBA;;;;;;;MAC7BC,kBAAkBA;;;;;;MACJC,mBAAmBA;;;;;;;MACvBC,eAAeA;;;;;;;MACpDC,YAAYA;MACqDC,iBAAiBA;MACzDC,UAAUA;;;;;;MAtEgBC,SAASA;;;;;MAC/FC,cAAcA;;;MACEC,aAAaA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;QCiC7EC,eAAeA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;iBGnCZQ,UAAUA;;iBASVC,UAAUA;;iBASVC,gBAAgBA;;;;;;;;;;iBC5BhBC,YAAYA;iBAeZC,YAAYA;iBAcZC,aAAaA;;;;;;;iBCvBbC,MAAMA;MCoBVC,MAAMA;;;;;;;iBCfFC,OAAOA;;;;;MDaXC,UAAUA;;MAEVF,MAAMA;MPgDqHzB,iBAAiBA;;;;;;;MAC7BC,kBAAkBA;;;;;;MACJC,mBAAmBA;;;;;;;MACvBC,eAAeA;;;;;;;MACpDC,YAAYA;MACqDC,iBAAiBA;MACzDC,UAAUA;;;;;;MAtEgBC,SAASA;;;;;MAC/FC,cAAcA;;;MACEC,aAAaA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;QCiC7EC,eAAeA"
 }

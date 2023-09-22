@@ -52,7 +52,7 @@ function solidStartFileRouter(config) {
 	return (router, app) =>
 		new SolidStartFileSystemRouter(
 			{
-				dir: resolve.absolute(config.dir, router, app),
+				dir: resolve.absolute(config.dir, router.root),
 				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"],
 			},
 			router,
@@ -72,30 +72,26 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			style: solidStartFileRouter({
+			routes: solidStartFileRouter({
 				dir: "./app/pages",
 			}),
-			compile: {
-				target: "browser",
-				plugins: () => [
-					solid({
-						ssr: true,
-					}),
-				],
-			},
+			target: "browser",
+			plugins: () => [
+				solid({
+					ssr: true,
+				}),
+			],
 			base: "/_build",
 		},
 		{
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			style: solidStartFileRouter({
+			routes: solidStartFileRouter({
 				dir: "./app/pages",
 			}),
-			compile: {
-				target: "server",
-				plugins: () => [solid({ ssr: true })],
-			},
+			target: "server",
+			plugins: () => [solid({ ssr: true })],
 		},
 	],
 });

@@ -13,10 +13,8 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			compile: {
-				target: "browser",
-				plugins: () => [reactRefresh()],
-			},
+			target: "browser",
+			plugins: () => [reactRefresh()],
 			base: "/_build",
 		},
 		{
@@ -24,9 +22,8 @@ export default createApp({
 			mode: "handler",
 			middleware: "./app/middleware.tsx",
 			handler: "./app/server.tsx",
-			compile: {
-				target: "server",
-			},
+			target: "server",
+			plugins: () => [reactRefresh()],
 		},
 	],
 });

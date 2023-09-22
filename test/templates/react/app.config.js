@@ -54,7 +54,7 @@ export default createApp({
 			name: "api",
 			mode: "handler",
 			handler: "./app/api.ts",
-			style: (router, app) =>
+			routes: (router, app) =>
 				new APIFileSystemRouter(
 					{
 						dir: resolve.absolute("./app/api", router, app),
@@ -63,29 +63,23 @@ export default createApp({
 					router,
 					app,
 				),
-			compile: {
-				target: "server",
-				// plugins: () => [reactRefresh()],
-			},
+			target: "server",
+			// plugins: () => [reactRefresh()],
 			base: "/api",
 		},
 		{
 			name: "client",
 			mode: "build",
 			handler: "./app/entry-client.tsx",
-			compile: {
-				target: "browser",
-				plugins: () => [reactRefresh()],
-			},
+			target: "browser",
+			plugins: () => [reactRefresh()],
 			base: "/_build",
 		},
 		{
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/entry-server.tsx",
-			compile: {
-				target: "server",
-			},
+			target: "server",
 		},
 	],
 });

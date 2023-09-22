@@ -6,6 +6,7 @@
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"allowJs": true,
+		"strict": true,
 		"checkJs": true,
 		"noEmit": true,
 		"isolatedModules": true

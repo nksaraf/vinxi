@@ -2,18 +2,37 @@ import { relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export function routes() {
+	/**
+	 * @type {Exclude<import("../app").RouterSchema, import("../app").StaticRouterSchema>}
+	 */
 	let router;
+	/**
+	 * @type {string}
+	 */
 	let root;
+	/**
+	 * @type {boolean}
+	 */
 	let isBuild;
 	return {
 		name: "vinxi:routes",
+		/**
+		 * @param {any} config
+		 * @param {{ command: string; }} command
+		 */
 		config(config, command) {
 			isBuild = command.command === "build";
 		},
+		/**
+		 * @param {{ root: any; router: any; }} config
+		 */
 		configResolved(config) {
 			root = config.root;
 			router = config.router;
 		},
+		/**
+		 * @param {{ split: (arg0: string) => [any, any]; }} url
+		 */
 		async load(url) {
 			const [id, query] = url.split("?");
 			if (
@@ -24,7 +43,7 @@ export function routes() {
 				)
 			) {
 				const js = jsCode();
-				const routes = await router.compiled?.getRoutes();
+				const routes = await router.internals.routes?.getRoutes();
 				console.log(routes);
 
 				let routesCode = JSON.stringify(routes ?? [], (k, v) => {
@@ -34,9 +53,12 @@ export function routes() {
 
 					if (k.startsWith("$$")) {
 						const buildId = `${v.src}?${v.pick
-							.map((p) => `pick=${p}`)
+							.map((/** @type {any} */ p) => `pick=${p}`)
 							.join("&")}`;
 
+						/**
+						 * @type {{ [key: string]: string }}
+						 */
 						const refs = {};
 						for (var pick of v.pick) {
 							refs[pick] = js.addNamedImport(pick, buildId);
@@ -49,7 +71,7 @@ export function routes() {
 						};
 					} else if (k.startsWith("$")) {
 						const buildId = `${v.src}?${v.pick
-							.map((p) => `pick=${p}`)
+							.map((/** @type {any} */ p) => `pick=${p}`)
 							.join("&")}`;
 						return {
 							src: isBuild ? relative(root, buildId) : buildId,
@@ -57,7 +79,7 @@ export function routes() {
 								? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
 								: undefined,
 							import:
-								router.compile.target === "server"
+								router.target === "server"
 									? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
 									: `_$(() => { const id = '${relative(
 											root,
@@ -84,6 +106,9 @@ function jsCode() {
 	let imports = new Map();
 	let vars = 0;
 
+	/**
+	 * @param {any} p
+	 */
 	function addImport(p) {
 		let id = imports.get(p);
 		if (!id) {
@@ -96,6 +121,10 @@ function jsCode() {
 		return d;
 	}
 
+	/**
+	 * @param {string | number} name
+	 * @param {any} p
+	 */
 	function addNamedImport(name, p) {
 		let id = imports.get(p);
 		if (!id) {
@@ -108,7 +137,7 @@ function jsCode() {
 		return d;
 	}
 
-	const getNamedExport = (p) => {
+	const getNamedExport = (/** @type {any} */ p) => {
 		let id = imports.get(p);
 
 		delete id["default"];

@@ -6,103 +6,38 @@ import invariant, { InvariantError } from "./invariant.js";
 import { resolve } from "./resolve.js";
 
 export { resolve };
-/**
- *
- * @param {RouterSchema} router
- * @param {AppOptions} appConfig
- * @returns {RouterSchema}
- */
-function resolveConfig(router, appConfig) {
-	switch (router.mode) {
-		case "static":
-			return {
-				base: "/",
-				root: appConfig.root,
-				...router,
-			};
-		case "build":
-			return {
-				base: "/",
-				root: appConfig.root,
-				...router,
-				handler: resolve.relative(router.handler, router, appConfig),
-				compiled: router.style ? router.style(router, appConfig) : undefined,
-				compile: {
-					...(router.compile ?? {}),
-					outDir: router.compile?.outDir
-						? join(appConfig.root, router.compile.outDir)
-						: join(appConfig.root, ".nitro", "build", router.name),
-				},
-			};
-		case "handler":
-			return {
-				base: "/",
-				root: appConfig.root,
-				...router,
-				handler: resolve.relative(router.handler, router, appConfig),
-				middleware: resolve.relative(router.middleware, router, appConfig),
-				compiled: router.style ? router.style(router, appConfig) : undefined,
-				compile: {
-					...(router.compile ?? {}),
-					outDir: router.compile?.outDir
-						? join(appConfig.root, router.compile.outDir)
-						: join(appConfig.root, ".nitro", "build", router.name),
-				},
-			};
-		case "spa":
-			return {
-				base: "/",
-				root: appConfig.root,
-				...router,
-				handler: resolve.relative(router.handler, router, appConfig),
-				compiled: router.style ? router.style(router, appConfig) : undefined,
-				compile: {
-					...(router.compile ?? {}),
-					outDir: router.compile?.outDir
-						? join(appConfig.root, router.compile.outDir)
-						: join(appConfig.root, ".nitro", "build", router.name),
-				},
-			};
-	}
-}
 
-/** @typedef {"static" | "build" | "spa" | "handler"} RouterModes  */
-/** @type {[RouterModes, ...RouterModes[]]} */
-const routerModes = ["static", "build", "spa", "handler"];
+/**
+ * @typedef {{ routes?: CompiledRouter; devServer?: import('vite').ViteDevServer; appWorker?: import('./app-worker-client.js').AppWorkerClient; }} Internals
+ * @typedef {{ getRoutes(): Promise<any[]>; } & EventTarget} CompiledRouter
+ * @typedef {(router: RouterSchemaInput, app: AppOptions) => CompiledRouter} RouterStyleFn
+ * */
 
 const staticRouterSchema = v.object({
 	name: v.string(),
-	base: v.string().default("/"),
+	base: v.optional(v.string().default("/")),
 	mode: v.literal("static"),
 	dir: v.string(),
 	root: v.optional(v.string()),
 });
 
-/** @typedef {v.infer<typeof staticRouterSchema>} StaticRouterSchema */
-
 const buildRouterSchema = v.object({
 	name: v.string(),
-	base: v.string().default("/"),
+	base: v.optional(v.string().default("/")),
 	root: v.optional(v.string()),
 	mode: v.literal("build"),
 	handler: v.string(),
-	/** @type {v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>} */
-	style: v.custom((value) => value !== null),
+	/** @type {v.ZodOptionalType<v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>>} */
+	routes: v.optional(v.custom((value) => value !== null)),
 	extensions: v.array(v.string()).optional(),
-	compile: v.object({
-		outDir: v.string().optional(),
-		target: v.literal("browser"),
-		plugins: v.optional(v.custom((value) => typeof value === "function")),
-	}),
+	outDir: v.string().optional(),
+	target: v.literal("browser"),
+	plugins: v.optional(v.custom((value) => typeof value === "function")),
 });
-
-/** @typedef {{ getRoutes(): Promise<any[]> }} CompiledRouter */
-/** @typedef {(router: RouterSchema, app: AppOptions) => CompiledRouter} RouterStyleFn */
-/** @typedef {v.infer<typeof buildRouterSchema> & { compiled?: CompiledRouter }} BuildRouterSchema */
 
 const handlerRouterSchema = v.object({
 	name: v.string(),
-	base: v.string().default("/"),
+	base: v.optional(v.string().default("/")),
 	root: v.optional(v.string()),
 
 	mode: v.literal("handler"),
@@ -110,33 +45,25 @@ const handlerRouterSchema = v.object({
 	worker: v.optional(v.boolean()),
 	handler: v.string(),
 	middleware: v.optional(v.string()),
-	/** @type {v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>} */
-	style: v.custom((value) => value !== null),
-	compile: v.object({
-		outDir: v.string().optional(),
-		target: v.literal("server"),
-		plugins: v.optional(v.custom((value) => typeof value === "function")),
-	}),
+	/** @type {v.ZodOptionalType<v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>>} */
+	routes: v.optional(v.custom((value) => value !== null)),
+	outDir: v.string().optional(),
+	target: v.literal("server"),
+	plugins: v.optional(v.custom((value) => typeof value === "function")),
 });
-
-/** @typedef {v.infer<typeof handlerRouterSchema> & { compiled?: CompiledRouter }} HandlerRouterSchema */
 
 const spaRouterSchema = v.object({
 	name: v.string(),
-	base: v.string().default("/"),
+	base: v.optional(v.string().default("/")),
 	root: v.optional(v.string()),
 	mode: v.literal("spa"),
-	/** @type {v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>} */
-	style: v.custom((value) => value !== null),
+	/** @type {v.ZodOptionalType<v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>>} */
+	routes: v.optional(v.custom((value) => value !== null)),
 	handler: v.string(),
-	compile: v.object({
-		outDir: v.string().optional(),
-		target: v.literal("browser"),
-		plugins: v.optional(v.custom((value) => typeof value === "function")),
-	}),
+	outDir: v.string().optional(),
+	target: v.literal("browser"),
+	plugins: v.optional(v.custom((value) => typeof value === "function")),
 });
-
-/** @typedef {v.infer<typeof spaRouterSchema>  & { compiled?: CompiledRouter }} SPARouterSchema */
 
 const routerSchema = {
 	static: staticRouterSchema,
@@ -145,17 +72,116 @@ const routerSchema = {
 	handler: handlerRouterSchema,
 };
 
-/** @typedef {(HandlerRouterSchema | BuildRouterSchema | SPARouterSchema | StaticRouterSchema) & { fileRouter?: any }} RouterSchema  */
-/** @typedef {{ routers?: RouterSchema[]; name?: string; server?: import('nitropack').NitroConfig; root?: string }} AppOptions */
-/** @typedef {{ config: { name: string; server: import('nitropack').NitroConfig; routers: RouterSchema[]; root: string; }; getRouter: (name: string) => RouterSchema & { devServer: import('vite').ViteDevServer } }} App */
+/** @typedef {v.infer<typeof buildRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} BuildRouterSchema */
+/** @typedef {v.infer<typeof staticRouterSchema> & { outDir: string; base: string; order: number; internals?: Internals }} StaticRouterSchema */
+/** @typedef {v.infer<typeof handlerRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} HandlerRouterSchema */
+/** @typedef {v.infer<typeof spaRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} SPARouterSchema */
+/** @typedef {(HandlerRouterSchema | BuildRouterSchema | SPARouterSchema | StaticRouterSchema)} RouterSchema  */
+/** @typedef {(v.infer<typeof buildRouterSchema> | v.infer<typeof staticRouterSchema> | v.infer<typeof spaRouterSchema> |  v.infer<typeof handlerRouterSchema>)} RouterSchemaInput  */
+/** @typedef {{ routers?: RouterSchemaInput[]; name?: string; server?: import('nitropack').NitroConfig; root?: string }} AppOptions */
+/** @typedef {{ config: { name: string; server: import('nitropack').NitroConfig; routers: RouterSchema[]; root: string; }; getRouter: (name: string) => RouterSchema; dev(): Promise<void>; build(): Promise<void> }} App */
+
+/**
+ *
+ * @param {RouterSchemaInput} router
+ * @param {AppOptions} appConfig
+ * @param {number} order
+ * @returns {RouterSchema}
+ */
+function resolveConfig(router, appConfig, order) {
+	const appRoot = appConfig.root ?? process.cwd();
+	const root = router.root ?? appRoot;
+	switch (router.mode) {
+		case "static":
+			return {
+				...router,
+				base: router.base ?? "/",
+				root,
+				order,
+				outDir: join(appRoot, ".nitro", "build", router.name),
+			};
+		case "build":
+			/** @type {BuildRouterSchema} */
+			const buildRouter = {
+				...router,
+				root,
+				base: router.base ?? "/",
+				handler: resolve.relative(router.handler, root),
+				target: router.target ?? "browser",
+				outDir: router.outDir
+					? join(appRoot, router.outDir)
+					: join(appRoot, ".nitro", "build", router.name),
+				internals: {},
+				order,
+			};
+
+			buildRouter.internals = {
+				routes: router.routes
+					? router.routes(buildRouter, appConfig)
+					: undefined,
+				devServer: undefined,
+			};
+
+			return buildRouter;
+		case "handler":
+			/** @type {HandlerRouterSchema} */
+			const handlerRouter = {
+				...router,
+				root,
+				base: router.base ?? "/",
+				internals: {},
+				handler: resolve.relative(router.handler, root),
+				middleware: resolve.relative(router.middleware, root),
+				target: router.target ?? "server",
+				outDir: router.outDir
+					? join(appRoot, router.outDir)
+					: join(appRoot, ".nitro", "build", router.name),
+				order,
+			};
+
+			handlerRouter.internals = {
+				routes: router.routes
+					? router.routes(handlerRouter, appConfig)
+					: undefined,
+				devServer: undefined,
+			};
+			return handlerRouter;
+		case "spa":
+			/** @type {SPARouterSchema} */
+			const spaRouter = {
+				...router,
+				base: router.base ?? "/",
+				root,
+				internals: {},
+				handler: resolve.relative(router.handler, root),
+				target: router.target ?? "browser",
+				outDir: router.outDir
+					? join(appRoot, router.outDir)
+					: join(appRoot, ".nitro", "build", router.name),
+				order,
+			};
+
+			spaRouter.internals = {
+				routes: router.routes ? router.routes(spaRouter, appConfig) : undefined,
+				devServer: undefined,
+			};
+
+			return spaRouter;
+	}
+}
 
 /**
  *
  * @param {AppOptions} param0
  * @returns {App}
  */
-export function createApp({ routers = [], name = "app", server = {} }) {
-	routers = routers.map((router) => {
+export function createApp({
+	routers = [],
+	name = "app",
+	server = {},
+	root = process.cwd(),
+}) {
+	const parsedRouters = routers.map((router) => {
 		invariant(
 			router.mode in routerSchema,
 			`Invalid router mode ${router.mode}`,
@@ -172,26 +198,40 @@ export function createApp({ routers = [], name = "app", server = {} }) {
 		return result.data;
 	});
 
-	const config = {
-		name: name ?? "vinxi",
-		routers,
-		server,
-		root: process.cwd(),
-	};
-
-	config.routers = routers.map((router, index) => {
+	const resolvedRouters = routers.map((router, index) => {
 		return {
-			...resolveConfig(router, config),
-			index,
+			...resolveConfig(
+				router,
+				{
+					name: name ?? "vinxi",
+					// @ts-ignore
+					routers: parsedRouters,
+					server,
+					root,
+				},
+				index,
+			),
 		};
 	});
 
+	const config = {
+		name: name ?? "vinxi",
+		routers: resolvedRouters,
+		server,
+		root,
+	};
+
+	/** @type {App} */
 	const app = {
 		config,
-		getRouter(name) {
-			return config.routers.find((router) => router.name === name);
+		getRouter(/** @type {string} */ name) {
+			const router = config.routers.find((router) => router.name === name);
+			if (!router) {
+				throw new InvariantError(`Router ${name} not found`);
+			}
+			return router;
 		},
-		async serve() {
+		async dev() {
 			if (isMainThread) {
 				const { createDevServer } = await import("./dev-server.js");
 				await createDevServer(app, {
@@ -202,12 +242,12 @@ export function createApp({ routers = [], name = "app", server = {} }) {
 		},
 		async build() {
 			const { createBuild } = await import("./build.js");
-			await createBuild(app);
+			await createBuild(app, {});
 		},
 	};
 
 	if (process.argv.includes("--dev")) {
-		app.serve();
+		app.dev();
 	} else if (process.argv.includes("--build")) {
 		app.build();
 	}

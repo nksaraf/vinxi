@@ -62,13 +62,13 @@ class TanstackFileSystemRouter extends BaseFileSystemRouter {
 
 /**
  *
- * @param {import("vinxi/file-system-router").FileSystemRouterConfig} config
+ * @param {Partial<import("vinxi/file-system-router").FileSystemRouterConfig>} config
  */
 function tanstackFileRouter(config) {
 	return (router, app) =>
 		new TanstackFileSystemRouter(
 			{
-				dir: resolve.absolute(config.dir, router, app),
+				dir: resolve.absolute(config.dir, router.root),
 				extensions: config.extensions ?? ["ts", "tsx", "jsx", "js"],
 			},
 			router,
@@ -87,13 +87,11 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			style: tanstackFileRouter({
+			routes: tanstackFileRouter({
 				dir: "./app/routes",
 			}),
-			compile: {
-				target: "browser",
-				plugins: () => [reactRefresh()],
-			},
+			target: "browser",
+			plugins: () => [reactRefresh()],
 		},
 	],
 });

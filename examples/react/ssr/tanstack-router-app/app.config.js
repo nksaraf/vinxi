@@ -64,7 +64,7 @@ function tanstackFileRouter(config) {
 	return (router, app) =>
 		new TanstackFileRouter(
 			{
-				dir: resolve.absolute(config.dir, router, app),
+				dir: resolve.absolute(config.dir, router.root),
 				extensions: config.extensions ?? ["ts", "tsx", "jsx", "js"],
 			},
 			router,
@@ -91,21 +91,17 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			style: tanstackFileRouter({ dir: "./app/routes" }),
-			compile: {
-				target: "browser",
-				plugins: () => [reactRefresh()],
-			},
+			routes: tanstackFileRouter({ dir: "./app/routes" }),
+			target: "browser",
+			plugins: () => [reactRefresh()],
 		},
 		{
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			style: tanstackFileRouter({ dir: "./app/routes" }),
-			compile: {
-				target: "server",
-				plugins: () => [reactRefresh()],
-			},
+			routes: tanstackFileRouter({ dir: "./app/routes" }),
+			target: "server",
+			plugins: () => [reactRefresh()],
 		},
 	],
 });

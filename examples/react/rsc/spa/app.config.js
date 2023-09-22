@@ -23,25 +23,21 @@ export default createApp({
 			mode: "handler",
 			base: "/_rsc",
 			handler: "./app/react-server.tsx",
-			compile: {
-				target: "server",
-				plugins: () => [references.serverComponents(), reactRefresh()],
-			},
+			target: "server",
+			plugins: () => [references.serverComponents(), reactRefresh()],
 		},
 		{
 			name: "client",
 			mode: "spa",
 			handler: "./index.ts",
-			compile: {
-				target: "browser",
-				plugins: () => [
-					references.clientRouterPlugin({
-						runtime: "@vinxi/react-server-dom/runtime",
-					}),
-					reactRefresh(),
-					references.clientComponents(),
-				],
-			},
+			target: "browser",
+			plugins: () => [
+				references.clientRouterPlugin({
+					runtime: "@vinxi/react-server-dom/runtime",
+				}),
+				reactRefresh(),
+				references.clientComponents(),
+			],
 			base: "/",
 		},
 		{
@@ -50,16 +46,14 @@ export default createApp({
 			mode: "handler",
 			base: "/_server",
 			handler: "./app/server-action.tsx",
-			compile: {
-				target: "server",
-				plugins: () => [
-					references.serverRouterPlugin({
-						resolve: {
-							conditions: ["react-server"],
-						},
-					}),
-				],
-			},
+			target: "server",
+			plugins: () => [
+				references.serverRouterPlugin({
+					resolve: {
+						conditions: ["react-server"],
+					},
+				}),
+			],
 		},
 	],
 });

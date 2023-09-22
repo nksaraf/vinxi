@@ -3,6 +3,13 @@ import { join, relative } from "pathe";
 import invariant from "../invariant.js";
 import findAssetsInViteManifest from "./vite-manifest.js";
 
+/** @typedef {import("../app.js").App & { config: { buildManifest: { [key:string]: any } }}} ProdApp */
+
+/**
+ *
+ * @param {ProdApp} app
+ * @returns
+ */
 export function createProdManifest(app) {
 	const manifest = new Proxy(
 		{},
@@ -12,12 +19,18 @@ export function createProdManifest(app) {
 				const router = app.getRouter(routerName);
 				const bundlerManifest = app.config.buildManifest[routerName];
 
+				invariant(
+					router.mode !== "static",
+					"manifest not available for static router",
+				);
 				return {
 					handler: router.handler,
 					async assets() {
+						/** @type {{ [key: string]: string[] }} */
 						let assets = {};
 						assets[router.handler] = await this.inputs[router.handler].assets();
-						for (const route of (await router.compiled?.getRoutes()) ?? []) {
+						for (const route of (await router.internals.routes?.getRoutes()) ??
+							[]) {
 							assets[route.filePath] = await this.inputs[
 								route.filePath
 							].assets();
@@ -25,6 +38,7 @@ export function createProdManifest(app) {
 						return assets;
 					},
 					async json() {
+						/** @type {{ [key: string]: { output: string; assets: string[]} }} */
 						let json = {};
 						for (const input of Object.keys(this.inputs)) {
 							json[input] = {
@@ -41,11 +55,7 @@ export function createProdManifest(app) {
 								invariant(typeof chunk === "string", "Chunk expected");
 								return {
 									output: {
-										path: join(
-											router.compile.outDir,
-											router.base,
-											chunk + ".js",
-										),
+										path: join(router.outDir, router.base, chunk + ".js"),
 									},
 								};
 							},
@@ -69,7 +79,7 @@ export function createProdManifest(app) {
 							get(target, input) {
 								invariant(typeof input === "string", "Input expected");
 								const id = input;
-								if (router.compile.target === "server") {
+								if (router.target === "server") {
 									const id =
 										input === router.handler ? "virtual:#vinxi/handler" : input;
 									return {
@@ -88,13 +98,13 @@ export function createProdManifest(app) {
 										},
 										output: {
 											path: join(
-												router.compile.outDir,
+												router.outDir,
 												router.base,
 												bundlerManifest[id].file,
 											),
 										},
 									};
-								} else if (router.compile.target === "browser") {
+								} else if (router.target === "browser") {
 									const id =
 										input === router.handler && !input.endsWith(".html")
 											? "virtual:#vinxi/handler"
