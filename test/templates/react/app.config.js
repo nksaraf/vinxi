@@ -57,7 +57,7 @@ export default createApp({
 			routes: (router, app) =>
 				new APIFileSystemRouter(
 					{
-						dir: resolve.absolute("./app/api", router, app),
+						dir: resolve.absolute("./app/api", router.root),
 						extensions: ["js", "ts", "tsx", "jsx"],
 					},
 					router,
