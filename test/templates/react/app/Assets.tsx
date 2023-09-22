@@ -1,6 +1,6 @@
 import React from "react";
 import { lazy } from "react";
-import { updateStyles } from "vinxi/lib/style";
+import { updateStyles } from "vinxi/runtime/style";
 
 import { renderAsset } from "./render-asset";
 

@@ -1,5 +1,5 @@
 import fs from "fs";
-import { createApp } from "vinxi";
+import { createApp, resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
@@ -48,6 +48,18 @@ class SolidStartFileSystemRouter extends BaseFileSystemRouter {
 	}
 }
 
+function solidStartFileRouter(config) {
+	return (router, app) =>
+		new SolidStartFileSystemRouter(
+			{
+				dir: resolve.absolute(config.dir, router, app),
+				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"],
+			},
+			router,
+			app,
+		);
+}
+
 export default createApp({
 	routers: [
 		{
@@ -60,9 +72,10 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			style: SolidStartFileSystemRouter,
-			dir: "./app/pages",
-			build: {
+			style: solidStartFileRouter({
+				dir: "./app/pages",
+			}),
+			compile: {
 				target: "browser",
 				plugins: () => [
 					solid({
@@ -76,9 +89,10 @@ export default createApp({
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			dir: "./app/pages",
-			style: SolidStartFileSystemRouter,
-			build: {
+			style: solidStartFileRouter({
+				dir: "./app/pages",
+			}),
+			compile: {
 				target: "server",
 				plugins: () => [solid({ ssr: true })],
 			},

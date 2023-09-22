@@ -9,5 +9,6 @@
 		"checkJs": true,
 		"noEmit": true,
 		"isolatedModules": true
-	}
+	},
+	"include": ["lib", "runtime"]
 }

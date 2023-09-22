@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-/// <reference types="../../client" />
+/// <reference types="./client" />
 import { join } from "pathe";
 
 import { invariant } from "../invariant";
@@ -15,7 +15,7 @@ const manifest = new Proxy(
 			return {
 				handler: import.meta.env.DEV
 					? join(import.meta.env.CWD, import.meta.env.ROUTER_HANDLER)
-					: import.meta.env.ROUTER_HANDLER,
+					: "virtual:#vinxi/handler",
 				chunks: new Proxy(
 					{},
 					{

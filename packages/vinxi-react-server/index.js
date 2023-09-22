@@ -3,7 +3,7 @@ import reactRefresh from "@vitejs/plugin-react";
 import { join } from "path";
 import { fileURLToPath } from "url";
 import { createApp } from "vinxi";
-import { config } from "vinxi/lib/plugins/config";
+import { config } from "vinxi/plugins/config";
 
 export function defineConfig() {
 	return createApp({

@@ -2,7 +2,7 @@ import { references } from "@vinxi/plugin-references";
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 
-import { TanstackFileRouter } from "./lib/file-router.js";
+import { tanstackFileRouter } from "./lib/file-router.js";
 
 export default createApp({
 	server: {
@@ -23,20 +23,20 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			dir: "./app/pages",
-			style: TanstackFileRouter,
-			build: {
+			style: tanstackFileRouter({
+				dir: "./app/pages",
+			}),
+			compile: {
 				target: "browser",
 				plugins: () => [references.clientRouterPlugin(), reactRefresh()],
 			},
-			base: "/",
 		},
 		{
 			name: "server",
 			mode: "handler",
 			base: "/_server",
 			handler: "./app/entry-server.tsx",
-			build: {
+			compile: {
 				target: "server",
 				plugins: () => [references.serverRouterPlugin()],
 			},

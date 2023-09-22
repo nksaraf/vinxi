@@ -37,7 +37,7 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			build: {
+			compile: {
 				target: "browser",
 				plugins: () => [reactRefresh()],
 			},
@@ -47,7 +47,7 @@ export default createApp({
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			build: {
+			compile: {
 				target: "server",
 				plugins: () => [
 					viteServer(),

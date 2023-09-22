@@ -5,16 +5,13 @@ import { eventHandler } from "vinxi/runtime/server";
 
 export function createHandler() {
 	return eventHandler(async (event) => {
-		console.log("event", event);
 		async function loadModule(id) {
 			if (import.meta.env.DEV) {
-				console.log(import.meta.env.MANIFEST["rsc"].chunks[id].output.path);
 				return await import(
 					import.meta.env.MANIFEST["rsc"].chunks[id].output.path
 				);
 			}
 
-			console.log(id, globalThis.$$chunks);
 			if (globalThis.$$chunks[id + ".js"]) {
 				return globalThis.$$chunks[id + ".js"];
 			}
@@ -29,7 +26,6 @@ export function createHandler() {
 				decodeReplyFromBusboy,
 				decodeAction,
 			} = await import("@vinxi/react-server-dom/server");
-			console.log(event.node.req.headers);
 			const serverReference = event.node.req.headers["server-action"];
 			if (serverReference) {
 				// This is the client-side case
@@ -53,17 +49,14 @@ export function createHandler() {
 				const text = await new Promise((resolve) => {
 					const requestBody = [];
 					event.node.req.on("data", (chunks) => {
-						console.log(chunks);
 						requestBody.push(chunks);
 					});
 					event.node.req.on("end", () => {
 						resolve(requestBody.join(""));
 					});
 				});
-				console.log(text);
 
 				args = await decodeReply(text);
-				console.log(args, action);
 				// }
 				const result = action.apply(null, args);
 				try {
@@ -78,7 +71,6 @@ export function createHandler() {
 				throw new Error("Invalid request");
 			}
 		}
-		console.log("rendering");
 		const reactServerManifest = import.meta.env.MANIFEST["rsc"];
 		const serverAssets = await reactServerManifest.inputs[
 			reactServerManifest.handler

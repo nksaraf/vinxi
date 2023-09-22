@@ -18,9 +18,11 @@ export function createTransformer(
 
 	return async function transform(code_mdx: string, mdxOptions?: MdxOptions) {
 		const mdx = await import("@mdx-js/mdx");
-		const code_jsx = await mdx.compile(code_mdx, mdxOptions as any);
-		const code_es2019 = await jsxToES2019(code_jsx.toString());
-		return imports.concat("", code_es2019).join("\n");
+		let code_jsx = await mdx.compile(code_mdx, mdxOptions as any);
+		let code = !mdxOptions.jsx
+			? await jsxToES2019(code_jsx.toString())
+			: code_jsx.toString();
+		return imports.concat("", code).join("\n");
 	};
 }
 

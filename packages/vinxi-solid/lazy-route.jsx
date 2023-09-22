@@ -2,7 +2,7 @@
 
 /** @jsxImportSource solid-js */
 import { createComponent, lazy, onCleanup } from "solid-js";
-import { appendStyles, cleanupStyles, updateStyles } from "vinxi/lib/style";
+import { appendStyles, cleanupStyles, updateStyles } from "vinxi/runtime/style";
 
 import invariant from "./invariant";
 import { renderAsset } from "./render-asset";

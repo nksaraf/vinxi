@@ -5,7 +5,7 @@ import findStylesInModuleGraph from "./collect-styles.js";
 
 /**
  *
- * @param {import('../types.js').App} app
+ * @param {import("../app.js").App} app
  * @returns
  */
 export function createDevManifest(app) {
@@ -16,6 +16,8 @@ export function createDevManifest(app) {
 				invariant(typeof bundlerName === "string", "Bundler name expected");
 
 				let router = app.getRouter(bundlerName);
+
+				invariant(router.mode != "static", "No manifest for static router");
 
 				const viteServer = router.devServer;
 				return {
@@ -34,9 +36,13 @@ export function createDevManifest(app) {
 								let absolutePath = isAbsolute(chunk)
 									? chunk
 									: join(app.config.root, chunk);
+								invariant(
+									router.mode != "static",
+									"No manifest for static router",
+								);
 
 								let relativePath = relative(app.config.root, chunk);
-								if (router.build.target === "browser") {
+								if (router.compile.target === "browser") {
 									return {
 										output: {
 											path: join(router.base, "@fs", absolutePath),
@@ -62,15 +68,12 @@ export function createDevManifest(app) {
 									: join(app.config.root, input);
 
 								let relativePath = relative(app.config.root, input);
+								invariant(
+									router.mode != "static",
+									"No manifest for static router",
+								);
 
 								let isHandler = router.handler === relativePath;
-								let isDirEntry =
-									router.dir && absolutePath.startsWith(router.dir);
-
-								// invariant(
-								// 	isHandler || isDirEntry,
-								// 	`Could not find entry ${input} in any router with bundler ${bundlerName}`,
-								// );
 
 								async function getVitePluginAssets() {
 									const plugins = router.devServer.config.plugins.filter(
@@ -78,6 +81,7 @@ export function createDevManifest(app) {
 									);
 									let pluginAssets = [];
 									for (let plugin of plugins) {
+										// @ts-ignore
 										let transformedHtml = await plugin.transformIndexHtml(
 											"/",
 											``,
@@ -103,7 +107,7 @@ export function createDevManifest(app) {
 									});
 								}
 
-								if (router.build.target === "browser") {
+								if (router.compile.target === "browser") {
 									return {
 										async assets() {
 											return [

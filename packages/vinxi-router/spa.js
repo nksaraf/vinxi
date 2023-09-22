@@ -1,9 +1,9 @@
-import { config } from "vinxi/lib/plugins/config";
+import { config } from "vinxi/plugins/config";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 /**
  *
- * @param {{ plugins: () => import('vinxi').PluginOption[]; dir: string; style: string; }} param0
+ * @param {{ plugins: () => import('vinxi').Plugin[]; dir: string; style: string; }} param0
  * @returns {import('vinxi').RouterSchema}
  */
 export function spaRouter({

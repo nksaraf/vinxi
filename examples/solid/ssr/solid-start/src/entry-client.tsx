@@ -1,3 +1,3 @@
-import { StartClient, mount } from "solid-start/entry-client";
+import { StartClient, mount } from "@vinxi/solid-start/entry-client";
 
 mount(() => <StartClient />, document);

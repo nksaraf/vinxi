@@ -1,6 +1,6 @@
 /// <reference types="vinxi/client" />
 import { lazy } from "solid-js";
-import { updateStyles } from "vinxi/lib/style";
+import { updateStyles } from "vinxi/runtime/style";
 
 import { renderAsset } from "./render-asset";
 

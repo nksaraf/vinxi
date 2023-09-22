@@ -18,6 +18,8 @@ export function cleanPath(src, config) {
 		.replace(new RegExp(`\.(${config.extensions.join("|")})$`), "");
 }
 
+/** @typedef {{ dir: string; extensions?: string[] }} FileSystemRouterConfig */
+
 export function analyzeModule(src) {
 	return parse(
 		esbuild.transformSync(fs.readFileSync(src, "utf-8"), {
@@ -31,9 +33,21 @@ export function analyzeModule(src) {
 
 export class BaseFileSystemRouter {
 	routes;
-	constructor(config) {
+	routerConfig;
+	appConfig;
+	config;
+
+	/**
+	 *
+	 * @param {FileSystemRouterConfig} config
+	 * @param {import("./app").RouterSchema} router
+	 * @param {import("./app").AppOptions} app
+	 */
+	constructor(config, router, app) {
 		this.routes = [];
 		this.config = config;
+		this.routerConfig = router;
+		this.appConfig = app;
 	}
 
 	glob() {

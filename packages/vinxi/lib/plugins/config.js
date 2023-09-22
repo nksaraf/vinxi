@@ -2,7 +2,7 @@
  *
  * @param {string} tag
  * @param {import('vite').InlineConfig} conf
- * @returns
+ * @returns {import('../vite-dev.d.ts').Plugin}
  */
 export function config(tag, conf) {
 	return {

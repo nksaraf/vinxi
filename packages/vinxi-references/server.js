@@ -18,6 +18,7 @@ export function server({
 	let input;
 	return {
 		name: "server-references",
+		enforce: "post",
 		config(config, env) {
 			isBuild = env.command === "build";
 			// @ts-ignore
@@ -36,7 +37,7 @@ export function server({
 				);
 
 				input = {
-					entry: router.handler,
+					entry: "#vinxi/handler",
 					...Object.fromEntries(
 						reactClientManifest.server.map((key) => {
 							return [`c_${hash(key)}`, key];

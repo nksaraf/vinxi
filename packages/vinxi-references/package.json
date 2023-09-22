@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/plugin-references",
-  "version": "0.0.17",
+  "version": "0.0.19",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
@@ -20,10 +20,10 @@
     }
   },
   "devDependencies": {
-    "vinxi": "^0.0.27"
+    "vinxi": "^0.0.29"
   },
   "peerDependencies": {
-    "vinxi": "^0.0.27"
+    "vinxi": "^0.0.29"
   },
   "dependencies": {
     "acorn": "^8.10.0",

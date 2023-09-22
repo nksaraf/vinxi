@@ -2,6 +2,7 @@ import getPort from "get-port";
 import { H3Event, createApp, defineEventHandler, fromNodeMiddleware } from "h3";
 import { createNitro } from "nitropack";
 
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isMainThread } from "node:worker_threads";
 
@@ -14,6 +15,7 @@ import { css } from "./plugins/css.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
+import { virtual } from "./plugins/virtual.js";
 
 /**
  *
@@ -53,7 +55,7 @@ function setupWatcher(watcher, router) {
 	watcher.on("unlink", async (path) => {
 		// path = slash(path);
 		// if (!isTarget(path, this.options)) return;
-		await router.fileRouter.removeRoute(path);
+		await router.compiled.removeRoute(path);
 	});
 	watcher.on("add", async (path) => {
 		// path = slash(path);
@@ -61,7 +63,7 @@ function setupWatcher(watcher, router) {
 		// const page = this.options.dirs.find((i) =>
 		// 	path.startsWith(slash(resolve(this.root, i.dir))),
 		// );
-		await router.fileRouter.addRoute(path);
+		await router.compiled.addRoute(path);
 	});
 
 	watcher.on("change", async (path) => {
@@ -69,7 +71,7 @@ function setupWatcher(watcher, router) {
 		// if (!isTarget(path, this.options)) return;
 		// const page = this._pageRouteMap.get(path);
 		// if (page) await this.options.resolver.hmr?.changed?.(this, path);
-		await router.fileRouter.updateRoute(path);
+		await router.compiled.updateRoute(path);
 	});
 }
 
@@ -84,9 +86,8 @@ const fileSystemWatcher = () => {
 		configureServer(server) {
 			if (config.router.fileRouter) {
 				setupWatcher(server.watcher, config.router);
-				config.router.fileRouter.update = () => {
+				config.router.compiled.update = () => {
 					const { moduleGraph } = server;
-					console.log("file system router", "update");
 					const mods = moduleGraph.getModulesByFile(
 						fileURLToPath(new URL("./routes.js", import.meta.url)),
 					);
@@ -127,6 +128,21 @@ const routerModeDevPlugin = {
 		router.fileRouter ? fileSystemWatcher() : null,
 	],
 	handler: (router) => [
+		virtual({
+			"#vinxi/handler": ({ config }) => {
+				if (config.router.middleware) {
+					return `
+					import middleware from "${join(config.router.root, config.router.middleware)}";
+					import handler from "${join(config.router.root, config.router.handler)}"; 
+					import { eventHandler } from "vinxi/runtime/server";
+					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler});`;
+				}
+				return `import handler from "${join(
+					config.router.root,
+					config.router.handler,
+				)}"; export default handler;`;
+			},
+		}),
 		routes(),
 		devEntries(),
 		manifest(),
@@ -146,6 +162,17 @@ const routerModeDevPlugin = {
 		router.fileRouter ? fileSystemWatcher() : null,
 	],
 	build: (router) => [
+		virtual(
+			{
+				"#vinxi/handler": ({ config }) => {
+					return `import * as mod from "${join(
+						config.router.root,
+						config.router.handler,
+					)}"; export default mod['default']`;
+				},
+			},
+			"handler",
+		),
 		routes(),
 		devEntries(),
 		manifest(),
@@ -184,12 +211,12 @@ async function createViteHandler(app, router, serveConfig) {
 		configFile: false,
 		base: router.base,
 		plugins: [
-			...((targetDevPlugin[router.build.target]?.(router) ?? []).filter(
+			...((targetDevPlugin[router.compile.target]?.(router) ?? []).filter(
 				Boolean,
 			) ?? []),
 			...((routerModeDevPlugin[router.mode]?.(router) ?? []).filter(Boolean) ??
 				[]),
-			...(((await router.build?.plugins?.(router)) ?? []).filter(Boolean) ||
+			...(((await router.compile?.plugins?.(router)) ?? []).filter(Boolean) ||
 				[]),
 		],
 		router,
@@ -207,13 +234,12 @@ async function createViteHandler(app, router, serveConfig) {
 	if (router.mode === "handler") {
 		return defineEventHandler(async (event) => {
 			const { default: handler } = await viteDevServer.ssrLoadModule(
-				router.handler,
+				"#vinxi/handler",
 			);
 			return handler(event);
 		});
 	} else if (router.mode === "spa") {
 		if (router.handler.endsWith(".html")) {
-			console.log(viteDevServer.middlewares.stack);
 			return defineEventHandler(fromNodeMiddleware(viteDevServer.middlewares));
 		} else {
 			viteDevServer.middlewares.stack = viteDevServer.middlewares.stack.filter(
@@ -222,6 +248,7 @@ async function createViteHandler(app, router, serveConfig) {
 						"viteIndexHtmlMiddleware",
 						"viteHtmlFallbackMiddleware",
 						"vite404Middleware",
+						// @ts-expect-error
 					].includes(m.handle.name),
 			);
 			const viteHandler = fromNodeMiddleware(viteDevServer.middlewares);
@@ -229,7 +256,6 @@ async function createViteHandler(app, router, serveConfig) {
 			return defineEventHandler(async (event) => {
 				const response = await viteHandler(event);
 				if (event.handled) {
-					console.log("handled", response, event.node.res);
 					return;
 				}
 				const { default: handler } = await viteDevServer.ssrLoadModule(
@@ -303,11 +329,13 @@ export async function createDevServer(
 			publicAssets: [
 				...app.config.routers
 					.filter((router) => router.mode === "static")
-					.map((router) => ({
-						dir: router.dir,
-						baseURL: router.base,
-						passthrough: true,
-					})),
+					.map(
+						(/** @type {import("./app.js").StaticRouterSchema} */ router) => ({
+							dir: router.dir,
+							baseURL: router.base,
+							passthrough: true,
+						}),
+					),
 				...(app.config.server.publicAssets ?? []),
 			],
 			devHandlers: [
@@ -320,17 +348,18 @@ export async function createDevServer(
 				)),
 			],
 			handlers: [...(app.config.server.handlers ?? [])],
+			plugins: [...(app.config.server.plugins ?? [])],
 		});
 
 		nitro.options.appConfigFiles = [];
 		nitro.logger = consola.withTag(app.config.name);
 
 		const devApp = createDevNitroServer(nitro);
-		await devApp.listen(port);
+		await devApp.listen(port, {});
 
 		for (const router of app.config.routers) {
-			if ("fileRouter" in router && router.fileRouter) {
-				const routes = await router.fileRouter.getRoutes();
+			if ("compiled" in router && router.compiled) {
+				const routes = await router.compiled.getRoutes();
 				for (const route of routes) {
 					console.log(route.path);
 				}

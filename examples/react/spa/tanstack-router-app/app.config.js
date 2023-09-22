@@ -1,6 +1,6 @@
 import reactRefresh from "@vitejs/plugin-react";
 import { join } from "path";
-import { createApp } from "vinxi";
+import { createApp, resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
@@ -60,6 +60,22 @@ class TanstackFileSystemRouter extends BaseFileSystemRouter {
 	}
 }
 
+/**
+ *
+ * @param {import("vinxi/file-system-router").FileSystemRouterConfig} config
+ */
+function tanstackFileRouter(config) {
+	return (router, app) =>
+		new TanstackFileSystemRouter(
+			{
+				dir: resolve.absolute(config.dir, router, app),
+				extensions: config.extensions ?? ["ts", "tsx", "jsx", "js"],
+			},
+			router,
+			app,
+		);
+}
+
 export default createApp({
 	routers: [
 		{
@@ -71,10 +87,10 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			dir: "./app/routes",
-			root: "./app/root.tsx",
-			style: TanstackFileSystemRouter,
-			build: {
+			style: tanstackFileRouter({
+				dir: "./app/routes",
+			}),
+			compile: {
 				target: "browser",
 				plugins: () => [reactRefresh()],
 			},

@@ -39,7 +39,7 @@ export default eventHandler(async (event) => {
 	const FileRoutes = () => {
 		return pageRoutes as any;
 	};
-	console.log(routes);
+
 	const tags = [];
 	function Meta() {
 		useAssets(() => ssr(renderTags(tags)) as any);
@@ -47,67 +47,50 @@ export default eventHandler(async (event) => {
 	}
 
 	const manifestJson = await clientManifest.json();
-	const stream = renderToStream(
-		() => (
-			<MetaProvider tags={tags}>
-				<Router
-					out={{}}
-					url={join(import.meta.env.BASE_URL, event.path)}
-					base={import.meta.env.BASE_URL}
+	const stream = renderToStream(() => (
+		<MetaProvider tags={tags}>
+			<Router
+				out={{}}
+				url={join(import.meta.env.BASE_URL, event.path)}
+				base={import.meta.env.BASE_URL}
+			>
+				<App
+					assets={
+						<>
+							<NoHydration>
+								<Meta />
+							</NoHydration>
+							<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>
+						</>
+					}
+					scripts={
+						<>
+							<NoHydration>
+								<HydrationScript />
+								<script
+									innerHTML={`window.manifest = ${JSON.stringify(
+										manifestJson,
+									)}`}
+								></script>
+								<script
+									type="module"
+									src={
+										clientManifest.inputs[clientManifest.handler].output.path
+									}
+								/>
+							</NoHydration>
+						</>
+					}
 				>
-					<App
-						assets={
-							<>
-								<NoHydration>
-									<Meta />
-								</NoHydration>
-								<Suspense>{assets.map((m) => renderAsset(m))}</Suspense>
-							</>
-						}
-						scripts={
-							<>
-								<NoHydration>
-									<HydrationScript />
-									<script
-										innerHTML={`window.manifest = ${JSON.stringify(
-											manifestJson,
-										)}`}
-									></script>
-									<script
-										type="module"
-										src={
-											clientManifest.inputs[clientManifest.handler].output.path
-										}
-									/>
-								</NoHydration>
-							</>
-						}
-					>
-						<Suspense>
-							<Routes>
-								<FileRoutes />
-							</Routes>
-						</Suspense>
-					</App>
-				</Router>
-			</MetaProvider>
-		),
-		{
-			onCompleteAll(info) {
-				events["end"]?.();
-			},
-		},
-	);
+					<Suspense>
+						<Routes>
+							<FileRoutes />
+						</Routes>
+					</Suspense>
+				</App>
+			</Router>
+		</MetaProvider>
+	));
 
-	// @ts-ignore
-	stream.on = (event, listener) => {
-		events[event] = listener;
-	};
-
-	return {
-		pipe: stream.pipe.bind(stream),
-		on: (event, listener) => {
-			events[event] = listener;
-		},
-	};
+	return stream;
 });

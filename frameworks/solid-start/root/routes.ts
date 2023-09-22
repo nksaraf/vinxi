@@ -1,5 +1,7 @@
 import fileRoutes from "vinxi/routes";
 
+console.log("fileRoutes", fileRoutes);
+
 const defineRoutes = (fileRoutes) => {
 	function processRoute(routes, route, id, full) {
 		const parentRoute = Object.values(routes).find((o) => {

@@ -23,58 +23,57 @@ export function routes() {
 					"/",
 				)
 			) {
-				console.log(router.name, "routers");
 				const js = jsCode();
-				const routesCode = JSON.stringify(
-					(await router.fileRouter?.getRoutes()) ?? [],
-					(k, v) => {
-						if (!v) {
-							return undefined;
-						}
-
-						if (k.startsWith("$$")) {
-							const buildId = `${v.src}?${v.pick
-								.map((p) => `pick=${p}`)
-								.join("&")}`;
-
-							const refs = {};
-							for (var pick of v.pick) {
-								refs[pick] = js.addNamedImport(pick, buildId);
-							}
-							return {
-								require: `_$() => ({ ${Object.entries(refs)
-									.map(([pick, namedImport]) => `'${pick}': ${namedImport}`)
-									.join(", ")} })$_`,
-								src: isBuild ? relative(root, buildId) : buildId,
-							};
-						} else if (k.startsWith("$")) {
-							const buildId = `${v.src}?${v.pick
-								.map((p) => `pick=${p}`)
-								.join("&")}`;
-							return {
-								src: isBuild ? relative(root, buildId) : buildId,
-								build: isBuild ? `_$() => import('${buildId}')$_` : undefined,
-								import:
-									router.build.target === "server"
-										? `_$() => import('${buildId}')$_`
-										: `_$(() => { const id = '${relative(
-												root,
-												buildId,
-										  )}'; return import(import.meta.env.MANIFEST['${
-												router.name
-										  }'].inputs[id].output.path) })$_`,
-							};
-						}
-						return v;
-					},
-				);
-				const routes = routesCode
-					.replaceAll('"_$(', "(")
-					.replaceAll(')$_"', ")");
-
+				const routes = await router.compiled?.getRoutes();
 				console.log(routes);
+
+				let routesCode = JSON.stringify(routes ?? [], (k, v) => {
+					if (!v) {
+						return undefined;
+					}
+
+					if (k.startsWith("$$")) {
+						const buildId = `${v.src}?${v.pick
+							.map((p) => `pick=${p}`)
+							.join("&")}`;
+
+						const refs = {};
+						for (var pick of v.pick) {
+							refs[pick] = js.addNamedImport(pick, buildId);
+						}
+						return {
+							require: `_$() => ({ ${Object.entries(refs)
+								.map(([pick, namedImport]) => `'${pick}': ${namedImport}`)
+								.join(", ")} })$_`,
+							src: isBuild ? relative(root, buildId) : buildId,
+						};
+					} else if (k.startsWith("$")) {
+						const buildId = `${v.src}?${v.pick
+							.map((p) => `pick=${p}`)
+							.join("&")}`;
+						return {
+							src: isBuild ? relative(root, buildId) : buildId,
+							build: isBuild
+								? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
+								: undefined,
+							import:
+								router.compile.target === "server"
+									? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
+									: `_$(() => { const id = '${relative(
+											root,
+											buildId,
+									  )}'; return import(/* @vite-ignore */ import.meta.env.MANIFEST['${
+											router.name
+									  }'].inputs[id].output.path) })$_`,
+						};
+					}
+					return v;
+				});
+
+				routesCode = routesCode.replaceAll('"_$(', "(").replaceAll(')$_"', ")");
+
 				const code = `${js.getImportStatements()}
-				export default ${routes}`;
+				export default ${routesCode}`;
 				return code;
 			}
 		},

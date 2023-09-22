@@ -78,7 +78,6 @@ export function buildServerComponents({
 								// preserve the export names of the server actions in chunks
 								minifyInternalExports: false,
 								manualChunks: (chunk) => {
-									console.log("manula chunks", chunk);
 									// server references should be emitted as separate chunks
 									// so that we can load them individually when server actions
 									// are called. we need to do this in manualChunks because we don't

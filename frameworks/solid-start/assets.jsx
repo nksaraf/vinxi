@@ -1,11 +1,11 @@
 /// <reference types="vinxi/client" />
 import { lazy } from "solid-js";
-import { updateStyles } from "vinxi/lib/style";
+import { updateStyles } from "vinxi/runtime/style";
 
-import { renderAsset } from "solid-start/render-asset";
+import { renderAsset } from "./render-asset";
 
 export { renderAsset };
-export { default as lazyRoute } from "solid-start/lazy-route";
+export { default as lazyRoute } from "./lazy-route";
 
 export const createAssets = (src, manifest) =>
 	lazy(async () => {

@@ -2,7 +2,14 @@ import { dirname, resolve } from "pathe";
 
 const PREFIX = "\0virtual:";
 
-export function virtual(modules, cache = {}) {
+/**
+ *
+ * @param {{ [key: string] : any }} modules
+ * @param {string} name
+ * @param {any} cache
+ * @returns {import('../vite-dev.d.ts').Plugin}
+ */
+export function virtual(modules, name = "", cache = {}) {
 	const _modules = new Map();
 
 	for (const [id, mod] of Object.entries(modules)) {
@@ -15,7 +22,7 @@ export function virtual(modules, cache = {}) {
 	let env;
 
 	return {
-		name: "virtual",
+		name: `virtual:${name}`,
 		configResolved(_config) {
 			config = _config;
 		},

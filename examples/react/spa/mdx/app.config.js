@@ -1,6 +1,6 @@
 import pkg from "@vinxi/plugin-mdx";
 import reactRefresh from "@vitejs/plugin-react";
-import { createApp } from "vinxi";
+import { createApp, resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
@@ -30,11 +30,6 @@ class WouterFileSystemRouter extends BaseFileSystemRouter {
 
 	toRoute(src) {
 		let path = this.toPath(src);
-		console.log({ src, path });
-		if (src.endsWith(".mdx")) {
-		}
-
-		// const [_, exports] = analyzeModule(src);
 		return {
 			$component: {
 				src: src,
@@ -44,6 +39,18 @@ class WouterFileSystemRouter extends BaseFileSystemRouter {
 			filePath: src,
 		};
 	}
+}
+
+function wouterFileRouter(config) {
+	return (router, app) =>
+		new WouterFileSystemRouter(
+			{
+				dir: resolve.absolute(config.dir, router, app),
+				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx", "mdx"],
+			},
+			router,
+			app,
+		);
 }
 
 export default createApp({
@@ -57,16 +64,16 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			dir: "./app/pages",
-			style: WouterFileSystemRouter,
-			extensions: ["js", "jsx", "ts", "tsx", "mdx"],
-			build: {
+			style: wouterFileRouter({ dir: "./app/pages" }),
+			compile: {
 				target: "browser",
-				plugins: async () => [
-					reactRefresh({}),
-					mdx({
+				plugins: () => [
+					mdx.withImports({
+						react: "React",
+					})({
 						providerImportSource: "@mdx-js/react",
 					}),
+					reactRefresh({}),
 				],
 			},
 		},

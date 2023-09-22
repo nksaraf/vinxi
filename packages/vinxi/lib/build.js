@@ -20,6 +20,7 @@ import { config } from "./plugins/config.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
+import { virtual } from "./plugins/virtual.js";
 
 const require = createRequire(import.meta.url);
 
@@ -33,9 +34,9 @@ export async function createBuild(app, buildConfig) {
 	const { join } = await import("path");
 	const { fileURLToPath } = await import("url");
 	for (const router of app.config.routers) {
-		if ("build" in router) {
-			if (existsSync(router.build.outDir)) {
-				await fsPromises.rm(router.build.outDir, { recursive: true });
+		if ("compile" in router) {
+			if (existsSync(router.compile.outDir)) {
+				await fsPromises.rm(router.compile.outDir, { recursive: true });
 			}
 		}
 	}
@@ -78,13 +79,13 @@ export async function createBuild(app, buildConfig) {
 			"#prod-app",
 			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
 			fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
-			...app.config.routers
-				.map((router) =>
-					router.mode === "handler"
-						? router.build.server?.middleware ?? []
-						: [],
-				)
-				.flat(),
+			// ...app.config.routers
+			// 	.map((router) =>
+			// 		router.mode === "handler"
+			// 			? router.compile.server?.middleware ?? []
+			// 			: [],
+			// 	)
+			// 	.flat(),
 			...(app.config.server.plugins ?? []),
 			// "#extra-chunks",
 		],
@@ -94,15 +95,19 @@ export async function createBuild(app, buildConfig) {
 					if (router.mode === "handler") {
 						const bundlerManifest = JSON.parse(
 							readFileSync(
-								join(router.build.outDir, router.base, "manifest.json"),
+								join(router.compile.outDir, router.base, "manifest.json"),
 								"utf-8",
 							),
 						);
 
 						const handler = join(
-							router.build.outDir,
+							router.compile.outDir,
 							router.base,
-							bundlerManifest[relative(app.config.root, router.handler)].file,
+							bundlerManifest[
+								"virtual:#vinxi/handler" in bundlerManifest
+									? "virtual:#vinxi/handler"
+									: relative(app.config.root, router.handler)
+							].file,
 						).replace(/\\/g, "\\\\");
 
 						return [
@@ -134,7 +139,7 @@ export async function createBuild(app, buildConfig) {
 		publicAssets: [
 			...app.config.routers
 				.filter((router) => router.mode === "static")
-				.map((router) => ({
+				.map((/** @type {import("./app.js").StaticRouterSchema} */ router) => ({
 					dir: router.dir,
 					baseURL: router.base,
 					passthrough: true,
@@ -142,14 +147,14 @@ export async function createBuild(app, buildConfig) {
 			...app.config.routers
 				.filter((router) => router.mode === "build")
 				.map((/** @type {import("./app.js").BuildRouterSchema} */ router) => ({
-					dir: join(router.build.outDir, router.base),
+					dir: join(router.compile.outDir, router.base),
 					baseURL: router.base,
 					passthrough: true,
 				})),
 			...app.config.routers
 				.filter((router) => router.mode === "spa")
 				.map((/** @type {import("./app.js").SPARouterSchema} */ router) => ({
-					dir: join(router.build.outDir, router.base),
+					dir: join(router.compile.outDir, router.base),
 					baseURL: router.base,
 					passthrough: true,
 				})),
@@ -157,7 +162,7 @@ export async function createBuild(app, buildConfig) {
 				.filter((router) => router.mode === "handler")
 				.map(
 					(/** @type {import("./app.js").HandlerRouterSchema} */ router) => ({
-						dir: join(router.build.outDir, router.base, "assets"),
+						dir: join(router.compile.outDir, router.base, "assets"),
 						baseURL: join(router.base, "assets"),
 						passthrough: true,
 					}),
@@ -183,7 +188,18 @@ export async function createBuild(app, buildConfig) {
 					}),
 				};
 				return `
-        const appConfig = ${JSON.stringify(config)}
+        const appConfig = ${JSON.stringify(config, (k, v) => {
+					if (k === "compiled") {
+						return undefined;
+					} else if (k === "compile") {
+						return {
+							target: v.target,
+							outDir: v.outDir,
+						};
+					}
+
+					return v;
+				})}
 				const buildManifest = ${JSON.stringify(
 					Object.fromEntries(
 						app.config.routers
@@ -194,7 +210,7 @@ export async function createBuild(app, buildConfig) {
 								) => {
 									const bundlerManifest = JSON.parse(
 										readFileSync(
-											join(router.build.outDir, router.base, "manifest.json"),
+											join(router.compile.outDir, router.base, "manifest.json"),
 											"utf-8",
 										),
 									);
@@ -224,12 +240,12 @@ export async function createBuild(app, buildConfig) {
 					(router) => router.mode === "spa",
 				);
 
-				if (!("build" in router)) {
+				if (!("compile" in router)) {
 					return;
 				}
 
 				const indexHtml = readFileSync(
-					join(router.build.outDir, router.base, "index.html"),
+					join(router.compile.outDir, router.base, "index.html"),
 					"utf-8",
 				);
 				return `
@@ -240,17 +256,17 @@ export async function createBuild(app, buildConfig) {
 					})
 				`;
 			},
-			...Object.fromEntries(
-				app.config.routers
-					.map((router) =>
-						router.mode === "handler"
-							? Object.entries(router.build.server?.virtual ?? {}).map(
-									([k, v]) => [k, typeof v === "function" ? () => v(app) : v],
-							  )
-							: [],
-					)
-					.flat(),
-			),
+			// ...Object.fromEntries(
+			// 	app.config.routers
+			// 		.map((router) =>
+			// 			router.mode === "handler"
+			// 				? Object.entries(router.compile.server?.virtual ?? {}).map(
+			// 						([k, v]) => [k, typeof v === "function" ? () => v(app) : v],
+			// 				  )
+			// 				: [],
+			// 		)
+			// 		.flat(),
+			// ),
 			...(Object.fromEntries(
 				Object.entries(app.config.server?.virtual ?? {}).map(([k, v]) => [
 					k,
@@ -294,14 +310,15 @@ async function createRouterBuild(app, router) {
 				ssrManifest: true,
 				rollupOptions: {
 					input: { handler: router.handler },
+					external: ["h3"],
 				},
 				target: "esnext",
-				outDir: join(router.build.outDir + "_entry"),
+				outDir: join(router.compile.outDir + "_entry"),
 			},
 		});
 
 		const render = await import(
-			join(router.build.outDir + "_entry", "handler.js")
+			join(router.compile.outDir + "_entry", "handler.js")
 		);
 
 		const smallApp = createApp();
@@ -332,13 +349,15 @@ async function createRouterBuild(app, router) {
 		};
 	}
 
+	console.log(`building router ${router.name} in ${router.mode} mode`);
+
 	await createViteBuild({
 		router: buildRouter,
 		app,
 		plugins: [
 			routerModePlugin[buildRouter.mode]?.() ?? [],
-			buildTargetPlugin[buildRouter.build.target]?.() ?? [],
-			...((await buildRouter.build.plugins?.()) ?? []),
+			buildTargetPlugin[buildRouter.compile.target]?.() ?? [],
+			...((await buildRouter.compile.plugins?.()) ?? []),
 		],
 	});
 
@@ -394,10 +413,26 @@ const spaManifest = () => {
 const routerModePlugin = {
 	static: () => [],
 	build: () => [
+		virtual(
+			{
+				"#vinxi/handler": ({ config }) => {
+					return `import * as mod from "${join(
+						config.router.root,
+						config.router.handler,
+					)}"; export default mod['default']`;
+				},
+			},
+			"handler",
+		),
 		config("appType", {
 			appType: "custom",
 			ssr: {
 				noExternal: ["vinxi"],
+			},
+			build: {
+				rollupOptions: {
+					external: ["h3"],
+				},
 			},
 			optimizeDeps: {
 				force: true,
@@ -409,10 +444,33 @@ const routerModePlugin = {
 		}),
 	],
 	handler: () => [
+		virtual(
+			{
+				"#vinxi/handler": ({ config }) => {
+					if (config.router.middleware) {
+						return `
+					import middleware from "${join(config.router.root, config.router.middleware)}";
+					import handler from "${join(config.router.root, config.router.handler)}";
+					import { eventHandler } from "vinxi/runtime/server";
+					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler});`;
+					}
+					return `import handler from "${join(
+						config.router.root,
+						config.router.handler,
+					)}"; export default handler;`;
+				},
+			},
+			"handler",
+		),
 		config("appType", {
 			appType: "custom",
 			ssr: {
 				noExternal: ["vinxi"],
+			},
+			build: {
+				rollupOptions: {
+					external: ["h3"],
+				},
 			},
 			optimizeDeps: {
 				disabled: true,
@@ -428,6 +486,11 @@ const routerModePlugin = {
 			appType: "custom",
 			ssr: {
 				noExternal: ["vinxi"],
+			},
+			build: {
+				rollupOptions: {
+					external: ["h3"],
+				},
 			},
 			optimizeDeps: {
 				force: true,
@@ -446,9 +509,9 @@ function toRouteId(route) {
 
 export async function getEntries(router) {
 	return [
-		router.handler,
+		router.handler.endsWith(".html") ? router.handler : "#vinxi/handler",
 		...(
-			(await router.fileRouter?.getRoutes())?.map((r) =>
+			(await router.compiled?.getRoutes())?.map((r) =>
 				Object.entries(r)
 					.filter(([r, v]) => v && r.startsWith("$") && !r.startsWith("$$"))
 					.map(([, v]) => toRouteId(v)),
@@ -467,10 +530,11 @@ function handerBuild() {
 			if (env.command === "build") {
 				const { builtinModules } = await import("module");
 				const { join } = await import("path");
+				const input = await getEntries(inlineConfig.router);
 				return {
 					build: {
 						rollupOptions: {
-							input: await getEntries(inlineConfig.router),
+							input,
 							external: [
 								...builtinModules,
 								...builtinModules.map((m) => `node:${m}`),
@@ -482,7 +546,7 @@ function handerBuild() {
 						target: "node18",
 						ssrEmitAssets: true,
 						outDir: join(
-							inlineConfig.router.build.outDir,
+							inlineConfig.router.compile.outDir,
 							inlineConfig.router.base,
 						),
 						emptyOutDir: false,
@@ -512,7 +576,7 @@ function browserBuild() {
 						},
 						manifest: true,
 						outDir: join(
-							inlineConfig.router.build.outDir,
+							inlineConfig.router.compile.outDir,
 							inlineConfig.router.base,
 						),
 						target: "esnext",

@@ -292,8 +292,6 @@ export function wrapExports({ code, id, ast, runtime, hash, options }) {
 		}
 	}
 
-	console.log();
-
 	let newSrc =
 		`import { ${runtime.function} } from '${runtime.module}';\n` +
 		print(ast).code;
@@ -466,9 +464,7 @@ export function wrapExportsPlugin({
 	return {
 		name: "wrap-exports",
 		async transform(code, id, options, ctx) {
-			console.log('parsingg')
 			const ast = await parseModule(code);
-			console.log('parsingg done')
 
 			if (ast.program.body.length === 0) {
 				return;
@@ -516,7 +512,7 @@ export function wrapExportsPlugin({
 
 async function parseModule(code) {
 	const acorn = await import("acorn");
-	const {tsPlugin} = await import("acorn-typescript");
+	const { tsPlugin } = await import("acorn-typescript");
 	const ast = recastParse(code, {
 		parser: {
 			parse(source) {
@@ -546,7 +542,6 @@ async function parseModule(code) {
 		},
 	});
 
-	console.log('parsing done')
 	return ast;
 }
 
