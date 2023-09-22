@@ -1,5 +1,11 @@
 # @vinxi/solid
 
+## 0.0.12
+
+### Patch Changes
+
+- 82267c5: move `build` to `compile` and more flexible `router.style` config
+
 ## 0.0.11
 
 ### Patch Changes

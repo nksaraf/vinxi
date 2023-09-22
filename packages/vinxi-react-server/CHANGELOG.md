@@ -1,5 +1,15 @@
 # @vinxi/react-server
 
+## 0.0.17
+
+### Patch Changes
+
+- 82267c5: move `build` to `compile` and more flexible `router.style` config
+- Updated dependencies [0f14555]
+- Updated dependencies [82267c5]
+  - @vinxi/plugin-references@0.0.20
+  - @vinxi/react@0.0.10
+
 ## 0.0.16
 
 ### Patch Changes
