@@ -44,7 +44,7 @@ function wouterFileRouter(config) {
 	return (router, app) =>
 		new WouterFileSystemRouter(
 			{
-				dir: resolve.absolute(config.dir, router, app),
+				dir: resolve.absolute(config.dir, router.root),
 				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"],
 			},
 			router,
@@ -63,13 +63,11 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			style: wouterFileRouter({
+			routes: wouterFileRouter({
 				dir: "./app/pages",
 			}),
-			compile: {
-				target: "browser",
-				plugins: () => [reactRefresh()],
-			},
+			target: "browser",
+			plugins: () => [reactRefresh()],
 		},
 	],
 });

@@ -27,11 +27,7 @@ The surface layer we are intending to tackle:
 
 ```bash
 npm install vinxi
-touch app.config.js
-echo `import { createApp } from 'vinxi'; export default createApp({});` > app.config.js
-npx vinxi dev
 ```
-
 
 ### React SSR
 
@@ -45,25 +41,20 @@ export default createApp({
 			name: "public",
 			mode: "static",
 			dir: "./public",
-			base: "/",
 		},
 		{
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			build: {
-				target: "browser",
-				plugins: () => [reactRefresh()],
-			},
+			target: "browser",
+			plugins: () => [reactRefresh()],
 			base: "/_build",
 		},
 		{
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			build: {
-				target: "server",
-			},
+			target: "server",
 		},
 	],
 });
@@ -81,26 +72,21 @@ export default createApp({
 			name: "public",
 			mode: "static",
 			dir: "./public",
-			base: "/",
 		},
 		{
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			build: {
-				target: "browser",
-				plugins: () => [solid({ ssr: true })],
-			},
+			target: "browser",
+			plugins: () => [solid({ ssr: true })],
 			base: "/_build",
 		},
 		{
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			build: {
-				target: "server",
-				plugins: () => [solid({ ssr: true })],
-			},
+			target: "server",
+			plugins: () => [solid({ ssr: true })],
 		},
 	],
 });

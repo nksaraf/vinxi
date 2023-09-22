@@ -3,12 +3,27 @@
 // 	// 	router: any;
 // 	// }
 // }
-import { ConfigEnv, UserConfig, Plugin as VitePlugin } from "vite";
+import {
+	ConfigEnv,
+	UserConfig,
+	Plugin as VitePlugin,
+	ResolvedConfig as _ResolvedConfig,
+} from "vite";
 
-export interface Plugin extends VitePlugin {
-	config?: (
-		this: void,
-		config: UserConfig & { router: any },
-		env: ConfigEnv,
-	) => void | UserConfig | Promise<void | UserConfig>;
+import { RouterSchema } from "./app";
+
+declare module "vite" {
+	interface UserConfig {
+		router?: RouterSchema;
+	}
+
+	interface PluginHookUtils {
+		router: RouterSchema;
+	}
 }
+
+export type ViteConfig = _ResolvedConfig & { router: RouterSchema };
+
+export type Plugin = VitePlugin;
+
+export { ConfigEnv } from "vite";

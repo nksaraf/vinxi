@@ -31,7 +31,7 @@ export function server({
 
 				const reactClientManifest = JSON.parse(
 					readFileSync(
-						join(rscRouter.build.outDir, rscRouter.base, manifest),
+						join(rscRouter.outDir, rscRouter.base, manifest),
 						"utf-8",
 					),
 				);

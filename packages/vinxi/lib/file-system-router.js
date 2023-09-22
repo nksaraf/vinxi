@@ -10,16 +10,33 @@ import { pathToRegexp } from "path-to-regexp";
 
 export { pathToRegexp };
 
+/**
+ *
+ * @param {string} path
+ * @returns {string[]}
+ */
 export const glob = (path) => fg.sync(path, { absolute: true });
 
+/** @typedef {{ dir: string; extensions: string[] }} FileSystemRouterConfig */
+/** @typedef {{ path: string } & any} Route */
+
+/**
+ *
+ * @param {string} src
+ * @param {FileSystemRouterConfig} config
+ * @returns
+ */
 export function cleanPath(src, config) {
 	return src
 		.slice(config.dir.length)
-		.replace(new RegExp(`\.(${config.extensions.join("|")})$`), "");
+		.replace(new RegExp(`\.(${(config.extensions ?? []).join("|")})$`), "");
 }
 
-/** @typedef {{ dir: string; extensions?: string[] }} FileSystemRouterConfig */
-
+/**
+ *
+ * @param {string} src
+ * @returns
+ */
 export function analyzeModule(src) {
 	return parse(
 		esbuild.transformSync(fs.readFileSync(src, "utf-8"), {
@@ -31,10 +48,17 @@ export function analyzeModule(src) {
 	);
 }
 
-export class BaseFileSystemRouter {
+export class BaseFileSystemRouter extends EventTarget {
+	/** @type {any[]} */
 	routes;
+
+	/** @type {import("./app").RouterSchema} */
 	routerConfig;
+
+	/** @type {import("./app").AppOptions} */
 	appConfig;
+
+	/** @type {FileSystemRouterConfig} */
 	config;
 
 	/**
@@ -44,6 +68,7 @@ export class BaseFileSystemRouter {
 	 * @param {import("./app").AppOptions} app
 	 */
 	constructor(config, router, app) {
+		super();
 		this.routes = [];
 		this.config = config;
 		this.routerConfig = router;
@@ -78,7 +103,7 @@ export class BaseFileSystemRouter {
 	 * @returns {boolean}
 	 */
 	isRoute(src) {
-		return micromatch(src, this.glob());
+		return Boolean(micromatch(src, this.glob())?.length);
 	}
 
 	/**
@@ -93,7 +118,7 @@ export class BaseFileSystemRouter {
 	/**
 	 *
 	 * @param {*} src
-	 * @returns {object}
+	 * @returns {Route | null}
 	 */
 	toRoute(src) {
 		let path = this.toPath(src);
@@ -123,27 +148,51 @@ export class BaseFileSystemRouter {
 	 */
 	update = undefined;
 
+	/**
+	 *
+	 * @param {Route} route
+	 */
 	_addRoute(route) {
 		const existing = this.routes.find((r) => r.path === route.path);
 		if (!existing) this.routes.push(route);
 	}
 
+	/**
+	 *
+	 * @param {string} src
+	 */
 	addRoute(src) {
 		if (this.isRoute(src)) {
 			const route = this.toRoute(src);
 			if (route) {
 				this._addRoute(route);
-				this.update?.();
+				this.dispatchEvent(
+					new Event("reload", {
+						// @ts-ignore
+						detail: {
+							route,
+						},
+					}),
+				);
 			}
 		}
 	}
 
+	/**
+	 *
+	 * @param {string} src
+	 */
 	updateRoute(src) {
 		if (this.isRoute(src)) {
 			// this.update?.();
 		}
 	}
 
+	/**
+	 *
+	 * @param {string} src
+	 * @returns
+	 */
 	removeRoute(src) {
 		if (this.isRoute(src)) {
 			const path = this.toPath(src);
@@ -151,10 +200,11 @@ export class BaseFileSystemRouter {
 				return;
 			}
 			this.routes = this.routes.filter((r) => r.path !== path);
-			this.update?.();
+			this.dispatchEvent(new Event("reload", {}));
 		}
 	}
 
+	/** @type {Promise<any[]> | undefined} */
 	buildRoutesPromise = undefined;
 
 	async getRoutes() {

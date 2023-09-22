@@ -4,10 +4,7 @@ import { join } from "path";
 function getChunks(app, routerName, modIndex) {
 	const router = app.getRouter(routerName);
 	const bundlerManifest = JSON.parse(
-		readFileSync(
-			join(router.build.outDir, router.base, "manifest.json"),
-			"utf-8",
-		),
+		readFileSync(join(router.outDir, router.base, "manifest.json"), "utf-8"),
 	);
 
 	const chunks = Object.entries(bundlerManifest)
@@ -15,7 +12,7 @@ function getChunks(app, routerName, modIndex) {
 			([name, chunk]) => chunk.file.startsWith("c_") && name !== router.handler,
 		)
 		.map(([name, chunk], index) => {
-			const chunkPath = join(router.build.outDir, router.base, chunk.file);
+			const chunkPath = join(router.outDir, router.base, chunk.file);
 			return `
 				import * as mod_${index}_${modIndex} from '${chunkPath}';
 				chunks['${chunk.file}'] = mod_${index}_${modIndex}

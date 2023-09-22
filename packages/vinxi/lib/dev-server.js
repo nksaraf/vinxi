@@ -1,5 +1,11 @@
 import getPort from "get-port";
-import { H3Event, createApp, defineEventHandler, fromNodeMiddleware } from "h3";
+import {
+	H3Event,
+	createApp,
+	defineEventHandler,
+	fromNodeMiddleware,
+	getRequestURL,
+} from "h3";
 import { createNitro } from "nitropack";
 
 import { join } from "pathe";
@@ -8,6 +14,7 @@ import { isMainThread } from "node:worker_threads";
 
 import { AppWorkerClient } from "./app-worker-client.js";
 import { createServerResponse } from "./http-stream.js";
+import invariant from "./invariant.js";
 import { consola } from "./logger.js";
 import { createDevServer as createDevNitroServer } from "./nitro-dev.js";
 import { config } from "./plugins/config.js";
@@ -16,6 +23,9 @@ import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
 import { virtual } from "./plugins/virtual.js";
+
+/** @typedef {{ port?: number; dev?: boolean; ws?: { port?: number } }} ServeConfigInput */
+/** @typedef {{ port: number; dev: boolean; ws: { port: number } }} ServeConfig */
 
 /**
  *
@@ -38,7 +48,7 @@ function devEntries() {
 
 /**
  *
- * @param {import('vite').InlineConfig & { router: any; app: any }} config
+ * @param {import('vite').InlineConfig & { router: import("./app.js").RouterSchema; app: import("./app.js").App }} config
  * @returns
  */
 async function createViteServer(config) {
@@ -47,46 +57,52 @@ async function createViteServer(config) {
 }
 
 const targetDevPlugin = {
-	browser: () => [css()],
-	node: () => [],
+	browser: (/** @type {import("./app.js").RouterSchema} */ router) => [css()],
+	server: (/** @type {import("./app.js").RouterSchema} */ router) => [],
 };
 
+/**
+ *
+ * @param {import('vite').FSWatcher} watcher
+ * @param {import("./app.js").RouterSchema} router
+ */
 function setupWatcher(watcher, router) {
-	watcher.on("unlink", async (path) => {
-		// path = slash(path);
-		// if (!isTarget(path, this.options)) return;
-		await router.compiled.removeRoute(path);
-	});
-	watcher.on("add", async (path) => {
-		// path = slash(path);
-		// if (!isTarget(path, this.options)) return;
-		// const page = this.options.dirs.find((i) =>
-		// 	path.startsWith(slash(resolve(this.root, i.dir))),
-		// );
-		await router.compiled.addRoute(path);
-	});
+	if (router.internals?.routes) {
+		watcher.on("unlink", async (path) => {
+			if (router.internals?.routes) {
+				await router.internals?.routes.removeRoute(path);
+			}
+		});
 
-	watcher.on("change", async (path) => {
-		// path = slash(path);
-		// if (!isTarget(path, this.options)) return;
-		// const page = this._pageRouteMap.get(path);
-		// if (page) await this.options.resolver.hmr?.changed?.(this, path);
-		await router.compiled.updateRoute(path);
-	});
+		watcher.on("add", async (path) => {
+			if (router.internals?.routes) {
+				await router.internals?.routes.addRoute(path);
+			}
+		});
+
+		watcher.on("change", async (path) => {
+			if (router.internals?.routes) {
+				await router.internals?.routes.updateRoute(path);
+			}
+		});
+	}
 }
 
 const fileSystemWatcher = () => {
+	/** @type {import('./vite-dev.d.ts').ViteConfig} */
 	let config;
-	return {
+
+	/** @type {import('./vite-dev.d.ts').Plugin} */
+	const plugin = {
 		name: "fs-watcher",
 		apply: "serve",
 		configResolved(resolvedConfig) {
 			config = resolvedConfig;
 		},
 		configureServer(server) {
-			if (config.router.fileRouter) {
+			if (config.router.internals?.routes) {
 				setupWatcher(server.watcher, config.router);
-				config.router.compiled.update = () => {
+				config.router.internals.routes.addEventListener("reload", () => {
 					const { moduleGraph } = server;
 					const mods = moduleGraph.getModulesByFile(
 						fileURLToPath(new URL("./routes.js", import.meta.url)),
@@ -101,14 +117,15 @@ const fileSystemWatcher = () => {
 					server.ws.send({
 						type: "full-reload",
 					});
-				};
+				});
 			}
 		},
 	};
+	return plugin;
 };
 
 const routerModeDevPlugin = {
-	spa: (router) => [
+	spa: (/** @type {import("./app.js").SPARouterSchema} */ router) => [
 		routes(),
 		devEntries(),
 		manifest(),
@@ -125,11 +142,15 @@ const routerModeDevPlugin = {
 			},
 		}),
 		treeShake(),
-		router.fileRouter ? fileSystemWatcher() : null,
+		router.internals.routes ? fileSystemWatcher() : null,
 	],
-	handler: (router) => [
+	handler: (/** @type {import("./app.js").HandlerRouterSchema} */ router) => [
 		virtual({
 			"#vinxi/handler": ({ config }) => {
+				invariant(
+					config.router.mode === "handler",
+					"#vinxi/handler is only supported in handler mode",
+				);
 				if (config.router.middleware) {
 					return `
 					import middleware from "${join(config.router.root, config.router.middleware)}";
@@ -159,12 +180,16 @@ const routerModeDevPlugin = {
 			},
 		}),
 		treeShake(),
-		router.fileRouter ? fileSystemWatcher() : null,
+		router.internals.routes ? fileSystemWatcher() : null,
 	],
-	build: (router) => [
+	build: (/** @type {import("./app.js").BuildRouterSchema} */ router) => [
 		virtual(
 			{
 				"#vinxi/handler": ({ config }) => {
+					invariant(
+						config.router.mode === "build",
+						"#vinxi/handler is only supported in build mode",
+					);
 					return `import * as mod from "${join(
 						config.router.root,
 						config.router.handler,
@@ -190,46 +215,61 @@ const routerModeDevPlugin = {
 			},
 		}),
 		treeShake(),
-		router.fileRouter ? fileSystemWatcher() : null,
+		router.internals.routes ? fileSystemWatcher() : null,
 	],
 };
 
+/**
+ *
+ * @param {import('./app.js').App} app
+ * @param {import('./app.js').RouterSchema} router
+ * @param {ServeConfig} serveConfig
+ * @returns
+ */
 async function createViteHandler(app, router, serveConfig) {
-	if (router.worker && isMainThread) {
-		if (!router.appWorker) {
-			router.appWorker = new AppWorkerClient(
+	if (router.mode === "handler" && router.worker && isMainThread) {
+		if (!router.internals.appWorker) {
+			router.internals.appWorker = new AppWorkerClient(
 				new URL("./app-worker.js", import.meta.url),
 			);
 		}
 		return defineEventHandler(async (event) => {
-			await router.appWorker.init(() => {});
-			await router.appWorker.handle(event);
+			invariant(
+				router.internals.appWorker,
+				"Router App Worker not initialized",
+			);
+			await router.internals.appWorker.init(() => {});
+			await router.internals.appWorker.handle(event);
 		});
 	}
+
+	invariant(
+		router.mode !== "static",
+		"Vite does not need to run for static mode",
+	);
 
 	const viteDevServer = await createViteServer({
 		configFile: false,
 		base: router.base,
 		plugins: [
-			...((targetDevPlugin[router.compile.target]?.(router) ?? []).filter(
-				Boolean,
-			) ?? []),
+			...((targetDevPlugin[router.target]?.(router) ?? []).filter(Boolean) ??
+				[]),
+			// @ts-expect-error
 			...((routerModeDevPlugin[router.mode]?.(router) ?? []).filter(Boolean) ??
 				[]),
-			...(((await router.compile?.plugins?.(router)) ?? []).filter(Boolean) ||
-				[]),
+			...(((await router.plugins?.(router)) ?? []).filter(Boolean) || []),
 		],
 		router,
 		app,
 		server: {
 			middlewareMode: true,
 			hmr: {
-				port: await getPort({ port: serveConfig.ws.port + router.index }),
+				port: await getPort({ port: serveConfig.ws.port + router.order }),
 			},
 		},
 	});
 
-	router.devServer = viteDevServer;
+	router.internals.devServer = viteDevServer;
 
 	if (router.mode === "handler") {
 		return defineEventHandler(async (event) => {
@@ -283,7 +323,7 @@ async function createViteHandler(app, router, serveConfig) {
 				});
 
 				const transformedHtml = await viteDevServer.transformIndexHtml(
-					event.node.req.url,
+					getRequestURL(event).href,
 					text,
 				);
 
@@ -295,6 +335,13 @@ async function createViteHandler(app, router, serveConfig) {
 	}
 }
 
+/**
+ *
+ * @param {import('./app.js').App} app
+ * @param {import('./app.js').RouterSchema} router
+ * @param {ServeConfig} serveConfig
+ * @returns
+ */
 async function createDevRouterHandler(app, router, serveConfig) {
 	return {
 		route: router.base,
@@ -305,18 +352,18 @@ async function createDevRouterHandler(app, router, serveConfig) {
 /**
  *
  * @param {import('./app.js').App} app
- * @param {{ port?: number; dev?: boolean; ws?: { port?: number } }} param1
+ * @param {ServeConfigInput} param1
  * @returns
  */
 export async function createDevServer(
 	app,
-	{ port = 3000, dev = false, ws: { port: wsPort = null } = {} },
+	{ port = 3000, dev = false, ws: { port: wsPort = undefined } = {} },
 ) {
 	const serveConfig = {
 		port,
 		dev,
 		ws: {
-			port: wsPort,
+			port: wsPort ?? 8989,
 		},
 	};
 
@@ -328,21 +375,22 @@ export async function createDevServer(
 			preset: "nitro-dev",
 			publicAssets: [
 				...app.config.routers
-					.filter((router) => router.mode === "static")
-					.map(
-						(/** @type {import("./app.js").StaticRouterSchema} */ router) => ({
-							dir: router.dir,
-							baseURL: router.base,
-							passthrough: true,
-						}),
-					),
+					.map((router) => {
+						if (router.mode === "static") {
+							return {
+								dir: router.dir,
+								baseURL: router.base,
+								fallthrough: true,
+							};
+						}
+					})
+					.filter(Boolean),
 				...(app.config.server.publicAssets ?? []),
 			],
 			devHandlers: [
 				...(await Promise.all(
 					app.config.routers
 						.filter((router) => router.mode != "static")
-
 						.sort((a, b) => b.base.length - a.base.length)
 						.map((router) => createDevRouterHandler(app, router, serveConfig)),
 				)),
@@ -358,14 +406,15 @@ export async function createDevServer(
 		await devApp.listen(port, {});
 
 		for (const router of app.config.routers) {
-			if ("compiled" in router && router.compiled) {
-				const routes = await router.compiled.getRoutes();
+			if (router.internals && router.internals.routes) {
+				const routes = await router.internals.routes.getRoutes();
 				for (const route of routes) {
 					console.log(route.path);
 				}
 			}
 		}
 
+		// @ts-ignore
 		globalThis.app = app;
 
 		const plugins = [

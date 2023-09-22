@@ -58,7 +58,7 @@ export function tanstackFileRouter(config) {
 	return (router, app) =>
 		new TanstackFileRouter(
 			{
-				dir: resolve.absolute(config.dir, router, app),
+				dir: resolve.absolute(config.dir, router.root),
 				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"],
 			},
 			router,

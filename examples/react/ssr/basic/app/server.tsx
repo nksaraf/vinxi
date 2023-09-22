@@ -27,12 +27,6 @@ export default eventHandler(async (event) => {
 		);
 	});
 
-	// @ts-ignore
-	stream._read = () => {};
-	// @ts-ignore
-	stream.on = (event, listener) => {
-		events[event] = listener;
-	};
 	event.node.res.setHeader("Content-Type", "text/html");
 	return stream;
 });

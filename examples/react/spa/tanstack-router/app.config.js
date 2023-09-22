@@ -23,23 +23,19 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			style: tanstackFileRouter({
+			routes: tanstackFileRouter({
 				dir: "./app/pages",
 			}),
-			compile: {
-				target: "browser",
-				plugins: () => [references.clientRouterPlugin(), reactRefresh()],
-			},
+			target: "browser",
+			plugins: () => [references.clientRouterPlugin(), reactRefresh()],
 		},
 		{
 			name: "server",
 			mode: "handler",
 			base: "/_server",
 			handler: "./app/entry-server.tsx",
-			compile: {
-				target: "server",
-				plugins: () => [references.serverRouterPlugin()],
-			},
+			target: "server",
+			plugins: () => [references.serverRouterPlugin()],
 		},
 	],
 });

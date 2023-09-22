@@ -20,11 +20,8 @@ export const references = {
 		mode: "handler",
 		base: "/_server",
 		handler: fileURLToPath(new URL("./server-handler.js", import.meta.url)),
+		target: "server",
 		...(overrides ?? {}),
-		build: {
-			target: "server",
-			...(overrides?.build ?? {}),
-			plugins: () => [server(), ...(overrides?.build?.plugins?.() ?? [])],
-		},
+		plugins: () => [server(), ...(overrides?.plugins?.() ?? [])],
 	}),
 };

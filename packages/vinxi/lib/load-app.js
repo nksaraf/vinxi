@@ -53,10 +53,8 @@ export async function loadApp(configFile = undefined) {
 						name: "client",
 						mode: "spa",
 						handler: "./index.html",
-						build: {
-							target: "browser",
-							plugins: () => config.plugins ?? [],
-						},
+						target: "browser",
+						plugins: () => config.plugins ?? [],
 					},
 				],
 			});

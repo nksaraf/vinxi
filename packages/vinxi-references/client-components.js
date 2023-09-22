@@ -5,7 +5,7 @@ import { SERVER_REFERENCES_MANIFEST, hash } from "./constants.js";
 
 /**
  *
- * @returns {import('vinxi').PluginOption}
+ * @returns {import('vinxi').Plugin}
  */
 export function clientComponents({
 	server = "rsc",
@@ -28,7 +28,7 @@ export function clientComponents({
 
 				const serverManifest = JSON.parse(
 					readFileSync(
-						join(serverRouter.build.outDir, serverRouter.base, manifest),
+						join(serverRouter.outDir, serverRouter.base, manifest),
 						"utf-8",
 					),
 				);

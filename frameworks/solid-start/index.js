@@ -54,7 +54,7 @@ function solidStartFileSystemRouter(config) {
 	return (router, app) =>
 		new SolidStartFileSystemRouter(
 			{
-				dir: resolve.absolute(config.dir, router, app),
+				dir: resolve.absolute(config.dir, router.root),
 				extensions: ["tsx", "ts", "jsx", "js"],
 			},
 			router,
@@ -75,46 +75,42 @@ export function defineConfig({} = {}) {
 				name: "client",
 				mode: "build",
 				handler: "./src/entry-client.tsx",
-				style: solidStartFileSystemRouter({
+				routes: solidStartFileSystemRouter({
 					dir: "./src/routes",
 				}),
-				compile: {
-					target: "browser",
-					plugins: () => [
-						solid({
-							ssr: true,
-						}),
-						config("root", {
-							resolve: {
-								alias: {
-									"#start/root": join(process.cwd(), "src", "root.tsx"),
-								},
+				target: "browser",
+				plugins: () => [
+					solid({
+						ssr: true,
+					}),
+					config("root", {
+						resolve: {
+							alias: {
+								"#start/root": join(process.cwd(), "src", "root.tsx"),
 							},
-						}),
-					],
-				},
+						},
+					}),
+				],
 				base: "/_build",
 			},
 			{
 				name: "ssr",
 				mode: "handler",
 				handler: "./src/entry-server.tsx",
-				style: solidStartFileSystemRouter({
+				routes: solidStartFileSystemRouter({
 					dir: "./src/routes",
 				}),
-				compile: {
-					target: "server",
-					plugins: () => [
-						solid({ ssr: true }),
-						config("root", {
-							resolve: {
-								alias: {
-									"#start/root": join(process.cwd(), "src", "root.tsx"),
-								},
+				target: "server",
+				plugins: () => [
+					solid({ ssr: true }),
+					config("root", {
+						resolve: {
+							alias: {
+								"#start/root": join(process.cwd(), "src", "root.tsx"),
 							},
-						}),
-					],
-				},
+						},
+					}),
+				],
 			},
 		],
 	});

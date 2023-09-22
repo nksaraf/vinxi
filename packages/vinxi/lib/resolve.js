@@ -1,19 +1,25 @@
 import { isAbsolute, join, relative } from "pathe";
 
-function absoluteAppPath(path, router, appConfig) {
-	return path
-		? isAbsolute(path)
-			? path
-			: join(router.root ?? appConfig.root, path)
-		: undefined;
+/**
+ * @template {string | undefined} T
+ * @param {T} path
+ * @param {string} root
+ * @returns {T}
+ */
+function absoluteAppPath(path, root) {
+	//@ts-ignore
+	return path ? (isAbsolute(path) ? path : join(root, path)) : path;
 }
-export function relativeAppPath(path, router, appConfig) {
-	return path
-		? relative(
-				router.root ?? appConfig.root,
-				absoluteAppPath(path, router, appConfig),
-		  )
-		: undefined;
+
+/**
+ * @template {string | undefined} T
+ * @param {T} path
+ * @param {string} root
+ * @returns {T}
+ */
+export function relativeAppPath(path, root) {
+	//@ts-ignore
+	return path ? relative(root, absoluteAppPath(path, root)) : path;
 }
 
 export const resolve = {

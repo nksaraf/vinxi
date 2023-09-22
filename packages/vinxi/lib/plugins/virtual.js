@@ -4,7 +4,7 @@ const PREFIX = "\0virtual:";
 
 /**
  *
- * @param {{ [key: string] : any }} modules
+ * @param {{ [key: string] : (ctx: { config: import("../vite-dev.d.ts").ViteConfig }) => (string | Promise<string>) }} modules
  * @param {string} name
  * @param {any} cache
  * @returns {import('../vite-dev.d.ts').Plugin}
@@ -18,7 +18,9 @@ export function virtual(modules, name = "", cache = {}) {
 		_modules.set(resolve(id), mod);
 	}
 
+	/** @type {import('../vite-dev.d.ts').ViteConfig} */
 	let config;
+	/** @type {import('vite').ConfigEnv} */
 	let env;
 
 	return {

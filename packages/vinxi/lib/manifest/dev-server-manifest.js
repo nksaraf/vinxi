@@ -19,7 +19,7 @@ export function createDevManifest(app) {
 
 				invariant(router.mode != "static", "No manifest for static router");
 
-				const viteServer = router.devServer;
+				const viteServer = router.internals.devServer;
 				return {
 					json() {
 						return {};
@@ -42,7 +42,7 @@ export function createDevManifest(app) {
 								);
 
 								let relativePath = relative(app.config.root, chunk);
-								if (router.compile.target === "browser") {
+								if (router.target === "browser") {
 									return {
 										output: {
 											path: join(router.base, "@fs", absolutePath),
@@ -76,9 +76,11 @@ export function createDevManifest(app) {
 								let isHandler = router.handler === relativePath;
 
 								async function getVitePluginAssets() {
-									const plugins = router.devServer.config.plugins.filter(
-										(plugin) => "transformIndexHtml" in plugin,
-									);
+									const plugins = router.internals?.devServer
+										? router.internals.devServer.config.plugins.filter(
+												(plugin) => "transformIndexHtml" in plugin,
+										  )
+										: [];
 									let pluginAssets = [];
 									for (let plugin of plugins) {
 										// @ts-ignore
@@ -107,23 +109,27 @@ export function createDevManifest(app) {
 									});
 								}
 
-								if (router.compile.target === "browser") {
+								if (router.target === "browser") {
 									return {
 										async assets() {
 											return [
-												...Object.entries(
-													await findStylesInModuleGraph(viteServer, [
-														absolutePath,
-													]),
-												).map(([key, value]) => ({
-													tag: "style",
-													attrs: {
-														type: "text/css",
-														key,
-														"data-vite-dev-id": key,
-													},
-													children: value,
-												})),
+												...(viteServer
+													? Object.entries(
+															await findStylesInModuleGraph(
+																viteServer,
+																[absolutePath],
+																false,
+															),
+													  ).map(([key, value]) => ({
+															tag: "style",
+															attrs: {
+																type: "text/css",
+																key,
+																"data-vite-dev-id": key,
+															},
+															children: value,
+													  }))
+													: []),
 												...(isHandler
 													? [
 															...(await getVitePluginAssets()),
@@ -147,21 +153,23 @@ export function createDevManifest(app) {
 									return {
 										async assets() {
 											return [
-												...Object.entries(
-													await findStylesInModuleGraph(
-														viteServer,
-														[input],
-														true,
-													),
-												).map(([key, value]) => ({
-													tag: "style",
-													attrs: {
-														type: "text/css",
-														key,
-														"data-vite-dev-id": key,
-													},
-													children: value,
-												})),
+												...(viteServer
+													? Object.entries(
+															await findStylesInModuleGraph(
+																viteServer,
+																[input],
+																true,
+															),
+													  ).map(([key, value]) => ({
+															tag: "style",
+															attrs: {
+																type: "text/css",
+																key,
+																"data-vite-dev-id": key,
+															},
+															children: value,
+													  }))
+													: []),
 											];
 										},
 										output: {
