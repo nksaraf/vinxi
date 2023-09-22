@@ -8,8 +8,7 @@ import {
 } from "h3";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro } from "nitropack";
-import { join } from "path";
-import { relative } from "pathe";
+import { join, relative } from "pathe";
 
 import { writeFileSync } from "node:fs";
 
@@ -31,7 +30,7 @@ const require = createRequire(import.meta.url);
  */
 export async function createBuild(app, buildConfig) {
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
-	const { join } = await import("path");
+	const { join } = await import("pathe");
 	const { fileURLToPath } = await import("url");
 	for (const router of app.config.routers) {
 		if ("compile" in router) {
@@ -108,7 +107,7 @@ export async function createBuild(app, buildConfig) {
 									? "virtual:#vinxi/handler"
 									: relative(app.config.root, router.handler)
 							].file,
-						).replace(/\\/g, "\\\\");
+						);
 
 						return [
 							{
@@ -529,7 +528,7 @@ function handerBuild() {
 		async config(inlineConfig, env) {
 			if (env.command === "build") {
 				const { builtinModules } = await import("module");
-				const { join } = await import("path");
+				const { join } = await import("pathe");
 				const input = await getEntries(inlineConfig.router);
 				return {
 					build: {
@@ -567,7 +566,7 @@ function browserBuild() {
 		name: "build:browser",
 		async config(inlineConfig, env) {
 			if (env.command === "build") {
-				const { join } = await import("path");
+				const { join } = await import("pathe");
 				return {
 					build: {
 						rollupOptions: {

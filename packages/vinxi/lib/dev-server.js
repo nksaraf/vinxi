@@ -2,7 +2,7 @@ import getPort from "get-port";
 import { H3Event, createApp, defineEventHandler, fromNodeMiddleware } from "h3";
 import { createNitro } from "nitropack";
 
-import { join } from "node:path";
+import { join } from "pathe";
 import { fileURLToPath } from "node:url";
 import { isMainThread } from "node:worker_threads";
 
