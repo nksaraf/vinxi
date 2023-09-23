@@ -6,7 +6,7 @@
   <div align="center"><img src="https://badge.fury.io/js/vinxi.svg" /></div>
 </p>
 
-# `vinxi` (The App Framework)
+# `vinxi`
 
 
 Compose full stack applications (and frameworks) using [**Vite**](https://github.com/vitejs/vite), the versatile bundler and dev server, and [**Nitro**](https://github.com/unjs/nitro), the universal production server. The core primitive in `vinxi` is a **router**. 
