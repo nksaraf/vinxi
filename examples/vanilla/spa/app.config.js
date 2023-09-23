@@ -1,5 +1,4 @@
 import { references } from "@vinxi/plugin-references";
-import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 
 export default createApp({
@@ -20,7 +19,7 @@ export default createApp({
 			mode: "spa",
 			handler: "./index.html",
 			target: "browser",
-			plugins: () => [references.clientRouterPlugin(), reactRefresh()],
+			plugins: () => [references.clientRouterPlugin()],
 		},
 		references.serverRouter({
 			middleware: "./app/middleware.tsx",
