@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.0.30
+
+### Patch Changes
+
+- fd06048: fix prod-server-manifest to handle #vinxi/handler properly
+- 0f14555: changed `style` to `routes` and removed `compile` nested, flat options API
+- 82267c5: move `build` to `compile` and more flexible `router.style` config
+
 ## 0.0.29
 
 ### Patch Changes

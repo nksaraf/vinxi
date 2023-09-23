@@ -1,5 +1,11 @@
 # @vinxi/react
 
+## 0.0.10
+
+### Patch Changes
+
+- 82267c5: move `build` to `compile` and more flexible `router.style` config
+
 ## 0.0.9
 
 ### Patch Changes

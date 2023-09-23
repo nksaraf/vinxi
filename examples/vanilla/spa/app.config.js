@@ -19,10 +19,8 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			compile: {
-				target: "browser",
-				plugins: () => [references.clientRouterPlugin(), reactRefresh()],
-			},
+			target: "browser",
+			plugins: () => [references.clientRouterPlugin(), reactRefresh()],
 		},
 		references.serverRouter({
 			middleware: "./app/middleware.tsx",

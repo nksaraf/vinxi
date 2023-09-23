@@ -1,6 +1,13 @@
-# `vinxi` (The App Framework)
+ <p align="center">
+  <h1  align="center" ><img src="/docs/public/logo.png" width="196" /></h1>
+  <p align="center">
+	 <i>The JavaScript Server SDK to build full stack apps and frameworks with your own opinions.<br>powered by <code><a href="https://github.com/vitejs/vite">vite</a></code> and <code><a href="https://github.com/unjs/nitro">nitro</a></code></i>
+  </p>
+  <div align="center"><img src="https://badge.fury.io/js/vinxi.svg" /></div>
+</p>
 
-[![npm version](https://badge.fury.io/js/vinxi.svg)](https://badge.fury.io/js/vinxi)
+# `vinxi`
+
 
 Compose full stack applications (and frameworks) using [**Vite**](https://github.com/vitejs/vite), the versatile bundler and dev server, and [**Nitro**](https://github.com/unjs/nitro), the universal production server. The core primitive in `vinxi` is a **router**. 
 
