@@ -1,5 +1,5 @@
  <p align="center">
-  <h1  align="center" ><img src="/docs/public/logo.png" width="196" /></h1><p align="center"><i>A bunch of simple but magical React hooks to work with GraphQL.<br>powered by <code><a href="https://github.com/tannerlinsley/react-query">vite</a></code> and <code><a href="https://github.com/tannerlinsley/react-query">nitro</a></code></i></p>
+  <h1  align="center" ><img src="/docs/public/logo.png" width="196" /></h1><p align="center"><i>The JavaScript Server SDK to build full stack apps and frameworks with your own opinions.<br>powered by <code><a href="https://github.com/tannerlinsley/react-query">vite</a></code> and <code><a href="https://github.com/tannerlinsley/react-query">nitro</a></code></i></p>
 </p>
 
 # `vinxi` (The App Framework)
