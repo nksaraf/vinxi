@@ -64,7 +64,6 @@ export default createApp({
 					app,
 				),
 			target: "server",
-			// plugins: () => [reactRefresh()],
 			base: "/api",
 		},
 		{
