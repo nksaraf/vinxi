@@ -88,7 +88,7 @@ const routerSchema = {
  * @param {number} order
  * @returns {RouterSchema}
  */
-function resolveConfig(router, appConfig, order) {
+function resolveRouterConfig(router, appConfig, order) {
 	const appRoot = appConfig.root ?? process.cwd();
 	const root = router.root ?? appRoot;
 	switch (router.mode) {
@@ -200,7 +200,7 @@ export function createApp({
 
 	const resolvedRouters = routers.map((router, index) => {
 		return {
-			...resolveConfig(
+			...resolveRouterConfig(
 				router,
 				{
 					name: name ?? "vinxi",

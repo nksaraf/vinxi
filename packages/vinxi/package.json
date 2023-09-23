@@ -53,6 +53,7 @@
     "@babel/plugin-syntax-jsx": "^7.22.5",
     "@babel/plugin-syntax-typescript": "^7.22.5",
     "@types/micromatch": "^4.0.2",
+    "@types/serve-static": "^1.15.2",
     "c12": "^1.4.2",
     "chokidar": "^3.5.3",
     "consola": "^3.2.3",

@@ -1,14 +1,4 @@
-// declare module "vite" {
-// 	// interface UserConfig {
-// 	// 	router: any;
-// 	// }
-// }
-import {
-	ConfigEnv,
-	UserConfig,
-	Plugin as VitePlugin,
-	ResolvedConfig as _ResolvedConfig,
-} from "vite";
+import { Plugin as VitePlugin, ResolvedConfig as _ResolvedConfig } from "vite";
 
 import { RouterSchema } from "./app";
 
@@ -26,4 +16,4 @@ export type ViteConfig = _ResolvedConfig & { router: RouterSchema };
 
 export type Plugin = VitePlugin;
 
-export { ConfigEnv } from "vite";
+export type { ConfigEnv as ConfigEnv } from "vite";

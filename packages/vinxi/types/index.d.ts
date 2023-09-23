@@ -181,11 +181,6 @@ declare module 'vinxi' {
 		outDir?: string | undefined;
 		plugins?: any;
 	}>;
-  /**
-   * Create a worker thread that will be used to render RSC chunks.
-   * @param buildPath Absolute path to the the built RSC bundle.
-   * @param onReload Called when the worker reloads.
-   */
   class AppWorkerClient {
 	  constructor(url: any);
 	  
@@ -430,11 +425,6 @@ declare module 'vinxi/file-system-router' {
 		outDir?: string | undefined;
 		plugins?: any;
 	}>;
-  /**
-   * Create a worker thread that will be used to render RSC chunks.
-   * @param buildPath Absolute path to the the built RSC bundle.
-   * @param onReload Called when the worker reloads.
-   */
   class AppWorkerClient {
 	  constructor(url: any);
 	  
@@ -675,11 +665,6 @@ declare module 'vinxi/plugins/virtual' {
 		outDir?: string | undefined;
 		plugins?: any;
 	}>;
-  /**
-   * Create a worker thread that will be used to render RSC chunks.
-   * @param buildPath Absolute path to the the built RSC bundle.
-   * @param onReload Called when the worker reloads.
-   */
   class AppWorkerClient {
 	  constructor(url: any);
 	  
