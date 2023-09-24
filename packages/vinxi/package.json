@@ -11,7 +11,9 @@
     "types",
     "*.d.ts"
   ],
-  "scripts": {},
+  "scripts": {
+    "types": "rm -rf dist/types && tsc && cp -r types dist/types/types"
+  },
   "bin": "./bin/cli.mjs",
   "types": "./dist/types/lib/index.d.ts",
   "exports": {

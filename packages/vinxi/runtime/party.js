@@ -66,6 +66,7 @@ class InternalParty {
 
 	/**
 	 * @param {any} msg
+	 * @param {string[]} without
 	 */
 	broadcast(msg, without = []) {
 		for (const conn of this.connections.values()) {
@@ -84,15 +85,17 @@ class InternalParty {
 
 /**
  * @param {WebSocket} webSocket
+ * @returns {import("../types/party.d.ts").Connection}
  */
 function createConnection(webSocket) {
 	// @ts-ignore
 	webSocket.id ??= Math.random().toString(36).slice(2);
+	// @ts-ignore
 	return webSocket;
 }
 
 /**
- * @param {{ onStart: (arg0: InternalParty) => any; onConnect: (arg0: InternalParty, arg1: any) => void; onMessage: (arg0: InternalParty, arg1: string | ArrayBuffer | Buffer[], arg2: any) => void; onError: (arg0: InternalParty, arg1: any, arg2: Error) => void; onClose: (arg0: InternalParty, arg1: any) => void; onRequest: (arg0: InternalParty, arg1: Request) => any; }} partyServer
+ * @param {import('../types/party.d.ts').PartyHandler} partyServer
  */
 export function partyHandler(partyServer) {
 	return lazyEventHandler(async () => {

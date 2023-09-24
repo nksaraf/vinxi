@@ -4,7 +4,7 @@
 // 	DurableObjectStorage,
 // 	WebSocket,
 // } from "@cloudflare/workers-types";
-import { EventHandler } from "./server";
+import { EventHandler } from "../runtime/server";
 
 export type StaticAssetsManifestType = {
 	devServer: string;
@@ -402,7 +402,7 @@ export type WebSocketEvent =
 			connection: Connection;
 	  };
 
-export function partyHandler(partyServer: {
+export type PartyHandler = {
 	onStart?: ((party: Party) => void | Promise<void>) | undefined;
 	onConnect?:
 		| ((party: Party, connection: Connection) => void | Promise<void>)
@@ -427,4 +427,6 @@ export function partyHandler(partyServer: {
 	onRequest?:
 		| ((party: Party, req: Request) => Response | Promise<Response>)
 		| undefined;
-}): EventHandler;
+};
+
+export function partyHandler(partyServer: PartyHandler): EventHandler;
