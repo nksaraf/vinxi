@@ -43,7 +43,7 @@ export const fileSystemWatcher = () => {
 				config.router.internals.routes.addEventListener("reload", () => {
 					const { moduleGraph } = server;
 					const mods = moduleGraph.getModulesByFile(
-						fileURLToPath(new URL("./routes.js", import.meta.url)),
+						fileURLToPath(new URL("../routes.js", import.meta.url)),
 					);
 					if (mods) {
 						const seen = new Set();
