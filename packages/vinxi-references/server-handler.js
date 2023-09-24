@@ -4,6 +4,7 @@ import { eventHandler, toWebRequest } from "vinxi/runtime/server";
 async function loadModule(id) {
 	if (import.meta.env.DEV) {
 		return await import(
+			/* @vite-ignore */
 			import.meta.env.MANIFEST["server"].chunks[id].output.path
 		);
 	}
@@ -12,6 +13,7 @@ async function loadModule(id) {
 		return globalThis.$$chunks[id + ".js"];
 	}
 	return await import(
+		/* @vite-ignore */
 		import.meta.env.MANIFEST["server"].chunks[id].output.path
 	);
 }

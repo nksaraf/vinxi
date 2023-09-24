@@ -21,6 +21,13 @@ export default createApp({
 			target: "browser",
 			plugins: () => [references.clientRouterPlugin()],
 		},
+		{
+			name: "ws",
+			base: "/party",
+			mode: "handler",
+			handler: "./app/websocket.ts",
+			target: "server",
+		},
 		references.serverRouter({
 			middleware: "./app/middleware.tsx",
 		}),

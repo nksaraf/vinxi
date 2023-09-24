@@ -1,6 +1,10 @@
 import { relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
+/**
+ *
+ * @returns {import("../vite-dev.d.ts").Plugin}
+ */
 export function routes() {
 	/**
 	 * @type {Exclude<import("../app").RouterSchema, import("../app").StaticRouterSchema>}

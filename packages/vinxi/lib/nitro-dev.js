@@ -1,5 +1,6 @@
 import { watch } from "chokidar";
 import {
+	H3Event,
 	createApp,
 	eventHandler,
 	fromNodeMiddleware,
@@ -17,8 +18,9 @@ import {
 	createFetch,
 	createFetch as createLocalFetch,
 } from "unenv/runtime/fetch/index";
+import { WebSocketServer } from "ws";
 
-import { accessSync } from "node:fs";
+import { createServerResponse } from "./http-stream.js";
 
 // import { createVFSHandler } from './vfs'
 // import defaultErrorHandler from './error'
@@ -146,6 +148,11 @@ export function createDevServer(nitro) {
 			app.use(url, fromNodeMiddleware(servePlaceholder()));
 		}
 	}
+
+	/**
+	 * @type {Record<string, WebSocketServer>}
+	 */
+	const ws = {};
 
 	// Dev-only handlers
 	for (const handler of nitro.options.devHandlers) {

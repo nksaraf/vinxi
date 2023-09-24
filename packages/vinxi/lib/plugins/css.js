@@ -1,6 +1,8 @@
 export function css() {
+	/** @type {import('vite').ViteDevServer} */
 	let viteServer;
-	return {
+	/** @type {import('../vite-dev.d.ts').Plugin} */
+	const plugin = {
 		name: "vinxi:css-hmr",
 		configureServer(dev) {
 			viteServer = dev;
@@ -25,4 +27,6 @@ export function css() {
 			}
 		},
 	};
+
+	return plugin;
 }

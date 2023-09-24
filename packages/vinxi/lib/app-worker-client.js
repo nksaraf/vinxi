@@ -18,7 +18,7 @@ export class AppWorkerClient {
 
 	/**
 	 *
-	 * @param {string} url
+	 * @param {URL} url
 	 */
 	constructor(url) {
 		this.url = url;
