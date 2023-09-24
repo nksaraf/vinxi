@@ -18,5 +18,4 @@ docs/.vitepress/dist
 docs/.vitepress/cache
 .vitepress
 
-**/types/**/*.d.ts
-**/types/**/*.d.ts.map
+

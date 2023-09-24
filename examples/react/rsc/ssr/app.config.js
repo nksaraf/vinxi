@@ -3,7 +3,7 @@ import reactRefresh from "@vitejs/plugin-react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import { createApp } from "vinxi";
-import { virtual } from "vinxi/lib/plugins/virtual";
+import { virtual } from "vinxi/plugins/virtual";
 
 function hash(str) {
 	let hash = 0;

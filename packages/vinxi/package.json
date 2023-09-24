@@ -13,7 +13,7 @@
   ],
   "scripts": {},
   "bin": "./bin/cli.mjs",
-  "types": "./types/lib/index.d.ts",
+  "types": "./dist/types/lib/index.d.ts",
   "exports": {
     ".": {
       "import": "./lib/index.js"
@@ -52,43 +52,43 @@
   "typesVersions": {
     "*": {
       ".": [
-        "./types/lib/index.d.ts"
+        "./dist/types/lib/index.d.ts"
       ],
       "dev-server": [
-        "./types/lib/dev-server.d.ts"
+        "./dist/types/lib/dev-server.d.ts"
       ],
       "server": [
-        "./types/runtime/server.d.ts"
+        "./dist/types/runtime/server.d.ts"
       ],
       "party": [
-        "./types/runtime/party.d.ts"
+        "./dist/types/runtime/party.d.ts"
       ],
       "css": [
-        "./types/runtime/style.d.ts"
+        "./dist/types/runtime/style.d.ts"
       ],
       "client": [
-        "./types/runtime/client.d.ts"
+        "./dist/types/runtime/client.d.ts"
       ],
       "fs-router": [
-        "./types/lib/fs-router.d.ts"
+        "./dist/types/lib/fs-router.d.ts"
       ],
       "types/server": [
-        "./runtime/types-lib/server.d.ts"
+        "./types/server.d.ts"
       ],
       "types/client": [
-        "./runtime/types-lib/client.d.ts"
+        "./types/client.d.ts"
       ],
       "routes": [
-        "./runtime/types-lib/routes.d.ts"
+        "./types/routes.d.ts"
       ],
       "lib/invariant": [
-        "./types/lib/invariant.d.ts"
+        "./dist/types/lib/invariant.d.ts"
       ],
       "plugins/config": [
-        "./types/lib/plugins/config.d.ts"
+        "./dist/types/lib/plugins/config.d.ts"
       ],
       "plugins/virtual": [
-        "./types/lib/plugins/virtual.d.ts"
+        "./dist/types/lib/plugins/virtual.d.ts"
       ]
     }
   },

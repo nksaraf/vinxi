@@ -1,7 +1,7 @@
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
-import { config } from "vinxi/lib/plugins/config";
-import { virtual } from "vinxi/lib/plugins/virtual";
+import { config } from "vinxi/plugins/config";
+import { virtual } from "vinxi/plugins/virtual";
 
 function viteServer() {
 	let router;
@@ -37,27 +37,23 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			compile: {
-				target: "browser",
-				plugins: () => [reactRefresh()],
-			},
+			target: "browser",
+			plugins: () => [reactRefresh()],
 			base: "/_build",
 		},
 		{
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			compile: {
-				target: "server",
-				plugins: () => [
-					viteServer(),
-					config("kv", {
-						define: {
-							"import.meta.env.cloudflare": "globalThis.cloudflare",
-						},
-					}),
-				],
-			},
+			target: "server",
+			plugins: () => [
+				viteServer(),
+				config("kv", {
+					define: {
+						"import.meta.env.cloudflare": "globalThis.cloudflare",
+					},
+				}),
+			],
 		},
 	],
 });

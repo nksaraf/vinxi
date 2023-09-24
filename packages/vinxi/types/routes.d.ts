@@ -1,6 +1,6 @@
 declare type Mod = `$${string}`;
 
-declare const routes: ({
+export type RouteModule = {
 	path: string;
 } & Record<
 	Mod,
@@ -9,6 +9,8 @@ declare const routes: ({
 		import: () => Promise<any>;
 		require: () => any;
 	}
->)[];
+>;
+
+declare const routes: RouteModule[];
 
 export default routes;
