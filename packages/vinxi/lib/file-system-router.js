@@ -5,7 +5,8 @@ import fg from "fast-glob";
 import fs from "fs";
 import micromatch from "micromatch";
 import os from "os";
-import { join } from "path";
+import { normalize } from "pathe";
+import { posix } from "path";
 import { pathToRegexp } from "path-to-regexp";
 
 export { pathToRegexp };
@@ -76,13 +77,10 @@ export class BaseFileSystemRouter extends EventTarget {
 	}
 
 	glob() {
-		if (os.platform() === "win32") {
-			return fg.convertPathToPattern(this.config.dir + "//**//*");
-		} else {
-			return (
-				join(this.config.dir, "**/*") + `.{${this.config.extensions.join(",")}}`
-			);
-		}
+		return posix.join(
+			fg.convertPathToPattern(normalize(this.config.dir)), 
+			"**/*"
+		) + `.{${this.config.extensions.join(",")}}`;
 	}
 
 	/**
@@ -90,7 +88,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	 */
 	async buildRoutes() {
 		await init;
-		glob(this.glob()).forEach((src) => {
+		glob(this.glob().replace(/\\/g, "\\\\")).forEach((src) => {
 			this.addRoute(src);
 		});
 
