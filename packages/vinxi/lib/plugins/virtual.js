@@ -20,7 +20,7 @@ export function virtual(modules, name = "", cache = {}) {
 
 	/** @type {import('../vite-dev.d.ts').ViteConfig} */
 	let config;
-	/** @type {import('vite').ConfigEnv} */
+	/** @type {import('../vite-dev.d.ts').ConfigEnv} */
 	let env;
 
 	return {

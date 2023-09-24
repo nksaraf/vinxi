@@ -37,10 +37,9 @@ export async function createBuild(app, buildConfig) {
 	const { join } = await import("path");
 	const { fileURLToPath } = await import("url");
 	for (const router of app.config.routers) {
-		if ("compile" in router) {
-			if (existsSync(router.outDir)) {
-				await fsPromises.rm(router.outDir, { recursive: true });
-			}
+		if (existsSync(router.outDir)) {
+			console.log(`removing ${router.outDir}`);
+			await fsPromises.rm(router.outDir, { recursive: true });
 		}
 	}
 
@@ -82,15 +81,7 @@ export async function createBuild(app, buildConfig) {
 			"#prod-app",
 			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
 			fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
-			// ...app.config.routers
-			// 	.map((router) =>
-			// 		router.mode === "handler"
-			// 			? router.server?.middleware ?? []
-			// 			: [],
-			// 	)
-			// 	.flat(),
 			...(app.config.server.plugins ?? []),
-			// "#extra-chunks",
 		],
 		handlers: [
 			...app.config.routers
@@ -267,12 +258,16 @@ export async function createBuild(app, buildConfig) {
 
 	nitro.options.appConfigFiles = [];
 	nitro.logger = consola.withTag(app.config.name);
-	await copyPublicAssets(nitro);
 
 	if (existsSync(join(nitro.options.output.serverDir))) {
 		await rm(join(nitro.options.output.serverDir), { recursive: true });
 	}
 
+	if (existsSync(join(nitro.options.output.publicDir))) {
+		await rm(join(nitro.options.output.publicDir), { recursive: true });
+	}
+
+	await copyPublicAssets(nitro);
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
 	await build(nitro);
 	await nitro.close();
@@ -291,7 +286,7 @@ async function createViteBuild(config) {
 /**
  *
  * @param {import("./app.js").App} app
- * @param {Exclude<import("./app.js").RouterSchema, import("./app.js").StaticRouterSchema>} router
+ * @param {Exclude<import("./app-router-mode.js").RouterSchema, import("./app-router-mode.js").StaticRouterSchema>} router
  */
 async function createRouterBuild(app, router) {
 	let buildRouter = router;
@@ -519,7 +514,7 @@ function toRouteId(route) {
 
 /**
  *
- * @param {Exclude<import("./app.js").RouterSchema, import("./app.js").StaticRouterSchema>} router
+ * @param {Exclude<import("./app-router-mode.js").RouterSchema, import("./app-router-mode.js").StaticRouterSchema>} router
  * @returns
  */
 export async function getEntries(router) {
