@@ -1,11 +1,13 @@
 import { watch } from "chokidar";
 import {
+	H3Event,
 	createApp,
 	eventHandler,
 	fromNodeMiddleware,
+	promisifyNodeListener,
 	toNodeListener,
 } from "h3";
-import httpProxy from "http-proxy";
+// import httpProxy from "http-proxy";
 import { listen } from "listhen";
 import { resolve } from "pathe";
 import { servePlaceholder } from "serve-placeholder";
@@ -16,8 +18,9 @@ import {
 	createFetch,
 	createFetch as createLocalFetch,
 } from "unenv/runtime/fetch/index";
+import { WebSocketServer } from "ws";
 
-import { accessSync } from "node:fs";
+import { createServerResponse } from "./http-stream.js";
 
 // import { createVFSHandler } from './vfs'
 // import defaultErrorHandler from './error'
@@ -84,6 +87,11 @@ import { accessSync } from "node:fs";
 //   }
 // }
 
+/**
+ *
+ * @param {import("nitropack").Nitro} nitro
+ * @returns
+ */
 export function createDevServer(nitro) {
 	// Worker
 	// const workerEntry = resolve(
@@ -131,12 +139,20 @@ export function createDevServer(nitro) {
 
 	// Serve asset dirs
 	for (const asset of nitro.options.publicAssets) {
-		const url = joinURL(nitro.options.runtimeConfig.app.baseURL, asset.baseURL);
+		const url = joinURL(
+			nitro.options.runtimeConfig.app.baseURL,
+			asset.baseURL ?? "/",
+		);
 		app.use(url, fromNodeMiddleware(serveStatic(asset.dir)));
 		if (!asset.fallthrough) {
 			app.use(url, fromNodeMiddleware(servePlaceholder()));
 		}
 	}
+
+	/**
+	 * @type {Record<string, WebSocketServer>}
+	 */
+	const ws = {};
 
 	// Dev-only handlers
 	for (const handler of nitro.options.devHandlers) {
@@ -144,19 +160,19 @@ export function createDevServer(nitro) {
 	}
 
 	// User defined dev proxy
-	for (const route of Object.keys(nitro.options.devProxy).sort().reverse()) {
-		let opts = nitro.options.devProxy[route];
-		if (typeof opts === "string") {
-			opts = { target: opts };
-		}
-		const proxy = createProxy(opts);
-		app.use(
-			route,
-			eventHandler(async (event) => {
-				await proxy.handle(event);
-			}),
-		);
-	}
+	// for (const route of Object.keys(nitro.options.devProxy).sort().reverse()) {
+	// 	let opts = nitro.options.devProxy[route];
+	// 	if (typeof opts === "string") {
+	// 		opts = { target: opts };
+	// 	}
+	// 	const proxy = createProxy(opts);
+	// 	app.use(
+	// 		route,
+	// 		eventHandler(async (event) => {
+	// 			await proxy.handle(event);
+	// 		}),
+	// 	);
+	// }
 
 	// Main worker proxy
 	// const proxy = createProxy();
@@ -206,7 +222,14 @@ export function createDevServer(nitro) {
 	// );
 
 	// Listen
+	/** @type {import("listhen").Listener[]}  */
 	let listeners = [];
+	/**
+	 *
+	 * @param {number} port
+	 * @param {Partial<import("listhen").ListenOptions>} opts
+	 * @returns
+	 */
 	const _listen = async (port, opts) => {
 		const listener = await listen(toNodeListener(app), { port, ...opts });
 		listeners.push(listener);
@@ -232,7 +255,7 @@ export function createDevServer(nitro) {
 	nitro.hooks.hook("close", close);
 
 	// Create local fetch callers
-	const localCall = createCall(toNodeListener(app));
+	const localCall = createCall(promisifyNodeListener(toNodeListener(app)));
 	const localFetch = createLocalFetch(localCall, globalThis.fetch);
 
 	return {
@@ -246,25 +269,25 @@ export function createDevServer(nitro) {
 	};
 }
 
-function createProxy(defaults = {}) {
-	const proxy = httpProxy.createProxy();
-	const handle = (event, opts = {}) => {
-		return new Promise((resolve, reject) => {
-			proxy.web(
-				event.node.req,
-				event.node.res,
-				{ ...defaults, ...opts },
-				(error) => {
-					if (error.code !== "ECONNRESET") {
-						reject(error);
-					}
-					resolve();
-				},
-			);
-		});
-	};
-	return {
-		proxy,
-		handle,
-	};
-}
+// function createProxy(defaults = {}) {
+// 	const proxy = httpProxy.createProxy();
+// 	const handle = (event, opts = {}) => {
+// 		return new Promise((resolve, reject) => {
+// 			proxy.web(
+// 				event.node.req,
+// 				event.node.res,
+// 				{ ...defaults, ...opts },
+// 				(error) => {
+// 					if (error.code !== "ECONNRESET") {
+// 						reject(error);
+// 					}
+// 					resolve();
+// 				},
+// 			);
+// 		});
+// 	};
+// 	return {
+// 		proxy,
+// 		handle,
+// 	};
+// }

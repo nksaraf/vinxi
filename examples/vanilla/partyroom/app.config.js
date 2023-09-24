@@ -21,6 +21,13 @@ export default createApp({
 			target: "browser",
 			plugins: () => [references.clientRouterPlugin()],
 		},
+		{
+			name: "party",
+			base: "/party",
+			mode: "handler",
+			handler: "./app/party.ts",
+			target: "server",
+		},
 		references.serverRouter({
 			middleware: "./app/middleware.tsx",
 		}),

@@ -53,7 +53,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	/** @type {any[]} */
 	routes;
 
-	/** @type {import("./app").RouterSchema} */
+	/** @type {import("./router-mode").Router<any>} */
 	routerConfig;
 
 	/** @type {import("./app").AppOptions} */
@@ -65,7 +65,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	/**
 	 *
 	 * @param {FileSystemRouterConfig} config
-	 * @param {import("./app").RouterSchema} router
+	 * @param {import("./router-mode").Router<any>} router
 	 * @param {import("./app").AppOptions} app
 	 */
 	constructor(config, router, app) {

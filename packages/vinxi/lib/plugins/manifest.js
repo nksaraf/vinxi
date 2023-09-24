@@ -1,3 +1,7 @@
+/**
+ *
+ * @returns {import("../vite-dev.d.ts").Plugin}
+ */
 export function manifest() {
 	let router;
 

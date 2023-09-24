@@ -24,10 +24,10 @@ export class InvariantError extends Error {
  * @param {string | number} message
  * @returns {asserts condition}
  */
-export function invariant(condition, message) {
+export default function invariant(condition, message) {
 	if (!condition) {
 		throw new InvariantError(message);
 	}
 }
 
-export default invariant;
+export { invariant };

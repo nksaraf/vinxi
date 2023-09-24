@@ -3,6 +3,10 @@ import typescript from "@babel/plugin-syntax-typescript";
 
 import plugin from "./tree-shake.babel.js";
 
+/**
+ *
+ * @returns {import("../vite-dev.d.ts").Plugin}
+ */
 export function treeShake() {
 	let config;
 	let cache = {};

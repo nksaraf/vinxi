@@ -12,10 +12,8 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.ts",
-			compile: {
-				target: "browser",
-				plugins: () => [reactRefresh()],
-			},
+			target: "browser",
+			plugins: () => [reactRefresh()],
 		},
 	],
 });

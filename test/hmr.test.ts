@@ -152,7 +152,7 @@ test.describe("hmr", () => {
 			}`,
 		);
 
-		await new Promise((r) => setTimeout(r, 1000));
+		await new Promise((r) => setTimeout(r, 2000));
 
 		res = await fixture.requestDocument("/api/new");
 		expect(res.status).toBe(200);
