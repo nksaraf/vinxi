@@ -1,4 +1,4 @@
-import { join } from "node:path";
+import { join } from "pathe";
 
 import { devEntries } from "./dev-server.js";
 import invariant from "./invariant.js";
