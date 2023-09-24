@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from "react";
 import { Fragment, createElement, forwardRef, lazy } from "react";
-import { cleanupStyles, updateStyles } from "vinxi/runtime/style";
+import { cleanupStyles, updateStyles } from "vinxi/css";
 
 import invariant from "./invariant.js";
 import { renderAsset } from "./render-asset";

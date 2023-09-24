@@ -5,7 +5,7 @@ import {
 	BaseFileSystemRouter,
 	analyzeModule,
 	cleanPath,
-} from "vinxi/file-system-router";
+} from "vinxi/fs-router";
 
 class APIFileSystemRouter extends BaseFileSystemRouter {
 	toPath(src) {

@@ -1,4 +1,4 @@
-/// <reference types="vinxi/server" />
+/// <reference types="vinxi/types/server" />
 import { MetaProvider, renderTags } from "@solidjs/meta";
 import { Router, Routes } from "@solidjs/router";
 import { lazyRoute, renderAsset } from "@vinxi/solid";
@@ -10,7 +10,7 @@ import {
 	ssr,
 	useAssets,
 } from "solid-js/web";
-import { eventHandler } from "vinxi/runtime/server";
+import { eventHandler } from "vinxi/server";
 
 import { join } from "node:path";
 

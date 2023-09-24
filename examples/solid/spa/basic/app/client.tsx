@@ -1,4 +1,4 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 import { render } from "solid-js/web";
 
 import "./style.css";

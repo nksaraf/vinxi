@@ -1,4 +1,4 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 import {
 	Loader,
 	LoaderClient,
@@ -17,8 +17,8 @@ import { lazyRoute } from "@vinxi/react";
 import axios from "axios";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
+import "vinxi/client";
 import fileRoutes from "vinxi/routes";
-import "vinxi/runtime/client";
 
 import { NotFoundError } from "./error";
 import "./style.css";

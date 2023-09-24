@@ -1,6 +1,6 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 import { createModuleLoader } from "@vinxi/react-server-dom/runtime";
-import "vinxi/runtime/client";
+import "vinxi/client";
 
 export { ServerComponent } from "./server-component";
 export { fetchServerAction } from "./fetch-server-action";

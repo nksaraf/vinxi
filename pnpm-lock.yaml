@@ -700,6 +700,24 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0
 
+  examples/vanilla/partyroom:
+    dependencies:
+      '@picocss/pico':
+        specifier: ^1.5.10
+        version: 1.5.10
+      '@vinxi/plugin-references':
+        specifier: 0.0.20
+        version: link:../../../packages/vinxi-references
+      autoprefixer:
+        specifier: ^10.4.15
+        version: 10.4.16(postcss@8.4.30)
+      tailwindcss:
+        specifier: ^3.3.3
+        version: 3.3.3
+      vinxi:
+        specifier: 0.0.30
+        version: link:../../../packages/vinxi
+
   examples/vanilla/spa:
     dependencies:
       '@picocss/pico':
@@ -925,6 +943,9 @@ importers:
       '@types/react':
         specifier: ^18.2.21
         version: 18.2.22
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.2.7
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704

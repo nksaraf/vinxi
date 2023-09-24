@@ -1,4 +1,4 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 import {
 	Loader,
 	LoaderClient,
@@ -16,8 +16,8 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { lazyRoute } from "@vinxi/react";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
+import "vinxi/client";
 import fileRoutes from "vinxi/routes";
-import "vinxi/runtime/client";
 
 import { fetchPost, fetchPosts } from "./db";
 import "./style.css";

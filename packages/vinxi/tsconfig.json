@@ -8,8 +8,12 @@
 		"allowJs": true,
 		"strict": true,
 		"checkJs": true,
-		"noEmit": true,
-		"isolatedModules": true
+		"noEmit": false,
+		"isolatedModules": true,
+		"declarationMap": true,
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"outDir": "./types"
 	},
 	"include": ["lib", "runtime"]
 }

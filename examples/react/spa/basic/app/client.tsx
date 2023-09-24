@@ -1,4 +1,4 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 import ReactDOM from "react-dom/client";
 
 import "./style.css";

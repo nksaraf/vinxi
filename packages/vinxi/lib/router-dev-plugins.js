@@ -46,7 +46,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 					return `
 					import middleware from "${join(config.router.root, config.router.middleware)}";
 					import handler from "${join(config.router.root, config.router.handler)}"; 
-					import { eventHandler } from "vinxi/runtime/server";
+					import { eventHandler } from "vinxi/server";
 					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler});`;
 				}
 				return `import handler from "${join(

@@ -2,7 +2,7 @@ import {
 	BaseFileSystemRouter,
 	analyzeModule,
 	cleanPath,
-} from "vinxi/file-system-router";
+} from "vinxi/fs-router";
 import { config } from "vinxi/plugins/config";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -48,7 +48,7 @@ class APIFileSystemRouter extends BaseFileSystemRouter {
 
 /**
  *
- * @param {{ plugins?: () => import('vinxi').PluginOption[]; dir?: string; style?: any; base?: string; handler?: string }} param0
+ * @param {{ plugins?: () => import('vinxi').Plugin[]; dir?: string; style?: any; base?: string; handler?: string }} param0
  * @returns {import('vinxi').RouterSchema}
  */
 export function apiRouter({

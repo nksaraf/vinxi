@@ -1,11 +1,11 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 import { MDXProvider } from "@mdx-js/react";
 import { lazyRoute } from "@vinxi/react";
 import { pathToRegexp } from "path-to-regexp";
 import { Suspense } from "react";
 import ReactDOM from "react-dom/client";
+import "vinxi/client";
 import fileRoutes from "vinxi/routes";
-import "vinxi/runtime/client";
 import { Link, Route, Router } from "wouter";
 import makeCachedMatcher from "wouter/matcher";
 

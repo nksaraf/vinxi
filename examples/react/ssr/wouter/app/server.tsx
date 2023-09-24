@@ -1,9 +1,9 @@
-/// <reference types="vinxi/server" />
+/// <reference types="vinxi/types/server" />
 import { lazyRoute, renderAsset } from "@vinxi/react";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import fileRoutes from "vinxi/routes";
-import { eventHandler } from "vinxi/runtime/server";
+import { eventHandler } from "vinxi/server";
 import { Route, Router } from "wouter";
 
 import App from "./app";

@@ -1,7 +1,7 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 import { Suspense } from "react";
 import { hydrateRoot } from "react-dom/client";
-import "vinxi/runtime/client";
+import "vinxi/client";
 
 import { createAssets } from "./Assets";
 import App from "./root";

@@ -13,57 +13,82 @@
   ],
   "scripts": {},
   "bin": "./bin/cli.mjs",
-  "types": "./types/index.d.ts",
+  "types": "./types/lib/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "types": "./types/index.d.ts"
+      "import": "./lib/index.js"
     },
     "./dev-server": {
-      "import": "./lib/dev-server.js",
-      "types": "./types/index.d.ts"
+      "import": "./lib/dev-server.js"
     },
-    "./file-system-router": {
-      "import": "./lib/file-system-router.js",
-      "types": "./types/index.d.ts"
+    "./fs-router": {
+      "import": "./lib/fs-router.js"
     },
     "./routes": {
-      "import": "./lib/routes.js",
-      "types": "./types/index.d.ts"
+      "import": "./lib/routes.js"
     },
-    "./runtime/client": {
-      "import": "./runtime/client.js",
-      "types": "./types/index.d.ts"
+    "./client": {
+      "import": "./runtime/client.js"
     },
-    "./runtime/server": {
-      "import": "./runtime/server.js",
-      "types": "./types/index.d.ts"
+    "./server": {
+      "import": "./runtime/server.js"
     },
-    "./runtime/party": {
-      "import": "./runtime/party.js",
-      "types": "./runtime/party.d.ts"
+    "./party": {
+      "import": "./runtime/party.js"
     },
-    "./runtime/style": {
-      "import": "./runtime/style.js",
-      "types": "./types/index.d.ts"
+    "./css": {
+      "import": "./runtime/style.js"
     },
     "./lib/invariant": {
-      "import": "./lib/invariant.js",
-      "types": "./types/index.d.ts"
+      "import": "./lib/invariant.js"
     },
     "./plugins/config": {
-      "import": "./lib/plugins/config.js",
-      "types": "./types/index.d.ts"
+      "import": "./lib/plugins/config.js"
     },
     "./plugins/virtual": {
-      "import": "./lib/plugins/virtual.js",
-      "types": "./types/index.d.ts"
+      "import": "./lib/plugins/virtual.js"
     }
   },
   "typesVersions": {
     "*": {
-      "runtime/party": [
-        "./runtime/party.d.ts"
+      ".": [
+        "./types/lib/index.d.ts"
+      ],
+      "dev-server": [
+        "./types/lib/dev-server.d.ts"
+      ],
+      "server": [
+        "./types/runtime/server.d.ts"
+      ],
+      "party": [
+        "./types/runtime/party.d.ts"
+      ],
+      "css": [
+        "./types/runtime/style.d.ts"
+      ],
+      "client": [
+        "./types/runtime/client.d.ts"
+      ],
+      "fs-router": [
+        "./types/lib/fs-router.d.ts"
+      ],
+      "types/server": [
+        "./runtime/types-lib/server.d.ts"
+      ],
+      "types/client": [
+        "./runtime/types-lib/client.d.ts"
+      ],
+      "routes": [
+        "./runtime/types-lib/routes.d.ts"
+      ],
+      "lib/invariant": [
+        "./types/lib/invariant.d.ts"
+      ],
+      "plugins/config": [
+        "./types/lib/plugins/config.d.ts"
+      ],
+      "plugins/virtual": [
+        "./types/lib/plugins/virtual.d.ts"
       ]
     }
   },

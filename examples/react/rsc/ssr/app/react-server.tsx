@@ -1,7 +1,7 @@
 import { renderAsset } from "@vinxi/react";
 import * as RSDV from "@vinxi/react-server-dom/server";
 import React, { Suspense } from "react";
-import { eventHandler } from "vinxi/runtime/server";
+import { eventHandler } from "vinxi/server";
 
 import App from "./app";
 

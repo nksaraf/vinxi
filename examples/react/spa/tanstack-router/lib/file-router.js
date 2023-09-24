@@ -3,7 +3,7 @@ import {
 	BaseFileSystemRouter,
 	analyzeModule,
 	cleanPath,
-} from "vinxi/file-system-router";
+} from "vinxi/fs-router";
 
 export class TanstackFileRouter extends BaseFileSystemRouter {
 	toPath(src) {

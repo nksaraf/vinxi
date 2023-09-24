@@ -1,10 +1,9 @@
-import fs from "fs";
 import { createApp, resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
 	cleanPath,
-} from "vinxi/file-system-router";
+} from "vinxi/fs-router";
 import solid from "vite-plugin-solid";
 
 class SolidStartFileSystemRouter extends BaseFileSystemRouter {

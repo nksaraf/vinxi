@@ -228,7 +228,7 @@ export async function createBuild(app, buildConfig) {
 					"utf-8",
 				);
 				return `
-					import { eventHandler } from 'vinxi/runtime/server'
+					import { eventHandler } from 'vinxi/server'
 					const html = ${JSON.stringify(indexHtml)}
 					export default eventHandler(event => { 
 						return html
@@ -451,7 +451,7 @@ const routerModePlugin = {
 						return `
 					import middleware from "${join(config.router.root, config.router.middleware)}";
 					import handler from "${join(config.router.root, config.router.handler)}";
-					import { eventHandler } from "vinxi/runtime/server";
+					import { eventHandler } from "vinxi/server";
 					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler});`;
 					}
 					return `import handler from "${join(
