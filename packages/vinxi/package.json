@@ -39,6 +39,10 @@
       "import": "./runtime/server.js",
       "types": "./types/index.d.ts"
     },
+    "./runtime/party": {
+      "import": "./runtime/party.js",
+      "types": "./runtime/party.d.ts"
+    },
     "./runtime/style": {
       "import": "./runtime/style.js",
       "types": "./types/index.d.ts"
