@@ -21,10 +21,6 @@
     "patchedDependencies": {
       "vite@4.3.9": "patches/vite@4.3.9.patch",
       "@tanstack/react-start@0.0.1-beta.111": "patches/@tanstack__react-start@0.0.1-beta.111.patch"
-    },
-    "overrides": {
-      "h3": "npm:@vinxi/h3@1.8.6",
-      "listhen": "npm:@vinxi/listhen"
     }
   },
   "dependencies": {

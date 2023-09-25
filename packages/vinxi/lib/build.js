@@ -297,7 +297,6 @@ async function createRouterBuild(app, router) {
 				ssrManifest: true,
 				rollupOptions: {
 					input: { handler: router.handler },
-					external: ["h3"],
 				},
 				target: "esnext",
 				outDir: join(router.outDir + "_entry"),
