@@ -1,3 +1,4 @@
+import { resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
@@ -46,14 +47,25 @@ class APIFileSystemRouter extends BaseFileSystemRouter {
 	}
 }
 
+export function apiRoutes(config) {
+	return (router, app) =>
+		new APIFileSystemRouter(
+			{
+				dir: resolve.absolute(config.dir, router.root),
+				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"],
+			},
+			router,
+			app,
+		);
+}
+
 /**
  *
  * @param {{ plugins?: () => import('vinxi').Plugin[]; dir?: string; style?: any; base?: string; handler?: string }} param0
- * @returns {import('vinxi').RouterSchema}
+ * @returns {Partial<import('vinxi').RouterSchema>}
  */
 export function apiRouter({
 	dir = "./app/api/routes",
-	style = APIFileSystemRouter,
 	base = "/api",
 	handler = fileURLToPath(new URL("./handler.js", import.meta.url)),
 	plugins = () => [],
@@ -62,18 +74,15 @@ export function apiRouter({
 		name: "api",
 		mode: "handler",
 		base,
-		dir,
-		style,
+		routes: apiRoutes({ dir }),
 		handler,
-		build: {
-			target: "server",
-			plugins: () => [
-				...((plugins?.() ?? []).filter(Boolean) ?? []),
-				tsconfigPaths(),
-				config("env-vars", {
-					envPrefix: "PRIVATE_",
-				}),
-			],
-		},
+		target: "server",
+		plugins: () => [
+			...((plugins?.() ?? []).filter(Boolean) ?? []),
+			tsconfigPaths(),
+			config("env-vars", {
+				envPrefix: "PRIVATE_",
+			}),
+		],
 	};
 }

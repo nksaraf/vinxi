@@ -54,7 +54,7 @@ export class TanstackFileRouter extends BaseFileSystemRouter {
 	}
 }
 
-export function tanstackFileRouter(config) {
+export function tanstackFileRoutes(config) {
 	return (router, app) =>
 		new TanstackFileRouter(
 			{
