@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@vinxi/plugin-references": "0.0.21",
+    "@vinxi/plugin-references": "0.0.22",
     "@vinxi/react": "0.0.11",
     "@vinxi/react-server-dom": "0.0.3",
     "@vitejs/plugin-react": "^4.0.4",
@@ -19,7 +19,7 @@
     "react": "0.0.0-experimental-035a41c4e-20230704",
     "react-dom": "0.0.0-experimental-035a41c4e-20230704",
     "tailwindcss": "^3.3.3",
-    "vinxi": "0.0.31"
+    "vinxi": "0.0.32"
   },
   "devDependencies": {
     "@types/react": "^18.2.21",

@@ -1,5 +1,13 @@
 # @vinxi/router
 
+## 0.0.12
+
+### Patch Changes
+
+- 982147a: add plugin type export
+- Updated dependencies [982147a]
+  - vinxi@0.0.32
+
 ## 0.0.11
 
 ### Patch Changes
