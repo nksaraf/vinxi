@@ -12,7 +12,10 @@ function getChunks(app, routerName, modIndex) {
 			([name, chunk]) => chunk.file.startsWith("c_") && name !== router.handler,
 		)
 		.map(([name, chunk], index) => {
-			const chunkPath = join(router.outDir, router.base, chunk.file);
+			const chunkPath = join(router.outDir, router.base, chunk.file).replace(
+				/\\/g,
+				"/",
+			);
 			return `
 				import * as mod_${index}_${modIndex} from '${chunkPath}';
 				chunks['${chunk.file}'] = mod_${index}_${modIndex}
