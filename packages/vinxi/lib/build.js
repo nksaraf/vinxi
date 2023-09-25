@@ -11,6 +11,7 @@ import { build, copyPublicAssets, createNitro } from "nitropack";
 import { join, relative } from "pathe";
 
 import { writeFileSync } from "node:fs";
+import { pathToFileURL } from "node:url";
 
 import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
@@ -303,7 +304,9 @@ async function createRouterBuild(app, router) {
 			},
 		});
 
-		const render = await import(join(router.outDir + "_entry", "handler.js"));
+		const render = await import(
+			pathToFileURL(join(router.outDir + "_entry", "handler.js")).href
+		);
 
 		const smallApp = createApp();
 		smallApp.use(render.default);
