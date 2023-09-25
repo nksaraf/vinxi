@@ -10,7 +10,6 @@ import solid from "vite-plugin-solid";
 
 class SolidStartFileSystemRouter extends BaseFileSystemRouter {
 	toPath(src) {
-		console.log(src);
 		const routePath = cleanPath(src, this.config)
 			// remove the initial slash
 			.slice(1)

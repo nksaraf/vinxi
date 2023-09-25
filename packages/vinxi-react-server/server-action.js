@@ -75,8 +75,8 @@ export default eventHandler(async (event) => {
 				event.node.res.setHeader("Router", "server");
 
 				return stream;
-			} catch (x) {
-				console.log("errorr", x);
+			} catch (error) {
+				console.error("error during server action", error);
 				// We handle the error on the client
 			}
 			// Refresh the client and return the value

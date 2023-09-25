@@ -23,7 +23,6 @@ export function createApp({
 				router.mode in routerSchema,
 				`Invalid router mode ${router.mode}`,
 			);
-			console.log(router);
 			const result = routerSchema[router.mode].safeParse(router);
 			if (result.success !== true) {
 				const issues = result.error.issues.map((issue) => {

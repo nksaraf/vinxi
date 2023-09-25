@@ -49,7 +49,6 @@ export function routes() {
 			) {
 				const js = jsCode();
 				const routes = await router.internals.routes?.getRoutes();
-				console.log(routes);
 
 				let routesCode = JSON.stringify(routes ?? [], (k, v) => {
 					if (!v) {

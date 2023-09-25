@@ -6,16 +6,13 @@ import { eventHandler, sendStream } from "vinxi/server";
 // import App from "./app";
 
 export default eventHandler(async (event) => {
-	console.log("event", event);
 	async function loadModule(id) {
 		if (import.meta.env.DEV) {
-			console.log(import.meta.env.MANIFEST["rsc"].chunks[id].output.path);
 			return await import(
 				import.meta.env.MANIFEST["rsc"].chunks[id].output.path
 			);
 		}
 
-		console.log(id, globalThis.$$chunks);
 		if (globalThis.$$chunks[id + ".js"]) {
 			return globalThis.$$chunks[id + ".js"];
 		}
@@ -41,41 +38,23 @@ export default eventHandler(async (event) => {
 			}
 
 			let args;
-			// if (req.is('multipart/form-data')) {
-			//   // Use busboy to streamingly parse the reply from form-data.
-			//   const bb = busboy({headers: req.headers});
-			//   const reply = decodeReplyFromBusboy(bb, moduleBasePath);
-			//   req.pipe(bb);
-			//   args = await reply;
-			// } else {
 			const text = await new Promise((resolve) => {
 				const requestBody = [];
 				event.node.req.on("data", (chunks) => {
-					console.log(chunks);
 					requestBody.push(chunks);
 				});
 				event.node.req.on("end", () => {
 					resolve(requestBody.join(""));
 				});
 			});
-			console.log(text);
 
 			args = await decodeReply(text);
-			console.log(args, action);
-			// }
 			const result = action.apply(null, args);
 			try {
 				// Wait for any mutations
 				await result;
 				const events = {};
 				const stream = renderToPipeableStream(result);
-
-				// @ts-ignore
-				stream._read = () => {};
-				// @ts-ignore
-				stream.on = (event, listener) => {
-					events[event] = listener;
-				};
 
 				event.node.res.setHeader("Content-Type", "application/json");
 				event.node.res.setHeader("Router", "server");
@@ -90,35 +69,4 @@ export default eventHandler(async (event) => {
 			throw new Error("Invalid request");
 		}
 	}
-	console.log("rendering");
-	// const reactServerManifest = import.meta.env.MANIFEST["rsc"];
-	// const serverAssets = await reactServerManifest.inputs[
-	// 	reactServerManifest.handler
-	// ].assets();
-	// const clientManifest = import.meta.env.MANIFEST["client"];
-	// const assets = await clientManifest.inputs[clientManifest.handler].assets();
-
-	// const events = {};
-	// const stream = renderToPipeableStream(
-	// 	<App
-	// 		assets={
-	// 			<Suspense>
-	// 				{serverAssets.map((m) => renderAsset(m))}
-	// 				{assets.map((m) => renderAsset(m))}
-	// 			</Suspense>
-	// 		}
-	// 	/>,
-	// );
-
-	// // @ts-ignore
-	// stream._read = () => {};
-	// // @ts-ignore
-	// stream.on = (event, listener) => {
-	// 	events[event] = listener;
-	// };
-
-	// event.node.res.setHeader("Content-Type", "text/x-component");
-	// event.node.res.setHeader("Router", "rsc");
-
-	// return result;
 });

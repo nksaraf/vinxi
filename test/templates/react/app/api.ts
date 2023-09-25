@@ -12,8 +12,6 @@ const routes = [
 	})),
 ];
 
-console.log(routes);
-
 function createRouter(routes) {
 	const builtRoutes = routes.map((route) => {
 		const keys = [];

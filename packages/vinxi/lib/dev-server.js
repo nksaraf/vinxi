@@ -46,6 +46,7 @@ export async function createViteServer(config) {
  * @returns {Promise<import("vite").ViteDevServer>}
  */
 export async function createViteHandler(router, app, serveConfig) {
+	const port = await getPort({ port: 9000 + router.order * 10 });
 	const viteDevServer = await createViteServer({
 		configFile: false,
 		base: router.base,
@@ -60,7 +61,7 @@ export async function createViteHandler(router, app, serveConfig) {
 		server: {
 			middlewareMode: true,
 			hmr: {
-				port: await getPort({ port: serveConfig.ws.port + router.order }),
+				port,
 			},
 		},
 	});
@@ -84,7 +85,7 @@ export async function createDevServer(
 		port,
 		dev,
 		ws: {
-			port: wsPort ?? 8989,
+			port: wsPort,
 		},
 	};
 

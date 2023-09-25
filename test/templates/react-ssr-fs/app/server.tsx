@@ -12,16 +12,12 @@ export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];
 	const serverManifest = import.meta.env.MANIFEST["ssr"];
 
-	console.log(fileRoutes);
-
 	const routes = fileRoutes.map((route) => {
 		return {
 			...route,
 			component: lazyRoute(route.$component, clientManifest, serverManifest),
 		};
 	});
-
-	console.log(routes);
 
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 	const events = {};
