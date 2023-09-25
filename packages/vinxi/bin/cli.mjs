@@ -3,6 +3,7 @@ import mri from "mri";
 
 import { loadApp } from "../lib/load-app.js";
 import { resolve } from "../lib/path.js";
+import { exec } from "node:child_process";
 
 async function main() {
 	const args = mri(process.argv.slice(2));
@@ -23,6 +24,10 @@ async function main() {
 		process.env.NODE_ENV = "production";
 		const { createBuild } = await import("../lib/build.js");
 		await createBuild(app, {});
+	} else if (command === "start") {
+		exec(`node .output/dist/server.js`)
+	} else {
+		throw new Error(`Unknown command ${command}`);
 	}
 }
 main().catch((err) => {
