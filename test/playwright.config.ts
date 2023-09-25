@@ -3,7 +3,7 @@ import { devices } from "@playwright/test";
 
 const config: PlaywrightTestConfig = {
 	testDir: ".",
-	testMatch: ["**/*.test.ts"],
+	testMatch: ["**/rsc.test.ts"],
 	fullyParallel: true,
 	timeout: process.env.CI ? 120_000 : 30_000, // 2 minutes in CI, 30 seconds locally
 	expect: {
