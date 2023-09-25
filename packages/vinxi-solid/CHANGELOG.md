@@ -1,5 +1,11 @@
 # @vinxi/solid
 
+## 0.0.13
+
+### Patch Changes
+
+- bc82d8e: refactor vinxi entrypoints to make them simpler, better typescript
+
 ## 0.0.12
 
 ### Patch Changes

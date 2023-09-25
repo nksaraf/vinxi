@@ -1,5 +1,11 @@
 # @vinxi/react
 
+## 0.0.11
+
+### Patch Changes
+
+- bc82d8e: refactor vinxi entrypoints to make them simpler, better typescript
+
 ## 0.0.10
 
 ### Patch Changes

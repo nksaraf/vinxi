@@ -1,5 +1,18 @@
 # @vinxi/react-server
 
+## 0.0.18
+
+### Patch Changes
+
+- bc82d8e: refactor vinxi entrypoints to make them simpler, better typescript
+- c223ab6: use pathe everywhere
+- Updated dependencies [94f59aa]
+- Updated dependencies [bc82d8e]
+- Updated dependencies [c223ab6]
+- Updated dependencies [94f59aa]
+  - @vinxi/plugin-references@0.0.21
+  - @vinxi/react@0.0.11
+
 ## 0.0.17
 
 ### Patch Changes

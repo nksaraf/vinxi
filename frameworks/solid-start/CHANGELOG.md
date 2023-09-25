@@ -1,5 +1,13 @@
 # @vinxi/solid-start
 
+## 0.2.3
+
+### Patch Changes
+
+- bc82d8e: refactor vinxi entrypoints to make them simpler, better typescript
+- 1d8b542: fix types
+- c223ab6: use pathe everywhere
+
 ## 0.2.2
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @vinxi/router
 
+## 0.0.11
+
+### Patch Changes
+
+- bc82d8e: refactor vinxi entrypoints to make them simpler, better typescript
+- Updated dependencies [94f59aa]
+- Updated dependencies [bc82d8e]
+- Updated dependencies [1d8b542]
+- Updated dependencies [5bf5e03]
+- Updated dependencies [4c7fd35]
+- Updated dependencies [0f4b3ee]
+- Updated dependencies [ad62318]
+- Updated dependencies [c223ab6]
+- Updated dependencies [94f59aa]
+  - vinxi@0.0.31
+
 ## 0.0.10
 
 ### Patch Changes

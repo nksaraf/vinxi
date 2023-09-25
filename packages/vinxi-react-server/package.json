@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/react-server",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
@@ -35,11 +35,11 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "react": "0.0.0-experimental-035a41c4e-20230704",
-    "vinxi": "0.0.30"
+    "vinxi": "0.0.31"
   },
   "dependencies": {
-    "@vinxi/plugin-references": "0.0.20",
-    "@vinxi/react": "0.0.10",
+    "@vinxi/plugin-references": "0.0.21",
+    "@vinxi/react": "0.0.11",
     "@vinxi/react-server-dom": "^0.0.3",
     "@vitejs/plugin-react": "^4.0.4"
   }

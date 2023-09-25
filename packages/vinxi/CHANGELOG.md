@@ -1,5 +1,19 @@
 # vinxi
 
+## 0.0.31
+
+### Patch Changes
+
+- 94f59aa: refactor internals to have user customizable modes
+- bc82d8e: refactor vinxi entrypoints to make them simpler, better typescript
+- 1d8b542: fix types
+- 5bf5e03: fix types and unnecessary comments
+- 4c7fd35: fix: hmr broken
+- 0f4b3ee: windows support
+- ad62318: experimental websocket support (doesn't work yet, waiting on dependencies)
+- c223ab6: use pathe everywhere
+- 94f59aa: fixes
+
 ## 0.0.30
 
 ### Patch Changes
