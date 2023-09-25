@@ -1,7 +1,6 @@
-import { join } from "pathe";
-
 import { devEntries } from "./dev-server.js";
 import invariant from "./invariant.js";
+import { join } from "./path.js";
 import { config } from "./plugins/config.js";
 import { css } from "./plugins/css.js";
 import { fileSystemWatcher } from "./plugins/fs-watcher.js";

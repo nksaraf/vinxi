@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { join } from "path";
+import { join } from "vinxi/path";
 
 function getChunks(app, routerName, modIndex) {
 	const router = app.getRouter(routerName);
@@ -12,10 +12,7 @@ function getChunks(app, routerName, modIndex) {
 			([name, chunk]) => chunk.file.startsWith("c_") && name !== router.handler,
 		)
 		.map(([name, chunk], index) => {
-			const chunkPath = join(router.outDir, router.base, chunk.file).replace(
-				/\\/g,
-				"/",
-			);
+			const chunkPath = join(router.outDir, router.base, chunk.file);
 			return `
 				import * as mod_${index}_${modIndex} from '${chunkPath}';
 				chunks['${chunk.file}'] = mod_${index}_${modIndex}

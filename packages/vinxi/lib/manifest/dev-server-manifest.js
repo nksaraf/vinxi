@@ -1,6 +1,5 @@
-import { isAbsolute, join, relative } from "pathe";
-
 import invariant from "../invariant.js";
+import { isAbsolute, join, relative } from "../path.js";
 import findStylesInModuleGraph from "./collect-styles.js";
 
 /**

@@ -49,6 +49,9 @@
     },
     "./plugins/virtual": {
       "import": "./lib/plugins/virtual.js"
+    },
+    "./path": {
+      "import": "./lib/path.js"
     }
   },
   "typesVersions": {
@@ -91,6 +94,9 @@
       ],
       "plugins/virtual": [
         "./dist/types/lib/plugins/virtual.d.ts"
+      ],
+      "path": [
+        "./dist/types/lib/path.d.ts"
       ]
     }
   },

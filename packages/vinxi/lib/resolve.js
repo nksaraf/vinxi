@@ -1,4 +1,4 @@
-import { isAbsolute, join, relative } from "pathe";
+import { isAbsolute, join, relative } from "./path.js";
 
 /**
  * @template {string | undefined} T

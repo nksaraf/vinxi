@@ -1,6 +1,5 @@
-import { join, relative } from "pathe";
-
 import invariant from "../invariant.js";
+import { join, relative } from "../path.js";
 import findAssetsInViteManifest from "./vite-manifest.js";
 
 /** @typedef {import("../app.js").App & { config: { buildManifest: { [key:string]: any } }}} ProdApp */

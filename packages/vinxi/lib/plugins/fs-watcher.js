@@ -1,5 +1,6 @@
 import { fileURLToPath } from "node:url";
-import { normalize } from "pathe";
+
+import { normalize } from "../path.js";
 
 /**
  *

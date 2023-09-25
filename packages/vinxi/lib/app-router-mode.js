@@ -1,9 +1,9 @@
-import { join } from "pathe";
 import * as v from "zod";
 
 import { isMainThread } from "node:worker_threads";
 
 import invariant from "./invariant.js";
+import { join } from "./path.js";
 import { resolve } from "./resolve.js";
 
 export { v };

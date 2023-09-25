@@ -1,5 +1,4 @@
 import reactRefresh from "@vitejs/plugin-react";
-import { join } from "path";
 import { createApp, resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,

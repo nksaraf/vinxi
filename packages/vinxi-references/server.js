@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { join } from "path";
+import { join } from "vinxi/path";
 
 import { CLIENT_REFERENCES_MANIFEST, hash } from "./constants.js";
 

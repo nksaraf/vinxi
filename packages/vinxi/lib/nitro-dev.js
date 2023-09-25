@@ -9,7 +9,6 @@ import {
 } from "h3";
 // import httpProxy from "http-proxy";
 import { listen } from "listhen";
-import { resolve } from "pathe";
 import { servePlaceholder } from "serve-placeholder";
 import serveStatic from "serve-static";
 import { joinURL } from "ufo";
@@ -21,6 +20,7 @@ import {
 import { WebSocketServer } from "ws";
 
 import { createServerResponse } from "./http-stream.js";
+import { resolve } from "./path.js";
 
 // import { createVFSHandler } from './vfs'
 // import defaultErrorHandler from './error'

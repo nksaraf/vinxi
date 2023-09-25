@@ -1,6 +1,6 @@
 import { log } from "console";
-import { join, relative } from "pathe";
 
+import { join, relative } from "../path.js";
 import { createViteManifest } from "./create-vite-manifest.js";
 import findAssetsInViteManifest from "./vite-manifest.js";
 

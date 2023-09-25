@@ -1,8 +1,7 @@
 /// <reference types="vite/client" />
 /// <reference types="./client" />
-import { join } from "pathe";
-
 import { invariant } from "../invariant";
+import { join } from "../path.js";
 
 const manifest = new Proxy(
 	{},

@@ -1,4 +1,4 @@
-import { dirname, resolve } from "pathe";
+import { dirname, resolve } from "../path.js";
 
 const PREFIX = "\0virtual:";
 

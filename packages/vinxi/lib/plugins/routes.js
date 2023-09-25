@@ -1,5 +1,6 @@
-import { relative } from "pathe";
 import { fileURLToPath } from "node:url";
+
+import { relative } from "../path.js";
 
 /**
  *

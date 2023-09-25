@@ -8,7 +8,6 @@ import {
 } from "h3";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro } from "nitropack";
-import { join, relative } from "pathe";
 
 import { writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -17,6 +16,7 @@ import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
 import { consola, withLogger } from "./logger.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
+import { join, relative } from "./path.js";
 import { config } from "./plugins/config.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
@@ -34,7 +34,7 @@ const require = createRequire(import.meta.url);
  */
 export async function createBuild(app, buildConfig) {
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
-	const { join } = await import("pathe");
+	const { join } = await import("./path.js");
 	const { fileURLToPath } = await import("url");
 	for (const router of app.config.routers) {
 		if (existsSync(router.outDir)) {
@@ -544,7 +544,7 @@ function handerBuild() {
 					"Invalid router",
 				);
 				const { builtinModules } = await import("module");
-				const { join } = await import("pathe");
+				const { join } = await import("./path.js");
 				const input = await getEntries(inlineConfig.router);
 				return {
 					build: {
@@ -583,7 +583,7 @@ function browserBuild() {
 					inlineConfig.router && inlineConfig.router.mode !== "static",
 					"Invalid router",
 				);
-				const { join } = await import("pathe");
+				const { join } = await import("./path.js");
 				return {
 					build: {
 						rollupOptions: {

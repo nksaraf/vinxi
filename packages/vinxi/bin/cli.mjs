@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import mri from "mri";
-import { resolve } from "pathe";
 
 import { loadApp } from "../lib/load-app.js";
+import { resolve } from "../lib/path.js";
 
 async function main() {
 	const args = mri(process.argv.slice(2));

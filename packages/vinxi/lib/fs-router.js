@@ -4,7 +4,6 @@ import esbuild from "esbuild";
 import fg from "fast-glob";
 import fs from "fs";
 import micromatch from "micromatch";
-import os from "os";
 import { posix } from "path";
 import { pathToRegexp } from "path-to-regexp";
 

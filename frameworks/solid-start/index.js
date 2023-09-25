@@ -1,10 +1,10 @@
-import { join } from "path";
 import { createApp, resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
 	analyzeModule,
 	cleanPath,
 } from "vinxi/fs-router";
+import { join } from "vinxi/path";
 import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
 
