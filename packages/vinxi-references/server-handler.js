@@ -1,5 +1,6 @@
+/// <reference types="vinxi/types/server" />
 import invariant from "vinxi/lib/invariant";
-import { eventHandler, toWebRequest } from "vinxi/runtime/server";
+import { eventHandler, toWebRequest } from "vinxi/server";
 
 async function loadModule(id) {
 	if (import.meta.env.DEV) {
@@ -23,6 +24,7 @@ export default eventHandler(async function handleServerAction(event) {
 
 	const serverReference = event.node.req.headers["server-action"];
 	if (serverReference) {
+		invariant(typeof serverReference === "string", "Invalid server action");
 		// This is the client-side case
 		const [filepath, name] = serverReference.split("#");
 		const action = (await loadModule(filepath))[name];

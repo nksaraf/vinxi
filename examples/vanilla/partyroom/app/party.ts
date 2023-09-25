@@ -1,4 +1,4 @@
-import { partyHandler } from "vinxi/runtime/party";
+import { partyHandler } from "vinxi/party";
 
 export default partyHandler({
 	onMessage(party, message, connection) {

@@ -5,7 +5,7 @@ import {
 	BaseFileSystemRouter,
 	analyzeModule,
 	cleanPath,
-} from "vinxi/file-system-router";
+} from "vinxi/fs-router";
 
 class TanstackFileSystemRouter extends BaseFileSystemRouter {
 	glob() {
@@ -62,7 +62,7 @@ class TanstackFileSystemRouter extends BaseFileSystemRouter {
 
 /**
  *
- * @param {Partial<import("vinxi/file-system-router").FileSystemRouterConfig>} config
+ * @param {Partial<import("vinxi/fs-router").FileSystemRouterConfig>} config
  */
 function tanstackFileRouter(config) {
 	return (router, app) =>

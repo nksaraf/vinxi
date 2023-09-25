@@ -1,5 +1,5 @@
 import { renderToStream } from "solid-js/web";
-import { eventHandler } from "vinxi/runtime/server";
+import { eventHandler } from "vinxi/server";
 
 import { createRoutes } from "../root/FileRoutes";
 

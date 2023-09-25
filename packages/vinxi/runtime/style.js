@@ -1,3 +1,8 @@
+/**
+ * 
+ * @param {*} styles 
+ * @param {*} data 
+ */
 export function updateStyles(styles, data) {
 	let styleAsset = styles.find(
 		(s) => s.attrs["data-vite-dev-id"] === data.file,

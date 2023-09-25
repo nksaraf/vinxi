@@ -1,7 +1,7 @@
 import App from "#vinxi/app";
 import { renderAsset } from "@vinxi/react";
 import { Suspense } from "react";
-import { eventHandler } from "vinxi/runtime/server";
+import { eventHandler } from "vinxi/server";
 
 export function createHandler() {
 	return eventHandler(async (event) => {

@@ -1,8 +1,8 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 import { StartClient } from "@tanstack/react-start/client";
 import { createAssets } from "@vinxi/react";
 import ReactDOM from "react-dom/client";
-import "vinxi/runtime/client";
+import "vinxi/client";
 
 import { createRouter } from "./router";
 // import { loaderClient, router } from "./router";

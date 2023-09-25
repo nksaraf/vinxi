@@ -1,4 +1,4 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 import { ServerComponent } from "@vinxi/react-server/client";
 import { createRoot } from "react-dom/client";
 

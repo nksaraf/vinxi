@@ -1,8 +1,8 @@
-import fileRoutes from "vinxi/routes";
+import fileRoutes, { RouteModule } from "vinxi/routes";
 
 console.log("fileRoutes", fileRoutes);
 
-const defineRoutes = (fileRoutes) => {
+const defineRoutes = (fileRoutes: RouteModule[]) => {
 	function processRoute(routes, route, id, full) {
 		const parentRoute = Object.values(routes).find((o) => {
 			// if (o.id.endsWith("/index")) {

@@ -1,4 +1,4 @@
-/// <reference types="vinxi/server" />
+/// <reference types="vinxi/types/server" />
 /// <reference types="@cloudflare/workers-types"	/>
 import { renderAsset } from "@vinxi/react";
 import React, { Suspense } from "react";
@@ -10,8 +10,8 @@ import {
 	lazyEventHandler,
 	sendStream,
 	toNodeListener,
-} from "vinxi/runtime/server";
-import { createApp } from "vinxi/runtime/server";
+} from "vinxi/server";
+import { createApp } from "vinxi/server";
 
 import App from "./app";
 

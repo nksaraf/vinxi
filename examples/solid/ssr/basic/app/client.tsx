@@ -1,8 +1,8 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 import { MetaProvider } from "@solidjs/meta";
 import { createAssets } from "@vinxi/solid";
 import { NoHydration, Suspense, hydrate } from "solid-js/web";
-import "vinxi/runtime/client";
+import "vinxi/client";
 
 import { sayHello } from "./actions";
 import App from "./app";

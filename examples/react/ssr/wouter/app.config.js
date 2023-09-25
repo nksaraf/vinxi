@@ -1,6 +1,6 @@
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
-import { NextJSPagesFileSystemRouter } from "vinxi/file-system-router";
+import { NextJSPagesFileSystemRouter } from "vinxi/fs-router";
 
 export default createApp({
 	routers: [

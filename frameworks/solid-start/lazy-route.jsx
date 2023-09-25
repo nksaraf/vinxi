@@ -1,8 +1,8 @@
-/// <reference types="vinxi/client" />
+/// <reference types="vinxi/types/client" />
 
 /** @jsxImportSource solid-js */
 import { createComponent, lazy, onCleanup } from "solid-js";
-import { appendStyles, cleanupStyles, updateStyles } from "vinxi/runtime/style";
+import { appendStyles, cleanupStyles, updateStyles } from "vinxi/css";
 
 import { renderAsset } from "./render-asset";
 

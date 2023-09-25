@@ -4,7 +4,7 @@ import {
 	BaseFileSystemRouter,
 	analyzeModule,
 	cleanPath,
-} from "vinxi/file-system-router";
+} from "vinxi/fs-router";
 import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
 
