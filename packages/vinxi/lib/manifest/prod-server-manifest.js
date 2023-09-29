@@ -1,5 +1,5 @@
 import invariant from "vinxi/lib/invariant";
-import { join } from "vinxi/path";
+import { join } from "vinxi/lib/path";
 
 import findAssetsInViteManifest from "./vite-manifest.js";
 

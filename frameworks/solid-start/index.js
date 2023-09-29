@@ -4,7 +4,7 @@ import {
 	analyzeModule,
 	cleanPath,
 } from "vinxi/fs-router";
-import { join } from "vinxi/path";
+import { join } from "vinxi/lib/path";
 import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
 

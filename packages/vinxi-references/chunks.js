@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { join } from "vinxi/path";
+import { join } from "vinxi/lib/path";
 
 function getChunks(app, routerName, modIndex) {
 	const router = app.getRouter(routerName);

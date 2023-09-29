@@ -2,7 +2,7 @@ import { references } from "@vinxi/plugin-references";
 import reactRefresh from "@vitejs/plugin-react";
 import { fileURLToPath } from "url";
 import { createApp } from "vinxi";
-import { join } from "vinxi/path";
+import { join } from "vinxi/lib/path";
 import { config } from "vinxi/plugins/config";
 
 export function defineConfig() {

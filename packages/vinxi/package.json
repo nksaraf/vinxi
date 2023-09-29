@@ -50,7 +50,7 @@
     "./plugins/virtual": {
       "import": "./lib/plugins/virtual.js"
     },
-    "./path": {
+    "./lib/path": {
       "import": "./lib/path.js"
     }
   },
@@ -95,7 +95,7 @@
       "plugins/virtual": [
         "./dist/types/lib/plugins/virtual.d.ts"
       ],
-      "path": [
+      "lib/path": [
         "./dist/types/lib/path.d.ts"
       ]
     }

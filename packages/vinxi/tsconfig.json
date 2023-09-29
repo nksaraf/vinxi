@@ -13,7 +13,10 @@
 		"declarationMap": true,
 		"declaration": true,
 		"emitDeclarationOnly": true,
-		"outDir": "./dist/types"
+		"outDir": "./dist/types",
+		"paths": {
+			"vinxi/*": ["./*"]
+		}
 	},
 	"include": ["lib", "runtime", "types"]
 }
