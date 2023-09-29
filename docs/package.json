@@ -16,6 +16,7 @@
     "nuxt": "3.3.3"
   },
   "dependencies": {
-    "unified": "^11.0.3"
+    "unified": "^11.0.3",
+    "vite-plugin-node-polyfills": "^0.14.1"
   }
 }
