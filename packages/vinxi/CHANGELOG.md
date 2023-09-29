@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.0.33
+
+### Patch Changes
+
+- 1dec590: fix bug with externalizing vinxi subpaths
+
 ## 0.0.32
 
 ### Patch Changes
