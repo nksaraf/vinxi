@@ -1,5 +1,11 @@
 # @vinxi/solid-start
 
+## 0.2.4
+
+### Patch Changes
+
+- 355daea: move vinxi/path to vinxi/lib/path
+
 ## 0.2.3
 
 ### Patch Changes

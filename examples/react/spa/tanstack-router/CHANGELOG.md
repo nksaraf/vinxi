@@ -4,6 +4,14 @@
 
 ### Patch Changes
 
+- Updated dependencies [355daea]
+  - @vinxi/plugin-references@0.0.24
+  - vinxi@0.0.34
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [1dec590]
   - vinxi@0.0.33
   - @vinxi/plugin-references@0.0.23

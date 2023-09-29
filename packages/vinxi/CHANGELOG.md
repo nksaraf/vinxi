@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.0.34
+
+### Patch Changes
+
+- 355daea: move vinxi/path to vinxi/lib/path
+
 ## 0.0.33
 
 ### Patch Changes

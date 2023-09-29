@@ -1,5 +1,13 @@
 # @vinxi/react-server
 
+## 0.0.21
+
+### Patch Changes
+
+- 355daea: move vinxi/path to vinxi/lib/path
+- Updated dependencies [355daea]
+  - @vinxi/plugin-references@0.0.24
+
 ## 0.0.20
 
 ### Patch Changes

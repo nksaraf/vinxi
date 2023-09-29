@@ -1,5 +1,13 @@
 # @vinxi/plugin-references
 
+## 0.0.24
+
+### Patch Changes
+
+- 355daea: move vinxi/path to vinxi/lib/path
+- Updated dependencies [355daea]
+  - vinxi@0.0.34
+
 ## 0.0.23
 
 ### Patch Changes
