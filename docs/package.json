@@ -1,22 +1,43 @@
 {
-  "name": "docus-starter",
-  "version": "0.1.0",
+  "name": "react-spa-mdx",
+  "type": "module",
   "private": true,
+  "version": null,
   "scripts": {
-    "dev": "nuxi dev",
-    "build": "nuxi build",
-    "generate": "nuxi generate",
-    "preview": "nuxi preview",
-    "lint": "eslint ."
-  },
-  "devDependencies": {
-    "@nuxt-themes/docus": "^1.11.1",
-    "@nuxt/eslint-config": "^0.1.1",
-    "eslint": "^8.40.0",
-    "nuxt": "3.3.3"
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
   },
   "dependencies": {
-    "unified": "^11.0.3",
-    "vite-plugin-node-polyfills": "^0.14.1"
+    "@algolia/autocomplete-core": "^1.11.0",
+    "@code-hike/mdx": "^0.9.0",
+    "@headlessui/react": "^1.7.17",
+    "@mdx-js/react": "^2.3.0",
+    "@mdx-js/rollup": "^2.3.0",
+    "@picocss/pico": "^1.5.10",
+    "@sindresorhus/slugify": "^2.2.1",
+    "@vinxi/plugin-mdx": "3.6.5",
+    "@vinxi/react": "0.0.11",
+    "@vitejs/plugin-react": "^4.0.4",
+    "@webcontainer/api": "^1.1.7",
+    "acorn": "^8.10.0",
+    "autoprefixer": "^10.4.15",
+    "clsx": "^2.0.0",
+    "framer-motion": "^10.16.4",
+    "path-to-regexp": "^6.2.1",
+    "react": "0.0.0-experimental-dddfe6882-20231005",
+    "react-dom": "0.0.0-experimental-dddfe6882-20231005",
+    "tailwindcss": "^3.3.3",
+    "unist-util-visit": "^5.0.0",
+    "vinxi": "0.0.34",
+    "vite-plugin-inspect": "^0.7.38",
+    "vite-tsconfig-paths": "^4.2.0",
+    "wouter": "^2.11.0",
+    "zustand": "^4.4.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7"
   }
 }
