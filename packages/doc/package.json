@@ -1,0 +1,5 @@
+{
+  "name": "@vinxi/doc",
+  "main": "deno_doc.cjs",
+  "version": "0.0.1"
+}
