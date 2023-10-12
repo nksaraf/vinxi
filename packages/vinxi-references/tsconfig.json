@@ -3,7 +3,7 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"checkJs": true,
-		"moduleResolution": "node",
+		"moduleResolution": "Bundler",
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"allowJs": true,

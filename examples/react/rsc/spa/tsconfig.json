@@ -2,14 +2,14 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleResolution": "Bundler",
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"jsx": "react-jsx",
 		"allowJs": true,
 		"checkJs": true,
 		"noEmit": true,
-		"types": ["vinxi/client", "react/experimental"],
+		"types": ["vinxi/types/client", "react/experimental"],
 		"isolatedModules": true
 	}
 }

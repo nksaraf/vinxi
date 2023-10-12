@@ -5,9 +5,15 @@
 		"moduleResolution": "Bundler",
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
-		"allowJs": true,
-		"noEmit": true,
 		"jsx": "react-jsx",
+		"allowJs": true,
+		"checkJs": true,
+		"noEmit": true,
+		"paths": {
+			"@/components/*": ["./app/components/*"],
+			"@/lib/*": ["./app/lib/*"],
+			"next/*": ["./app/next/*"]
+		},
 		"types": ["react/experimental"],
 		"isolatedModules": true
 	}

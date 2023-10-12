@@ -4,7 +4,7 @@
 		"esModuleInterop": true,
 		"target": "ESNext",
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleResolution": "Bundler",
 		"jsx": "react-jsx",
 		"baseUrl": "./",
 		"paths": {
