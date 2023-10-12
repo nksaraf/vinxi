@@ -1,5 +1,5 @@
 {
-  "name": "example-vanilla-partyroom",
+  "name": "example-vanilla-spa",
   "type": "module",
   "private": true,
   "version": null,
@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
+    "@trpc/client": "^10.38.5",
+    "@trpc/server": "^10.38.5",
     "@vinxi/plugin-references": "0.0.25",
     "autoprefixer": "^10.4.15",
+    "superjson": "^1.13.3",
     "tailwindcss": "^3.3.3",
     "vinxi": "0.0.35"
   }

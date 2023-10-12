@@ -11,12 +11,12 @@
   "dependencies": {
     "@picocss/pico": "^1.5.10",
     "@solidjs/meta": "^0.28.6",
-    "@vinxi/plugin-references": "0.0.24",
+    "@vinxi/plugin-references": "0.0.25",
     "@vinxi/solid": "0.0.13",
     "autoprefixer": "^10.4.15",
     "solid-js": "^1.7.11",
     "tailwindcss": "^3.3.3",
-    "vinxi": "0.0.34",
+    "vinxi": "0.0.35",
     "vite-plugin-solid": "^2.7.0"
   }
 }

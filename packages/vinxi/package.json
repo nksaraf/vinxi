@@ -1,6 +1,6 @@
 {
   "name": "vinxi",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
@@ -18,40 +18,61 @@
   "types": "./dist/types/lib/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/index.js"
+      "import": "./lib/index.js",
+      "types": "./dist/types/lib/index.d.ts"
     },
     "./dev-server": {
-      "import": "./lib/dev-server.js"
+      "import": "./lib/dev-server.js",
+      "types": "./dist/types/lib/dev-server.d.ts"
+    },
+    "./lib/doc": {
+      "import": "./lib/doc.js"
     },
     "./fs-router": {
-      "import": "./lib/fs-router.js"
+      "import": "./lib/fs-router.js",
+      "types": "./dist/types/lib/fs-router.d.ts"
     },
     "./routes": {
-      "import": "./lib/routes.js"
+      "import": "./lib/routes.js",
+      "types": "./types/routes.d.ts"
     },
     "./client": {
-      "import": "./runtime/client.js"
+      "import": "./runtime/client.js",
+      "types": "./dist/types/runtime/client.d.ts"
     },
     "./server": {
-      "import": "./runtime/server.js"
+      "import": "./runtime/server.js",
+      "types": "./dist/types/runtime/server.d.ts"
     },
     "./party": {
-      "import": "./runtime/party.js"
+      "import": "./runtime/party.js",
+      "types": "./dist/types/runtime/party.d.ts"
     },
     "./css": {
-      "import": "./runtime/style.js"
+      "import": "./runtime/style.js",
+      "types": "./dist/types/runtime/style.d.ts"
     },
     "./lib/invariant": {
-      "import": "./lib/invariant.js"
+      "import": "./lib/invariant.js",
+      "types": "./dist/types/lib/invariant.d.ts"
     },
     "./plugins/config": {
-      "import": "./lib/plugins/config.js"
+      "import": "./lib/plugins/config.js",
+      "types": "./dist/types/lib/plugins/config.d.ts"
     },
     "./plugins/virtual": {
-      "import": "./lib/plugins/virtual.js"
+      "import": "./lib/plugins/virtual.js",
+      "types": "./dist/types/lib/plugins/virtual.d.ts"
     },
     "./lib/path": {
-      "import": "./lib/path.js"
+      "import": "./lib/path.js",
+      "types": "./dist/types/lib/path.d.ts"
+    },
+    "./types/client": {
+      "types": "./types/client.d.ts"
+    },
+    "./types/server": {
+      "types": "./types/server.d.ts"
     }
   },
   "typesVersions": {
@@ -107,6 +128,7 @@
     "@types/micromatch": "^4.0.2",
     "@types/serve-static": "^1.15.2",
     "@types/ws": "^8.5.5",
+    "@vinxi/doc": "workspace:^",
     "c12": "^1.4.2",
     "chokidar": "^3.5.3",
     "consola": "^3.2.3",
@@ -126,6 +148,7 @@
     "path-to-regexp": "^6.2.1",
     "pathe": "^1.1.1",
     "perfect-debounce": "^1.0.0",
+    "resolve": "^1.22.6",
     "rollup-plugin-visualizer": "^5.9.2",
     "serve-placeholder": "^2.0.1",
     "serve-static": "^1.15.0",

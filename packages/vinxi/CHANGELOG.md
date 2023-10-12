@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.35
+
+### Patch Changes
+
+- Updated dependencies [5b0304b]
+  - @vinxi/doc@0.0.2
+
 ## 0.0.34
 
 ### Patch Changes

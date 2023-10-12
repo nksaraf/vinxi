@@ -1,5 +1,11 @@
 # @vinxi/plugin-references
 
+## 0.0.25
+
+### Patch Changes
+
+- vinxi@0.0.35
+
 ## 0.0.24
 
 ### Patch Changes

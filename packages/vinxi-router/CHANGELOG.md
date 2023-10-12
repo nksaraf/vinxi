@@ -1,5 +1,11 @@
 # @vinxi/router
 
+## 0.0.15
+
+### Patch Changes
+
+- vinxi@0.0.35
+
 ## 0.0.14
 
 ### Patch Changes

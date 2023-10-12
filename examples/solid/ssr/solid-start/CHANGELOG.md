@@ -4,6 +4,13 @@
 
 ### Patch Changes
 
+- vinxi@0.0.35
+- @vinxi/solid-start@0.2.4
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [355daea]
   - @vinxi/solid-start@0.2.4
   - vinxi@0.0.34
