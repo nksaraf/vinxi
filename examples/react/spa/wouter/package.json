@@ -12,8 +12,8 @@
     "@picocss/pico": "^1.5.10",
     "@vinxi/react": "0.0.11",
     "path-to-regexp": "^6.2.1",
-    "react": "0.0.0-experimental-035a41c4e-20230704",
-    "react-dom": "0.0.0-experimental-035a41c4e-20230704",
+    "react": "0.0.0-experimental-dddfe6882-20231005",
+    "react-dom": "0.0.0-experimental-dddfe6882-20231005",
     "wouter": "^2.11.0"
   },
   "devDependencies": {
