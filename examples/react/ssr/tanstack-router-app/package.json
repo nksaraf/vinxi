@@ -19,16 +19,13 @@
     "autoprefixer": "^10.4.15",
     "axios": "^1.5.0",
     "isbot": "^3.6.13",
-    "react": "0.0.0-experimental-dddfe6882-20231005",
-    "react-dom": "0.0.0-experimental-dddfe6882-20231005",
+    "react": "0.0.0-experimental-035a41c4e-20230704",
+    "react-dom": "0.0.0-experimental-035a41c4e-20230704",
     "tailwindcss": "^3.3.3",
     "vinxi": "0.0.35"
   },
   "devDependencies": {
     "@types/react": "^18.2.21",
-    "vitest": "^0.34.1",
-    "@vitest/browser": "^0.34.6",
-    "playwright": "^1.38.1",
-    "webdriverio": "^8.16.20"
+    "@types/react-dom": "^18.2.7"
   }
 }

@@ -49,8 +49,8 @@
     "node": ">=0.10.0"
   },
   "peerDependencies": {
-    "react": "0.0.0-experimental-dddfe6882-20231005",
-    "react-dom": "0.0.0-experimental-dddfe6882-20231005",
+    "react": "0.0.0-experimental-035a41c4e-20230704",
+    "react-dom": "0.0.0-experimental-035a41c4e-20230704",
     "vite": "^4.3.9"
   },
   "dependencies": {
