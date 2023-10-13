@@ -10,9 +10,10 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@tanstack/react-loaders": "0.0.1-beta.109",
-    "@tanstack/router": "0.0.1-beta.111",
-    "@tanstack/router-devtools": "0.0.1-beta.111",
+    "@tanstack/react-loaders": "0.0.1-beta.194",
+    "@tanstack/react-router": "0.0.1-beta.194",
+    "@tanstack/router": "0.0.1-beta.174",
+    "@tanstack/router-devtools": "0.0.1-beta.194",
     "@vinxi/react": "0.0.11",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.15",
