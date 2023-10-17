@@ -17,12 +17,6 @@
     "prettier": "^2.8.8",
     "typescript": "5.1.6"
   },
-  "pnpm": {
-    "patchedDependencies": {
-      "vite@4.3.9": "patches/vite@4.3.9.patch",
-      "@tanstack/react-start@0.0.1-beta.111": "patches/@tanstack__react-start@0.0.1-beta.111.patch"
-    }
-  },
   "dependencies": {
     "@changesets/cli": "^2.26.2",
     "rimraf": "^5.0.1"
