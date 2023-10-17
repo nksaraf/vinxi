@@ -19,7 +19,7 @@ async function loadModule(id) {
 	);
 }
 
-export default eventHandler(async function handleServerAction(event) {
+export async function handleServerAction(event) {
 	invariant(event.method === "POST", "Invalid method");
 
 	const serverReference = event.node.req.headers["server-action"];
@@ -57,4 +57,6 @@ export default eventHandler(async function handleServerAction(event) {
 	} else {
 		throw new Error("Invalid request");
 	}
-});
+}
+
+export default eventHandler(handleServerAction);
