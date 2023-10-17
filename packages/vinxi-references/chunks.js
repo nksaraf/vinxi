@@ -4,7 +4,10 @@ import { join } from "vinxi/lib/path";
 function getChunks(app, routerName, modIndex) {
 	const router = app.getRouter(routerName);
 	const bundlerManifest = JSON.parse(
-		readFileSync(join(router.outDir, router.base, "manifest.json"), "utf-8"),
+		readFileSync(
+			join(router.outDir, router.base, ".vite", "manifest.json"),
+			"utf-8",
+		),
 	);
 
 	const chunks = Object.entries(bundlerManifest)

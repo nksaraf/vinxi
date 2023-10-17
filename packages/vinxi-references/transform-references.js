@@ -545,6 +545,11 @@ async function parseModule(code) {
 	return ast;
 }
 
+/**
+ *
+ * @param {*} param0
+ * @returns {import('vinxi').Plugin}
+ */
 export function transformReferences({
 	hash = (str) => str,
 	onReference = (type, ref) => {},

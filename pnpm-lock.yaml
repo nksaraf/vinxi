@@ -65,7 +65,7 @@ importers:
         version: 8.10.0
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       clsx:
         specifier: ^2.0.0
         version: 2.0.0
@@ -126,7 +126,7 @@ importers:
         version: 0.0.3(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -169,7 +169,7 @@ importers:
         version: 8.3.0
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -206,7 +206,7 @@ importers:
         version: 4.1.0(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -240,7 +240,7 @@ importers:
         version: 4.1.0(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -283,7 +283,7 @@ importers:
         version: 4.1.0(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       path-to-regexp:
         specifier: ^6.2.1
         version: 6.2.1
@@ -344,7 +344,7 @@ importers:
         version: 8.3.0
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       axios:
         specifier: ^1.5.0
         version: 1.5.1
@@ -393,7 +393,7 @@ importers:
         version: 4.1.0(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       axios:
         specifier: ^1.5.0
         version: 1.5.1
@@ -449,7 +449,7 @@ importers:
         version: 4.1.0(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       tailwindcss:
         specifier: ^3.3.3
         version: 3.3.3
@@ -470,7 +470,7 @@ importers:
         version: 4.1.0(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -516,7 +516,7 @@ importers:
         version: 4.1.0(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       miniflare:
         specifier: ^2.14.1
         version: 2.14.1
@@ -571,7 +571,7 @@ importers:
         version: 4.1.0(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       axios:
         specifier: ^1.5.0
         version: 1.5.1
@@ -611,7 +611,7 @@ importers:
         version: 4.1.0(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       path-to-regexp:
         specifier: ^6.2.1
         version: 6.2.1
@@ -645,7 +645,7 @@ importers:
         version: 1.5.10
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.12
@@ -678,7 +678,7 @@ importers:
         version: link:../../../../packages/vinxi-solid
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.12
@@ -714,7 +714,7 @@ importers:
         version: link:../../../../packages/vinxi-solid
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.12
@@ -748,7 +748,7 @@ importers:
         version: link:../../../../frameworks/solid-start
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       solid-js:
         specifier: ^1.7.11
         version: 1.7.12
@@ -773,7 +773,7 @@ importers:
         version: link:../../../packages/vinxi-references
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       tailwindcss:
         specifier: ^3.3.3
         version: 3.3.3
@@ -791,7 +791,7 @@ importers:
         version: 0.0.24(vinxi@0.0.34)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       tailwindcss:
         specifier: ^3.3.3
         version: 3.3.3
@@ -815,7 +815,7 @@ importers:
         version: link:../../../packages/vinxi-references
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
@@ -1228,7 +1228,7 @@ importers:
         version: 8.3.0
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -1262,7 +1262,7 @@ importers:
         version: 4.1.0(vite@4.4.9)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.30)
+        version: 10.4.16(postcss@8.4.31)
       path-to-regexp:
         specifier: ^6.2.1
         version: 6.2.1
@@ -1276,8 +1276,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       vinxi:
-        specifier: 0.0.34
-        version: 0.0.34(rollup@3.29.4)
+        specifier: 0.0.35
+        version: link:../../../packages/vinxi
       wouter:
         specifier: ^2.11.0
         version: 2.11.0(react@0.0.0-experimental-035a41c4e-20230704)
@@ -4422,7 +4422,7 @@ packages:
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  /autoprefixer@10.4.16(postcss@8.4.30):
+  /autoprefixer@10.4.16(postcss@8.4.31):
     resolution: {integrity: sha512-7vd3UC6xKp0HLfua5IjZlcXvGAGy7cBAXTg2lyQ/8WpNhd6SiZ8Be+xm3FyBSYJx5GKcpRCzBh7RH4/0dnY+uQ==}
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
@@ -4434,7 +4434,7 @@ packages:
       fraction.js: 4.3.6
       normalize-range: 0.1.2
       picocolors: 1.0.0
-      postcss: 8.4.30
+      postcss: 8.4.31
       postcss-value-parser: 4.2.0
 
   /available-typed-arrays@1.0.5:
@@ -8059,7 +8059,6 @@ packages:
       nanoid: 3.3.6
       picocolors: 1.0.0
       source-map-js: 1.0.2
-    dev: false
 
   /preferred-pm@3.1.2:
     resolution: {integrity: sha512-nk7dKrcW8hfCZ4H6klWcdRknBOXWzNQByJ0oJyX97BOupsYD+FzLS4hflgEu/uPUEHZCuRfMxzCBsuWd7OzT8Q==}

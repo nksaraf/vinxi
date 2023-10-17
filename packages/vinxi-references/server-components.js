@@ -1,6 +1,11 @@
 import { SERVER_REFERENCES_MANIFEST, hash } from "./constants.js";
 import { transformReferences } from "./transform-references.js";
 
+/**
+ *
+ * @param {*} param0
+ * @returns {import('vinxi').Plugin}
+ */
 export function serverComponents({
 	resolve = {
 		conditions: ["react-server"],
@@ -37,6 +42,11 @@ export function serverComponents({
 	];
 }
 
+/**
+ *
+ * @param {*} param0
+ * @returns {import('vinxi').Plugin}
+ */
 export function buildServerComponents({
 	resolve = {
 		conditions: ["react-server"],
@@ -92,30 +102,41 @@ export function buildServerComponents({
 							},
 						},
 					},
-					resolve: {
-						conditions: [
-							"node",
-							"import",
-							...(resolve.conditions ?? []),
-							process.env.NODE_ENV,
-						],
-					},
 					ssr: {
+						resolve: {
+							externalConditions: [
+								"node",
+								"import",
+								...(resolve.conditions ?? []),
+								process.env.NODE_ENV,
+							],
+							conditions: [
+								"node",
+								"import",
+								...(resolve.conditions ?? []),
+								process.env.NODE_ENV,
+							],
+						},
 						noExternal: true,
 					},
 				};
 			} else {
 				return {
-					resolve: {
-						conditions: [
-							"node",
-							"import",
-							...(resolve.conditions ?? []),
-
-							process.env.NODE_ENV,
-						],
-					},
 					ssr: {
+						resolve: {
+							externalConditions: [
+								"node",
+								"import",
+								...(resolve.conditions ?? []),
+								process.env.NODE_ENV,
+							],
+							conditions: [
+								"node",
+								"import",
+								...(resolve.conditions ?? []),
+								process.env.NODE_ENV,
+							],
+						},
 						noExternal: true,
 						external: transpileDeps,
 					},

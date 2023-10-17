@@ -5,7 +5,7 @@ import { CLIENT_REFERENCES_MANIFEST, hash } from "./constants.js";
 
 /**
  *
- * @returns {import('vinxi').PluginOption}
+ * @returns {import('vinxi').Plugin}
  */
 export function server({
 	client = "client",
@@ -54,15 +54,21 @@ export function server({
 							treeshake: true,
 						},
 					},
-					resolve: {
-						conditions: [
-							"node",
-							"import",
-							...(resolve.conditions ?? []),
-							process.env.NODE_ENV,
-						],
-					},
 					ssr: {
+						resolve: {
+							externalConditions: [
+								"node",
+								"import",
+								...(resolve.conditions ?? []),
+								process.env.NODE_ENV,
+							],
+							conditions: [
+								"node",
+								"import",
+								...(resolve.conditions ?? []),
+								process.env.NODE_ENV,
+							],
+						},
 						noExternal: true,
 					},
 				};
