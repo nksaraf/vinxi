@@ -89,7 +89,7 @@ export async function createBuild(app, buildConfig) {
 					if (router.mode === "handler") {
 						const bundlerManifest = JSON.parse(
 							readFileSync(
-								join(router.outDir, router.base, "manifest.json"),
+								join(router.outDir, router.base, ".vite", "manifest.json"),
 								"utf-8",
 							),
 						);
@@ -190,7 +190,7 @@ export async function createBuild(app, buildConfig) {
 								if (router.mode !== "static") {
 									const bundlerManifest = JSON.parse(
 										readFileSync(
-											join(router.outDir, router.base, "manifest.json"),
+											join(router.outDir, router.base, ".vite", "manifest.json"),
 											"utf-8",
 										),
 									);
