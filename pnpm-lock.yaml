@@ -870,9 +870,6 @@ importers:
       '@types/ws':
         specifier: ^8.5.5
         version: 8.5.6
-      '@vinxi/doc':
-        specifier: 0.0.2
-        version: link:../vinxi-doc
       c12:
         specifier: ^1.4.2
         version: 1.4.2
