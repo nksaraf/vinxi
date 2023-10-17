@@ -1,5 +1,5 @@
 {
-  "name": "@vinxi/doc",
+  "name": "@vinxi/deno-doc",
   "main": "deno_doc.cjs",
   "version": "0.0.2"
 }
