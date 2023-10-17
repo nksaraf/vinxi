@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.36
+
+### Patch Changes
+
+- 49e4e03: better types for router and custom modes
+- a009733: move doc out of vinxi core
+
 ## 0.0.35
 
 ### Patch Changes

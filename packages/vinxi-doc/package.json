@@ -2,11 +2,11 @@
   "name": "@vinxi/doc",
   "module": "doc.js",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "exports": {
     ".": "./doc.js"
   },
   "dependencies": {
-    "@vinxi/deno-doc": "0.0.2"
+    "@vinxi/deno-doc": "0.0.3"
   }
 }

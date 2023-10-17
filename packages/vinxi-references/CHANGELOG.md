@@ -1,5 +1,14 @@
 # @vinxi/plugin-references
 
+## 0.0.26
+
+### Patch Changes
+
+- 781cedd: bump to vite-5
+- Updated dependencies [49e4e03]
+- Updated dependencies [a009733]
+  - vinxi@0.0.36
+
 ## 0.0.25
 
 ### Patch Changes
