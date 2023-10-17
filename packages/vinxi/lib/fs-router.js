@@ -75,10 +75,10 @@ export class BaseFileSystemRouter extends EventTarget {
 	}
 
 	glob() {
-		return posix.join(
-			fg.convertPathToPattern(this.config.dir),
-			"**/*"
-		) + `.{${this.config.extensions.join(",")}}`;
+		return (
+			posix.join(fg.convertPathToPattern(this.config.dir), "**/*") +
+			`.{${this.config.extensions.join(",")}}`
+		);
 	}
 
 	/**
@@ -86,9 +86,9 @@ export class BaseFileSystemRouter extends EventTarget {
 	 */
 	async buildRoutes() {
 		await init;
-		glob(this.glob()).forEach((src) => {
-			this.addRoute(src);
-		});
+		for (var src of glob(this.glob())) {
+			await this.addRoute(src);
+		}
 
 		return this.routes;
 	}
@@ -149,37 +149,50 @@ export class BaseFileSystemRouter extends EventTarget {
 	 * @param {Route} route
 	 */
 	_addRoute(route) {
-		const existing = this.routes.find((r) => r.path === route.path);
-		if (!existing) this.routes.push(route);
+		this.routes = this.routes.filter((r) => r.path !== route.path);
+		this.routes.push(route);
 	}
 
 	/**
 	 *
 	 * @param {string} src
 	 */
-	addRoute(src) {
+	async addRoute(src) {
 		if (this.isRoute(src)) {
-			const route = this.toRoute(src);
+			const route = await this.toRoute(src);
 			if (route) {
 				this._addRoute(route);
-				this.dispatchEvent(
-					new Event("reload", {
-						// @ts-ignore
-						detail: {
-							route,
-						},
-					}),
-				);
+				this.reload(route);
 			}
 		}
 	}
 
 	/**
 	 *
+	 * @param {string} route
+	 */
+	reload(route) {
+		this.dispatchEvent(
+			new Event("reload", {
+				// @ts-ignore
+				detail: {
+					route,
+				},
+			}),
+		);
+	}
+
+	/**
+	 *
 	 * @param {string} src
 	 */
-	updateRoute(src) {
+	async updateRoute(src) {
 		if (this.isRoute(src)) {
+			const route = await this.toRoute(src);
+			if (route) {
+				this._addRoute(route);
+				this.reload(route);
+			}
 			// this.update?.();
 		}
 	}
