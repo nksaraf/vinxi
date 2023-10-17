@@ -5,7 +5,6 @@ import ReactDOM from "react-dom/client";
 import "vinxi/client";
 
 import { createRouter } from "./router";
-// import { loaderClient, router } from "./router";
 import "./style.css";
 
 const Assets = createAssets(
@@ -37,14 +36,3 @@ router.update({
 router.hydrate();
 
 ReactDOM.hydrateRoot(document, <StartClient router={router} />);
-// if (!rootElement.innerHTML) {
-// 	const root = ReactDOM.createRoot(rootElement);
-
-// 	root.render(
-// 		<StrictMode>
-// 			{/* <LoaderClientProvider loaderClient={loaderClient}> */}
-// 			{/* <RouterProvider router={router} /> */}
-// 			{/* </LoaderClientProvider> */}
-// 		</StrictMode>,
-// 	);
-// }
