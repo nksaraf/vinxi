@@ -1,29 +1,19 @@
-import { useLoader } from "@tanstack/react-loaders";
-import { ErrorComponent, Route, RouteOptions } from "@tanstack/router";
+import {
+	createLoaderOptions,
+	useLoaderInstance,
+} from "@tanstack/react-loaders";
+import { ErrorComponent, Route, RouteOptions } from "@tanstack/react-router";
 
 import { NotFoundError } from "../../../error";
 
-export const loader = async ({
-	context: { loaderClient },
-	params: { postId },
-}) => {
-	const postLoader = loaderClient.loaders.post;
-	await postLoader.load({
-		variables: postId,
-	});
-
-	// Return a curried hook!
-	return () =>
-		useLoader({
-			loader: postLoader,
-			variables: postId,
-		});
+export const loader = async ({ context: { loaderClient, loaderOptions } }) => {
+	await loaderClient.load(loaderOptions);
 };
 
-export default function Page({ useLoader }) {
-	const {
-		state: { data: post },
-	} = useLoader()();
+export default function Page({ useRouteContext }) {
+	const { loaderOptions } = useRouteContext();
+	const { data: post } = useLoaderInstance(loaderOptions);
+	console.log(post);
 
 	return (
 		<div className="space-y-2">
@@ -37,6 +27,14 @@ type Config = Omit<RouteOptions, "id" | "component" | "getParentRoute">;
 
 export const config = {
 	errorComponent: ErrorBoundary,
+	beforeLoad: ({ params: { postId } }) => {
+		return {
+			loaderOptions: createLoaderOptions({
+				key: "post",
+				variables: postId,
+			}),
+		};
+	},
 } satisfies Config;
 
 function ErrorBoundary({ error }) {

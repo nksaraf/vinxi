@@ -1,8 +1,14 @@
 import { Link } from "@tanstack/router";
 import React from "react";
 
-import "./white.css";
-
+/**
+ * Yooo whats this page about
+ *
+ * asdasd  asdasd  asdad
+ *
+ * @prerender {true}
+ * @returns {string}
+ */
 export default function Hello() {
 	return (
 		<div>

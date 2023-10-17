@@ -1,17 +1,10 @@
-import { useLoader } from "@tanstack/react-loaders";
-import { ErrorComponent, Link, Outlet } from "@tanstack/router";
+import { useLoaderInstance } from "@tanstack/react-loaders";
+import { ErrorComponent, Link, Outlet } from "@tanstack/react-router";
+import { Suspense } from "react";
 
-export const loader = async ({ context }) => {
-	const postsLoader = context.loaderClient.loaders.posts;
-
-	await postsLoader.load();
-
-	return () =>
-		useLoader({
-			loader: postsLoader,
-		});
+export const loader = async ({ context: { loaderClient } }) => {
+	await loaderClient.load({ key: "posts" });
 };
-
 export function ErrorBoundary({ error }) {
 	return <ErrorComponent error={error} />;
 }
@@ -20,33 +13,35 @@ export function Loading() {
 	return <div>Loading</div>;
 }
 
-export default function Page({ useLoader }) {
-	const postsLoader = useLoader()();
+export default function Page({ useRouteContext }) {
+	const { data: posts } = useLoaderInstance({ key: "posts" });
+
 	return (
 		<div className="p-2 flex gap-2">
 			<ul className="list-disc pl-4">
-				{[
-					...postsLoader.state.data,
-					{ id: "i-do-not-exist", title: "Non-existent Post" },
-				]?.map((post) => {
-					return (
-						<li key={post.id} className="whitespace-nowrap">
-							<Link
-								to={"/posts/$postId"}
-								params={{
-									postId: post.id,
-								}}
-								className="block py-1 text-blue-800 hover:text-blue-600"
-								activeProps={{ className: "text-black font-bold" }}
-							>
-								<div>{post.title.substring(0, 20)}</div>
-							</Link>
-						</li>
-					);
-				})}
+				{[...posts, { id: "i-do-not-exist", title: "Non-existent Post" }]?.map(
+					(post) => {
+						return (
+							<li key={post.id} className="whitespace-nowrap">
+								<Link
+									to={"/posts/$postId"}
+									params={{
+										postId: post.id,
+									}}
+									className="block py-1 text-blue-800 hover:text-blue-600"
+									activeProps={{ className: "text-black font-bold" }}
+								>
+									<div>{post.title.substring(0, 20)}</div>
+								</Link>
+							</li>
+						);
+					},
+				)}
 			</ul>
 			<hr />
-			<Outlet />
+			<Suspense fallback={"Loading..."}>
+				<Outlet />
+			</Suspense>
 		</div>
 	);
 }

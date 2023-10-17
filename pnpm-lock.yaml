@@ -871,8 +871,8 @@ importers:
         specifier: ^8.5.5
         version: 8.5.6
       '@vinxi/doc':
-        specifier: workspace:^
-        version: link:../doc
+        specifier: 0.0.2
+        version: link:../vinxi-doc
       c12:
         specifier: ^1.4.2
         version: 1.4.2
@@ -971,6 +971,12 @@ importers:
         specifier: ^2.8.8
         version: 2.8.8
 
+  packages/vinxi-doc:
+    dependencies:
+      '@vinxi/deno-doc':
+        specifier: 0.0.2
+        version: link:../doc
+
   packages/vinxi-mdx:
     dependencies:
       '@alloc/quick-lru':
@@ -1013,6 +1019,9 @@ importers:
 
   packages/vinxi-openapi:
     dependencies:
+      '@vinxi/doc':
+        specifier: workspace:0.0.2
+        version: link:../vinxi-doc
       openapi-types:
         specifier: ^12.1.3
         version: 12.1.3

@@ -3,41 +3,134 @@ import {
 	Loader,
 	LoaderClient,
 	LoaderClientProvider,
+	createLoaderOptions,
+	typedClient,
+	useLoaderInstance,
 } from "@tanstack/react-loaders";
 import {
+	ErrorComponent,
 	Link,
 	Outlet,
 	RootRoute,
 	Route,
 	Router,
+	RouterContext,
 	RouterProvider,
-} from "@tanstack/router";
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { lazyRoute } from "@vinxi/react";
-import { StrictMode } from "react";
+import axios from "axios";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import "vinxi/client";
 import fileRoutes from "vinxi/routes";
 
-import { fetchPost, fetchPosts } from "./db";
+import { NotFoundError } from "./error";
 import "./style.css";
 
+const defineRoutes = (fileRoutes) => {
+	function processRoute(routes, route, id, full) {
+		const parentRoute = Object.values(routes).find((o) => {
+			// if (o.id.endsWith("/index")) {
+			// 	return false;
+			// }
+			return id.startsWith(o.path + "/");
+		});
+		if (!parentRoute) {
+			routes.push({ ...route, path: id });
+			return routes;
+		}
+		processRoute(
+			parentRoute.children || (parentRoute.children = []),
+			route,
+			id.slice(parentRoute.path.length),
+			full,
+		);
+		return routes;
+	}
+	return fileRoutes
+		.sort((a, b) => a.path.length - b.path.length)
+		.reduce((prevRoutes, route) => {
+			return processRoute(prevRoutes, route, route.path, route.path);
+		}, []);
+};
+const routes = defineRoutes(fileRoutes);
+function createRoute(route, parent) {
+	const parentRoute = new Route({
+		path: route.path,
+		component: lazyRoute(route.$component, import.meta.env.MANIFEST["client"]),
+		errorComponent: route.$error
+			? lazyRoute(
+					route.$error,
+					import.meta.env.MANIFEST["client"],
+					undefined,
+					"ErrorBoundary",
+			  )
+			: undefined,
+			
+		pendingComponent: route.$loading
+			? lazyRoute(
+					route.$loading,
+					import.meta.env.MANIFEST["client"],
+					undefined,
+					"Loading",
+			  )
+			: undefined,
+		loader: route.$$loader?.require().loader,
+		...(route.$$config?.require().config ?? {}),
+		getParentRoute: () => parent,
+	});
+	if (route.children) {
+		parentRoute.addChildren(
+			route.children.map((route) => createRoute(route, parentRoute)),
+		);
+	}
+	return parentRoute;
+}
+
+type PostType = {
+	id: string;
+	title: string;
+	body: string;
+};
+
+const fetchPosts = async () => {
+	console.log("Fetching posts...");
+	await new Promise((r) => setTimeout(r, 500));
+	return axios
+		.get<PostType[]>("https://jsonplaceholder.typicode.com/posts")
+		.then((r) => r.data.slice(0, 10));
+};
+
+const fetchPost = async (postId: string) => {
+	console.log(`Fetching post with id ${postId}...`);
+	await new Promise((r) => setTimeout(r, 500));
+	const post = await axios
+		.get<PostType>(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+		.then((r) => r.data);
+
+	if (!post) {
+		throw new NotFoundError(`Post with id "${postId}" not found!`);
+	}
+
+	return post;
+};
+
 const postsLoader = new Loader({
+	key: "posts",
 	fn: fetchPosts,
 });
 
 const postLoader = new Loader({
+	key: "post",
 	fn: fetchPost,
-	onInvalidate: () => {
-		postsLoader.invalidate();
+	onInvalidate: ({ client }) => {
+		typedClient(client).invalidateLoader({ key: "posts" });
 	},
 });
 
 const loaderClient = new LoaderClient({
-	getLoaders: () => ({
-		posts: postsLoader,
-		post: postLoader,
-	}),
+	loaders: [postsLoader, postLoader],
 });
 
 declare module "@tanstack/react-loaders" {
@@ -46,11 +139,11 @@ declare module "@tanstack/react-loaders" {
 	}
 }
 
-type RouterContext = {
+const routerContext = new RouterContext<{
 	loaderClient: typeof loaderClient;
-};
+}>();
 
-const rootRoute = RootRoute.withRouterContext<RouterContext>()({
+const rootRoute = routerContext.createRootRoute({
 	component: () => {
 		return (
 			<>
@@ -82,70 +175,6 @@ const rootRoute = RootRoute.withRouterContext<RouterContext>()({
 	},
 });
 
-const defineRoutes = (fileRoutes) => {
-	function processRoute(routes, route, id, full) {
-		const parentRoute = Object.values(routes).find((o) => {
-			// if (o.id.endsWith("/index")) {
-			// 	return false;
-			// }
-			return id.startsWith(o.path + "/");
-		});
-
-		if (!parentRoute) {
-			routes.push({ ...route, path: id });
-			return routes;
-		}
-		processRoute(
-			parentRoute.children || (parentRoute.children = []),
-			route,
-			id.slice(parentRoute.path.length),
-			full,
-		);
-
-		return routes;
-	}
-
-	return fileRoutes
-		.sort((a, b) => a.path.length - b.path.length)
-		.reduce((prevRoutes, route) => {
-			return processRoute(prevRoutes, route, route.path, route.path);
-		}, []);
-};
-
-const routes = defineRoutes(fileRoutes);
-
-function createRoute(route, parent) {
-	const parentRoute = new Route({
-		path: route.path,
-		component: lazyRoute(route.$component, import.meta.env.MANIFEST["client"]),
-		errorComponent: route.$error
-			? lazyRoute(
-					route.$error,
-					import.meta.env.MANIFEST["client"],
-					undefined,
-					"ErrorBoundary",
-			  )
-			: undefined,
-		pendingComponent: route.$loading
-			? lazyRoute(
-					route.$loading,
-					import.meta.env.MANIFEST["client"],
-					undefined,
-					"Loading",
-			  )
-			: undefined,
-		loader: route.$$loader?.require().loader,
-		...(route.$$config?.require().config ?? {}),
-		getParentRoute: () => parent,
-	});
-	if (route.children) {
-		parentRoute.addChildren(
-			route.children.map((route) => createRoute(route, parentRoute)),
-		);
-	}
-	return parentRoute;
-}
-
 const routeTree = rootRoute.addChildren([
 	...routes.map((route) => {
 		return createRoute(route, rootRoute);
@@ -162,7 +191,7 @@ const router = new Router({
 });
 
 // Register things for typesafety
-declare module "@tanstack/router" {
+declare module "@tanstack/react-router" {
 	interface Register {
 		router: typeof router;
 	}
@@ -174,10 +203,10 @@ if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 
 	root.render(
-		<StrictMode>
-			<LoaderClientProvider loaderClient={loaderClient}>
-				<RouterProvider router={router} />
-			</LoaderClientProvider>
-		</StrictMode>,
+		// <React.StrictMode>
+		<LoaderClientProvider client={loaderClient}>
+			<RouterProvider router={router} />
+		</LoaderClientProvider>,
+		// </React.StrictMode>,
 	);
 }
