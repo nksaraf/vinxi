@@ -1,10 +1,10 @@
 import { isMainThread } from "worker_threads";
 
-import { resolveRouterConfig, routerSchema } from "./app-router-mode.js";
 import invariant, { InvariantError } from "./invariant.js";
+import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 
-/** @typedef {{ routers?: import("./app-router-mode.js").RouterSchemaInput[]; name?: string; server?: import('nitropack').NitroConfig; root?: string }} AppOptions */
-/** @typedef {{ config: { name: string; server: import('nitropack').NitroConfig; routers: import("./router-mode.js").Router<any>[]; root: string; }; getRouter: (name: string) => import("./app-router-mode.js").RouterSchema; dev(): Promise<void>; build(): Promise<void> }} App */
+/** @typedef {{ routers?: import("./router-modes.js").RouterSchemaInput[]; name?: string; server?: import('nitropack').NitroConfig; root?: string }} AppOptions */
+/** @typedef {{ config: { name: string; server: import('nitropack').NitroConfig; routers: import("./router-mode.js").Router<any>[]; root: string; }; getRouter: (name: string) => import("./router-modes.js").RouterSchema; dev(): Promise<void>; build(): Promise<void> }} App */
 
 /**
  *

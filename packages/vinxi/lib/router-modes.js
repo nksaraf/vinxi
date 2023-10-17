@@ -1,3 +1,4 @@
+import { setHeader } from "h3";
 import * as v from "zod";
 
 import { isMainThread } from "node:worker_threads";
@@ -146,7 +147,13 @@ const routerModes = {
 
 				return {
 					route: router.base,
-					handler: fromNodeMiddleware(viteDevServer.middlewares),
+					handler: eventHandler({
+						onRequest: async (event) => {
+							setHeader(event, "Cross-Origin-Embedder-Policy", "require-corp");
+							setHeader(event, "Cross-Origin-Opener-Policy", "same-origin");
+						},
+						handler: fromNodeMiddleware(viteDevServer.middlewares),
+					}),
 				};
 			},
 		},
@@ -198,17 +205,25 @@ const routerModes = {
 							new URL("./app-worker.js", import.meta.url),
 						);
 					}
-					return {
-						route: router.base,
-						handler: eventHandler(async (event) => {
-							invariant(
-								router.internals.appWorker,
-								"Router App Worker not initialized",
-							);
-							await router.internals.appWorker.init(() => {});
-							await router.internals.appWorker.handle(event);
-						}),
-					};
+
+					const handler = eventHandler(async (event) => {
+						invariant(
+							router.internals.appWorker,
+							"Router App Worker not initialized",
+						);
+						await router.internals.appWorker.init(() => {});
+						await router.internals.appWorker.handle(event);
+					});
+					return [
+						{
+							route: `${router.base}/**`,
+							handler,
+						},
+						{
+							route: router.base,
+							handler,
+						},
+					];
 				}
 
 				const { createViteHandler } = await import("./dev-server.js");
@@ -219,10 +234,16 @@ const routerModes = {
 					);
 					return handler(event);
 				});
-				return {
-					route: router.base,
-					handler,
-				};
+				return [
+					{
+						route: `${router.base}/**`,
+						handler,
+					},
+					{
+						route: router.base,
+						handler,
+					},
+				];
 			},
 		},
 		resolveConfig(router, appConfig, order) {
@@ -278,12 +299,36 @@ const routerModes = {
 				const viteDevServer = await createViteHandler(router, app, serveConfig);
 
 				if (router.handler.endsWith(".html")) {
-					return {
-						route: router.base,
-						handler: defineEventHandler(
-							fromNodeMiddleware(viteDevServer.middlewares),
-						),
-					};
+					return [
+						{
+							route: `${router.base}/**`,
+							handler: defineEventHandler({
+								onRequest: async (event) => {
+									setHeader(
+										event,
+										"Cross-Origin-Embedder-Policy",
+										"require-corp",
+									);
+									setHeader(event, "Cross-Origin-Opener-Policy", "same-origin");
+								},
+								handler: fromNodeMiddleware(viteDevServer.middlewares),
+							}),
+						},
+						{
+							route: router.base,
+							handler: defineEventHandler({
+								onRequest: async (event) => {
+									setHeader(
+										event,
+										"Cross-Origin-Embedder-Policy",
+										"require-corp",
+									);
+									setHeader(event, "Cross-Origin-Opener-Policy", "same-origin");
+								},
+								handler: fromNodeMiddleware(viteDevServer.middlewares),
+							}),
+						},
+					];
 				} else {
 					viteDevServer.middlewares.stack =
 						viteDevServer.middlewares.stack.filter(

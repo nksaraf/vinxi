@@ -1,12 +1,8 @@
 import { EventHandler } from "h3";
 
-import {
-	Internals,
-	RouterSchema,
-	RouterSchemaInput,
-} from "./app-router-mode.js";
 import { App } from "./app.js";
 import { ServeConfig } from "./dev-server.js";
+import { Internals } from "./router-modes.js";
 
 type PublicAsset = {
 	baseURL?: string | undefined;
@@ -20,12 +16,14 @@ type DevHandler = {
 	handler: EventHandler<any, any>;
 };
 
-type Router<T> = T & {
+type Router<T = {}> = T & {
 	base: string;
 	internals: Internals;
 	order: number;
 	outDir: string;
 	root: string;
+	name: string;
+	handler?: string;
 };
 
 export type RouterMode<T extends any = any> = {

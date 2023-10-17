@@ -37,6 +37,9 @@ export function createProdManifest(app) {
 						}
 						return assets;
 					},
+					async routes() {
+						return (await router.internals.routes?.getRoutes()) ?? [];
+					},
 					async json() {
 						/** @type {{ [key: string]: { output: string; assets: string[]} }} */
 						let json = {};

@@ -1,12 +1,16 @@
 /// <reference types="vite/client" />
 
 declare interface Window {
-	MANIFEST: any;
+	MANIFEST: {
+		readonly [key: string]: import("./manifest").Manifest;
+	};
 }
 
 interface ImportMetaEnv {
 	// more env variables...
-	readonly MANIFEST: any;
+	readonly MANIFEST: {
+		readonly [key: string]: import("./manifest").Manifest;
+	};
 }
 
 interface ImportMeta {

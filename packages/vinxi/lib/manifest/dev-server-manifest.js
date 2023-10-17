@@ -16,7 +16,25 @@ export function createDevManifest(app) {
 
 				let router = app.getRouter(bundlerName);
 
-				invariant(router.mode != "static", "No manifest for static router");
+				if (router.mode === "static") {
+					return {
+						json() {
+							return {};
+						},
+						assets() {
+							return {};
+						},
+						routes() {
+							return [];
+						},
+						base: router.base,
+						target: "static",
+						mode: router.mode,
+						handler: undefined,
+						chunks: {},
+						inputs: {},
+					};
+				}
 
 				const viteServer = router.internals.devServer;
 				return {
@@ -27,6 +45,9 @@ export function createDevManifest(app) {
 						return {};
 					},
 					handler: router.handler,
+					base: router.base,
+					target: router.target,
+					mode: router.mode,
 					chunks: new Proxy(
 						{},
 						{
@@ -57,9 +78,24 @@ export function createDevManifest(app) {
 							},
 						},
 					),
+					async routes() {
+						return (await router.internals.routes?.getRoutes()) ?? [];
+					},
 					inputs: new Proxy(
 						{},
 						{
+							// ownKeys(target) {
+							// 	const keys = Object.keys(bundlerManifest)
+							// 		.filter((id) => bundlerManifest[id].isEntry)
+							// 		.map((id) => id);
+							// 	return keys;
+							// },
+							getOwnPropertyDescriptor(k) {
+								return {
+									enumerable: true,
+									configurable: true,
+								};
+							},
 							get(target, input, receiver) {
 								invariant(typeof input === "string", "Input string expected");
 								let absolutePath = isAbsolute(input)

@@ -1,15 +1,17 @@
 import { Plugin as VitePlugin, ResolvedConfig as _ResolvedConfig } from "vite";
 
-import { RouterSchema } from "./app-router-mode.js";
+import { App } from "./app.js";
 import { Router } from "./router-mode.js";
 
 declare module "vite" {
 	interface UserConfig {
-		router?: Router<any>;
+		router?: Router;
+		app?: App;
 	}
 
 	interface PluginHookUtils {
-		router: Router<any>;
+		router: Router;
+		app: App;
 	}
 }
 
@@ -19,7 +21,7 @@ declare module "nitropack" {
 	}
 }
 
-export type ViteConfig = _ResolvedConfig & { router: Router<any> };
+export type ViteConfig = _ResolvedConfig & { router: Router; app: App };
 
 export type Plugin = VitePlugin;
 

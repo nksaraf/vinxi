@@ -7,6 +7,7 @@ const logContext = new AsyncLocalStorage();
 let prevLog = console.log.bind(console);
 export const consola = createConsola({});
 
+export { colors as c };
 console.log = (...args) => {
 	const req = logContext.getStore();
 	if (!req) {

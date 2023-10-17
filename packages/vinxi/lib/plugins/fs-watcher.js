@@ -5,7 +5,7 @@ import { normalize } from "../path.js";
 /**
  *
  * @param {import('vite').FSWatcher} watcher
- * @param {import("../app-router-mode.js").RouterSchema} router
+ * @param {import("../router-modes.js").RouterSchema} router
  */
 function setupWatcher(watcher, router) {
 	if (router.internals?.routes) {
