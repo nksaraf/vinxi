@@ -1,8 +1,4 @@
-import getPort from "get-port";
-import { createNitro } from "nitropack";
-
-import { consola } from "./logger.js";
-import { createDevServer as createDevNitroServer } from "./nitro-dev.js";
+import { consola, withLogger } from "./logger.js";
 
 export * from "./router-dev-plugins.js";
 
@@ -33,7 +29,7 @@ export function devEntries() {
  * @param {import('vite').InlineConfig & { router: import("./router-mode.js").Router<any>; app: import("./app.js").App }} config
  * @returns
  */
-export async function createViteServer(config) {
+export async function createViteDevServer(config) {
 	const vite = await import("vite");
 	return vite.createServer(config);
 }
@@ -46,8 +42,9 @@ export async function createViteServer(config) {
  * @returns {Promise<import("vite").ViteDevServer>}
  */
 export async function createViteHandler(router, app, serveConfig) {
+	const { default: getPort } = await import("get-port");
 	const port = await getPort({ port: 9000 + router.order * 10 });
-	const viteDevServer = await createViteServer({
+	const viteDevServer = await createViteDevServer({
 		configFile: false,
 		base: router.base,
 		plugins: [
@@ -90,6 +87,7 @@ export async function createDevServer(
 	};
 
 	if (dev) {
+		const { createNitro } = await import("nitropack");
 		const nitro = await createNitro({
 			...app.config.server,
 			rootDir: "",
@@ -133,24 +131,35 @@ export async function createDevServer(
 			plugins: [...(app.config.server.plugins ?? [])],
 		});
 
+		// We do this so that nitro doesn't try to load app.config.ts files since those are
+		// special to vinxi as the app definition files.
 		nitro.options.appConfigFiles = [];
 		nitro.logger = consola.withTag(app.config.name);
 
-		const devApp = createDevNitroServer(nitro);
+		// During development, we use our own nitro dev server instead of the one provided by nitro.
+		// it's very similar to the one provided by nitro, but it has different defaults. Most importantly, it
+		// doesn't run the server in a worker.
+		const { createDevServer: createNitroDevServer } = await import(
+			"./nitro-dev.js"
+		);
+
+		const devApp = createNitroDevServer(nitro);
 		await devApp.listen(port, {});
 
 		for (const router of app.config.routers) {
 			if (router.internals && router.internals.routes) {
 				const routes = await router.internals.routes.getRoutes();
 				for (const route of routes) {
-					console.log(route.path);
+					withLogger({ router }, () => console.log(route.path));
 				}
 			}
 		}
 
+		// We do this so that we can access the app in plugins using globalThis.app just like we do in production.
 		// @ts-ignore
 		globalThis.app = app;
 
+		// Running plugins manually
 		const plugins = [
 			new URL("./app-fetch.js", import.meta.url).href,
 			new URL("./app-manifest.js", import.meta.url).href,

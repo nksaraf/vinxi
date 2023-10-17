@@ -1,11 +1,5 @@
 import { mkdir, rm, writeFile } from "fs/promises";
-import {
-	H3Event,
-	createApp,
-	eventHandler,
-	fromNodeMiddleware,
-	toNodeListener,
-} from "h3";
+import { H3Event, createApp } from "h3";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro } from "nitropack";
 
@@ -38,21 +32,19 @@ export async function createBuild(app, buildConfig) {
 	const { fileURLToPath } = await import("url");
 	for (const router of app.config.routers) {
 		if (existsSync(router.outDir)) {
-			console.log(`removing ${router.outDir}`);
-			await fsPromises.rm(router.outDir, { recursive: true });
+			await withLogger({ router, requestId: "build" }, async () => {
+				console.log(`removing ${router.outDir}`);
+				await fsPromises.rm(router.outDir, { recursive: true });
+			});
 		}
 	}
 
 	for (const router of app.config.routers) {
 		if (router.mode !== "static") {
-			// if (router.mode in routers) {
 			await withLogger({ router, requestId: "build" }, async () => {
 				await createRouterBuild(app, router);
-
-				//     await routers[router.mode].build.apply(this, [router])
 			});
 		}
-		// }
 	}
 
 	const nitro = await createNitro({
@@ -108,10 +100,7 @@ export async function createBuild(app, buildConfig) {
 							{
 								route: router.base.length === 1 ? "/" : `${router.base}`,
 								handler,
-							},
-							{
-								route: router.base.length === 1 ? "/**" : `${router.base}/**`,
-								handler,
+								middleware: true,
 							},
 						];
 					} else if (router.mode === "spa") {
@@ -119,10 +108,7 @@ export async function createBuild(app, buildConfig) {
 							{
 								route: router.base.length === 1 ? "/" : `${router.base}`,
 								handler: "#vinxi/spa",
-							},
-							{
-								route: router.base.length === 1 ? "/**" : `${router.base}/**`,
-								handler: "#vinxi/spa",
+								middleware: true,
 							},
 						];
 					}
@@ -190,7 +176,12 @@ export async function createBuild(app, buildConfig) {
 								if (router.mode !== "static") {
 									const bundlerManifest = JSON.parse(
 										readFileSync(
-											join(router.outDir, router.base, ".vite", "manifest.json"),
+											join(
+												router.outDir,
+												router.base,
+												".vite",
+												"manifest.json",
+											),
 											"utf-8",
 										),
 									);
@@ -201,9 +192,23 @@ export async function createBuild(app, buildConfig) {
 					),
 				)}
 
+				const routeManifest = ${JSON.stringify(
+					Object.fromEntries(
+						// @ts-ignore
+						app.config.routers
+							.map((router) => {
+								if (router.mode !== "static" && router.internals.routes) {
+									return [router.name, router.internals.routes?.getRoutes?.()];
+								}
+							})
+							.filter(Boolean),
+					),
+				)}
+				
+
         function createProdApp(appConfig) {
           return {
-            config: { ...appConfig, buildManifest },
+            config: { ...appConfig, buildManifest, routeManifest },
             getRouter(name) {
               return appConfig.routers.find(router => router.name === name)
             }
@@ -286,7 +291,7 @@ async function createViteBuild(config) {
 /**
  *
  * @param {import("./app.js").App} app
- * @param {Exclude<import("./app-router-mode.js").RouterSchema, import("./app-router-mode.js").StaticRouterSchema>} router
+ * @param {Exclude<import("./router-modes.js").RouterSchema, import("./router-modes.js").StaticRouterSchema>} router
  */
 async function createRouterBuild(app, router) {
 	let buildRouter = router;
@@ -342,7 +347,7 @@ async function createRouterBuild(app, router) {
 		router: buildRouter,
 		app,
 		plugins: [
-			routerModePlugin[buildRouter.mode]?.() ?? [],
+			routerModePlugin[buildRouter.internals.mode.name]?.() ?? [],
 			buildTargetPlugin[buildRouter.target]?.() ?? [],
 			...((await buildRouter.plugins?.()) ?? []),
 		],
@@ -515,7 +520,7 @@ function toRouteId(route) {
 
 /**
  *
- * @param {Exclude<import("./app-router-mode.js").RouterSchema, import("./app-router-mode.js").StaticRouterSchema>} router
+ * @param {Exclude<import("./router-modes.js").RouterSchema, import("./router-modes.js").StaticRouterSchema>} router
  * @returns
  */
 export async function getEntries(router) {
