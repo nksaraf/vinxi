@@ -4,7 +4,7 @@
   "type": "module",
   "module": "index.js",
   "scripts": {
-    "dev": "node dev.js --dev",
+    "dev": "node dev.js --dev --force",
     "build": "node build.js --build"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "unocss": "^0.56.5",
     "unocss-preset-radix": "^2.5.5",
     "vite-dev-rpc": "^0.1.2",
+    "ws": "^8.13.0",
     "zustand": "^4.4.3"
   },
   "exports": {

@@ -1,3 +1,5 @@
+// import httpProxy from "http-proxy";
+import { listen } from "@vinxi/listhen";
 import { watch } from "chokidar";
 import {
 	H3Event,
@@ -7,8 +9,6 @@ import {
 	promisifyNodeListener,
 	toNodeListener,
 } from "h3";
-// import httpProxy from "http-proxy";
-import { listen } from "listhen";
 import { servePlaceholder } from "serve-placeholder";
 import serveStatic from "serve-static";
 import { joinURL } from "ufo";
@@ -231,7 +231,11 @@ export function createDevServer(nitro) {
 	 * @returns
 	 */
 	const _listen = async (port, opts) => {
-		const listener = await listen(toNodeListener(app), { port, ...opts });
+		const listener = await listen(toNodeListener(app), {
+			port,
+			ws: true,
+			...opts,
+		});
 		listeners.push(listener);
 		return listener;
 	};

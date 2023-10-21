@@ -873,6 +873,9 @@ importers:
       '@vinxi/devtools':
         specifier: workspace:^
         version: link:../vinxi-devtools
+      '@vinxi/listhen':
+        specifier: ^1.5.5
+        version: 1.5.5
       c12:
         specifier: ^1.4.2
         version: 1.4.2
@@ -906,9 +909,6 @@ importers:
       http-proxy:
         specifier: ^1.18.1
         version: 1.18.1
-      listhen:
-        specifier: ^1.5.0
-        version: 1.5.5
       micromatch:
         specifier: ^4.0.5
         version: 4.0.5
@@ -1036,6 +1036,9 @@ importers:
       vite-dev-rpc:
         specifier: ^0.1.2
         version: 0.1.2(vite@4.4.9)
+      ws:
+        specifier: ^8.13.0
+        version: 8.14.2
       zustand:
         specifier: ^4.4.3
         version: 4.4.3(@types/react@18.2.23)(react@0.0.0-experimental-035a41c4e-20230704)
@@ -5529,6 +5532,29 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    dev: false
+
+  /@vinxi/listhen@1.5.5:
+    resolution: {integrity: sha512-vSvw7Zw+foAsW9N6jki8trZDBBaqtwkf1nnG6rwZvRlkgqfNeSKUOrsI38DTXvZR4S4MzpwUSrWyG2lwTrilOw==}
+    hasBin: true
+    dependencies:
+      '@parcel/watcher': 2.3.0
+      '@parcel/watcher-wasm': 2.3.0
+      citty: 0.1.4
+      clipboardy: 3.0.0
+      consola: 3.2.3
+      defu: 6.1.2
+      get-port-please: 3.1.1
+      h3: 1.8.2
+      http-shutdown: 1.2.2
+      jiti: 1.20.0
+      mlly: 1.4.2
+      node-forge: 1.3.1
+      pathe: 1.1.1
+      std-env: 3.4.3
+      ufo: 1.3.1
+      untun: 0.1.2
+      uqr: 0.1.2
     dev: false
 
   /@vinxi/react-server-dom@0.0.3(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)(vite@4.4.9):

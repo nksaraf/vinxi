@@ -1,13 +1,12 @@
+// @ts-ignore
+import { devtoolsClient, devtoolsRpc } from "@vinxi/devtools";
 import { isMainThread } from "worker_threads";
 
 import invariant, { InvariantError } from "./invariant.js";
 import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 
-// @ts-ignore
-export * from "@vinxi/devtools";
-
-/** @typedef {{ routers?: import("./router-modes.js").RouterSchemaInput[]; name?: string; server?: import('nitropack').NitroConfig; root?: string }} AppOptions */
-/** @typedef {{ config: { name: string; server: import('nitropack').NitroConfig; routers: import("./router-mode.js").Router[]; root: string; }; getRouter: (name: string) => import("./router-modes.js").RouterSchema; dev(): Promise<void>; build(): Promise<void> }} App */
+/** @typedef {{ devtools?: boolean; routers?: import("./router-modes.js").RouterSchemaInput[]; name?: string; server?: import('nitropack').NitroConfig; root?: string }} AppOptions */
+/** @typedef {{ devtools: boolean; config: { name: string; server: import('nitropack').NitroConfig; routers: import("./router-mode.js").Router[]; root: string; }; getRouter: (name: string) => import("./router-modes.js").RouterSchema; dev(): Promise<void>; build(): Promise<void> }} App */
 
 /**
  *
@@ -18,8 +17,13 @@ export function createApp({
 	routers = [],
 	name = "app",
 	server = {},
+	devtools = true,
 	root = process.cwd(),
 }) {
+	if (devtools) {
+		routers = [devtoolsClient(), devtoolsRpc(), ...routers];
+	}
+
 	const parsedRouters = routers.map((router) => {
 		if (typeof router.mode === "string") {
 			invariant(

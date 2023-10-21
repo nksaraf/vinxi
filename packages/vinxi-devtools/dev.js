@@ -1,9 +1,10 @@
 import { createApp } from "vinxi";
 import { config } from "vinxi/plugins/config";
 
-import { devtoolsClientDev, devtoolsServer } from "./index.js";
+import { devtoolsClientDev, devtoolsRpc } from "./index.js";
 
 export default createApp({
+	devtools: false,
 	routers: [
 		{
 			name: "test",
@@ -20,6 +21,6 @@ export default createApp({
 			],
 		},
 		devtoolsClientDev(),
-		devtoolsServer(),
+		devtoolsRpc(),
 	],
 });

@@ -1,4 +1,6 @@
 /// <reference types="vinxi/types/client" />
+import "vinxi/client";
+
 import { sayHello } from "./actions";
 import "./style.css";
 

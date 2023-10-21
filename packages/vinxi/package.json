@@ -140,7 +140,7 @@
     "get-port": "^6.1.2",
     "h3": "1.8.0",
     "http-proxy": "^1.18.1",
-    "listhen": "^1.5.0",
+    "@vinxi/listhen": "^1.5.5",
     "micromatch": "^4.0.5",
     "mri": "^1.2.0",
     "nitropack": "2.6.1",

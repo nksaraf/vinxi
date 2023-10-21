@@ -49,6 +49,16 @@ export const devtoolsServer = () => {
 	};
 };
 
+export const devtoolsRpc = () => {
+	return {
+		name: "devtools-rpc",
+		mode: "handler",
+		handler: fileURLToPath(new URL("./devtools-rpc.js", import.meta.url)),
+		target: "server",
+		base: "/__devtools/rpc",
+	};
+};
+
 export const devtoolsClientDev = () => {
 	return {
 		name: "devtools-client",
