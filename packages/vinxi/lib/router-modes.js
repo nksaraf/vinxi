@@ -58,7 +58,7 @@ export const spaRouterSchema = v.object({
 	routes: v.optional(v.custom((value) => value !== null)),
 	handler: v.string(),
 	outDir: v.string().optional(),
-	target: v.literal("browser"),
+	target: v.literal("browser").optional().default("browser"),
 	plugins: v.optional(v.custom((value) => typeof value === "function")),
 });
 const customRouterSchema = v.object({
@@ -148,10 +148,6 @@ const routerModes = {
 				return {
 					route: router.base,
 					handler: eventHandler({
-						onRequest: async (event) => {
-							setHeader(event, "Cross-Origin-Embedder-Policy", "require-corp");
-							setHeader(event, "Cross-Origin-Opener-Policy", "same-origin");
-						},
 						handler: fromNodeMiddleware(viteDevServer.middlewares),
 					}),
 				};
@@ -227,10 +223,10 @@ const routerModes = {
 				}
 
 				const { createViteHandler } = await import("./dev-server.js");
-				const viteDevServer = await createViteHandler(router, app, serveConfig);
+				const viteServer = await createViteHandler(router, app, serveConfig);
 				const handler = eventHandler(async (event) => {
-					const { default: handler } = await viteDevServer.ssrLoadModule(
-						"#vinxi/handler",
+					const { default: handler } = await viteServer.ssrLoadModule(
+						router.handler,
 					);
 					return handler(event);
 				});
@@ -303,28 +299,12 @@ const routerModes = {
 						{
 							route: `${router.base}/**`,
 							handler: defineEventHandler({
-								onRequest: async (event) => {
-									setHeader(
-										event,
-										"Cross-Origin-Embedder-Policy",
-										"require-corp",
-									);
-									setHeader(event, "Cross-Origin-Opener-Policy", "same-origin");
-								},
 								handler: fromNodeMiddleware(viteDevServer.middlewares),
 							}),
 						},
 						{
 							route: router.base,
 							handler: defineEventHandler({
-								onRequest: async (event) => {
-									setHeader(
-										event,
-										"Cross-Origin-Embedder-Policy",
-										"require-corp",
-									);
-									setHeader(event, "Cross-Origin-Opener-Policy", "same-origin");
-								},
 								handler: fromNodeMiddleware(viteDevServer.middlewares),
 							}),
 						},

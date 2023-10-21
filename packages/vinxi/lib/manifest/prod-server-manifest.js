@@ -1,5 +1,5 @@
 import invariant from "vinxi/lib/invariant";
-import { join } from "vinxi/lib/path";
+import { handlerModule, join, virtualId } from "vinxi/lib/path";
 
 import findAssetsInViteManifest from "./vite-manifest.js";
 
@@ -84,7 +84,9 @@ export function createProdManifest(app) {
 								const id = input;
 								if (router.target === "server") {
 									const id =
-										input === router.handler ? "virtual:#vinxi/handler" : input;
+										input === router.handler
+											? virtualId(handlerModule(router))
+											: input;
 									return {
 										assets() {
 											return findAssetsInViteManifest(bundlerManifest, id)
@@ -110,7 +112,7 @@ export function createProdManifest(app) {
 								} else if (router.target === "browser") {
 									const id =
 										input === router.handler && !input.endsWith(".html")
-											? "virtual:#vinxi/handler"
+											? virtualId(handlerModule(router))
 											: input;
 									return {
 										assets() {

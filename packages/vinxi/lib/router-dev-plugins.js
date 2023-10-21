@@ -1,6 +1,6 @@
 import { devEntries } from "./dev-server.js";
 import invariant from "./invariant.js";
-import { join } from "./path.js";
+import { handlerModule, join } from "./path.js";
 import { config } from "./plugins/config.js";
 import { css } from "./plugins/css.js";
 import { fileSystemWatcher } from "./plugins/fs-watcher.js";
@@ -34,21 +34,24 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		/** @type {import("./router-modes.js").HandlerRouterSchema} */ router,
 	) => [
 		virtual({
-			"#vinxi/handler": ({ config }) => {
-				// invariant(
-				// 	config.router.mode === "handler",
-				// 	"#vinxi/handler is only supported in handler mode",
-				// );
-				if (config.router.middleware) {
+			[handlerModule(router)]: ({ config }) => {
+				/** @type {import("./router-mode.js").Router<{ middleware?: string; }>} */
+				const router = config.router;
+				invariant(
+					router.handler === "handler",
+					"#vinxi/handler is only supported in handler mode",
+				);
+
+				if (router.middleware) {
 					return `
-					import middleware from "${join(config.router.root, config.router.middleware)}";
-					import handler from "${join(config.router.root, config.router.handler)}"; 
+					import middleware from "${join(router.root, router.middleware)}";
+					import handler from "${join(router.root, router.handler)}"; 
 					import { eventHandler } from "vinxi/server";
 					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler});`;
 				}
 				return `import handler from "${join(
-					config.router.root,
-					config.router.handler,
+					router.root,
+					router.handler,
 				)}"; export default handler;`;
 			},
 		}),
@@ -76,11 +79,8 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		css(),
 		virtual(
 			{
-				"#vinxi/handler": ({ config }) => {
-					invariant(
-						config.router.mode === "build",
-						"#vinxi/handler is only supported in build mode",
-					);
+				[handlerModule(router)]: ({ config }) => {
+					invariant(config.router.handler, "");
 					return `import * as mod from "${join(
 						config.router.root,
 						config.router.handler,

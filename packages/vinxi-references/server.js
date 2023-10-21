@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { join } from "vinxi/lib/path";
+import { handlerModule, join } from "vinxi/lib/path";
 
 import { CLIENT_REFERENCES_MANIFEST, hash } from "./constants.js";
 
@@ -37,7 +37,7 @@ export function server({
 				);
 
 				input = {
-					entry: "#vinxi/handler",
+					entry: handlerModule(router),
 					...Object.fromEntries(
 						reactClientManifest.server.map((key) => {
 							return [`c_${hash(key)}`, key];
