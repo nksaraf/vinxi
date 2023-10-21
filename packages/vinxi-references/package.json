@@ -20,7 +20,8 @@
     }
   },
   "devDependencies": {
-    "vinxi": "^0.0.36"
+    "vinxi": "^0.0.36",
+    "vitest": "^0.28.5"
   },
   "peerDependencies": {
     "vinxi": "^0.0.36"

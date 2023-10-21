@@ -1,0 +1,21 @@
+// Vitest Snapshot v1
+
+exports[`wrap exports > wraps named export of  async arrow function expressions 1`] = `
+"import { runtimeFunction } from \\"test\\";
+export const namedExport = runtimeFunction(async () => {}, \\"test\\", \\"namedExport\\");"
+`;
+
+exports[`wrap exports > wraps named export of anonymous async function 1`] = `
+"import { runtimeFunction } from \\"test\\";
+export const namedExport = runtimeFunction(async function() {}, \\"test\\", \\"namedExport\\");"
+`;
+
+exports[`wrap exports > wraps named export of anonymous function 1`] = `
+"import { runtimeFunction } from \\"test\\";
+export const namedExport = runtimeFunction(function() {}, \\"test\\", \\"namedExport\\");"
+`;
+
+exports[`wrap exports > wraps named export of arrow function expression 1`] = `
+"import { runtimeFunction } from \\"test\\";
+export const namedExport = runtimeFunction(() => {}, \\"test\\", \\"namedExport\\");"
+`;

@@ -270,23 +270,95 @@ export function wrapExports({ code, id, ast, runtime, hash, options }) {
 				if (node.declaration) {
 					if (node.declaration.type === "VariableDeclaration") {
 						const declarations = node.declaration.declarations;
+						const newDeclarations = [];
 						for (let j = 0; j < declarations.length; j++) {
 							addLocalExportedNames(localNames, declarations[j].id);
+							const declaration = declarations[j];
+							const name = declaration.id.name;
+							newDeclarations.push(
+								types.builders.variableDeclarator(
+									types.builders.identifier(name),
+									types.builders.callExpression(
+										types.builders.identifier(runtime.function),
+										[
+											declaration.init,
+											types.builders.stringLiteral(
+												options.command === "build" ? hash(id) : id,
+											),
+											types.builders.stringLiteral(name),
+										],
+									),
+								),
+							);
 						}
+						node.declaration.declarations = newDeclarations;
 					} else {
 						const name = node.declaration.id.name;
 						localNames.set(name, name);
 						if (node.declaration.type === "FunctionDeclaration") {
 							localTypes.set(name, "function");
 						}
+						node.declaration = types.builders.variableDeclaration("const", [
+							types.builders.variableDeclarator(
+								types.builders.identifier(name),
+								types.builders.callExpression(
+									types.builders.identifier(runtime.function),
+									[
+										types.builders.functionExpression(
+											node.declaration.id,
+											node.declaration.params,
+											node.declaration.body,
+											node.declaration.generator,
+											node.declaration.async,
+										),
+										types.builders.stringLiteral(
+											options.command === "build" ? hash(id) : id,
+										),
+										types.builders.stringLiteral(name),
+									],
+								),
+							),
+						]);
 					}
 				}
 				if (node.specifiers) {
 					const specifiers = node.specifiers;
+					const newSpecifiers = [];
 					for (let j = 0; j < specifiers.length; j++) {
 						const specifier = specifiers[j];
 						localNames.set(specifier.local.name, specifier.exported.name);
+						const exportedName = specifier.exported.name;
+						const localName = specifier.local?.name ?? exportedName;
+						// add a new statement before i position in ast.program.body
+						ast.program.body = [
+							...ast.program.body.slice(0, i),
+							types.builders.variableDeclaration("const", [
+								types.builders.variableDeclarator(
+									types.builders.identifier(exportedName + "$ref"),
+									types.builders.callExpression(
+										types.builders.identifier(runtime.function),
+										[
+											types.builders.identifier(localName),
+											types.builders.stringLiteral(
+												options.command === "build" ? hash(id) : id,
+											),
+											types.builders.stringLiteral(exportedName),
+										],
+									),
+								),
+							]),
+							...ast.program.body.slice(i),
+						];
+						newSpecifiers.push(
+							types.builders.exportSpecifier.from({
+								exported: types.builders.identifier(exportedName),
+								local: types.builders.identifier(exportedName + "$ref"),
+							}),
+						);
+						i++;
 					}
+
+					node.specifiers = newSpecifiers;
 				}
 				continue;
 		}
