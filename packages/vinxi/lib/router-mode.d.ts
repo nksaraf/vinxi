@@ -18,6 +18,7 @@ type DevHandler = {
 
 type Router<T = {}> = T & {
 	base: string;
+	mode: string;
 	internals: Internals;
 	order: number;
 	outDir: string;

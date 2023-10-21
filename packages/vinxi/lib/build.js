@@ -10,7 +10,7 @@ import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
 import { consola, withLogger } from "./logger.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
-import { join, relative } from "./path.js";
+import { handlerModule, join, relative, virtualId } from "./path.js";
 import { config } from "./plugins/config.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
@@ -79,6 +79,7 @@ export async function createBuild(app, buildConfig) {
 			...app.config.routers
 				.map((router) => {
 					if (router.mode === "handler") {
+						invariant(router.handler, "Missing router.handler");
 						const bundlerManifest = JSON.parse(
 							readFileSync(
 								join(router.outDir, router.base, ".vite", "manifest.json"),
@@ -86,12 +87,14 @@ export async function createBuild(app, buildConfig) {
 							),
 						);
 
+						const virtualHandlerId = virtualId(handlerModule(router));
+
 						const handler = join(
 							router.outDir,
 							router.base,
 							bundlerManifest[
-								"virtual:#vinxi/handler" in bundlerManifest
-									? "virtual:#vinxi/handler"
+								virtualHandlerId in bundlerManifest
+									? virtualHandlerId
 									: relative(app.config.root, router.handler)
 							].file,
 						);
@@ -121,6 +124,7 @@ export async function createBuild(app, buildConfig) {
 				.map((router) => {
 					if (router.mode === "static") {
 						return {
+							// @ts-expect-error
 							dir: router.dir,
 							baseURL: router.base,
 							passthrough: true,
@@ -291,7 +295,7 @@ async function createViteBuild(config) {
 /**
  *
  * @param {import("./app.js").App} app
- * @param {Exclude<import("./router-modes.js").RouterSchema, import("./router-modes.js").StaticRouterSchema>} router
+ * @param {import("./router-mode.js").Router} router
  */
 async function createRouterBuild(app, router) {
 	let buildRouter = router;
@@ -347,9 +351,9 @@ async function createRouterBuild(app, router) {
 		router: buildRouter,
 		app,
 		plugins: [
-			routerModePlugin[buildRouter.internals.mode.name]?.() ?? [],
-			buildTargetPlugin[buildRouter.target]?.() ?? [],
-			...((await buildRouter.plugins?.()) ?? []),
+			routerModePlugin[buildRouter.internals.mode.name]?.(buildRouter) ?? [],
+			buildTargetPlugin[buildRouter.target]?.(buildRouter) ?? [],
+			...((await buildRouter.plugins?.(buildRouter)) ?? []),
 		],
 	});
 
@@ -409,10 +413,10 @@ const spaManifest = () => {
 
 const routerModePlugin = {
 	static: () => [],
-	build: () => [
+	build: (router) => [
 		virtual(
 			{
-				"#vinxi/handler": ({ config }) => {
+				[handlerModule(router)]: ({ config }) => {
 					invariant(
 						config.router.mode === "build",
 						"#vinxi/handler is only supported in build mode",
@@ -444,10 +448,10 @@ const routerModePlugin = {
 			},
 		}),
 	],
-	handler: () => [
+	handler: (router) => [
 		virtual(
 			{
-				"#vinxi/handler": ({ config }) => {
+				[handlerModule(router)]: ({ config }) => {
 					invariant(
 						config.router.mode === "handler",
 						"#vinxi/handler is only supported in handler mode",
@@ -520,12 +524,12 @@ function toRouteId(route) {
 
 /**
  *
- * @param {Exclude<import("./router-modes.js").RouterSchema, import("./router-modes.js").StaticRouterSchema>} router
+ * @param {import("./router-mode.js").Router<{ handler: string }>} router
  * @returns
  */
 export async function getEntries(router) {
 	return [
-		router.handler.endsWith(".html") ? router.handler : "#vinxi/handler",
+		router.handler.endsWith(".html") ? router.handler : handlerModule(router),
 		...(
 			(await router.internals.routes?.getRoutes())?.map((r) =>
 				Object.entries(r)
@@ -542,15 +546,15 @@ export async function getEntries(router) {
 function handerBuild() {
 	return {
 		name: "react-rsc:handler",
-		async config(inlineConfig, env) {
+		async config({ router }, env) {
 			if (env.command === "build") {
 				invariant(
-					inlineConfig.router && inlineConfig.router.mode !== "static",
+					router && router.mode !== "static" && router.handler,
 					"Invalid router",
 				);
 				const { builtinModules } = await import("module");
 				const { join } = await import("./path.js");
-				const input = await getEntries(inlineConfig.router);
+				const input = await getEntries(router);
 				return {
 					build: {
 						rollupOptions: {
@@ -565,10 +569,10 @@ function handerBuild() {
 						manifest: true,
 						target: "node18",
 						ssrEmitAssets: true,
-						outDir: join(inlineConfig.router.outDir, inlineConfig.router.base),
+						outDir: join(router.outDir, router.base),
 						emptyOutDir: false,
 					},
-					base: inlineConfig.router.base,
+					base: router.base,
 					publicDir: false,
 				};
 			}
@@ -582,25 +586,22 @@ function handerBuild() {
 function browserBuild() {
 	return {
 		name: "build:browser",
-		async config(inlineConfig, env) {
+		async config({ router }, env) {
 			if (env.command === "build") {
-				invariant(
-					inlineConfig.router && inlineConfig.router.mode !== "static",
-					"Invalid router",
-				);
+				invariant(router && router.mode !== "static", "Invalid router");
 				const { join } = await import("./path.js");
 				return {
 					build: {
 						rollupOptions: {
-							input: await getEntries(inlineConfig.router),
+							input: await getEntries(router),
 							treeshake: true,
 						},
 						manifest: true,
-						outDir: join(inlineConfig.router.outDir, inlineConfig.router.base),
+						outDir: join(router.outDir, router.base),
 						target: "esnext",
 						emptyOutDir: false,
 					},
-					base: inlineConfig.router.base,
+					base: router.base,
 					publicDir: false,
 				};
 			}

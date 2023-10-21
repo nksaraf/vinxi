@@ -1,20 +1,21 @@
 /// <reference types="vite/client" />
-/// <reference types="./client" />
+/// <reference types="../../types/client" />
 import { invariant } from "../invariant";
-import { join } from "../path.js";
+import { handlerModule, join, virtualId } from "../path.js";
 
 const manifest = new Proxy(
 	{},
 	{
-		get(target, bundlerName) {
+		get(target, routerName) {
 			invariant(
-				typeof bundlerName === "string",
+				typeof routerName === "string",
 				"Bundler name should be a string",
 			);
 			return {
 				handler: import.meta.env.DEV
 					? join(import.meta.env.CWD, import.meta.env.ROUTER_HANDLER)
-					: "virtual:#vinxi/handler",
+					: // @ts-ignore
+					  virtualId(handlerModule({ name: routerName })),
 				chunks: new Proxy(
 					{},
 					{
@@ -46,7 +47,7 @@ const manifest = new Proxy(
 										const assetsPath =
 											join(
 												import.meta.env.BASE_URL,
-												`@manifest/${bundlerName}/${Date.now()}/assets`,
+												`@manifest/${routerName}/${Date.now()}/assets`,
 											) + `?id=${input}`;
 										return (await import(/* @vite-ignore */ assetsPath))
 											.default;
