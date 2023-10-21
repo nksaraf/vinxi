@@ -7,7 +7,10 @@ import { coupleWebSocket } from "@miniflare/web-sockets";
 import assert from "assert";
 import http from "http";
 import net from "net";
+import { createCall, createFetch } from "unenv/runtime/fetch/index";
 import { URL } from "url";
+import { eventHandler, lazyEventHandler, toNodeListener } from "vinxi/server";
+import { createApp } from "vinxi/server";
 
 async function writeResponse(response, res) {
 	var e_1, _a;
@@ -17,7 +20,6 @@ async function writeResponse(response, res) {
 		key = key.toLowerCase();
 		if (key === "set-cookie") {
 			// Multiple Set-Cookie headers should be treated as separate headers
-			// @ts-expect-error getAll is added to the Headers prototype by
 			// importing @miniflare/core
 			headers["set-cookie"] = response.headers.getAll("set-cookie");
 		} else {
@@ -163,4 +165,160 @@ export async function createServer(vite, mf, options) {
 		? void 0
 		: _b.on("close", () => mf.removeEventListener("reload", reloadListener));
 	return listener;
+}
+
+export function miniflareEventHandler(handler) {
+	return lazyEventHandler(async () => {
+		const innerHandler = eventHandler(handler);
+
+		if (import.meta.env.DEV) {
+			const { Miniflare } = await import("miniflare");
+			const { default: viteServer } = await import("#vite-dev-server");
+
+			const mf = new Miniflare({
+				script: `
+					export default {
+						fetch: async (request, env) => {
+							return await serve(request, env, globalThis);
+						}
+					}
+	
+					export const WebSocketDurableObject = WebSocketDurableObject1;
+				`,
+				globals: {
+					WebSocketDurableObject1: class DO {
+						state;
+						env;
+						promise;
+						constructor(state, env) {
+							this.state = state;
+							this.env = env;
+							this.promise = this.createProxy(state, env);
+						}
+
+						async createProxy(state, env) {
+							const { WebSocketDurableObject } = await vite.ssrLoadModule(
+								"~start/entry-server",
+							);
+							return new WebSocketDurableObject(state, env);
+						}
+
+						async fetch(request) {
+							console.log("DURABLE_OBJECT", request.url);
+
+							try {
+								let dObject = await this.promise;
+								return await dObject.fetch(request);
+							} catch (e) {
+								console.log("error", e);
+							}
+						}
+					},
+					serve: async (req, e, g) => {
+						const {
+							Request,
+							Response,
+							fetch,
+							crypto,
+							Headers,
+							ReadableStream,
+							WritableStream,
+							WebSocketPair,
+							TransformStream,
+						} = g;
+						Object.assign(globalThis, {
+							Request,
+							Response,
+							fetch,
+							crypto,
+							Headers,
+							ReadableStream,
+							WritableStream,
+							TransformStream,
+							WebSocketPair,
+						});
+
+						console.log(
+							"🔥",
+							req.headers.get("Upgrade") === "websocket"
+								? "WEBSOCKET"
+								: req.method,
+							req.url,
+						);
+
+						if (req.headers.get("Upgrade") === "websocket") {
+							const url = new URL(req.url);
+							console.log(url.search);
+							const durableObjectId = e.DO_WEBSOCKET.idFromName(
+								url.pathname + url.search,
+							);
+							const durableObjectStub = e.DO_WEBSOCKET.get(durableObjectId);
+							const response = await durableObjectStub.fetch(req);
+							return response;
+						}
+
+						const request = req;
+
+						try {
+							const url = new URL(request.url);
+
+							// https://deno.land/api?s=Body
+							let body;
+							if (request.body) {
+								body = await request.arrayBuffer();
+							}
+
+							const app = createApp({
+								onRequest(event) {
+									event.context = {
+										cf: request.cf,
+										waitUntil: (promise) => g.waitUntil(promise),
+										cloudflare: {
+											request,
+											env: e,
+											context: g,
+										},
+									};
+								},
+							});
+							app.use(innerHandler);
+
+							// @ts-ignore
+							const f = createFetch(createCall(toNodeListener(app)));
+
+							const d = await f(url.pathname + url.search, {
+								host: url.hostname,
+								protocol: url.protocol,
+								headers: request.headers,
+								method: request.method,
+								redirect: request.redirect,
+								body,
+							});
+
+							// const req = new IncomingMessage();
+							return d;
+						} catch (e) {
+							console.log("error", e);
+							return new Response(e.toString(), { status: 500 });
+						}
+					},
+				},
+				modules: true,
+				kvPersist: true,
+				compatibilityFlags: ["streams_enable_constructors"],
+				kvNamespaces: ["KV"],
+				// ...miniflareOptions,
+			});
+
+			console.log("🔥", "starting miniflare");
+
+			const listener = await createServer(viteServer, mf, {});
+			return eventHandler(async (event) => {
+				const response = await listener(event.node.req, event.node.res);
+				return response;
+			});
+		} else {
+			return handler;
+		}
+	});
 }
