@@ -2,8 +2,8 @@ import { consola, withLogger } from "./logger.js";
 
 export * from "./router-dev-plugins.js";
 
-/** @typedef {{ port?: number; dev?: boolean; ws?: { port?: number } }} ServeConfigInput */
-/** @typedef {{ port: number; dev: boolean; ws: { port: number } }} ServeConfig */
+/** @typedef {{ force?: boolean; port?: number; dev?: boolean; ws?: { port?: number } }} ServeConfigInput */
+/** @typedef {{ force: boolean; port: number; dev: boolean; ws: { port: number } }} ServeConfig */
 
 /**
  *
@@ -53,6 +53,9 @@ export async function createViteHandler(router, app, serveConfig) {
 			).filter(Boolean) || []),
 			...(((await router.plugins?.(router)) ?? []).filter(Boolean) || []),
 		],
+		optimizeDeps: {
+			force: serveConfig.force,
+		},
 		router,
 		app,
 		server: {
@@ -76,10 +79,16 @@ export async function createViteHandler(router, app, serveConfig) {
  */
 export async function createDevServer(
 	app,
-	{ port = 3000, dev = false, ws: { port: wsPort = undefined } = {} },
+	{
+		force = false,
+		port = 3000,
+		dev = false,
+		ws: { port: wsPort = undefined } = {},
+	},
 ) {
 	const serveConfig = {
 		port,
+		force,
 		dev,
 		ws: {
 			port: wsPort,
