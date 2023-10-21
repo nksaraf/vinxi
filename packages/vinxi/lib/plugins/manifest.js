@@ -27,6 +27,7 @@ export function manifest() {
 						app.config.routers.map((router) => router.name),
 					),
 					"process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+					"import.meta.env.DEVTOOLS": JSON.stringify(app.config.devtools),
 				},
 			};
 		},
