@@ -13,3 +13,19 @@ export function config(tag, conf) {
 		},
 	};
 }
+
+/**
+ *
+ * @param {string} path
+ * @param {string} file
+ * @returns {import('../vite-dev.d.ts').Plugin}
+ */
+export function input(path, file) {
+	return config(`input-${path}`, {
+		resolve: {
+			alias: {
+				[path]: file,
+			},
+		},
+	});
+}

@@ -1,7 +1,8 @@
 import { fileURLToPath } from "url";
 import { createApp } from "vinxi";
-import { config } from "vinxi/plugins/config";
+import { input } from "vinxi/plugins/config";
 
+/** @returns {import('vinxi').RouterSchemaInput} */
 function trpcRouter({ plugins = () => [] } = {}) {
 	return {
 		name: "server",
@@ -10,15 +11,10 @@ function trpcRouter({ plugins = () => [] } = {}) {
 		handler: fileURLToPath(new URL("./handler.js", import.meta.url)),
 		target: "server",
 		plugins: () => [
-			config("trpc", {
-				resolve: {
-					alias: {
-						"#vinxi/trpc/router": fileURLToPath(
-							new URL("./app/server.ts", import.meta.url),
-						),
-					},
-				},
-			}),
+			input(
+				"#vinxi/trpc/router",
+				fileURLToPath(new URL("./app/server.ts", import.meta.url)),
+			),
 		],
 	};
 }
