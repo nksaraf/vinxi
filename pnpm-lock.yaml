@@ -1370,9 +1370,12 @@ importers:
       '@picocss/pico':
         specifier: ^1.5.10
         version: 1.5.10
-      '@vinxi/plugin-references':
+      '@vinxi/plugin-server-components':
         specifier: 0.0.29
-        version: 0.0.29(vinxi@packages+vinxi)
+        version: link:../../../packages/vinxi-server-components
+      '@vinxi/plugin-server-functions':
+        specifier: 0.0.29
+        version: link:../../../packages/vinxi-server-functions
       '@vinxi/react':
         specifier: 0.0.11
         version: link:../../../packages/vinxi-react
