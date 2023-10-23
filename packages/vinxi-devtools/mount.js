@@ -91,51 +91,91 @@ export default function mount() {
 				// autoAnimate(ref.current);
 			}, [ref.current]);
 			return html`<div
-				ref=${ref}
 				style=${{
 					position: "fixed",
 					bottom: "0.5rem",
 					left: "50%",
 					transform: "translateX(-50%)",
-					backgroundColor: "black",
-					width: !isOpen ? "4rem" : "60vw",
-					borderRadius: isOpen ? "0.5rem" : "40vh",
-					height: !isOpen ? "2rem" : "24rem",
-					borderColor: "rgba(212,228,254,.191)",
-					display: "flex",
-					flexDirection: "row",
-					overflow: "hidden",
-					transition: "all",
-					alignItems: "center",
-					justifyContent: "center",
-					// nice box shadow
-					boxShadow: "rgba(99, 99, 99, 0.2) 0px 8px 16px 0px",
-				}}
-				onClick=${() => {
-					setIsOpen((o) => !o);
 				}}
 			>
-				${isOpen
-					? html`<iframe
-							style=${{ width: "100%", height: "100%", border: "none" }}
-							src="/__devtools/client/index.html"
-					  />`
-					: html`<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="1.25rem"
-							height="1.25rem"
-							viewBox="0 0 24 24"
-							style=${{ color: "white" }}
-					  >
+				<div
+					ref=${ref}
+					style=${{
+						position: "absolute",
+						bottom: "100%",
+						transform: "translateX(-50%)",
+						backgroundColor: "rgba(0, 0, 0, 0.90)",
+						width: "4rem",
+						borderRadius: "100px",
+						height: "30px",
+						border: "1px solid #3336",
+						display: "flex",
+						flexDirection: "row",
+						transition: "all",
+						zIndex: 9999999,
+						alignItems: "center",
+						justifyContent: "center",
+						// nice box shadow
+						boxShadow: "rgba(99, 99, 99, 0.2) 0px 8px 16px 0px",
+					}}
+					onClick=${() => {
+						setIsOpen((o) => !o);
+					}}
+				>
+					<svg
+						viewBox="0 0 128 128"
+						fill="none"
+						style=${{ color: "white", width: "16px", height: "16px" }}
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<g clip-path="url(#clip0_1_9)">
 							<path
-								fill="none"
+								d="M93.0704 3.61125L25.7606 54.3447L25 58.9291L25.7606 60.1516L27.2817 62.291L30.7042 64.4303L35.6479 66.5697L40.2113 68.4034L44.0141 71.154L46.2958 74.5159L47.0563 77.2665V81.5452L34.507 124.333V126.472L35.2676 127.694L36.4085 128L38.6901 127.389L104.479 77.2665L106 75.1271V72.3765L105.239 70.2372L103.338 68.4034L89.6479 61.9853L86.2254 58.9291L83.5634 54.3447V49.4548L96.1127 6.97311V3.30562L94.9718 3L93.0704 3.61125Z"
+								fill="currentColor"
 								stroke="currentColor"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="1"
-								d="M17.684 3.603c.521-.659.03-1.603-.836-1.603h-6.716a1.06 1.06 0 0 0-.909.502l-5.082 8.456c-.401.666.103 1.497.908 1.497h3.429l-3.23 8.065c-.467 1.02.795 1.953 1.643 1.215L20 9.331h-6.849l4.533-5.728Z"
 							/>
-					  </svg>`}
+						</g>
+						<defs>
+							<clipPath id="clip0_1_9">
+								<rect width="128" height="128" fill="currentColor" />
+							</clipPath>
+						</defs>
+					</svg>
+				</div>
+				${isOpen
+					? html`<div
+							style=${{
+								position: "absolute",
+								bottom: "1rem",
+								zIndex: 9999998,
+
+								left: "50%",
+								transform: "translateX(-50%)",
+								backgroundColor: "black",
+								width: "70vw",
+								borderRadius: "0.5rem",
+								height: "45vh",
+								border: "1px solid #3336",
+								display: "flex",
+								flexDirection: "row",
+								overflow: "hidden",
+								transition: "all",
+								alignItems: "center",
+								justifyContent: "center",
+								// nice box shadow
+								boxShadow: "rgba(99, 99, 99, 0.2) 0px 8px 16px 0px",
+							}}
+					  >
+							<iframe
+								style=${{
+									width: "100%",
+									height: "100%",
+									border: "none",
+								}}
+								src="/__devtools/client/index.html"
+							/>
+					  </div>`
+					: null}
 			</div>`;
 		}
 

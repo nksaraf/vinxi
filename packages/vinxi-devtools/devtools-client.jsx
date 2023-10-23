@@ -52,6 +52,17 @@ const plugins = [
 			);
 		},
 	},
+	{
+		id: "inspect",
+		icon: "i-carbon:stethoscope",
+		Component: () => {
+			return (
+				<div className="flex-1">
+					<iframe className="w-full h-full" src="/__inspect" />
+				</div>
+			);
+		},
+	},
 ];
 
 const buttonVariants = cva(

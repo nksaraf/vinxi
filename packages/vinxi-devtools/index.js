@@ -1,43 +1,6 @@
-import react from "@vitejs/plugin-react";
-import { presetIcons, presetUno } from "unocss";
-import unocss from "unocss/vite";
-import { createRPCServer } from "vite-dev-rpc";
-
 import { fileURLToPath } from "node:url";
 
-import unocssConfig from "./uno.config.js";
-
-/** @return {import('vinxi').Plugin} */
-function DemoPlugin() {
-	let app;
-	let router;
-	return {
-		name: "demo",
-		configResolved(config) {
-			app = config.app;
-			router = config.router;
-		},
-		configureServer(server) {
-			const rpc = createRPCServer(
-				"demo",
-				server.ws,
-				new Proxy(
-					{},
-					{
-						get(target, prop) {
-							return async (...args) => {
-								const { functions } = await server.ssrLoadModule(
-									fileURLToPath(new URL("./rpc.js", import.meta.url)),
-								);
-								return functions[prop](...args);
-							};
-						},
-					},
-				),
-			);
-		},
-	};
-}
+export { default as inspect } from "vite-plugin-inspect";
 
 export const devtoolsRpc = () => {
 	return {
@@ -46,17 +9,6 @@ export const devtoolsRpc = () => {
 		handler: fileURLToPath(new URL("./devtools-rpc.js", import.meta.url)),
 		target: "server",
 		base: "/__devtools/rpc",
-	};
-};
-
-export const devtoolsClientDev = () => {
-	return {
-		name: "devtools-client",
-		mode: "spa",
-		handler: fileURLToPath(new URL("./index.html.js", import.meta.url)),
-		target: "browser",
-		base: "/__devtools/client",
-		plugins: () => [DemoPlugin(), unocss(unocssConfig), react()],
 	};
 };
 

@@ -1,6 +1,7 @@
 import { consola, withLogger } from "./logger.js";
 
 export * from "./router-dev-plugins.js";
+import { inspect } from '@vinxi/devtools'
 
 /** @typedef {{ force?: boolean; port?: number; dev?: boolean; ws?: { port?: number } }} ServeConfigInput */
 /** @typedef {{ force: boolean; port: number; dev: boolean; ws: { port: number } }} ServeConfig */
@@ -48,11 +49,12 @@ export async function createViteHandler(router, app, serveConfig) {
 		configFile: false,
 		base: router.base,
 		plugins: [
+			app.config.devtools ? inspect() : null,
 			...((
 				(await router.internals.mode.dev.plugins?.(router, app)) ?? []
 			).filter(Boolean) || []),
 			...(((await router.plugins?.(router)) ?? []).filter(Boolean) || []),
-		],
+		].filter(Boolean),
 		optimizeDeps: {
 			force: serveConfig.force,
 		},

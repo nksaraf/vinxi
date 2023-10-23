@@ -8,6 +8,15 @@
     "build": "node build.js --build"
   },
   "dependencies": {
+    "birpc": "^0.2.14",
+    "ws": "^8.13.0",
+    "vite-plugin-inspect": "^0.7.38"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./mount": "./mount.js"
+  },
+  "devDependencies": {
     "@iconify/json": "^2.2.130",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-tabs": "^1.0.4",
@@ -19,7 +28,6 @@
     "@unocss/preset-uno": "^0.56.5",
     "@unocss/reset": "^0.56.5",
     "@vitejs/plugin-react": "^4.0.4",
-    "birpc": "^0.2.14",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "react": "0.0.0-experimental-035a41c4e-20230704",
@@ -28,15 +36,6 @@
     "tailwind-merge": "^1.14.0",
     "unocss": "^0.56.5",
     "unocss-preset-radix": "^2.5.5",
-    "vite-dev-rpc": "^0.1.2",
-    "ws": "^8.13.0",
-    "zustand": "^4.4.3"
-  },
-  "exports": {
-    ".": "./index.js",
-    "./mount": "./mount.js"
-  },
-  "devDependencies": {
     "vinxi": "workspace:^"
   }
 }

@@ -1,9 +1,8 @@
 import { createBirpc } from "birpc";
-import { createRPCClient } from "vite-dev-rpc";
 
 const clientFunctions = {
 	alert(message) {
-		msg.textContent = message;
+		// msg.textContent = message;
 	},
 };
 /** @typedef {typeof clientFunctions} ClientFunctions */
