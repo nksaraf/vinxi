@@ -1,5 +1,20 @@
 # @vinxi/plugin-references
 
+## 0.0.27
+
+### Patch Changes
+
+- f35dc0a: fix named exports for wrapExports
+- f2cbc3c: --force flag
+- d99d67a: add support for inline pragmas and use @vinxi/plugin-directives
+- Updated dependencies [6ff575e]
+- Updated dependencies [f2cbc3c]
+- Updated dependencies [b437331]
+- Updated dependencies [5a7aed6]
+- Updated dependencies [e87800e]
+  - vinxi@0.0.37
+  - @vinxi/plugin-directives@0.0.27
+
 ## 0.0.26
 
 ### Patch Changes

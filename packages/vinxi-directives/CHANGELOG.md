@@ -1,5 +1,16 @@
 # @vinxi/plugin-references
 
+## 0.0.27
+
+### Patch Changes
+
+- 5a7aed6: create @vinxi/plugin-directives page
+- Updated dependencies [6ff575e]
+- Updated dependencies [f2cbc3c]
+- Updated dependencies [b437331]
+- Updated dependencies [e87800e]
+  - vinxi@0.0.37
+
 ## 0.0.26
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # vinxi
 
+## 0.0.37
+
+### Patch Changes
+
+- 6ff575e: add devtools flag to vinxi, enabled by default
+- f2cbc3c: --force flag
+- b437331: add vite-plugin-inspect to devtools
+- e87800e: fix order of built routers based on base length
+- Updated dependencies [2cf0023]
+- Updated dependencies [6ff575e]
+- Updated dependencies [b437331]
+  - @vinxi/devtools@0.0.3
+
 ## 0.0.36
 
 ### Patch Changes

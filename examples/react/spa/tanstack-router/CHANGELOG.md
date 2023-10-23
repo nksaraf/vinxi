@@ -4,6 +4,20 @@
 
 ### Patch Changes
 
+- Updated dependencies [f35dc0a]
+- Updated dependencies [6ff575e]
+- Updated dependencies [f2cbc3c]
+- Updated dependencies [b437331]
+- Updated dependencies [e87800e]
+- Updated dependencies [d99d67a]
+  - @vinxi/plugin-references@0.0.27
+  - vinxi@0.0.37
+  - @vinxi/openapi@0.0.2
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [781cedd]
 - Updated dependencies [49e4e03]
 - Updated dependencies [a009733]
