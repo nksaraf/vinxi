@@ -39,16 +39,6 @@ function DemoPlugin() {
 	};
 }
 
-export const devtoolsServer = () => {
-	return {
-		name: "devtools-server",
-		mode: "handler",
-		handler: fileURLToPath(new URL("./devtools.js", import.meta.url)),
-		target: "server",
-		base: "/__devtools/server",
-	};
-};
-
 export const devtoolsRpc = () => {
 	return {
 		name: "devtools-rpc",
