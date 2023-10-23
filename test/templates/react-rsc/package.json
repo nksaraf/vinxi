@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@vinxi/plugin-references": "0.0.27",
+    "@vinxi/plugin-references": "0.0.28",
     "@vinxi/react": "0.0.11",
     "@vinxi/react-server-dom": "0.0.3",
     "@vitejs/plugin-react": "^4.0.4",

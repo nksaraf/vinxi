@@ -14,7 +14,7 @@
     "@tanstack/router": "0.0.1-beta.111",
     "@tanstack/router-devtools": "0.0.1-beta.111",
     "@vinxi/openapi": "workspace:^",
-    "@vinxi/plugin-references": "0.0.27",
+    "@vinxi/plugin-references": "0.0.28",
     "@vinxi/react": "0.0.11",
     "@vitejs/plugin-react": "^4.0.4",
     "acorn-loose": "^8.3.0",
