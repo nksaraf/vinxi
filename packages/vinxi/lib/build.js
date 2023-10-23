@@ -6,6 +6,7 @@ import { build, copyPublicAssets, createNitro } from "nitropack";
 import { writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
+import { chunksServerVirtualModule } from "./chunks.js";
 import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
 import { consola, withLogger } from "./logger.js";
@@ -70,9 +71,10 @@ export async function createBuild(app, buildConfig) {
 		// 	inline: ["node-fetch-native/polyfill"],
 		// },
 		plugins: [
-			"#prod-app",
+			"#vinxi/prod-app",
 			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
 			fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
+			"#vinxi/chunks",
 			...(app.config.server.plugins ?? []),
 		],
 		handlers: [
@@ -152,7 +154,7 @@ export async function createBuild(app, buildConfig) {
 		appConfigFiles: [],
 		imports: false,
 		virtual: {
-			"#prod-app": () => {
+			"#vinxi/prod-app": () => {
 				const config = {
 					...app.config,
 					routers: app.config.routers.map((router) => {
@@ -246,17 +248,8 @@ export async function createBuild(app, buildConfig) {
 					})
 				`;
 			},
-			// ...Object.fromEntries(
-			// 	app.config.routers
-			// 		.map((router) =>
-			// 			router.mode === "handler"
-			// 				? Object.entries(router.server?.virtual ?? {}).map(
-			// 						([k, v]) => [k, typeof v === "function" ? () => v(app) : v],
-			// 				  )
-			// 				: [],
-			// 		)
-			// 		.flat(),
-			// ),
+			"#vinxi/chunks": () => chunksServerVirtualModule()(app),
+
 			...(Object.fromEntries(
 				Object.entries(app.config.server?.virtual ?? {}).map(([k, v]) => [
 					k,

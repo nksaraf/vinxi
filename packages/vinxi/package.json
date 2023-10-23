@@ -9,6 +9,7 @@
     "public",
     "runtime",
     "types",
+    "dist/types",
     "*.d.ts"
   ],
   "scripts": {
@@ -67,6 +68,10 @@
     "./lib/path": {
       "import": "./lib/path.js",
       "types": "./dist/types/lib/path.d.ts"
+    },
+    "./lib/chunks": {
+      "import": "./lib/chunks.js",
+      "types": "./dist/types/lib/chunks.d.ts"
     },
     "./types/client": {
       "types": "./types/client.d.ts"

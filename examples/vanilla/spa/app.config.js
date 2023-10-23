@@ -1,13 +1,7 @@
-import { references } from "@vinxi/plugin-references";
+import { serverFunctions } from "@vinxi/plugin-server-functions";
 import { createApp } from "vinxi";
 
 export default createApp({
-	server: {
-		plugins: [references.serverPlugin],
-		virtual: {
-			[references.serverPlugin]: references.serverPluginModule(),
-		},
-	},
 	routers: [
 		{
 			name: "public",
@@ -19,9 +13,9 @@ export default createApp({
 			mode: "spa",
 			handler: "./index.html",
 			target: "browser",
-			plugins: () => [references.clientRouterPlugin()],
+			plugins: () => [serverFunctions.clientPlugin()],
 		},
-		references.serverRouter({
+		serverFunctions.router({
 			middleware: "./app/middleware.tsx",
 		}),
 	],

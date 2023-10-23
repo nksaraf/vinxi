@@ -1,0 +1,38 @@
+{
+  "name": "@vinxi/plugin-server-functions",
+  "version": "0.0.29",
+  "type": "module",
+  "author": "Nikhil Saraf <nsaraf98@gmail.com>",
+  "files": [
+    "*.js",
+    "*.d.ts"
+  ],
+  "types": "./index.d.ts",
+  "exports": {
+    ".": "./index.js",
+    "./*": "./*.js"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./index.d.ts"
+      ]
+    }
+  },
+  "devDependencies": {
+    "vinxi": "^0.0.37",
+    "vitest": "^0.28.5"
+  },
+  "peerDependencies": {
+    "vinxi": "^0.0.37"
+  },
+  "dependencies": {
+    "@vinxi/plugin-directives": "0.0.29",
+    "acorn": "^8.10.0",
+    "acorn-loose": "^8.3.0",
+    "acorn-typescript": "^1.4.3",
+    "astring": "^1.8.6",
+    "magicast": "^0.2.10",
+    "recast": "^0.23.4"
+  }
+}

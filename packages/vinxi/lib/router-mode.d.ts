@@ -22,6 +22,7 @@ type Router<T = {}> = T & {
 	internals: Internals;
 	order: number;
 	outDir: string;
+	target: "server" | "browser" | "static";
 	root: string;
 	name: string;
 	handler?: string;

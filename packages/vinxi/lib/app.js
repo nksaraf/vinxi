@@ -6,7 +6,7 @@ import invariant, { InvariantError } from "./invariant.js";
 import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 
 /** @typedef {{ devtools?: boolean; routers?: import("./router-modes.js").RouterSchemaInput[]; name?: string; server?: import('nitropack').NitroConfig; root?: string }} AppOptions */
-/** @typedef {{ config: { name: string; devtools: boolean; server: import('nitropack').NitroConfig; routers: import("./router-mode.js").Router[]; root: string; }; getRouter: (name: string) => import("./router-modes.js").RouterSchema; dev(): Promise<void>; build(): Promise<void> }} App */
+/** @typedef {{ config: { name: string; devtools: boolean; server: import('nitropack').NitroConfig; routers: import("./router-mode.js").Router[]; root: string; }; getRouter: (name: string) => import("./router-mode.js").Router; dev(): Promise<void>; build(): Promise<void> }} App */
 
 /**
  *
