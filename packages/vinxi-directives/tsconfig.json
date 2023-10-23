@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"checkJs": true,
+		"moduleResolution": "Bundler",
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"allowJs": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
+		"isolatedModules": true,
+		"paths": {
+			"~/runtime": ["./runtime.ts"]
+		}
+	}
+}
