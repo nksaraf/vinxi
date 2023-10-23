@@ -47,10 +47,7 @@ export async function parseExportNamesInto(vite, ast, names, parentURL) {
 
 					const clientImportCode = readFileSync(url, "utf8");
 
-					const childBody = parseLoose(clientImportCode ?? "", {
-						ecmaVersion: "2024",
-						sourceType: "module",
-					}).body;
+					const childBody = parseLoose(clientImportCode ?? "").body;
 
 					await parseExportNamesInto(vite, childBody, names, url);
 					continue;
@@ -428,10 +425,7 @@ export function shimExportsPlugin({
 				return false;
 			}
 
-			const ast = parseLoose(code, {
-				ecmaVersion: "2024",
-				sourceType: "module",
-			});
+			const ast = parseLoose(code);
 
 			if (ast.length === 0) {
 				return;
@@ -459,7 +453,7 @@ export function shimExportsPlugin({
 
 			let needsReference = false;
 			let splits = 0;
-
+			console.log(body[body.length - 1].declarations[0]);
 			visit(body, {
 				visitExportNamedDeclaration(path) {
 					if (
@@ -550,6 +544,7 @@ export function shimExportsPlugin({
 						statements.node.directive == pragma
 					) {
 						needsReference = true;
+						const splitId = splits++;
 						path.replace(
 							types.builders.callExpression(
 								types.builders.identifier(runtime.function),
@@ -579,6 +574,7 @@ export function shimExportsPlugin({
 						statements.node.directive == pragma
 					) {
 						needsReference = true;
+						const splitId = splits++;
 						path.replace(
 							types.builders.callExpression(
 								types.builders.identifier(runtime.function),
@@ -605,6 +601,7 @@ export function shimExportsPlugin({
 			ast.body = body;
 
 			if (needsReference) {
+				console.log(print(ast, {}).code);
 				return (
 					`import { ${runtime.function} } from '${runtime.module}';\n` +
 					print(ast).code

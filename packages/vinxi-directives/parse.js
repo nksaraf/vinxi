@@ -1,13 +1,21 @@
 import * as acorn from "acorn";
+import jsx from "acorn-jsx";
+import * as acornLoose from "acorn-loose";
 import tsPlugin from "acorn-typescript";
 import { parse as recastParse } from "recast";
-
-export { parse as parseLoose } from "acorn-loose";
 
 /** @typedef {acorn.Node & { comments: any[]; tokens: any[] }} AST */
 /** @type {any} */
 const parserTSPlugin = tsPlugin();
-const parser = acorn.Parser.extend(parserTSPlugin);
+const parser = acorn.Parser.extend(parserTSPlugin).extend(jsx());
+const looseParser = acornLoose.LooseParser.extend(jsx());
+
+export function parseLoose(code) {
+	return parser.parse(code, {
+		ecmaVersion: "2024",
+		sourceType: "module",
+	});
+}
 export function parseAdvanced(code) {
 	return recastParse(code, {
 		parser: {

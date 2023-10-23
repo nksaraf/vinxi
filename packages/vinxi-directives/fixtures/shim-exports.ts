@@ -14,3 +14,4 @@ export default function f7() {}
 
 export const x1 = 1;
 const x2 = 1;
+const y = <Abc />;

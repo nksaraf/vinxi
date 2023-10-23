@@ -15,3 +15,4 @@ const if6 = createReference(() => {}, "test?split=5", "default");
 export { if6 as f6 };
 export const x1 = 1;
 const x2 = 1;
+const y = <Abc />;
