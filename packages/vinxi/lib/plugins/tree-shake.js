@@ -8,6 +8,7 @@ import plugin from "./tree-shake.babel.js";
  * @returns {import("../vite-dev.d.ts").Plugin}
  */
 export function treeShake() {
+	/** @type {import('../vite-dev.d.ts').ViteConfig} */
 	let config;
 	let cache = {};
 	let server;
@@ -19,7 +20,6 @@ export function treeShake() {
 			const babel = await import("@babel/core");
 			const transformed = babel.transform(code, {
 				plugins: [
-					...(config.router.build?.babel?.plugins ?? []),
 					jsx,
 					[typescript, { isTSX: true }],
 					[plugin, { pick: query.getAll("pick") }],

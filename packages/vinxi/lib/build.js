@@ -76,7 +76,9 @@ export async function createBuild(app, buildConfig) {
 			...(app.config.server.plugins ?? []),
 		],
 		handlers: [
-			...app.config.routers
+			...[...app.config.routers]
+				.sort((a, b) => a.base.length - b.base.length)
+				.reverse()
 				.map((router) => {
 					if (router.mode === "handler") {
 						invariant(router.handler, "Missing router.handler");

@@ -20,7 +20,6 @@ export function createApp({
 	devtools = true,
 	root = process.cwd(),
 }) {
-	console.log("devtools", devtools);
 	if (devtools) {
 		routers = [devtoolsClient(), devtoolsRpc(), ...routers];
 	}
