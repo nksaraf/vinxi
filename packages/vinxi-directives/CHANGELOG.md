@@ -1,5 +1,13 @@
 # @vinxi/plugin-references
 
+## 0.0.30
+
+### Patch Changes
+
+- 930b2f2: create server components package, remove references package
+- Updated dependencies [1284791]
+  - vinxi@0.0.38
+
 ## 0.0.29
 
 ### Patch Changes

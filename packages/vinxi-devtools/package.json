@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/devtools",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "module": "index.js",
   "scripts": {
@@ -43,6 +43,6 @@
     "tailwind-merge": "^1.14.0",
     "unocss": "^0.56.5",
     "unocss-preset-radix": "^2.5.5",
-    "vinxi": "0.0.37"
+    "vinxi": "0.0.38"
   }
 }

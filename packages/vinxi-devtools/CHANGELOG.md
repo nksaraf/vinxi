@@ -1,5 +1,11 @@
 # @vinxi/openapi
 
+## 0.0.4
+
+### Patch Changes
+
+- 930b2f2: create server components package, remove references package
+
 ## 0.0.3
 
 ### Patch Changes

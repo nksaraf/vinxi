@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.0.38
+
+### Patch Changes
+
+- 1284791: Added @vinxi/server-functions support and chunking in vinxi
+- Updated dependencies [930b2f2]
+  - @vinxi/devtools@0.0.4
+
 ## 0.0.37
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @vinxi/plugin-references
 
+## 0.0.30
+
+### Patch Changes
+
+- 1284791: Added @vinxi/server-functions support and chunking in vinxi
+- 930b2f2: create server components package, remove references package
+- Updated dependencies [1284791]
+- Updated dependencies [930b2f2]
+  - vinxi@0.0.38
+  - @vinxi/plugin-directives@0.0.30
+
 ## 0.0.29
 
 ### Patch Changes
