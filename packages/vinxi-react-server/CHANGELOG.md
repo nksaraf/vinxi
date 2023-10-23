@@ -1,5 +1,11 @@
 # @vinxi/react-server
 
+## 0.0.26
+
+### Patch Changes
+
+- @vinxi/plugin-references@0.0.29
+
 ## 0.0.25
 
 ### Patch Changes

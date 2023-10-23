@@ -11,7 +11,7 @@
   "dependencies": {
     "@picocss/pico": "^1.5.10",
     "@solidjs/meta": "^0.28.6",
-    "@vinxi/plugin-references": "0.0.28",
+    "@vinxi/plugin-references": "0.0.29",
     "@vinxi/solid": "0.0.13",
     "autoprefixer": "^10.4.15",
     "solid-js": "^1.7.11",

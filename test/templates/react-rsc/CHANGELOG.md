@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- @vinxi/plugin-references@0.0.29
+
+## null
+
+### Patch Changes
+
 - @vinxi/plugin-references@0.0.28
 
 ## null

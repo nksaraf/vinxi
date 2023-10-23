@@ -1,5 +1,11 @@
 # @vinxi/plugin-references
 
+## 0.0.29
+
+### Patch Changes
+
+- 984ee77: fix arguments for inline functions
+
 ## 0.0.28
 
 ### Patch Changes
