@@ -1,5 +1,5 @@
 {
-  "name": "@vinxi/plugin-references",
+  "name": "@vinxi/plugin-server-components",
   "version": "0.0.29",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",

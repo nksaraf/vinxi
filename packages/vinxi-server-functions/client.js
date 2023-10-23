@@ -1,4 +1,4 @@
-import { directives } from "@vinxi/plugin-directives";
+import { directives, shimExportsPlugin } from "@vinxi/plugin-directives";
 import { fileURLToPath } from "url";
 import { chunkify } from "vinxi/lib/chunks";
 
@@ -14,6 +14,22 @@ export function client({
 		directives({
 			hash: chunkify,
 			runtime,
+			transforms: [
+				shimExportsPlugin({
+					runtime: {
+						module: runtime,
+						function: "createServerReference",
+					},
+					onModuleFound: (mod) => {
+						serverModules.add(mod);
+					},
+					hash: chunkify,
+					apply: (code, id, options) => {
+						return !options.ssr;
+					},
+					pragma: "use server",
+				}),
+			],
 			onReference(type, reference) {
 				if (type === "server") {
 					serverModules.add(reference);

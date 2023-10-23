@@ -1,16 +1,9 @@
-import { references } from "@vinxi/plugin-references";
+import { serverComponents } from "@vinxi/plugin-server-components";
+import { serverFunctions } from "@vinxi/plugin-server-functions";
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 
 export default createApp({
-	server: {
-		plugins: [references.serverPlugin],
-		virtual: {
-			[references.serverPlugin]: references.serverPluginModule({
-				routers: ["server", "rsc"],
-			}),
-		},
-	},
 	routers: [
 		{
 			name: "public",
@@ -24,7 +17,7 @@ export default createApp({
 			base: "/_rsc",
 			handler: "./app/react-server.tsx",
 			target: "server",
-			plugins: () => [references.serverComponents(), reactRefresh()],
+			plugins: () => [serverComponents.server(), reactRefresh()],
 		},
 		{
 			name: "client",
@@ -32,11 +25,11 @@ export default createApp({
 			handler: "./index.ts",
 			target: "browser",
 			plugins: () => [
-				references.clientRouterPlugin({
+				serverFunctions.client({
 					runtime: "@vinxi/react-server-dom/runtime",
 				}),
 				reactRefresh(),
-				references.clientComponents(),
+				serverComponents.client(),
 			],
 			base: "/",
 		},
@@ -48,11 +41,12 @@ export default createApp({
 			handler: "./app/server-action.tsx",
 			target: "server",
 			plugins: () => [
-				references.serverRouterPlugin({
+				serverFunctions.server({
 					resolve: {
 						conditions: ["react-server"],
 					},
 				}),
+				serverComponents.serverActions(),
 			],
 		},
 	],

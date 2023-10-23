@@ -1,12 +1,14 @@
 import { fileURLToPath } from "url";
 
 import { client } from "./client.js";
+import { serverActions } from "./server-action.js";
 import { server } from "./server.js";
 
-export const serverFunctions = {
+export const serverComponents = {
 	client: client,
 	server: server,
-	router: (overrides) => ({
+	serverActions: serverActions,
+	serverRouter: (overrides) => ({
 		name: "server",
 		mode: "handler",
 		base: "/_server",

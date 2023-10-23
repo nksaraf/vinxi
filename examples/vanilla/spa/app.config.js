@@ -13,7 +13,7 @@ export default createApp({
 			mode: "spa",
 			handler: "./index.html",
 			target: "browser",
-			plugins: () => [serverFunctions.clientPlugin()],
+			plugins: () => [serverFunctions.client()],
 		},
 		serverFunctions.router({
 			middleware: "./app/middleware.tsx",

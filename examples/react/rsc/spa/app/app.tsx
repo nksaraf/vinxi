@@ -4,6 +4,8 @@ import { Counter } from "./Counter";
 import { getStore, sayHello } from "./actions";
 import "./style.css";
 
+console.log(sayHello);
+
 export default function App({ assets }) {
 	return (
 		<html lang="en">

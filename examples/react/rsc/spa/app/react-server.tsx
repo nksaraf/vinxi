@@ -38,6 +38,7 @@ export default eventHandler(async (event) => {
 			// not the client trying to invoke arbitrary functions. In a real app,
 			// you'd have a manifest verifying this before even importing it.
 			if (action.$$typeof !== Symbol.for("react.server.reference")) {
+				console.log(action);
 				throw new Error("Invalid action");
 			}
 

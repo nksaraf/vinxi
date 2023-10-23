@@ -11,18 +11,6 @@ export function directives({
 	onReference = (type, ref) => {},
 	runtime = "",
 	transforms = [
-		shimExportsPlugin({
-			runtime: {
-				module: runtime,
-				function: "createServerReference",
-			},
-			onModuleFound: (mod) => onReference("server", mod),
-			hash: hash,
-			apply: (code, id, options) => {
-				return !options.ssr;
-			},
-			pragma: "use server",
-		}),
 		// decorateExportsPlugin({
 		// 	runtime: {
 		// 		module: runtime,
@@ -84,10 +72,22 @@ export function directives({
 				throw new Error("no split handler");
 			}
 
+			if (id.endsWith(".css")) {
+				return;
+			}
+
+			if (id.includes("actions")) {
+				console.log(code);
+			}
+
 			for (var transform of transforms) {
 				if (transform.transform) {
 					code = await transform.transform(code, id, opts);
 				}
+			}
+
+			if (id.includes("actions")) {
+				console.log(code);
 			}
 			return code;
 		},

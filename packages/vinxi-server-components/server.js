@@ -1,13 +1,18 @@
-import { directives } from "@vinxi/plugin-directives";
+import {
+	decorateExportsPlugin,
+	directives,
+	shimExportsPlugin,
+} from "@vinxi/plugin-directives";
+import { chunkify } from "vinxi/lib/chunks";
 
-import { SERVER_REFERENCES_MANIFEST, hash } from "./constants.js";
+import { SERVER_REFERENCES_MANIFEST } from "./constants.js";
 
 /**
  *
  * @param {*} param0
  * @returns {import('vinxi').Plugin[]}
  */
-export function serverComponents({
+export function server({
 	resolve = {
 		conditions: ["react-server"],
 	},
@@ -20,7 +25,7 @@ export function serverComponents({
 	const clientModules = new Set();
 	return [
 		directives({
-			hash: (e) => `c_${hash(e)}`,
+			hash: chunkify,
 			runtime,
 			onReference(type, reference) {
 				if (type === "server") {
@@ -29,7 +34,36 @@ export function serverComponents({
 					clientModules.add(reference);
 				}
 			},
-			transforms,
+			transforms: [
+				decorateExportsPlugin({
+					runtime: {
+						module: runtime,
+						function: "createServerReference",
+					},
+					onModuleFound: (mod) => {
+						serverModules.add(mod);
+					},
+					hash: chunkify,
+					apply: (code, id, options) => {
+						return options.ssr;
+					},
+					pragma: "use server",
+				}),
+				shimExportsPlugin({
+					runtime: {
+						module: runtime,
+						function: "createClientReference",
+					},
+					onModuleFound: (mod) => {
+						clientModules.add(mod);
+					},
+					hash: chunkify,
+					apply: (code, id, options) => {
+						return options.ssr;
+					},
+					pragma: "use client",
+				}),
+			],
 		}),
 		buildServerComponents({
 			resolve,
@@ -94,7 +128,7 @@ export function buildServerComponents({
 									// are called. we need to do this in manualChunks because we don't
 									// want to run a preanalysis pass just to identify these
 									if (modules.server.has(chunk)) {
-										return `c_${hash(chunk)}`;
+										return chunkify(chunk);
 									}
 								},
 								// we want to control the chunk names so that we can load them

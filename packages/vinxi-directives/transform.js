@@ -416,19 +416,19 @@ export function shimExportsPlugin({
 		name: "shim-exports",
 		async transform(code, id, options, applied) {
 			if (code.indexOf(pragma) === -1) {
-				return false;
+				return code;
 			}
 
 			const shouldApply = apply(code, id, options);
 
 			if (!shouldApply) {
-				return false;
+				return code;
 			}
 
 			const ast = parseLoose(code);
 
 			if (ast.length === 0) {
-				return;
+				return code;
 			}
 
 			const body = ast.body;
@@ -601,7 +601,6 @@ export function shimExportsPlugin({
 			ast.body = body;
 
 			if (needsReference) {
-				console.log(print(ast, {}).code);
 				return (
 					`import { ${runtime.function} } from '${runtime.module}';\n` +
 					print(ast).code
@@ -628,13 +627,13 @@ export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
 		name: "shim-exports",
 		async split(code, id, options) {
 			if (code.indexOf(pragma) === -1) {
-				return false;
+				return code;
 			}
 
 			const shouldApply = apply(code, id, options);
 
 			if (!shouldApply) {
-				return false;
+				return code;
 			}
 
 			const ast = parseLoose(code, {
@@ -643,7 +642,7 @@ export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
 			});
 
 			if (ast.length === 0) {
-				return;
+				return code;
 			}
 
 			const body = ast.body;
@@ -1001,42 +1000,17 @@ export function decorateExportsPlugin({
 	return {
 		name: "decorate-exports",
 		async transform(code, id, options, ctx) {
-			const ast = parseLoose(code, {
-				ecmaVersion: "2024",
-				sourceType: "module",
-			}).body;
-
-			if (ast.length === 0) {
-				return;
-			}
-
-			onModuleFound(id, options);
-
-			const body = await decorateExports({
-				runtime,
-				ast,
-				id,
-				code,
-				hash,
-				options,
-			});
-			return body;
-		},
-		apply(code, id, options) {
 			if (code.indexOf(pragma) === -1) {
-				return false;
+				return code;
 			}
 
 			const shouldApply = apply(code, id, options);
 
 			if (!shouldApply) {
-				return false;
+				return code;
 			}
 
-			const body = parseLoose(code, {
-				ecmaVersion: "2024",
-				sourceType: "module",
-			}).body;
+			const body = parseLoose(code).body;
 
 			for (let i = 0; i < body.length; i++) {
 				const node = body[i];
@@ -1044,11 +1018,19 @@ export function decorateExportsPlugin({
 					break;
 				}
 				if (node.directive === pragma) {
-					return { body };
+					onModuleFound?.(id);
+					return await decorateExports({
+						runtime,
+						ast: body,
+						id,
+						code,
+						hash,
+						options,
+					});
 				}
 			}
 
-			return false;
+			return code;
 		},
 	};
 }
@@ -1064,19 +1046,19 @@ export function wrapExportsPlugin({
 		name: "wrap-exports",
 		async transform(code, id, options) {
 			if (code.indexOf(pragma) === -1) {
-				return false;
+				return code;
 			}
 
 			const shouldApply = apply(code, id, options);
 
 			if (!shouldApply) {
-				return false;
+				return code;
 			}
 
 			const ast = parseAdvanced(code);
 
 			if (ast.length === 0) {
-				return;
+				return code;
 			}
 
 			const body = ast.program.body;

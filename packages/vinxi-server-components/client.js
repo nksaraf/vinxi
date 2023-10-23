@@ -1,13 +1,35 @@
 import { readFileSync } from "fs";
+import { chunkify } from "vinxi/lib/chunks";
 import { join } from "vinxi/lib/path";
 
-import { SERVER_REFERENCES_MANIFEST, hash } from "./constants.js";
+import { SERVER_REFERENCES_MANIFEST } from "./constants.js";
+
+/**
+ *
+ * @param {*} param0
+ * @returns {import('vinxi').Plugin[]}
+ */
+export function client({
+	server = "rsc",
+	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom"],
+	manifest = SERVER_REFERENCES_MANIFEST,
+} = {}) {
+	const serverModules = new Set();
+	const clientModules = new Set();
+	return [
+		buildClientComponents({
+			server,
+			transpileDeps,
+			manifest,
+		}),
+	];
+}
 
 /**
  *
  * @returns {import('vinxi').Plugin}
  */
-export function clientComponents({
+export function buildClientComponents({
 	server = "rsc",
 	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom"],
 	manifest = SERVER_REFERENCES_MANIFEST,
@@ -37,7 +59,7 @@ export function clientComponents({
 					entry: router.handler,
 					...Object.fromEntries(
 						serverManifest.client.map((key) => {
-							return [`c_${hash(key)}`, key];
+							return [chunkify(key), key];
 						}),
 					),
 				};
