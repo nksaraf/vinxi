@@ -27,6 +27,7 @@
     "vinxi": "^0.0.36"
   },
   "dependencies": {
+    "@vinxi/plugin-directives": "0.0.26",
     "acorn": "^8.10.0",
     "acorn-loose": "^8.3.0",
     "acorn-typescript": "^1.4.3",

@@ -1,7 +1,7 @@
+import { directives } from "@vinxi/plugin-directives";
 import { fileURLToPath } from "url";
 
 import { CLIENT_REFERENCES_MANIFEST, hash } from "./constants.js";
-import { transformReferences } from "./transform-references.js";
 
 export function client({
 	runtime = fileURLToPath(new URL("./references-runtime.js", import.meta.url)),
@@ -10,7 +10,7 @@ export function client({
 	const serverModules = new Set();
 	const clientModules = new Set();
 	return [
-		transformReferences({
+		directives({
 			hash: (e) => `c_${hash(e)}`,
 			runtime,
 			onReference(type, reference) {

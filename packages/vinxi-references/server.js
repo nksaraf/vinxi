@@ -1,3 +1,4 @@
+import { directives, splitPlugin } from "@vinxi/plugin-directives";
 import { readFileSync } from "fs";
 import { handlerModule, join } from "vinxi/lib/path";
 
@@ -5,7 +6,7 @@ import { CLIENT_REFERENCES_MANIFEST, hash } from "./constants.js";
 
 /**
  *
- * @returns {import('vinxi').Plugin}
+ * @returns {import('vinxi').Plugin[]}
  */
 export function server({
 	client = "client",
@@ -16,72 +17,99 @@ export function server({
 } = {}) {
 	let isBuild;
 	let input;
-	return {
-		name: "server-references",
-		enforce: "post",
-		config(config, env) {
-			isBuild = env.command === "build";
-			// @ts-ignore
-			const router = config.router;
-			// @ts-ignore
-			const app = config.app;
+	return [
+		directives({
+			hash: (e) => `c_${hash(e)}`,
+			runtime: "",
+			transforms: [
+				splitPlugin({
+					runtime: {
+						module: "",
+						function: "createServerReference",
+					},
+					// onModuleFound: (mod) => onReference("server", mod),
+					hash: hash,
+					apply: (code, id, options) => {
+						return options.ssr;
+					},
+					pragma: "use server",
+				}),
+			],
+			onReference(type, reference) {
+				// if (type === "server") {
+				// 	serverModules.add(reference);
+				// } else {
+				// 	clientModules.add(reference);
+				// }
+			},
+		}),
+		{
+			name: "server-references",
+			enforce: "post",
+			config(config, env) {
+				isBuild = env.command === "build";
+				// @ts-ignore
+				const router = config.router;
+				// @ts-ignore
+				const app = config.app;
 
-			if (isBuild) {
-				const rscRouter = app.getRouter(client);
+				if (isBuild) {
+					const rscRouter = app.getRouter(client);
 
-				const reactClientManifest = JSON.parse(
-					readFileSync(
-						join(rscRouter.outDir, rscRouter.base, manifest),
-						"utf-8",
-					),
-				);
+					const reactClientManifest = JSON.parse(
+						readFileSync(
+							join(rscRouter.outDir, rscRouter.base, manifest),
+							"utf-8",
+						),
+					);
 
-				input = {
-					entry: handlerModule(router),
-					...Object.fromEntries(
-						reactClientManifest.server.map((key) => {
-							return [`c_${hash(key)}`, key];
-						}),
-					),
-				};
+					input = {
+						entry: handlerModule(router),
+						...Object.fromEntries(
+							reactClientManifest.server.map((key) => {
+								return [`c_${hash(key)}`, key];
+							}),
+						),
+					};
 
-				return {
-					build: {
-						rollupOptions: {
-							output: {
-								chunkFileNames: "[name].js",
+					return {
+						build: {
+							rollupOptions: {
+								output: {
+									chunkFileNames: "[name].js",
+								},
+								treeshake: true,
 							},
-							treeshake: true,
 						},
-					},
-					ssr: {
-						resolve: {
-							externalConditions: [
-								"node",
-								"import",
-								...(resolve.conditions ?? []),
-								process.env.NODE_ENV,
-							],
-							conditions: [
-								"node",
-								"import",
-								...(resolve.conditions ?? []),
-								process.env.NODE_ENV,
-							],
+						ssr: {
+							resolve: {
+								externalConditions: [
+									"node",
+									"import",
+									...(resolve.conditions ?? []),
+									process.env.NODE_ENV,
+								],
+								conditions: [
+									"node",
+									"import",
+									...(resolve.conditions ?? []),
+									process.env.NODE_ENV,
+								],
+							},
+							noExternal: true,
 						},
-						noExternal: true,
-					},
-				};
-			}
-		},
+					};
+				}
+			},
 
-		configResolved(config) {
-			if (isBuild) {
-				// const reactServerManifest = JSON.parse(
-				// 	readFileSync(".build/rsc/_rsc/react-server-manifest.json", "utf-8"),
-				// );
-				config.build.rollupOptions.input = input;
-			}
+			configResolved(config) {
+				if (isBuild) {
+					// const reactServerManifest = JSON.parse(
+					// 	readFileSync(".build/rsc/_rsc/react-server-manifest.json", "utf-8"),
+					// );
+					config.build.rollupOptions.input = input;
+				}
+			},
 		},
-	};
+	];
 }

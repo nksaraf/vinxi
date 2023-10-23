@@ -79,9 +79,6 @@ export function clientComponents({
 
 		configResolved(config) {
 			if (isBuild) {
-				// const reactServerManifest = JSON.parse(
-				// 	readFileSync(".build/rsc/_rsc/react-server-manifest.json", "utf-8"),
-				// );
 				config.build.rollupOptions.input = input;
 			}
 		},

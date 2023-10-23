@@ -1,10 +1,11 @@
+import { directives } from "@vinxi/plugin-directives";
+
 import { SERVER_REFERENCES_MANIFEST, hash } from "./constants.js";
-import { transformReferences } from "./transform-references.js";
 
 /**
  *
  * @param {*} param0
- * @returns {import('vinxi').Plugin}
+ * @returns {import('vinxi').Plugin[]}
  */
 export function serverComponents({
 	resolve = {
@@ -18,7 +19,7 @@ export function serverComponents({
 	const serverModules = new Set();
 	const clientModules = new Set();
 	return [
-		transformReferences({
+		directives({
 			hash: (e) => `c_${hash(e)}`,
 			runtime,
 			onReference(type, reference) {

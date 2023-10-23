@@ -1,3 +1,4 @@
+import { directives } from "@vinxi/plugin-directives";
 import { fileURLToPath } from "url";
 
 import { chunksServerVirtualModule } from "./chunks.js";
@@ -5,12 +6,11 @@ import { clientComponents } from "./client-components.js";
 import { client } from "./client.js";
 import { serverComponents } from "./server-components.js";
 import { server } from "./server.js";
-import { transformReferences } from "./transform-references.js";
 
 export const references = {
 	serverPlugin: "#extra-chunks",
 	serverPluginModule: chunksServerVirtualModule,
-	transformReferences,
+	transformReferences: directives,
 	clientRouterPlugin: client,
 	serverRouterPlugin: server,
 	clientComponents,
