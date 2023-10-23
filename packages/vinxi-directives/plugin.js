@@ -76,19 +76,12 @@ export function directives({
 				return;
 			}
 
-			if (id.includes("actions")) {
-				console.log(code);
-			}
-
 			for (var transform of transforms) {
 				if (transform.transform) {
 					code = await transform.transform(code, id, opts);
 				}
 			}
 
-			if (id.includes("actions")) {
-				console.log(code);
-			}
 			return code;
 		},
 	};

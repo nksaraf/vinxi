@@ -6,12 +6,6 @@ export default lazyEventHandler(async () => {
 	return eventHandler(async (event) => {
 		const routers = import.meta.env.ROUTERS;
 
-		console.log(
-			await Promise.all(
-				routers.map((router) => import.meta.env.MANIFEST[router].routes()),
-			),
-		);
-
 		/** @type {import('openapi-types').OpenAPIV3.Document['paths']} */
 		const paths = {};
 		for (var router of routers) {
@@ -40,8 +34,6 @@ export default lazyEventHandler(async () => {
 			};
 			return x;
 		}
-		console.log(event.path);
-
 		return await doc(`file://` + event.path);
 	});
 });

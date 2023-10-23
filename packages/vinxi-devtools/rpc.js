@@ -6,9 +6,7 @@ const getApp = () => {
 	return globalThis.app;
 };
 export const functions = {
-	add: () => {
-		console.log("adding hello");
-	},
+	add: () => {},
 	getRouterNames: () => {
 		return getApp().config.routers.map((router) => router.name);
 	},
