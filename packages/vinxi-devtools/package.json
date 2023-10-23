@@ -16,6 +16,13 @@
     ".": "./index.js",
     "./mount": "./mount.js"
   },
+  "files": [
+    "devtools-rpc.js",
+    "index.js",
+    "rpc.js",
+    "mount.js",
+    ".nitro/build/devtools-client/**/*"
+  ],
   "devDependencies": {
     "@iconify/json": "^2.2.130",
     "@radix-ui/react-icons": "^1.3.0",
@@ -36,6 +43,6 @@
     "tailwind-merge": "^1.14.0",
     "unocss": "^0.56.5",
     "unocss-preset-radix": "^2.5.5",
-    "vinxi": "workspace:^"
+    "vinxi": "0.0.36"
   }
 }
