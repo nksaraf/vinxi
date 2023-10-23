@@ -1,28 +1,28 @@
-export const f1 = function () {
+export const f1 = function (input, options) {
 	"use runtime";
 	console.log("hello");
 };
-const f11 = function () {
+const f11 = function (input, options) {
 	"use runtime";
 	console.log("hello");
 };
-export const fn2 = () => {};
-export const f2 = () => {
+export const fn2 = (input, options) => {};
+export const f2 = (input, options) => {
 	"use runtime";
 	console.log("hello");
 };
-const f3 = () => {
+const f3 = (input, options) => {
 		"use runtime";
 		console.log("hello");
 	},
-	f4 = function () {};
+	f4 = function (input, options) {};
 export { f3, f4 };
 
-export function f5() {
+export function f5(input, options) {
 	"use runtime";
 	console.log("hello");
 }
-function if6() {
+function if6(input, options) {
 	"use runtime";
 	console.log("hello");
 }

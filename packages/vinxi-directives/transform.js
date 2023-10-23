@@ -453,7 +453,6 @@ export function shimExportsPlugin({
 
 			let needsReference = false;
 			let splits = 0;
-			console.log(body[body.length - 1].declarations[0]);
 			visit(body, {
 				visitExportNamedDeclaration(path) {
 					if (
@@ -562,6 +561,7 @@ export function shimExportsPlugin({
 								],
 							),
 						);
+						onModuleFound?.(id + `?split=${splitId}`);
 						this.traverse(path);
 					}
 					return false;
@@ -670,7 +670,7 @@ export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
 								pickedFn = types.builders.exportDefaultDeclaration(
 									types.builders.functionDeclaration(
 										name ? types.builders.identifier(name) : null,
-										[],
+										path.node.declaration.params,
 										types.builders.blockStatement(
 											path.node.declaration.body.body.slice(1),
 										),
@@ -679,30 +679,6 @@ export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
 							}
 							splits++;
 							return false;
-							// path.replace(
-							// 	types.builders.exportNamedDeclaration(
-							// 		types.builders.variableDeclaration("const", [
-							// 			types.builders.variableDeclarator(
-							// 				types.builders.identifier(name),
-							// 				types.builders.callExpression(
-							// 					types.builders.identifier(runtime.function),
-							// 					[
-							// 						types.builders.arrowFunctionExpression(
-							// 							[],
-							// 							types.builders.blockStatement([]),
-							// 						),
-							// 						types.builders.stringLiteral(
-							// 							options.command === "build"
-							// 								? hash(id)
-							// 								: id + `?split=${splits++}`,
-							// 						),
-							// 						types.builders.stringLiteral("default"),
-							// 					],
-							// 				),
-							// 			),
-							// 		]),
-							// 	),
-							// );
 						}
 					}
 
@@ -720,7 +696,7 @@ export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
 							pickedFn = types.builders.exportDefaultDeclaration(
 								types.builders.functionDeclaration(
 									name,
-									[],
+									path.node.params,
 									types.builders.blockStatement(path.node.body.body.slice(1)),
 								),
 							);
@@ -730,34 +706,26 @@ export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
 					}
 					return this.traverse(path);
 				},
-				// visitArrowFunctionExpression(path) {
-				// 	const statements = path.get("body", "body", 0);
-				// 	if (
-				// 		statements.node.type === "ExpressionStatement" &&
-				// 		statements.node.directive == pragma
-				// 	) {
-				// 		needsReference = true;
-				// 		path.replace(
-				// 			types.builders.callExpression(
-				// 				types.builders.identifier(runtime.function),
-				// 				[
-				// 					types.builders.arrowFunctionExpression(
-				// 						[],
-				// 						types.builders.blockStatement([]),
-				// 					),
-				// 					types.builders.stringLiteral(
-				// 						options.command === "build"
-				// 							? hash(id)
-				// 							: id + `?split=${splits++}`,
-				// 					),
-				// 					types.builders.stringLiteral("default"),
-				// 				],
-				// 			),
-				// 		);
-				// 		this.traverse(path);
-				// 	}
-				// 	return false;
-				// },
+				visitArrowFunctionExpression(path) {
+					const statements = path.get("body", "body", 0);
+					if (
+						statements.node.type === "ExpressionStatement" &&
+						statements.node.directive == pragma
+					) {
+						needsReference = true;
+						if (splits === options.split) {
+							pickedFn = types.builders.exportDefaultDeclaration(
+								types.builders.arrowFunctionExpression(
+									path.node.params,
+									types.builders.blockStatement(path.node.body.body.slice(1)),
+								),
+							);
+						}
+						splits++;
+						return false;
+					}
+					return false;
+				},
 				// visitFunctionExpression(path) {
 				// 	const name = path.node.id?.name.toString();
 				// 	const statements = path.get("body", "body", 0);
