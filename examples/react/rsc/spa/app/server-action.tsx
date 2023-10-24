@@ -6,16 +6,13 @@ import { eventHandler, sendStream } from "vinxi/server";
 // import App from "./app";
 
 export default eventHandler(async (event) => {
-	console.log("event", event);
 	async function loadModule(id) {
 		if (import.meta.env.DEV) {
-			console.log(import.meta.env.MANIFEST["rsc"].chunks[id].output.path);
 			return await import(
 				import.meta.env.MANIFEST["rsc"].chunks[id].output.path
 			);
 		}
 
-		console.log(id, globalThis.$$chunks);
 		if (globalThis.$$chunks[id + ".js"]) {
 			return globalThis.$$chunks[id + ".js"];
 		}

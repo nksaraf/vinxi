@@ -22,8 +22,6 @@ export default eventHandler(async (event) => {
 
 	const writableStream = new Writable({
 		write(chunk, encoding, callback) {
-			console.log("chunk", chunk);
-
 			readable.push(chunk);
 			callback();
 		},
@@ -37,7 +35,6 @@ export default eventHandler(async (event) => {
 		//     id: rest.id,
 		//   })
 		// );
-		console.log("finish");
 
 		readable.push(null);
 		readable.destroy();
@@ -50,11 +47,8 @@ export default eventHandler(async (event) => {
 	const clientManifest = import.meta.env.MANIFEST["client"];
 
 	const events = {};
-	console.log("element", "here");
 
 	const element = await ReactServerDOM.createFromNodeStream(readable);
-
-	console.log("element", element);
 
 	const stream = renderToPipeableStream(element, {
 		bootstrapModules: [
@@ -94,14 +88,6 @@ export default eventHandler(async (event) => {
 	// );
 
 	// @ts-ignore
-	stream.on = (event, listener) => {
-		console.log("on", "event", event);
-
-		events[event] = listener;
-	};
-
-	console.log("render");
-
 	event.node.res.setHeader("Content-Type", "text/html");
 	return stream;
 });

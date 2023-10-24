@@ -7,7 +7,6 @@ const storage = createStorage({
 	driver: fsDriver({ base: "./tmp" }),
 });
 
-let store = { count: 0 };
 export async function sayHello() {
 	console.log("Hello World");
 	await storage.setItem(
