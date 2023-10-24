@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node dev.js --dev --force",
     "build": "node build.js --build",
-    "build:mount": "esbuild --bundle --jsx=transform --jsx-factory=h --format=esm --jsx-fragment=Fragment --target=es2020 --external:./style.css?raw --outdir=./dist mount.jsx"
+    "build:mount": "bun build --jsx-runtime=classic --jsx-import-source=preact --external '*?raw' --outdir dist mount.jsx"
   },
   "dependencies": {
     "birpc": "^0.2.14",

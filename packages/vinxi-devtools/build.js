@@ -1,6 +1,5 @@
+import { $ } from "execa";
 import { createApp } from "vinxi";
-import {$} from 'execa';
-
 
 import { devtoolsClientDev } from "./devtools-dev.js";
 
@@ -10,8 +9,7 @@ const app = createApp({
 
 app.hooks.hook("app:build:end", async () => {
 	const { default: fs } = await import("fs/promises");
-	console.log('writing');
-	await fs.rm
+	await fs.rm;
 	await fs.cp(".nitro/build/devtools-client/__devtools/client", "dist/client", {
 		recursive: true,
 	});
@@ -19,10 +17,7 @@ app.hooks.hook("app:build:end", async () => {
 		recursive: true,
 	});
 
-
-	await $`esbuild --bundle --jsx=transform --jsx-factory=h --format=esm --jsx-fragment=Fragment --target=es2020 --external:./style.css?raw --outdir=./dist mount.jsx`
-	console.log('writing');
-
+	console.log((await $`npm run build:mount`).stdout);
 });
 
 export default app;
