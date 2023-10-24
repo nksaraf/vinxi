@@ -95,6 +95,11 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm --filter tests install:playwright
 
+      - name: 👀 Build things that need to be built
+        env:
+          START_ADAPTER: ${{ matrix.adapter }}
+        run: npm run build
+        
       - name: 👀 Run Integration Tests
         env:
           START_ADAPTER: ${{ matrix.adapter }}
