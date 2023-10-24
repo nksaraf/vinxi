@@ -1,7 +1,7 @@
 import { EventHandler } from "h3";
 
 import { App } from "./app.js";
-import { ServeConfig } from "./dev-server.js";
+import { DevConfig } from "./dev-server.js";
 import { Internals } from "./router-modes.js";
 
 type PublicAsset = {
@@ -42,7 +42,7 @@ export type RouterMode<T extends any = any> = {
 		handler?: (
 			router: Router<T>,
 			app: App,
-			serveConfig: ServeConfig,
+			serveConfig: DevConfig,
 		) =>
 			| Promise<DevHandler | DevHandler[]>
 			| DevHandler

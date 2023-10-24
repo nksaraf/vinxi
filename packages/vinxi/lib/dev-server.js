@@ -1,10 +1,14 @@
+import { inspect } from "@vinxi/devtools";
+import { readFile } from "fs/promises";
+
 import { consola, withLogger } from "./logger.js";
+import { config } from "./plugins/config.js";
+import { virtual } from "./plugins/virtual.js";
 
 export * from "./router-dev-plugins.js";
-import { inspect } from '@vinxi/devtools'
 
-/** @typedef {{ force?: boolean; port?: number; dev?: boolean; ws?: { port?: number } }} ServeConfigInput */
-/** @typedef {{ force: boolean; port: number; dev: boolean; ws: { port: number } }} ServeConfig */
+/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number } }} DevConfigInput */
+/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number } }} DevConfig */
 
 /**
  *
@@ -39,7 +43,7 @@ export async function createViteDevServer(config) {
  *
  * @param {import('./app.js').App} app
  * @param {import('./router-mode.d.ts').Router<{ plugins?: any }>} router
- * @param {ServeConfig} serveConfig
+ * @param {DevConfig} serveConfig
  * @returns {Promise<import("vite").ViteDevServer>}
  */
 export async function createViteHandler(router, app, serveConfig) {
@@ -49,7 +53,7 @@ export async function createViteHandler(router, app, serveConfig) {
 		configFile: false,
 		base: router.base,
 		plugins: [
-			app.config.devtools ? inspect() : null,
+			...(serveConfig.devtools ? [inspect()] : []),
 			...((
 				(await router.internals.mode.dev.plugins?.(router, app)) ?? []
 			).filter(Boolean) || []),
@@ -58,6 +62,7 @@ export async function createViteHandler(router, app, serveConfig) {
 		optimizeDeps: {
 			force: serveConfig.force,
 		},
+		dev: serveConfig,
 		router,
 		app,
 		server: {
@@ -76,7 +81,7 @@ export async function createViteHandler(router, app, serveConfig) {
 /**
  *
  * @param {import('./app.js').App} app
- * @param {ServeConfigInput} param1
+ * @param {DevConfigInput} param1
  * @returns
  */
 export async function createDevServer(
@@ -84,103 +89,110 @@ export async function createDevServer(
 	{
 		force = false,
 		port = 3000,
-		dev = false,
+		devtools = false,
 		ws: { port: wsPort = undefined } = {},
 	},
 ) {
 	const serveConfig = {
 		port,
 		force,
-		dev,
+		devtools,
 		ws: {
 			port: wsPort,
 		},
 	};
 
-	if (dev) {
-		const { createNitro } = await import("nitropack");
-		const nitro = await createNitro({
-			...app.config.server,
-			rootDir: "",
-			dev: true,
-			preset: "nitro-dev",
-			publicAssets: [
-				...app.config.routers
-					.map((router) => {
-						return router.internals.mode.dev.publicAssets?.(router, app.config);
-					})
-					.filter(
-						/**
-						 * @param {*} asset
-						 * @returns {asset is import("./router-mode.js").PublicAsset[]}
-						 */
-						(asset) => Boolean(asset),
-					)
-					.flat(),
-				...(app.config.server.publicAssets ?? []),
-			],
-			devHandlers: [
-				...(
-					await Promise.all(
-						app.config.routers
-							.sort((a, b) => b.base.length - a.base.length)
-							.map((router) =>
-								router.internals.mode.dev.handler?.(router, app, serveConfig),
-							),
-					)
+	console.log(serveConfig);
+	if (devtools) {
+		const { devtoolsClient, devtoolsRpc } = await import("@vinxi/devtools");
+		app.addRouter(devtoolsClient());
+		app.addRouter(devtoolsRpc());
+	}
+
+	const { createNitro } = await import("nitropack");
+	const nitro = await createNitro({
+		...app.config.server,
+		rootDir: "",
+		dev: true,
+		preset: "nitro-dev",
+		publicAssets: [
+			...app.config.routers
+				.map((router) => {
+					return router.internals.mode.dev.publicAssets?.(router, app.config);
+				})
+				.filter(
+					/**
+					 * @param {*} asset
+					 * @returns {asset is import("./router-mode.js").PublicAsset[]}
+					 */
+					(asset) => Boolean(asset),
 				)
-					.filter(
-						/**
-						 * @param {*} asset
-						 * @returns {asset is import("./router-mode.js").DevHandler[]}
-						 */
-						(asset) => Boolean(asset),
-					)
-					.flat(),
-			],
-			handlers: [...(app.config.server.handlers ?? [])],
-			plugins: [...(app.config.server.plugins ?? [])],
-		});
+				.flat(),
+			...(app.config.server.publicAssets ?? []),
+		],
+		devHandlers: [
+			...(
+				await Promise.all(
+					app.config.routers
+						.sort((a, b) => b.base.length - a.base.length)
+						.map((router) =>
+							router.internals.mode.dev.handler?.(router, app, serveConfig),
+						),
+				)
+			)
+				.filter(
+					/**
+					 * @param {*} asset
+					 * @returns {asset is import("./router-mode.js").DevHandler[]}
+					 */
+					(asset) => Boolean(asset),
+				)
+				.flat(),
+		],
+		handlers: [...(app.config.server.handlers ?? [])],
+		plugins: [...(app.config.server.plugins ?? [])],
+	});
 
-		// We do this so that nitro doesn't try to load app.config.ts files since those are
-		// special to vinxi as the app definition files.
-		nitro.options.appConfigFiles = [];
-		nitro.logger = consola.withTag(app.config.name);
+	// We do this so that nitro doesn't try to load app.config.ts files since those are
+	// special to vinxi as the app definition files.
+	nitro.options.appConfigFiles = [];
+	nitro.logger = consola.withTag(app.config.name);
 
-		// During development, we use our own nitro dev server instead of the one provided by nitro.
-		// it's very similar to the one provided by nitro, but it has different defaults. Most importantly, it
-		// doesn't run the server in a worker.
-		const { createDevServer: createNitroDevServer } = await import(
-			"./nitro-dev.js"
-		);
+	// During development, we use our own nitro dev server instead of the one provided by nitro.
+	// it's very similar to the one provided by nitro, but it has different defaults. Most importantly, it
+	// doesn't run the server in a worker.
+	const { createDevServer: createNitroDevServer } = await import(
+		"./nitro-dev.js"
+	);
 
-		const devApp = createNitroDevServer(nitro);
-		await devApp.listen(port, {});
+	const devApp = createNitroDevServer(nitro);
 
-		for (const router of app.config.routers) {
-			if (router.internals && router.internals.routes) {
-				const routes = await router.internals.routes.getRoutes();
-				for (const route of routes) {
-					withLogger({ router }, () => console.log(route.path));
-				}
+	for (const router of app.config.routers) {
+		if (router.internals && router.internals.routes) {
+			const routes = await router.internals.routes.getRoutes();
+			for (const route of routes) {
+				withLogger({ router }, () => console.log(route.path));
 			}
 		}
-
-		// We do this so that we can access the app in plugins using globalThis.app just like we do in production.
-		// @ts-ignore
-		globalThis.app = app;
-
-		// Running plugins manually
-		const plugins = [
-			new URL("./app-fetch.js", import.meta.url).href,
-			new URL("./app-manifest.js", import.meta.url).href,
-		];
-
-		for (const plugin of plugins) {
-			const { default: pluginFn } = await import(plugin);
-			await pluginFn(devApp);
-		}
-
-		return devApp;
 	}
+
+	// We do this so that we can access the app in plugins using globalThis.app just like we do in production.
+	// @ts-ignore
+	globalThis.app = app;
+
+	// Running plugins manually
+	const plugins = [
+		new URL("./app-fetch.js", import.meta.url).href,
+		new URL("./app-manifest.js", import.meta.url).href,
+	];
+
+	for (const plugin of plugins) {
+		const { default: pluginFn } = await import(plugin);
+		await pluginFn(devApp);
+	}
+
+	return {
+		listen: () => devApp.listen(port, {}),
+		close: () => devApp.close(),
+	};
 }

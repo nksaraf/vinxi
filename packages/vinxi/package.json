@@ -158,6 +158,7 @@
     "rollup-plugin-visualizer": "^5.9.2",
     "serve-placeholder": "^2.0.1",
     "serve-static": "^1.15.0",
+    "turbowatch": "^2.29.4",
     "ufo": "^1.3.0",
     "unenv": "^1.7.4",
     "unimport": "^3.2.0",

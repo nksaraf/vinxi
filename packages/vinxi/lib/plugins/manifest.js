@@ -27,9 +27,22 @@ export function manifest() {
 						app.config.routers.map((router) => router.name),
 					),
 					"process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-					"import.meta.env.DEVTOOLS": JSON.stringify(app.config.devtools),
+					"import.meta.env.DEVTOOLS": config.dev?.devtools
+						? JSON.stringify(config.dev.devtools)
+						: `false`,
 				},
 			};
+		},
+		transformIndexHtml(html) {
+			return [
+				{
+					tag: "script",
+					attrs: {
+						type: "module",
+						src: `/@fs${process.cwd()}/node_modules/vinxi/runtime/client.js`,
+					},
+				},
+			];
 		},
 		async load(id) {
 			if (id.startsWith("/@manifest")) {

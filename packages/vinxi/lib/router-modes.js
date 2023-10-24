@@ -404,6 +404,8 @@ export function resolveRouterConfig(router, appConfig, order) {
 	const routerMode =
 		typeof router.mode === "string" ? routerModes[router.mode] : router.mode;
 
+	invariant(routerMode, `Invalid router mode: ${router.mode}`);
+
 	const config = routerMode.resolveConfig(router, appConfig, order);
 	config.internals.mode = routerMode;
 	return config;

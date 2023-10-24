@@ -32,6 +32,9 @@ export async function createBuild(app, buildConfig) {
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
 	const { join } = await import("./path.js");
 	const { fileURLToPath } = await import("url");
+	app.config.routers = app.config.routers.filter(
+		(router) => router.build !== false,
+	);
 	for (const router of app.config.routers) {
 		if (router.build !== false) {
 			if (existsSync(router.outDir)) {
