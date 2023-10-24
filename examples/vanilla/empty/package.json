@@ -1,0 +1,14 @@
+{
+  "name": "example-vanilla-empty",
+  "type": "module",
+  "private": true,
+  "version": null,
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "dependencies": {
+    "vinxi": "0.0.38"
+  }
+}
