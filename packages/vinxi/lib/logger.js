@@ -4,24 +4,14 @@ import { colors } from "consola/utils";
 import { isMainThread } from "worker_threads";
 
 const logContext = new AsyncLocalStorage();
-let prevLog = console.log.bind(console);
 export const consola = createConsola({});
 
 export { colors as c };
-console.log = (...args) => {
-	const req = logContext.getStore();
-	if (!req) {
-		prevLog(...args);
-		return;
-	}
 
-	prevLog(
+export const log = (...args) => {
+	console.log(
 		colors.dim(
-			[
-				colors.blue(req.router.name),
-				isMainThread ? undefined : "worker",
-				req.requestId,
-			]
+			[colors.blue("vinxi"), isMainThread ? undefined : "worker"]
 				.filter(Boolean)
 				.join(":"),
 		),

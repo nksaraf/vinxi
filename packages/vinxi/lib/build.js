@@ -28,20 +28,27 @@ const require = createRequire(import.meta.url);
  * @param {BuildConfig} buildConfig
  */
 export async function createBuild(app, buildConfig) {
+	await app.hooks.callHook("app:build:start", { app, buildConfig });
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
 	const { join } = await import("./path.js");
 	const { fileURLToPath } = await import("url");
 	for (const router of app.config.routers) {
-		if (existsSync(router.outDir)) {
+		if (router.build !== false) {
+			if (existsSync(router.outDir)) {
+				await withLogger({ router, requestId: "build" }, async () => {
+					console.log(`removing ${router.outDir}`);
+					await fsPromises.rm(router.outDir, { recursive: true });
+				});
+			}
+		} else {
 			await withLogger({ router, requestId: "build" }, async () => {
-				console.log(`removing ${router.outDir}`);
-				await fsPromises.rm(router.outDir, { recursive: true });
+				console.log(`skipping ${router.name}`);
 			});
 		}
 	}
 
 	for (const router of app.config.routers) {
-		if (router.mode !== "static") {
+		if (router.mode !== "static" && router.build !== false) {
 			await withLogger({ router, requestId: "build" }, async () => {
 				await createRouterBuild(app, router);
 			});
@@ -263,6 +270,8 @@ export async function createBuild(app, buildConfig) {
 	nitro.options.appConfigFiles = [];
 	nitro.logger = consola.withTag(app.config.name);
 
+	await app.hooks.callHook("app:build:nitro:config", { app, nitro });
+
 	if (existsSync(join(nitro.options.output.serverDir))) {
 		await rm(join(nitro.options.output.serverDir), { recursive: true });
 	}
@@ -271,10 +280,17 @@ export async function createBuild(app, buildConfig) {
 		await rm(join(nitro.options.output.publicDir), { recursive: true });
 	}
 
+	await app.hooks.callHook("app:build:nitro:assets:copy:start", { app, nitro });
+
 	await copyPublicAssets(nitro);
+	await app.hooks.callHook("app:build:nitro:assets:copy:end", { app, nitro });
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
+
+	await app.hooks.callHook("app:build:nitro:start", { app, nitro });
 	await build(nitro);
+	await app.hooks.callHook("app:build:nitro:end", { app, nitro });
 	await nitro.close();
+	await app.hooks.callHook("app:build:end", { app });
 	process.exit(0);
 }
 
@@ -293,8 +309,13 @@ async function createViteBuild(config) {
  * @param {import("./router-mode.js").Router} router
  */
 async function createRouterBuild(app, router) {
+	await app.hooks.callHook("app:build:router:start", { app, router });
 	let buildRouter = router;
 	if (router.mode === "spa" && !router.handler.endsWith(".html")) {
+		await app.hooks.callHook("app:build:router:html:generate:start", {
+			app,
+			router,
+		});
 		await createViteBuild({
 			app: app,
 			build: {
@@ -332,7 +353,22 @@ async function createRouterBuild(app, router) {
 			);
 		});
 
-		writeFileSync(join(process.cwd(), "index.html"), text);
+		const htmlCode = { code: text };
+
+		await app.hooks.callHook("app:build:router:html:generate:end", {
+			app,
+			router,
+			html: htmlCode,
+		});
+
+		writeFileSync(join(process.cwd(), "index.html"), htmlCode.code);
+
+		await app.hooks.callHook("app:build:router:html:generate:write", {
+			app,
+			router,
+			html: htmlCode,
+			path: join(process.cwd(), "index.html"),
+		});
 
 		buildRouter = {
 			...router,
@@ -342,7 +378,7 @@ async function createRouterBuild(app, router) {
 
 	console.log(`building router ${router.name} in ${router.mode} mode`);
 
-	await createViteBuild({
+	const viteBuildConfig = {
 		router: buildRouter,
 		app,
 		plugins: [
@@ -350,6 +386,26 @@ async function createRouterBuild(app, router) {
 			buildTargetPlugin[buildRouter.target]?.(buildRouter) ?? [],
 			...((await buildRouter.plugins?.(buildRouter)) ?? []),
 		],
+	};
+
+	await app.hooks.callHook("app:build:router:vite:config", {
+		vite: viteBuildConfig,
+		router: buildRouter,
+		app,
+	});
+
+	await app.hooks.callHook("app:build:router:vite:start", {
+		vite: viteBuildConfig,
+		router: buildRouter,
+		app,
+	});
+
+	await createViteBuild(viteBuildConfig);
+
+	await app.hooks.callHook("app:build:router:vite:end", {
+		vite: viteBuildConfig,
+		router: buildRouter,
+		app,
 	});
 
 	if (router.mode === "spa" && !router.handler.endsWith(".html")) {
