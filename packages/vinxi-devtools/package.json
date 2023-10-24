@@ -5,26 +5,28 @@
   "module": "index.js",
   "scripts": {
     "dev": "node dev.js --dev --force",
-    "build": "node build.js --build"
+    "build": "node build.js --build",
+    "build:mount": "esbuild --bundle --jsx=transform --jsx-factory=h --format=esm --jsx-fragment=Fragment --target=es2020 --external:./style.css?raw --outdir=./dist mount.jsx"
   },
   "dependencies": {
     "birpc": "^0.2.14",
-    "ws": "^8.13.0",
-    "vite-plugin-inspect": "^0.7.38"
+    "vite-plugin-inspect": "^0.7.38",
+    "ws": "^8.13.0"
   },
   "exports": {
     ".": "./index.js",
-    "./mount": "./mount.js"
+    "./mount": "./dist/mount.js"
   },
   "files": [
     "devtools-rpc.js",
     "index.js",
     "rpc.js",
-    "mount.js",
+    "dist",
     ".nitro/build/devtools-client/**/*"
   ],
   "devDependencies": {
     "@iconify/json": "^2.2.130",
+    "@preact/signals": "^1.2.1",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/themes": "^2.0.0",
@@ -37,6 +39,9 @@
     "@vitejs/plugin-react": "^4.0.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "execa": "^8.0.1",
+    "esbuild": "^0.18.20",
+    "preact": "^10.18.1",
     "react": "0.0.0-experimental-035a41c4e-20230704",
     "react-dom": "0.0.0-experimental-035a41c4e-20230704",
     "react-router-dom": "^6.17.0",

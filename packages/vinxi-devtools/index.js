@@ -8,6 +8,7 @@ export const devtoolsRpc = () => {
 		mode: "handler",
 		handler: fileURLToPath(new URL("./devtools-rpc.js", import.meta.url)),
 		target: "server",
+		build: false,
 		base: "/__devtools/rpc",
 	};
 };

@@ -10,6 +10,10 @@
 		"noEmit": true,
 		"jsx": "react-jsx",
 		"isolatedModules": true,
-		"types": ["react/experimental", "react-dom/experimental"]
+		"types": [
+			"react/experimental",
+			"react-dom/experimental",
+			"vinxi/types/client"
+		]
 	}
 }

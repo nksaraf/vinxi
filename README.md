@@ -30,6 +30,12 @@ The surface layer we are intending to tackle:
 6. Not to abstract away the platforms. Let people use what they want to the fullest
 7. Have little opinion about how the app should be authored or structured
 
+## Roadmap
+
+[ ] `vinxi deploy`
+[ ] hooks throughout the app licycle:
+	- dev: app:created, app:started, router:created
+
 ## Try it out
 
 ```bash
