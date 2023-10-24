@@ -221,7 +221,7 @@ export async function createBuild(app, buildConfig) {
 							})
 							.filter(Boolean),
 					),
-				))
+				)}
 
         function createProdApp(appConfig) {
           return {
