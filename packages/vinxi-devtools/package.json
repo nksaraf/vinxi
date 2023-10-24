@@ -21,8 +21,7 @@
     "devtools-rpc.js",
     "index.js",
     "rpc.js",
-    "dist",
-    ".nitro/build/devtools-client/**/*"
+    "dist"
   ],
   "devDependencies": {
     "@iconify/json": "^2.2.130",

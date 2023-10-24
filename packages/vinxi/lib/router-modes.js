@@ -40,6 +40,7 @@ export const handlerRouterSchema = v.object({
 
 	mode: v.literal("handler"),
 
+	build: v.optional(v.boolean()),
 	worker: v.optional(v.boolean()),
 	handler: v.string(),
 	middleware: v.optional(v.string()),
@@ -127,7 +128,7 @@ const routerModes = {
 				internals: {
 					mode: routerModes.static,
 				},
-				outDir: join(appRoot, ".nitro", "build", router.name),
+				outDir: join(appRoot, ".vinxi", "build", router.name),
 			};
 		},
 	}),
@@ -166,7 +167,7 @@ const routerModes = {
 				target: router.target ?? "browser",
 				outDir: router.outDir
 					? join(appRoot, router.outDir)
-					: join(appRoot, ".nitro", "build", router.name),
+					: join(appRoot, ".vinxi", "build", router.name),
 				// @ts-ignore
 				internals: {},
 				order: order ?? 0,
@@ -258,7 +259,7 @@ const routerModes = {
 				target: router.target ?? "server",
 				outDir: router.outDir
 					? join(appRoot, router.outDir)
-					: join(appRoot, ".nitro", "build", router.name),
+					: join(appRoot, ".vinxi", "build", router.name),
 				order: order ?? 0,
 			};
 
@@ -379,7 +380,7 @@ const routerModes = {
 				target: router.target ?? "browser",
 				outDir: router.outDir
 					? join(appRoot, router.outDir)
-					: join(appRoot, ".nitro", "build", router.name),
+					: join(appRoot, ".vinxi", "build", router.name),
 				order: order ?? 0,
 			};
 

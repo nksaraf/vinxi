@@ -221,8 +221,7 @@ export async function createBuild(app, buildConfig) {
 							})
 							.filter(Boolean),
 					),
-				)}
-				
+				))
 
         function createProdApp(appConfig) {
           return {
@@ -253,7 +252,7 @@ export async function createBuild(app, buildConfig) {
 				return `
 					import { eventHandler } from 'vinxi/server'
 					const html = ${JSON.stringify(indexHtml)}
-					export default eventHandler(event => { 
+					export default eventHandler(event => {
 						return html
 					})
 				`;

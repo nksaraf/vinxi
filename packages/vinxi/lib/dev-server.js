@@ -102,7 +102,6 @@ export async function createDevServer(
 		},
 	};
 
-	console.log(serveConfig);
 	if (devtools) {
 		const { devtoolsClient, devtoolsRpc } = await import("@vinxi/devtools");
 		app.addRouter(devtoolsClient());
@@ -130,6 +129,7 @@ export async function createDevServer(
 				.flat(),
 			...(app.config.server.publicAssets ?? []),
 		],
+		buildDir: ".vinxi",
 		devHandlers: [
 			...(
 				await Promise.all(

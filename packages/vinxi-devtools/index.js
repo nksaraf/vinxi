@@ -2,6 +2,7 @@ import { fileURLToPath } from "node:url";
 
 export { default as inspect } from "vite-plugin-inspect";
 
+/** @returns {import('vinxi').RouterSchemaInput} */
 export const devtoolsRpc = () => {
 	return {
 		name: "devtools-rpc",
@@ -13,16 +14,12 @@ export const devtoolsRpc = () => {
 	};
 };
 
+/** @returns {import('vinxi').RouterSchemaInput} */
 export const devtoolsClient = () => {
 	return {
 		name: "devtools-client",
 		mode: "static",
-		dir: fileURLToPath(
-			new URL(
-				"./.nitro/build/devtools-client/__devtools/client",
-				import.meta.url,
-			),
-		),
+		dir: fileURLToPath(new URL("./dist/client", import.meta.url)),
 		base: "/__devtools/client",
 	};
 };
