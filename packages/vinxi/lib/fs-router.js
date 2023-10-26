@@ -119,7 +119,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	toRoute(src) {
 		let path = this.toPath(src);
 
-		if (!path) {
+		if (path === undefined) {
 			return null;
 		}
 
@@ -205,7 +205,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	removeRoute(src) {
 		if (this.isRoute(src)) {
 			const path = this.toPath(src);
-			if (!path) {
+			if (path === undefined) {
 				return;
 			}
 			this.routes = this.routes.filter((r) => r.path !== path);
