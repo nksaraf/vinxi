@@ -2,16 +2,19 @@ import { Plugin as VitePlugin, ResolvedConfig as _ResolvedConfig } from "vite";
 
 import { App } from "./app.js";
 import { Router } from "./router-mode.js";
+import { DevConfig } from "./dev-server.js";
 
 declare module "vite" {
 	interface UserConfig {
 		router?: Router;
 		app?: App;
+		dev?: DevConfig;
 	}
 
 	interface PluginHookUtils {
 		router: Router;
 		app: App;
+		dev: DevConfig;
 	}
 }
 

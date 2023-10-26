@@ -14,15 +14,22 @@
     "ws": "^8.13.0"
   },
   "exports": {
-    ".": "./index.js",
-    "./mount": "./dist/mount.js"
+    ".": {
+      "import": "./index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./mount": {
+      "import": "./dist/mount.js",
+      "types": "./dist/types/mount.d.ts"
+    }
   },
-  "files": [
-    "devtools-rpc.js",
-    "index.js",
-    "rpc.js",
-    "dist"
-  ],
+  "typesVersions": {
+    "*": {
+      ".": ["./dist/types/index.d.ts"],
+      "mount": ["./dist/types/mount.d.ts"]
+    }
+  },
+  "files": ["devtools-rpc.js", "index.js", "rpc.js", "dist"],
   "devDependencies": {
     "@iconify/json": "^2.2.130",
     "@preact/signals": "^1.2.1",

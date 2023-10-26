@@ -1,9 +1,6 @@
 import { inspect } from "@vinxi/devtools";
-import { readFile } from "fs/promises";
 
 import { consola, withLogger } from "./logger.js";
-import { config } from "./plugins/config.js";
-import { virtual } from "./plugins/virtual.js";
 
 export * from "./router-dev-plugins.js";
 
@@ -49,16 +46,18 @@ export async function createViteDevServer(config) {
 export async function createViteHandler(router, app, serveConfig) {
 	const { default: getPort } = await import("get-port");
 	const port = await getPort({ port: 9000 + router.order * 10 });
+	const plugins = [
+		...(serveConfig.devtools ? [inspect()] : []),
+		...(((await router.internals.mode.dev.plugins?.(router, app)) ?? []).filter(
+			Boolean,
+		) || []),
+		...(((await router.plugins?.(router)) ?? []).filter(Boolean) || []),
+	].filter(Boolean);
+
 	const viteDevServer = await createViteDevServer({
 		configFile: false,
 		base: router.base,
-		plugins: [
-			...(serveConfig.devtools ? [inspect()] : []),
-			...((
-				(await router.internals.mode.dev.plugins?.(router, app)) ?? []
-			).filter(Boolean) || []),
-			...(((await router.plugins?.(router)) ?? []).filter(Boolean) || []),
-		].filter(Boolean),
+		plugins,
 		optimizeDeps: {
 			force: serveConfig.force,
 		},

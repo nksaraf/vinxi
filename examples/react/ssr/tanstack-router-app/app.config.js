@@ -73,14 +73,7 @@ function tanstackFileRouter(config) {
 }
 
 export default createApp({
-	server: {
-		externals: {
-			traceOptions: {
-				conditions: ["default"],
-			},
-			inline: ["h3"],
-		},
-	},
+	server: {},
 	routers: [
 		{
 			name: "public",
