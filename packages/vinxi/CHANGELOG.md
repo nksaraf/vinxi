@@ -1,5 +1,14 @@
 # vinxi
 
+## 0.0.39
+
+### Patch Changes
+
+- f237894: add hookable hooks to vinxi app
+- d620072: add hmr for the app config file itself
+- Updated dependencies [6fd5455]
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.38
 
 ### Patch Changes

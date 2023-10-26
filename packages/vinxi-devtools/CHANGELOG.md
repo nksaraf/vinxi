@@ -1,5 +1,11 @@
 # @vinxi/openapi
 
+## 0.0.5
+
+### Patch Changes
+
+- 6fd5455: better build for devtools using hooks
+
 ## 0.0.4
 
 ### Patch Changes

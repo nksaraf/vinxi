@@ -4,6 +4,14 @@
 
 ### Patch Changes
 
+- Updated dependencies [f237894]
+- Updated dependencies [d620072]
+  - vinxi@0.0.39
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [1284791]
   - vinxi@0.0.38
 
