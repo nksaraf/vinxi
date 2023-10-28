@@ -4,7 +4,7 @@ import * as v from "zod";
 import { isMainThread } from "node:worker_threads";
 
 import invariant from "./invariant.js";
-import { join } from "./path.js";
+import { handlerModule, join } from "./path.js";
 import { resolve } from "./resolve.js";
 
 export { v };
@@ -227,7 +227,7 @@ const routerModes = {
 				const viteServer = await createViteHandler(router, app, serveConfig);
 				const handler = eventHandler(async (event) => {
 					const { default: handler } = await viteServer.ssrLoadModule(
-						router.handler,
+						handlerModule(router),
 					);
 					return handler(event);
 				});

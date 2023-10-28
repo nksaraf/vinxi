@@ -38,7 +38,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 				/** @type {import("./router-mode.js").Router<{ middleware?: string; }>} */
 				const router = config.router;
 				invariant(
-					router.handler === "handler",
+					router.handler,
 					"#vinxi/handler is only supported in handler mode",
 				);
 
