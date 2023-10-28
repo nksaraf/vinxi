@@ -191,6 +191,7 @@ export async function createDevServer(
 	}
 
 	return {
+		...devApp,
 		listen: () => devApp.listen(port, {}),
 		close: () => devApp.close(),
 	};

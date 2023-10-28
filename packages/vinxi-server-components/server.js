@@ -140,15 +140,15 @@ export function buildServerComponents({
 					ssr: {
 						resolve: {
 							externalConditions: [
+								...(resolve.conditions ?? []),
 								"node",
 								"import",
-								...(resolve.conditions ?? []),
 								process.env.NODE_ENV,
 							],
 							conditions: [
+								...(resolve.conditions ?? []),
 								"node",
 								"import",
-								...(resolve.conditions ?? []),
 								process.env.NODE_ENV,
 							],
 						},
@@ -160,15 +160,15 @@ export function buildServerComponents({
 					ssr: {
 						resolve: {
 							externalConditions: [
+								...(resolve.conditions ?? []),
 								"node",
 								"import",
-								...(resolve.conditions ?? []),
 								process.env.NODE_ENV,
 							],
 							conditions: [
+								...(resolve.conditions ?? []),
 								"node",
 								"import",
-								...(resolve.conditions ?? []),
 								process.env.NODE_ENV,
 							],
 						},

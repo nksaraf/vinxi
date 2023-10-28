@@ -98,7 +98,6 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 				noExternal: ["vinxi"],
 			},
 			optimizeDeps: {
-				force: true,
 				exclude: ["vinxi"],
 			},
 			define: {

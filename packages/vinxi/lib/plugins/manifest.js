@@ -1,3 +1,7 @@
+import { fileURLToPath } from "node:url";
+
+import { join } from "../path.js";
+
 /**
  *
  * @returns {import("../vite-dev.d.ts").Plugin[]}
@@ -54,19 +58,35 @@ export function manifest() {
 				}
 			},
 		},
-		{
-			name: "vinxi:inject-client",
-			transformIndexHtml(html) {
-				return [
-					{
-						tag: "script",
-						attrs: {
-							type: "module",
-							src: `/@fs${process.cwd()}/node_modules/vinxi/runtime/client.js`,
-						},
-					},
-				];
-			},
-		},
+		injectVinxiClient(),
 	];
+}
+
+/** @returns {import('vinxi').Plugin} */
+export function injectVinxiClient() {
+	/** @type {import('../router-mode.js').Router} */
+	let router;
+	return {
+		name: "vinxi:inject-client-runtime",
+		configResolved(config) {
+			router = config.router;
+		},
+		transformIndexHtml(html) {
+			return [
+				{
+					tag: "script",
+					attrs: {
+						type: "module",
+						src: join(
+							router.base,
+							"@fs",
+							`${fileURLToPath(
+								new URL("../../runtime/client.js", import.meta.url),
+							)}`,
+						),
+					},
+				},
+			];
+		},
+	};
 }
