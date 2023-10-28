@@ -1,5 +1,14 @@
 # @vinxi/plugin-references
 
+## 0.0.32
+
+### Patch Changes
+
+- 0335776: fix server components resolve, inject
+- Updated dependencies [0335776]
+  - vinxi@0.0.40
+  - @vinxi/plugin-directives@0.0.32
+
 ## 0.0.31
 
 ### Patch Changes

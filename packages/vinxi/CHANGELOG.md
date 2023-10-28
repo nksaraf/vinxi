@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.40
+
+### Patch Changes
+
+- 0335776: fix server components resolve, inject
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.39
 
 ### Patch Changes
