@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.41
+
+### Patch Changes
+
+- 2e52d87: fix server functions resolve conditions order, middleware
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.40
 
 ### Patch Changes
