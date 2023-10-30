@@ -32,8 +32,8 @@ The surface layer we are intending to tackle:
 
 ## Roadmap
 
-[ ] `vinxi deploy`
-[ ] hooks throughout the app licycle:
+- [ ] `vinxi deploy`
+- [ ] hooks throughout the app licycle:
 	- dev: app:created, app:started, router:created
 
 ## Try it out
