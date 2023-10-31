@@ -1,5 +1,5 @@
 {
-  "name": "example-vanilla-spa",
+  "name": "example-vanilla-trpc",
   "type": "module",
   "private": true,
   "version": null,
