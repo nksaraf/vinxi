@@ -71,6 +71,7 @@ export function injectVinxiClient() {
 		configResolved(config) {
 			router = config.router;
 		},
+		apply: "serve",
 		transformIndexHtml(html) {
 			return [
 				{
