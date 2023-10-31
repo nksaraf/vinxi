@@ -11,7 +11,13 @@ import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
 import { consola, withLogger } from "./logger.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
-import { handlerModule, join, relative, virtualId } from "./path.js";
+import {
+	handlerModule,
+	join,
+	relative,
+	virtualId,
+	viteManifestPath,
+} from "./path.js";
 import { config } from "./plugins/config.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
@@ -95,10 +101,7 @@ export async function createBuild(app, buildConfig) {
 					if (router.mode === "handler") {
 						invariant(router.handler, "Missing router.handler");
 						const bundlerManifest = JSON.parse(
-							readFileSync(
-								join(router.outDir, router.base, ".vite", "manifest.json"),
-								"utf-8",
-							),
+							readFileSync(viteManifestPath(router), "utf-8"),
 						);
 
 						const virtualHandlerId = virtualId(handlerModule(router));
@@ -193,15 +196,7 @@ export async function createBuild(app, buildConfig) {
 							.map((router) => {
 								if (router.mode !== "static") {
 									const bundlerManifest = JSON.parse(
-										readFileSync(
-											join(
-												router.outDir,
-												router.base,
-												".vite",
-												"manifest.json",
-											),
-											"utf-8",
-										),
+										readFileSync(viteManifestPath(router), "utf-8"),
 									);
 									return [router.name, bundlerManifest];
 								}
@@ -387,6 +382,16 @@ async function createRouterBuild(app, router) {
 			routerModePlugin[buildRouter.internals.mode.name]?.(buildRouter) ?? [],
 			buildTargetPlugin[buildRouter.target]?.(buildRouter) ?? [],
 			...((await buildRouter.plugins?.(buildRouter)) ?? []),
+			{
+				name: "vinxi:build:router:config",
+				async configResolved(config) {
+					await app.hooks.callHook("app:build:router:vite:config:resolved", {
+						vite: config,
+						router: buildRouter,
+						app,
+					});
+				},
+			},
 		],
 	};
 
@@ -543,7 +548,17 @@ const routerModePlugin = {
 			},
 		}),
 	],
-	spa: () => [
+	spa: (router) => [
+		router.handler?.endsWith(".html")
+			? undefined
+			: virtual(
+					{
+						[handlerModule(router)]: ({ config }) => {
+							return `export default {}`;
+						},
+					},
+					"handler",
+			  ),
 		spaManifest(),
 		config("appType", {
 			appType: "custom",
@@ -643,6 +658,7 @@ function browserBuild() {
 			if (env.command === "build") {
 				invariant(router && router.mode !== "static", "Invalid router");
 				const { join } = await import("./path.js");
+				console.log(await getEntries(router));
 				return {
 					build: {
 						rollupOptions: {

@@ -3,7 +3,7 @@ import { serverFunctions } from "@vinxi/plugin-server-functions";
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 
-export default createApp({
+const app = createApp({
 	routers: [
 		{
 			name: "public",
@@ -51,3 +51,9 @@ export default createApp({
 		},
 	],
 });
+
+app.hooks.hook("app:build:router:vite:config:resolved", ({ vite }) => {
+	console.log(vite.build.rollupOptions.input);
+});
+
+export default app;

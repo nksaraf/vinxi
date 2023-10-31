@@ -1,3 +1,5 @@
+import { join } from "pathe";
+
 export * from "pathe";
 
 export function virtualId(/** @type {string} */ moduleName) {
@@ -7,5 +9,14 @@ export function virtualId(/** @type {string} */ moduleName) {
 export function handlerModule(
 	/** @type {import("./router-mode").Router} */ router,
 ) {
-	return `#vinxi/handler/${router.name}`;
+	return router.handler?.endsWith(".html")
+		? router.handler
+		: `#vinxi/handler/${router.name}`;
+}
+
+export function viteManifestPath(
+	/** @type {import("./router-mode").Router} */ router,
+) {
+	// return join(router.outDir, router.base, ".vite", "manifest.json");
+	return join(router.outDir, router.base, "manifest.json");
 }

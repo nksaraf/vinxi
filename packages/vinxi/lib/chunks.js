@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { join } from "vinxi/lib/path";
+import { join, viteManifestPath } from "vinxi/lib/path";
 
 const CHUNK_PREFIX = "c_";
 
@@ -18,10 +18,7 @@ function getChunks(app, routerName, modIndex) {
 
 	try {
 		const bundlerManifest = JSON.parse(
-			readFileSync(
-				join(router.outDir, router.base, ".vite", "manifest.json"),
-				"utf-8",
-			),
+			readFileSync(viteManifestPath(router), "utf-8"),
 		);
 
 		const chunks = Object.entries(bundlerManifest)

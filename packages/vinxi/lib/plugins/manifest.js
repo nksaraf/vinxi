@@ -22,6 +22,8 @@ export function manifest() {
 				if (!router || !app) {
 					throw new Error("Missing router or app");
 				}
+
+				console.log(router.name, router.handler);
 				return {
 					define: {
 						"import.meta.env.MANIFEST": `globalThis.MANIFEST`,

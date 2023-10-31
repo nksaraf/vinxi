@@ -38,7 +38,7 @@
     "@types/resolve": "^1.20.2",
     "@types/unist": "^2.0.7",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9"
+    "vite": "^4.5.0"
   },
   "description": "Vite plugin for MDX",
   "license": "MIT",
