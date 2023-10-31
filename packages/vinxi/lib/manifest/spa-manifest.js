@@ -21,10 +21,18 @@ async function getEntries(router) {
 	];
 }
 
+/**
+ *
+ * @param {import('../vite-dev.d.ts').ViteConfig} config
+ * @param {*} bundle
+ * @param {*} format
+ * @returns
+ */
 export async function createSPAManifest(config, bundle, format) {
 	const manifest = createViteManifest(config, bundle, format);
+	/** @type {Record<string, any>} */
 	let routeManifest = {};
-	if (config.router && config.router.fileRouter) {
+	if (config.router && config.router.internals.routes) {
 		const entries = await getEntries(config.router);
 
 		log(entries);
