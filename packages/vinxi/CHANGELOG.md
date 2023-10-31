@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.0.42
+
+### Patch Changes
+
+- e8fdad4: fix spa router manifest in prod
+- 291a5cf: only inject runtime client during dev (serve)
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.41
 
 ### Patch Changes
