@@ -13,8 +13,8 @@
     "*.d.ts"
   ],
   "scripts": {
-    "build": "npm run types",
-    "types": "rm -rf dist/types && tsc; cp -r types dist/types/types"
+    "types": "npm run tsc",
+    "tsc": "rm -rf dist/types && tsc; cp -r types dist/types/types"
   },
   "bin": "./bin/cli.mjs",
   "types": "./dist/types/lib/index.d.ts",

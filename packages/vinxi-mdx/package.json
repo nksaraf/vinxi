@@ -5,7 +5,7 @@
   "scripts": {
     "// User Scripts": "",
     "dev": "pnpm run tsc:watch",
-    "build": "pnpm run tsc:once",
+    "types": "pnpm run tsc:once",
     "// TypeScript": "",
     "tsc:watch": "tsc --build --watch",
     "tsc:once": "tsc --build",

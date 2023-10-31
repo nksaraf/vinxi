@@ -29,10 +29,10 @@ jobs:
       matrix:
         node-version: [18]
         # adapter:
-          # - solid-start-node
-          # - solid-start-cloudflare-workers
-          # - solid-start-cloudflare-pages
-          # - solid-start-deno
+        # - solid-start-node
+        # - solid-start-cloudflare-workers
+        # - solid-start-cloudflare-pages
+        # - solid-start-deno
         os:
           - ubuntu-latest
           # - macos-latest
@@ -96,10 +96,12 @@ jobs:
         run: pnpm --filter tests install:playwright
 
       - uses: oven-sh/setup-bun@v1
+        if: runner.os == 'ubuntu-latest'
         with:
           bun-version: latest
 
       - name: 👀 Build things that need to be built
+        if: runner.os == 'ubuntu-latest'
         env:
           START_ADAPTER: ${{ matrix.adapter }}
         run: npm run build
