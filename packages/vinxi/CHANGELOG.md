@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.43
+
+### Patch Changes
+
+- 978b04a: move back to vite 4
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.42
 
 ### Patch Changes
