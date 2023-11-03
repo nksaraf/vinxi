@@ -30,6 +30,7 @@ export type Manifest = {
 	chunks: {
 		[key: string]: {
 			assets(): Promise<Asset[]>;
+			import<T = { default: any; [k: string]: any }>(): Promise<T>;
 			output: {
 				path: string;
 			};

@@ -1,23 +1,14 @@
 import { renderAsset } from "@vinxi/react";
 import { renderToPipeableStream } from "@vinxi/react-server-dom/server";
 import { Suspense } from "react";
-import { eventHandler } from "vinxi/server";
+import { eventHandler, setHeaders } from "vinxi/server";
 
 import App from "./app";
 
 export default eventHandler(async (event) => {
-	async function loadModule(id) {
-		if (import.meta.env.DEV) {
-			return await import(
-				import.meta.env.MANIFEST["rsc"].chunks[id].output.path
-			);
-		}
+	const reactServerManifest = import.meta.env.MANIFEST["rsc"];
+	const clientManifest = import.meta.env.MANIFEST["client"];
 
-		if (globalThis.$$chunks[id + ".js"]) {
-			return globalThis.$$chunks[id + ".js"];
-		}
-		return await import(import.meta.env.MANIFEST["rsc"].chunks[id].output.path);
-	}
 	if (event.node.req.method === "POST") {
 		const {
 			renderToPipeableStream,
@@ -25,11 +16,13 @@ export default eventHandler(async (event) => {
 			decodeReplyFromBusboy,
 			decodeAction,
 		} = await import("@vinxi/react-server-dom/server");
-		const serverReference = event.node.req.headers["server-action"];
+		const serverReference = event.headers.get("server-action");
 		if (serverReference) {
 			// This is the client-side case
 			const [filepath, name] = serverReference.split("#");
-			const action = (await loadModule(filepath))[name];
+			const action = (await reactServerManifest.chunks[filepath].import())[
+				name
+			];
 			// Validate that this is actually a function we intended to expose and
 			// not the client trying to invoke arbitrary functions. In a real app,
 			// you'd have a manifest verifying this before even importing it.
@@ -69,14 +62,13 @@ export default eventHandler(async (event) => {
 			throw new Error("Invalid request");
 		}
 	}
-	const reactServerManifest = import.meta.env.MANIFEST["rsc"];
+
 	const serverAssets = await reactServerManifest.inputs[
 		reactServerManifest.handler
 	].assets();
-	const clientManifest = import.meta.env.MANIFEST["client"];
+
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 
-	const events = {};
 	const stream = renderToPipeableStream(
 		<App
 			assets={
@@ -88,15 +80,17 @@ export default eventHandler(async (event) => {
 		/>,
 	);
 
-	// @ts-ignore
-	stream._read = () => {};
-	// @ts-ignore
-	stream.on = (event, listener) => {
-		events[event] = listener;
-	};
+	// // @ts-ignore
+	// stream._read = () => {};
+	// // @ts-ignore
+	// stream.on = (event, listener) => {
+	// 	events[event] = listener;
+	// };
 
-	event.node.res.setHeader("Content-Type", "text/x-component");
-	event.node.res.setHeader("Router", "rsc");
+	setHeaders(event, {
+		"Content-Type": "text/x-component",
+		Router: "rsc",
+	});
 
 	return stream;
 });

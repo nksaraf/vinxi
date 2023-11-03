@@ -1,6 +1,9 @@
 import { inspect } from "@vinxi/devtools";
 
+import { fileURLToPath } from "node:url";
+
 import { consola, withLogger } from "./logger.js";
+import { normalize } from "./path.js";
 
 export * from "./router-dev-plugins.js";
 
@@ -65,6 +68,9 @@ export async function createViteHandler(router, app, serveConfig) {
 		router,
 		app,
 		server: {
+			fs: {
+				allow: [normalize(fileURLToPath(new URL("../", import.meta.url))), "."],
+			},
 			middlewareMode: true,
 			hmr: {
 				port,

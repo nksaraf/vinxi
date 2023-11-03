@@ -61,7 +61,6 @@ export function createDevManifest(app) {
 									"No manifest for static router",
 								);
 
-								let relativePath = relative(app.config.root, chunk);
 								if (router.target === "browser") {
 									return {
 										output: {
@@ -70,6 +69,11 @@ export function createDevManifest(app) {
 									};
 								} else {
 									return {
+										import() {
+											return router.internals.devServer?.ssrLoadModule(
+												/* @vite-ignore */ absolutePath,
+											);
+										},
 										output: {
 											path: join(absolutePath),
 										},
@@ -146,6 +150,11 @@ export function createDevManifest(app) {
 
 								if (router.target === "browser") {
 									return {
+										import() {
+											return router.internals.devServer?.ssrLoadModule(
+												/* @vite-ignore */ join(absolutePath),
+											);
+										},
 										async assets() {
 											return [
 												...(viteServer
@@ -186,6 +195,11 @@ export function createDevManifest(app) {
 									};
 								} else {
 									return {
+										import() {
+											return router.internals.devServer?.ssrLoadModule(
+												/* @vite-ignore */ join(absolutePath),
+											);
+										},
 										async assets() {
 											return [
 												...(viteServer
@@ -208,7 +222,7 @@ export function createDevManifest(app) {
 											];
 										},
 										output: {
-											path: join(router.base, "@fs", absolutePath),
+											path: absolutePath,
 										},
 									};
 								}
