@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.45
+
+### Patch Changes
+
+- 8d1f0dd: fix: add stacks to package.json files
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.44
 
 ### Patch Changes
