@@ -15,7 +15,7 @@
     "react": "0.0.0-experimental-035a41c4e-20230704",
     "react-dom": "0.0.0-experimental-035a41c4e-20230704",
     "tailwindcss": "^3.3.3",
-    "vinxi": "0.0.45"
+    "vinxi": "0.0.46"
   },
   "devDependencies": {
     "@types/react": "^18.2.21",

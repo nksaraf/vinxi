@@ -771,8 +771,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.5
       vinxi:
-        specifier: 0.0.43
-        version: 0.0.43
+        specifier: 0.0.45
+        version: link:../../../packages/vinxi
 
   examples/vanilla/stack:
     dependencies:
@@ -780,8 +780,11 @@ importers:
         specifier: ^1.5.10
         version: 1.5.10
       '@vinxi/server-functions':
-        specifier: workspace:^
+        specifier: 0.0.37
         version: link:../../../packages/vinxi-server-functions
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
         version: 10.4.16(postcss@8.4.31)
@@ -882,6 +885,9 @@ importers:
       chokidar:
         specifier: ^3.5.3
         version: 3.5.3
+      citty:
+        specifier: ^0.1.4
+        version: 0.1.4
       consola:
         specifier: ^3.2.3
         version: 3.2.3

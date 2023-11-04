@@ -87,7 +87,7 @@ async function applyStacks(app, s) {
 	const stacks = await Promise.all(
 		s.map(async (stack) => {
 			if (stack.includes("/") || stack.includes("@")) {
-				var res = resolve.sync(stack, { basedir: app.config.root });
+				var res = app.resolveSync(stack);
 				const mod = await import(res);
 				return mod.default;
 			}

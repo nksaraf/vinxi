@@ -1,5 +1,6 @@
 // @ts-ignore
 import { createHooks } from "hookable";
+import resolve from "resolve";
 import { isMainThread } from "worker_threads";
 
 import invariant, { InvariantError } from "./invariant.js";
@@ -24,7 +25,10 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 		root: string;
 	};
 	addRouter: (router: any) => App;
+	addRouterPlugins: (apply: (router: import("./router-mode.js").Router) => boolean, plugins: () => any[]) => void;
 	getRouter: (name: string) => import("./router-mode.js").Router;
+	resolveSync: (mod: string) => string;
+	import: (mod: string) => Promise<any>;
 	stack: (stack: (app: App) => void | Promise<void>) => Promise<App>;
 	dev(): Promise<void>;
 	build(): Promise<void>;
@@ -120,6 +124,28 @@ export function createApp({
 			const resolvedRouter = resolveRouter(parsedRouter, config.routers.length);
 			config.routers.push(resolvedRouter);
 			return app;
+		},
+		addRouterPlugins(apply, plugins) {
+			const routers = app.config.routers.filter(apply);
+
+			routers.forEach((router) => {
+				if (router.plugins) {
+					let prevPlugins = router.plugins;
+					router.plugins = () => [
+						...(plugins?.() ?? []),
+						...(prevPlugins() ?? []),
+					];
+				} else if (router.plugins === undefined) {
+					router.plugins = plugins;
+				}
+			});
+		},
+		resolveSync(mod) {
+			return resolve.sync(mod, { basedir: config.root });
+		},
+		async import(mod) {
+			const resolved = app.resolveSync(mod);
+			return await import(resolved);
 		},
 		getRouter(/** @type {string} */ name) {
 			const router = config.routers.find((router) => router.name === name);
