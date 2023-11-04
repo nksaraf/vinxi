@@ -17,13 +17,6 @@ export default createApp({
 			target: "browser",
 			plugins: () => [serverFunctions.client(), reactRefresh()],
 		},
-		{
-			name: "server",
-			mode: "handler",
-			base: "/_server",
-			handler: "./app/server-handler.js",
-			target: "server",
-			plugins: () => [serverFunctions.server()],
-		},
+		serverFunctions.router()
 	],
 });
