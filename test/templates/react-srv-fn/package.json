@@ -11,7 +11,7 @@
   "dependencies": {
     "@vinxi/react": "0.0.11",
     "@vitejs/plugin-react": "^4.0.4",
-    "@vinxi/plugin-server-functions": "0.0.35",
+    "@vinxi/server-functions": "0.0.37",
     "path-to-regexp": "^6.2.1",
     "react": "0.0.0-experimental-035a41c4e-20230704",
     "react-dom": "0.0.0-experimental-035a41c4e-20230704",
