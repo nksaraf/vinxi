@@ -9,6 +9,7 @@
     "public",
     "runtime",
     "types",
+    "stack",
     "dist/types",
     "*.d.ts"
   ],
@@ -86,48 +87,20 @@
   },
   "typesVersions": {
     "*": {
-      ".": [
-        "./dist/types/lib/index.d.ts"
-      ],
-      "dev-server": [
-        "./dist/types/lib/dev-server.d.ts"
-      ],
-      "server": [
-        "./dist/types/runtime/server.d.ts"
-      ],
-      "party": [
-        "./dist/types/runtime/party.d.ts"
-      ],
-      "css": [
-        "./dist/types/runtime/style.d.ts"
-      ],
-      "client": [
-        "./dist/types/runtime/client.d.ts"
-      ],
-      "fs-router": [
-        "./dist/types/lib/fs-router.d.ts"
-      ],
-      "types/server": [
-        "./types/server.d.ts"
-      ],
-      "types/client": [
-        "./types/client.d.ts"
-      ],
-      "routes": [
-        "./types/routes.d.ts"
-      ],
-      "lib/invariant": [
-        "./dist/types/lib/invariant.d.ts"
-      ],
-      "plugins/config": [
-        "./dist/types/lib/plugins/config.d.ts"
-      ],
-      "plugins/virtual": [
-        "./dist/types/lib/plugins/virtual.d.ts"
-      ],
-      "lib/path": [
-        "./dist/types/lib/path.d.ts"
-      ]
+      ".": ["./dist/types/lib/index.d.ts"],
+      "dev-server": ["./dist/types/lib/dev-server.d.ts"],
+      "server": ["./dist/types/runtime/server.d.ts"],
+      "party": ["./dist/types/runtime/party.d.ts"],
+      "css": ["./dist/types/runtime/style.d.ts"],
+      "client": ["./dist/types/runtime/client.d.ts"],
+      "fs-router": ["./dist/types/lib/fs-router.d.ts"],
+      "types/server": ["./types/server.d.ts"],
+      "types/client": ["./types/client.d.ts"],
+      "routes": ["./types/routes.d.ts"],
+      "lib/invariant": ["./dist/types/lib/invariant.d.ts"],
+      "plugins/config": ["./dist/types/lib/plugins/config.d.ts"],
+      "plugins/virtual": ["./dist/types/lib/plugins/virtual.d.ts"],
+      "lib/path": ["./dist/types/lib/path.d.ts"]
     }
   },
   "dependencies": {
