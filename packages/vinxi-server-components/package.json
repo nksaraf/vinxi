@@ -1,12 +1,9 @@
 {
-  "name": "@vinxi/plugin-server-components",
+  "name": "@vinxi/server-components",
   "version": "0.0.35",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
-  "files": [
-    "*.js",
-    "*.d.ts"
-  ],
+  "files": ["*.js", "*.d.ts"],
   "types": "./index.d.ts",
   "exports": {
     ".": "./index.js",
@@ -14,9 +11,7 @@
   },
   "typesVersions": {
     "*": {
-      ".": [
-        "./index.d.ts"
-      ]
+      ".": ["./index.d.ts"]
     }
   },
   "devDependencies": {

@@ -13,9 +13,11 @@ async function main() {
 	const command = args._[0];
 	const rootDir = resolve(args._[1] || ".");
 
+	console.log(args);
+
 	const configFile = args.config;
 	globalThis.MANIFEST = {};
-	const app = await loadApp(configFile);
+	const app = await loadApp(configFile, args);
 
 	if (command === "dev") {
 		let devServer;
@@ -32,7 +34,7 @@ async function main() {
 			watcher.on("all", async (ctx, path) => {
 				log("change detected in", path);
 				log("reloading app");
-				const newApp = await loadApp(configFile);
+				const newApp = await loadApp(configFile, args);
 				if (!newApp) return;
 				restartDevServer(newApp);
 			});
@@ -61,7 +63,7 @@ async function main() {
 			fsWatcher.on("all", async (path) => {
 				log("change detected in", path);
 				log("reloading app");
-				const newApp = await loadApp(configFile);
+				const newApp = await loadApp(configFile, args);
 				if (!newApp) return;
 
 				fsWatcher.close();
@@ -83,7 +85,7 @@ async function main() {
 		const { createBuild } = await import("../lib/build.js");
 		await createBuild(app, {});
 	} else if (command === "start") {
-		exec(`node .output/dist/server.js`);
+		await exec(`node .output/server/index.mjs`);
 	} else {
 		throw new Error(`Unknown command ${command}`);
 	}

@@ -1,19 +1,19 @@
-import { eventHandler, readRawBody, setHeader } from "vinxi/server";
+import { eventHandler, sendStream } from "vinxi/server";
 
 export default eventHandler(async (event) => {
-	if (event.method === "POST") {
+	if (event.node.req.method === "POST") {
 		const {
 			renderToPipeableStream,
 			decodeReply,
 			decodeReplyFromBusboy,
 			decodeAction,
 		} = await import("@vinxi/react-server-dom/server");
-		const serverReference = event.headers.get("server-action");
+		const serverReference = event.node.req.headers["server-action"];
 		if (serverReference) {
 			// This is the client-side case
 			const [filepath, name] = serverReference.split("#");
 			const action = (
-				await import.meta.env.MANIFEST["server"].chunks[filepath].import()
+				await import.meta.env.MANIFEST["rsc"].chunks[filepath].import()
 			)[name];
 			// Validate that this is actually a function we intended to expose and
 			// not the client trying to invoke arbitrary functions. In a real app,
@@ -23,14 +23,16 @@ export default eventHandler(async (event) => {
 			}
 
 			let args;
-			// if (req.is('multipart/form-data')) {
-			//   // Use busboy to streamingly parse the reply from form-data.
-			//   const bb = busboy({headers: req.headers});
-			//   const reply = decodeReplyFromBusboy(bb, moduleBasePath);
-			//   req.pipe(bb);
-			//   args = await reply;
-			// } else {
-			const text = await readRawBody(event);
+			const text = await new Promise((resolve) => {
+				const requestBody = [];
+				event.node.req.on("data", (chunks) => {
+					console.log(chunks);
+					requestBody.push(chunks);
+				});
+				event.node.req.on("end", () => {
+					resolve(requestBody.join(""));
+				});
+			});
 			console.log(text);
 
 			args = await decodeReply(text);
@@ -50,12 +52,11 @@ export default eventHandler(async (event) => {
 					events[event] = listener;
 				};
 
-				setHeader(event, "Content-Type", "application/json");
-				setHeader(event, "Router", "server");
+				event.node.res.setHeader("Content-Type", "application/json");
+				event.node.res.setHeader("Router", "server");
 
 				return stream;
 			} catch (x) {
-				console.error(x);
 				// We handle the error on the client
 			}
 			// Refresh the client and return the value

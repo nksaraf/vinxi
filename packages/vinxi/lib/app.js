@@ -1,5 +1,4 @@
 // @ts-ignore
-import { devtoolsClient, devtoolsRpc } from "@vinxi/devtools";
 import { createHooks } from "hookable";
 import { isMainThread } from "worker_threads";
 
@@ -7,8 +6,30 @@ import invariant, { InvariantError } from "./invariant.js";
 import { c, consola, log, withLogger } from "./logger.js";
 import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 
-/** @typedef {{ devtools?: boolean; routers?: import("./router-modes.js").RouterSchemaInput[]; name?: string; server?: import('nitropack').NitroConfig; root?: string }} AppOptions */
-/** @typedef {{ config: { name: string; devtools: boolean; server: import('nitropack').NitroConfig; routers: import("./router-mode.js").Router[]; root: string; }; addRouter: (router: any) => App, getRouter: (name: string) => import("./router-mode.js").Router; dev(): Promise<void>; build(): Promise<void>; hooks: import('hookable').Hookable}} App */
+/** @typedef {{ 
+	devtools?: boolean; 
+	routers?: import("./router-modes.js").RouterSchemaInput[]; 
+	name?: 
+	string; 
+	server?: import('nitropack').NitroConfig; 
+	root?: string
+}} AppOptions */
+
+/** @typedef {{
+	config: {
+		name: string;
+		devtools: boolean;
+		server: import("nitropack").NitroConfig;
+		routers: import("./router-mode.js").Router[];
+		root: string;
+	};
+	addRouter: (router: any) => App;
+	getRouter: (name: string) => import("./router-mode.js").Router;
+	stack: (stack: (app: App) => void | Promise<void>) => Promise<App>;
+	dev(): Promise<void>;
+	build(): Promise<void>;
+	hooks: import("hookable").Hookable;
+}} App */
 
 /**
  *
@@ -20,7 +41,7 @@ export function createApp({
 	name = "vinxi",
 	server = {},
 	root = process.cwd(),
-}) {
+} = {}) {
 	const hooks = createHooks();
 	hooks.afterEach((result) => {
 		const output = result.args[0].router
@@ -102,6 +123,10 @@ export function createApp({
 				throw new InvariantError(`Router ${name} not found`);
 			}
 			return router;
+		},
+		async stack(stack) {
+			await stack(app);
+			return app;
 		},
 		async dev() {
 			if (isMainThread) {

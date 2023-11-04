@@ -1,5 +1,5 @@
 {
-  "name": "@vinxi/plugin-server-functions",
+  "name": "@vinxi/server-functions",
   "version": "0.0.35",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",

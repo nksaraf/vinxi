@@ -9,7 +9,7 @@
 import { readFileSync } from "fs";
 import { print, types, visit } from "recast";
 
-import { parseAdvanced, parseLoose } from "./parse";
+import { parseAdvanced, parseLoose } from "./parse.js";
 
 /**
  *

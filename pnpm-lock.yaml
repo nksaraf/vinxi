@@ -152,18 +152,18 @@ importers:
       '@picocss/pico':
         specifier: ^1.5.10
         version: 1.5.10
-      '@vinxi/plugin-server-components':
+      '@vinxi/server-components':
         specifier: 0.0.35
         version: link:../../../../packages/vinxi-server-components
-      '@vinxi/plugin-server-functions':
-        specifier: 0.0.35
-        version: link:../../../../packages/vinxi-server-functions
       '@vinxi/react':
         specifier: 0.0.11
         version: link:../../../../packages/vinxi-react
       '@vinxi/react-server-dom':
         specifier: 0.0.3
         version: 0.0.3(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)(vite@4.5.0)
+      '@vinxi/server-functions':
+        specifier: 0.0.35
+        version: link:../../../../packages/vinxi-server-functions
       '@vitejs/plugin-react':
         specifier: ^4.0.4
         version: 4.1.0(vite@4.5.0)
@@ -761,7 +761,7 @@ importers:
       '@picocss/pico':
         specifier: ^1.5.10
         version: 1.5.10
-      '@vinxi/plugin-server-functions':
+      '@vinxi/server-functions':
         specifier: workspace:^
         version: link:../../../packages/vinxi-server-functions
       autoprefixer:
@@ -773,6 +773,28 @@ importers:
       vinxi:
         specifier: 0.0.43
         version: link:../../../packages/vinxi
+
+  examples/vanilla/stack:
+    dependencies:
+      '@picocss/pico':
+        specifier: ^1.5.10
+        version: 1.5.10
+      '@vinxi/server-functions':
+        specifier: workspace:^
+        version: link:../../../packages/vinxi-server-functions
+      autoprefixer:
+        specifier: ^10.4.15
+        version: 10.4.16(postcss@8.4.31)
+      tailwindcss:
+        specifier: ^3.3.3
+        version: 3.3.5
+      vinxi:
+        specifier: 0.0.43
+        version: link:../../../packages/vinxi
+    devDependencies:
+      '@types/resolve':
+        specifier: ^1.20.4
+        version: 1.20.4
 
   examples/vanilla/trpc:
     dependencies:
@@ -1354,18 +1376,18 @@ importers:
       '@picocss/pico':
         specifier: ^1.5.10
         version: 1.5.10
-      '@vinxi/plugin-server-components':
+      '@vinxi/server-components':
         specifier: 0.0.35
         version: link:../../../packages/vinxi-server-components
-      '@vinxi/plugin-server-functions':
-        specifier: 0.0.35
-        version: link:../../../packages/vinxi-server-functions
       '@vinxi/react':
         specifier: 0.0.11
         version: link:../../../packages/vinxi-react
       '@vinxi/react-server-dom':
         specifier: 0.0.3
         version: 0.0.3(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)(vite@4.5.0)
+      '@vinxi/server-functions':
+        specifier: 0.0.35
+        version: link:../../../packages/vinxi-server-functions
       '@vitejs/plugin-react':
         specifier: ^4.0.4
         version: 4.1.0(vite@4.5.0)

@@ -1,5 +1,3 @@
-import { decorateExportsPlugin, shimExportsPlugin } from "./transform";
-
 /**
  *
  * @param {*} param0

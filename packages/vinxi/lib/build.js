@@ -67,6 +67,7 @@ export async function createBuild(app, buildConfig) {
 	const nitro = await createNitro({
 		...app.config.server,
 		dev: false,
+
 		preset:
 			process.env.TARGET ??
 			process.env.NITRO_PRESET ??
@@ -93,6 +94,7 @@ export async function createBuild(app, buildConfig) {
 			"#vinxi/chunks",
 			...(app.config.server.plugins ?? []),
 		],
+		buildDir: ".vinxi",
 		handlers: [
 			...[...app.config.routers]
 				.sort((a, b) => a.base.length - b.base.length)
