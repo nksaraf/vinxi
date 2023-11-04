@@ -1,5 +1,5 @@
 {
-  "name": "example-vanilla-spa",
+  "name": "example-vanilla-stack",
   "type": "module",
   "private": true,
   "version": null,
@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@vinxi/server-functions": "workspace:^",
+    "@vinxi/server-functions": "0.0.37",
+    "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.15",
     "tailwindcss": "^3.3.3",
     "vinxi": "0.0.45"

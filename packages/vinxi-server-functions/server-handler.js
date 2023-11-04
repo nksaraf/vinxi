@@ -6,7 +6,8 @@ async function loadModule(id) {
 	if (import.meta.env.DEV) {
 		const mod = await import(
 			/* @vite-ignore */
-			import.meta.env.MANIFEST["server"].chunks[id].output.path
+			import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME].chunks[id].output
+				.path
 		);
 		return mod;
 	}
@@ -16,7 +17,7 @@ async function loadModule(id) {
 	}
 	return await import(
 		/* @vite-ignore */
-		import.meta.env.MANIFEST["server"].chunks[id].output.path
+		import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME].chunks[id].output.path
 	);
 }
 
@@ -45,7 +46,7 @@ export async function handleServerAction(event) {
 			// Wait for any mutations
 			const response = await result;
 			event.node.res.setHeader("Content-Type", "application/json");
-			event.node.res.setHeader("Router", "server");
+			event.node.res.setHeader("Router", "server-fns");
 
 			return JSON.stringify(response ?? null);
 		} catch (x) {

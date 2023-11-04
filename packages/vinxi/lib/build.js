@@ -76,7 +76,9 @@ export async function createBuild(app, buildConfig) {
 		dev: false,
 
 		preset:
+			buildConfig.preset ??
 			process.env.TARGET ??
+			process.env.SERVER_PRESET ??
 			process.env.NITRO_PRESET ??
 			app.config.server.preset,
 		alias: {
