@@ -1,5 +1,5 @@
 import reactRefresh from "@vitejs/plugin-react";
-import { serverFunctions } from "@vinxi/server-functions";
+import { serverFunctions } from "@vinxi/server-functions/plugin";
 import { createApp } from "vinxi";
 
 export default createApp({

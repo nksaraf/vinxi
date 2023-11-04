@@ -1429,11 +1429,11 @@ importers:
   test/templates/react-srv-fn:
     dependencies:
       '@vinxi/react':
-        specifier: 0.0.11
-        version: 0.0.11
+        specifier: workspace:*
+        version: link:../../../packages/vinxi-react
       '@vinxi/server-functions':
-        specifier: 0.0.37
-        version: 0.0.37(vinxi@0.0.43)
+        specifier: workspace:*
+        version: link:../../../packages/vinxi-server-functions
       '@vitejs/plugin-react':
         specifier: ^4.0.4
         version: 4.1.0(vite@4.5.0)
@@ -1447,8 +1447,8 @@ importers:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704(react@0.0.0-experimental-035a41c4e-20230704)
       vinxi:
-        specifier: 0.0.43
-        version: 0.0.43
+        specifier: workspace:*
+        version: link:../../../packages/vinxi
     devDependencies:
       '@types/react':
         specifier: ^18.2.21
@@ -5768,21 +5768,6 @@ packages:
       - supports-color
     dev: false
 
-  /@vinxi/devtools@0.0.5(vite@4.5.0):
-    resolution: {integrity: sha512-Zn4utX8Z6CYA4GZ2EvO7NKgpTYCHg5VOUKKTtlErbmTDzcxOYEpVtCs20GVo08LT0KMsugsLjs6hKcwblCQnvw==}
-    dependencies:
-      birpc: 0.2.14
-      vite-plugin-inspect: 0.7.41(vite@4.5.0)
-      ws: 8.14.2
-    transitivePeerDependencies:
-      - '@nuxt/kit'
-      - bufferutil
-      - rollup
-      - supports-color
-      - utf-8-validate
-      - vite
-    dev: false
-
   /@vinxi/listhen@1.5.5:
     resolution: {integrity: sha512-vSvw7Zw+foAsW9N6jki8trZDBBaqtwkf1nnG6rwZvRlkgqfNeSKUOrsI38DTXvZR4S4MzpwUSrWyG2lwTrilOw==}
     hasBin: true
@@ -5821,21 +5806,6 @@ packages:
       vinxi: link:packages/vinxi
     dev: false
 
-  /@vinxi/plugin-directives@0.0.37(vinxi@0.0.43):
-    resolution: {integrity: sha512-Ff3TcsVE0WD/ZdDgyf8yTlfO7Vxgjlua6Q5eezSmJM+KWSNfvuHdARlTxNQEMtH5Pxxd8KAyONCYOZyO6uJ97A==}
-    peerDependencies:
-      vinxi: ^0.0.45
-    dependencies:
-      acorn: 8.11.2
-      acorn-jsx: 5.3.2(acorn@8.11.2)
-      acorn-loose: 8.4.0
-      acorn-typescript: 1.4.10(acorn@8.11.2)
-      astring: 1.8.6
-      magicast: 0.2.11
-      recast: 0.23.4
-      vinxi: 0.0.43
-    dev: false
-
   /@vinxi/plugin-references@0.0.29(vinxi@packages+vinxi):
     resolution: {integrity: sha512-FIUDJ+bHKuGMkw+zk/+FYIcTDAkv7V7cQiFgfI3w9nJPfnfkn2wgJt+f/HZ0vky3gZqa6dYwnuMdvz4mKLDHPg==}
     peerDependencies:
@@ -5867,21 +5837,6 @@ packages:
 
   /@vinxi/react@0.0.11:
     resolution: {integrity: sha512-b50IJD9C3qgAtdd4QSsFF/olg0ZUKznS+N9rR+XQdIssVc63zB/TRlJiQaGUqink3lYRlhWiBEdoV5N1uvPzoA==}
-    dev: false
-
-  /@vinxi/server-functions@0.0.37(vinxi@0.0.43):
-    resolution: {integrity: sha512-Fb2MvQiif0tpRPyrPJsvsaJrnYpCRcDn1qlyJTbuw8pxvkwTFIbykiZfMJcFBOgVs6oiS+qQqE3PnbJAkTkt+Q==}
-    peerDependencies:
-      vinxi: ^0.0.45
-    dependencies:
-      '@vinxi/plugin-directives': 0.0.37(vinxi@0.0.43)
-      acorn: 8.11.2
-      acorn-loose: 8.4.0
-      acorn-typescript: 1.4.10(acorn@8.11.2)
-      astring: 1.8.6
-      magicast: 0.2.11
-      recast: 0.23.4
-      vinxi: 0.0.43
     dev: false
 
   /@vitejs/plugin-react@3.1.0(vite@4.5.0):
@@ -11815,76 +11770,6 @@ packages:
       - encoding
       - idb-keyval
       - less
-      - rollup
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - utf-8-validate
-    dev: false
-
-  /vinxi@0.0.43:
-    resolution: {integrity: sha512-Jt+v8nar11j97KfN2Mw42IduOE6SkjAz6IZEQvbw3ODE5sOPYY5nGhVECenRErq4h6kGG2KXu8m8y4vNkLcNLA==}
-    hasBin: true
-    dependencies:
-      '@babel/core': 7.23.2
-      '@babel/plugin-syntax-jsx': 7.22.5(@babel/core@7.23.2)
-      '@babel/plugin-syntax-typescript': 7.22.5(@babel/core@7.23.2)
-      '@types/micromatch': 4.0.4
-      '@types/serve-static': 1.15.4
-      '@types/ws': 8.5.8
-      '@vinxi/devtools': 0.0.5(vite@4.5.0)
-      '@vinxi/listhen': 1.5.5
-      c12: 1.5.1
-      chokidar: 3.5.3
-      consola: 3.2.3
-      defu: 6.1.3
-      dts-buddy: 0.2.5
-      es-module-lexer: 1.3.1
-      esbuild: 0.18.20
-      fast-glob: 3.3.1
-      get-port: 6.1.2
-      h3: 1.8.0
-      hookable: 5.5.3
-      http-proxy: 1.18.1
-      micromatch: 4.0.5
-      mri: 1.2.0
-      nitropack: 2.6.1
-      node-fetch-native: 1.4.1
-      path-to-regexp: 6.2.1
-      pathe: 1.1.1
-      perfect-debounce: 1.0.0
-      resolve: 1.22.8
-      rollup-plugin-visualizer: 5.9.2(rollup@4.2.0)
-      serve-placeholder: 2.0.1
-      serve-static: 1.15.0
-      ufo: 1.3.1
-      unenv: 1.7.4
-      unimport: 3.4.0
-      unstorage: 1.9.0
-      vite: 4.5.0(@types/node@14.18.63)
-      ws: 8.14.2
-      zod: 3.22.4
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@capacitor/preferences'
-      - '@nuxt/kit'
-      - '@planetscale/database'
-      - '@types/node'
-      - '@upstash/redis'
-      - '@vercel/kv'
-      - bufferutil
-      - debug
-      - encoding
-      - idb-keyval
-      - less
-      - lightningcss
       - rollup
       - sass
       - stylus
