@@ -3,7 +3,15 @@
   "version": "0.0.43",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
-  "files": ["bin", "lib", "public", "runtime", "types", "dist/types", "*.d.ts"],
+  "files": [
+    "bin",
+    "lib",
+    "public",
+    "runtime",
+    "types",
+    "dist/types",
+    "*.d.ts"
+  ],
   "scripts": {
     "types": "npm run tsc",
     "tsc": "rm -rf dist/types && tsc; cp -r types dist/types/types"
@@ -78,20 +86,48 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["./dist/types/lib/index.d.ts"],
-      "dev-server": ["./dist/types/lib/dev-server.d.ts"],
-      "server": ["./dist/types/runtime/server.d.ts"],
-      "party": ["./dist/types/runtime/party.d.ts"],
-      "css": ["./dist/types/runtime/style.d.ts"],
-      "client": ["./dist/types/runtime/client.d.ts"],
-      "fs-router": ["./dist/types/lib/fs-router.d.ts"],
-      "types/server": ["./types/server.d.ts"],
-      "types/client": ["./types/client.d.ts"],
-      "routes": ["./types/routes.d.ts"],
-      "lib/invariant": ["./dist/types/lib/invariant.d.ts"],
-      "plugins/config": ["./dist/types/lib/plugins/config.d.ts"],
-      "plugins/virtual": ["./dist/types/lib/plugins/virtual.d.ts"],
-      "lib/path": ["./dist/types/lib/path.d.ts"]
+      ".": [
+        "./dist/types/lib/index.d.ts"
+      ],
+      "dev-server": [
+        "./dist/types/lib/dev-server.d.ts"
+      ],
+      "server": [
+        "./dist/types/runtime/server.d.ts"
+      ],
+      "party": [
+        "./dist/types/runtime/party.d.ts"
+      ],
+      "css": [
+        "./dist/types/runtime/style.d.ts"
+      ],
+      "client": [
+        "./dist/types/runtime/client.d.ts"
+      ],
+      "fs-router": [
+        "./dist/types/lib/fs-router.d.ts"
+      ],
+      "types/server": [
+        "./types/server.d.ts"
+      ],
+      "types/client": [
+        "./types/client.d.ts"
+      ],
+      "routes": [
+        "./types/routes.d.ts"
+      ],
+      "lib/invariant": [
+        "./dist/types/lib/invariant.d.ts"
+      ],
+      "plugins/config": [
+        "./dist/types/lib/plugins/config.d.ts"
+      ],
+      "plugins/virtual": [
+        "./dist/types/lib/plugins/virtual.d.ts"
+      ],
+      "lib/path": [
+        "./dist/types/lib/path.d.ts"
+      ]
     }
   },
   "dependencies": {
@@ -103,6 +139,7 @@
     "@types/ws": "^8.5.5",
     "@vinxi/devtools": "workspace:^",
     "@vinxi/listhen": "^1.5.5",
+    "boxen": "^7.1.1",
     "c12": "^1.4.2",
     "chokidar": "^3.5.3",
     "consola": "^3.2.3",

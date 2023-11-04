@@ -1,8 +1,8 @@
 import { loadConfig } from "c12";
-import chokidar from "chokidar";
 import { fileURLToPath } from "url";
 
 import { createApp } from "./app.js";
+import { log } from "./logger.js";
 
 /**
  *
@@ -11,7 +11,6 @@ import { createApp } from "./app.js";
  */
 export async function loadApp(configFile = undefined, args = {}) {
 	const stacks = typeof args.s === "string" ? [args.s] : args.s ?? [];
-	console.log(stacks);
 	/** @type {{ config: import("./app.js").App }}*/
 	try {
 		let { config: app } = await loadConfig(
@@ -42,14 +41,15 @@ export async function loadApp(configFile = undefined, args = {}) {
 			});
 
 			if (config.config) {
-				console.warn("Found vite.config.js with app config");
+				log("Found vite.config.js with app config");
 				// @ts-expect-error trying to send c12's config as app
 				//
 				return config;
 			} else {
-				console.warn("No app config found. Assuming SPA app.");
+				log("No app config found. Assuming SPA app.");
 
 				if (stacks.length) {
+					log("Applying stacks:", ...stacks);
 					return applyStacks(createApp({}), stacks);
 				}
 
@@ -97,8 +97,6 @@ async function applyStacks(app, s) {
 			return mod.default;
 		}),
 	);
-
-	console.log(stacks);
 
 	for (const stack of stacks) {
 		await app.stack(stack);

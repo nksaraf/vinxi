@@ -13,8 +13,6 @@ async function main() {
 	const command = args._[0];
 	const rootDir = resolve(args._[1] || ".");
 
-	console.log(args);
-
 	const configFile = args.config;
 	globalThis.MANIFEST = {};
 	const app = await loadApp(configFile, args);

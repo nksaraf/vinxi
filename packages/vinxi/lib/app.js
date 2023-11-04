@@ -47,7 +47,11 @@ export function createApp({
 		const output = result.args[0].router
 			? [c.yellow(result.args[0].router?.name), result.name]
 			: [result.name];
-		consola.log(c.blue("vinxi"), c.green("hook"), ...output);
+		consola.log(
+			c.dim(c.blue("vinxi")),
+			c.dim(c.green("hook")),
+			...output.map(c.dim),
+		);
 	});
 	// if (devtools) {
 	// 	routers = [devtoolsClient(), devtoolsRpc(), ...routers];
