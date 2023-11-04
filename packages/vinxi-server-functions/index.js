@@ -1,18 +1,18 @@
-import { fileURLToPath } from "url";
+import { createStack } from "vinxi/stack";
 
-import { client } from "./client.js";
-import { server } from "./server.js";
+import { serverFunctions } from "./plugin.js";
 
-export const serverFunctions = {
-	client: client,
-	server: server,
-	router: (overrides) => ({
-		name: "server",
-		mode: "handler",
-		base: "/_server",
-		handler: fileURLToPath(new URL("./server-handler.js", import.meta.url)),
-		target: "server",
-		...(overrides ?? {}),
-		plugins: () => [server(), ...(overrides?.plugins?.() ?? [])],
-	}),
-};
+export default function serverFns(app) {
+	app.addRouter(serverFunctions.router());
+	const clientRouters = app.config.routers.filter(
+		(router) => router.target === "browser",
+	);
+
+	clientRouters.forEach((router) => {
+		if (router.plugins) {
+			router.plugins = () => [serverFunctions.client(), ...router.plugins()];
+		} else if (router.plugins === undefined) {
+			router.plugins = () => [serverFunctions.client()];
+		}
+	});
+}

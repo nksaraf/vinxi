@@ -1,6 +1,6 @@
 {
   "name": "vinxi",
-  "version": "0.0.43",
+  "version": "0.0.45",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
@@ -9,6 +9,7 @@
     "public",
     "runtime",
     "types",
+    "stack",
     "dist/types",
     "*.d.ts"
   ],
@@ -26,6 +27,9 @@
     "./dev-server": {
       "import": "./lib/dev-server.js",
       "types": "./dist/types/lib/dev-server.d.ts"
+    },
+    "./stack": {
+      "import": "./stack/index.js"
     },
     "./lib/doc": {
       "import": "./lib/doc.js"
@@ -136,6 +140,7 @@
     "@types/ws": "^8.5.5",
     "@vinxi/devtools": "workspace:^",
     "@vinxi/listhen": "^1.5.5",
+    "boxen": "^7.1.1",
     "c12": "^1.4.2",
     "chokidar": "^3.5.3",
     "consola": "^3.2.3",

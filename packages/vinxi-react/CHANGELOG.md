@@ -1,5 +1,11 @@
 # @vinxi/react
 
+## 0.0.12
+
+### Patch Changes
+
+- 0cc2f4a: added `import()` helpers to manifest
+
 ## 0.0.11
 
 ### Patch Changes

@@ -1,3 +1,4 @@
+import boxen from "boxen";
 import { mkdir, rm, writeFile } from "fs/promises";
 import { H3Event, createApp } from "h3";
 import { createRequire } from "module";
@@ -9,7 +10,7 @@ import { pathToFileURL } from "node:url";
 import { chunksServerVirtualModule } from "./chunks.js";
 import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
-import { consola, withLogger } from "./logger.js";
+import { c, consola, log, withLogger } from "./logger.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
 import {
 	handlerModule,
@@ -34,6 +35,12 @@ const require = createRequire(import.meta.url);
  * @param {BuildConfig} buildConfig
  */
 export async function createBuild(app, buildConfig) {
+	console.log("\n");
+	console.log(
+		boxen(`⚙  ${c.green("Building your app...")}`, {
+			padding: { left: 1, right: 4 },
+		}),
+	);
 	await app.hooks.callHook("app:build:start", { app, buildConfig });
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
 	const { join } = await import("./path.js");
@@ -67,6 +74,7 @@ export async function createBuild(app, buildConfig) {
 	const nitro = await createNitro({
 		...app.config.server,
 		dev: false,
+
 		preset:
 			process.env.TARGET ??
 			process.env.NITRO_PRESET ??
@@ -93,6 +101,7 @@ export async function createBuild(app, buildConfig) {
 			"#vinxi/chunks",
 			...(app.config.server.plugins ?? []),
 		],
+		buildDir: ".vinxi",
 		handlers: [
 			...[...app.config.routers]
 				.sort((a, b) => a.base.length - b.base.length)
@@ -264,6 +273,13 @@ export async function createBuild(app, buildConfig) {
 		},
 	});
 
+	console.log("\n");
+	console.log(
+		boxen(`⚙  ${c.green(`Preparing app for ${nitro.options.preset}...`)}`, {
+			padding: { left: 1, right: 4 },
+		}),
+	);
+
 	nitro.options.appConfigFiles = [];
 	nitro.logger = consola.withTag(app.config.name);
 
@@ -306,6 +322,12 @@ async function createViteBuild(config) {
  * @param {import("./router-mode.js").Router} router
  */
 async function createRouterBuild(app, router) {
+	console.log("\n");
+	console.log(
+		boxen(c.green(`📦 Compiling ${router.name} router...`), {
+			padding: { left: 1, right: 4 },
+		}),
+	);
 	await app.hooks.callHook("app:build:router:start", { app, router });
 	let buildRouter = router;
 	if (router.mode === "spa" && !router.handler.endsWith(".html")) {
@@ -373,7 +395,7 @@ async function createRouterBuild(app, router) {
 		};
 	}
 
-	console.log(`building router ${router.name} in ${router.mode} mode`);
+	log(`building router ${router.name} in ${router.mode} mode`);
 
 	const viteBuildConfig = {
 		router: buildRouter,

@@ -1,5 +1,11 @@
 # @vinxi/solid
 
+## 0.0.14
+
+### Patch Changes
+
+- 0cc2f4a: added `import()` helpers to manifest
+
 ## 0.0.13
 
 ### Patch Changes

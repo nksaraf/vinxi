@@ -9,6 +9,7 @@
 		"strict": true,
 		"checkJs": true,
 		"noEmit": false,
+		"rootDir": "./",
 		"isolatedModules": true,
 		"declarationMap": true,
 		"declaration": true,

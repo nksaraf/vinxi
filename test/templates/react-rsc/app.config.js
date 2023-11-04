@@ -1,5 +1,5 @@
-import { serverComponents } from "@vinxi/plugin-server-components";
-import { serverFunctions } from "@vinxi/plugin-server-functions";
+import { serverComponents } from "@vinxi/server-components/plugin";
+import { serverFunctions } from "@vinxi/server-functions/plugin";
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 

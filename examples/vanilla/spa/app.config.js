@@ -1,4 +1,4 @@
-import { serverFunctions } from "@vinxi/plugin-server-functions";
+import { serverFunctions } from "@vinxi/server-functions/plugin";
 import { createApp } from "vinxi";
 
 export default createApp({
@@ -12,7 +12,6 @@ export default createApp({
 			name: "client",
 			mode: "spa",
 			handler: "./index.html",
-			target: "browser",
 			plugins: () => [serverFunctions.client()],
 		},
 		serverFunctions.router({

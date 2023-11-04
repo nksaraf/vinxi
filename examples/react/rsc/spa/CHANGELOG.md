@@ -4,10 +4,31 @@
 
 ### Patch Changes
 
+- Updated dependencies [8d1f0dd]
+  - vinxi@0.0.45
+  - @vinxi/server-components@0.0.37
+  - @vinxi/server-functions@0.0.37
+
+## null
+
+### Patch Changes
+
+- Updated dependencies [b0029a2]
+- Updated dependencies [cbd8d4c]
+- Updated dependencies [0cc2f4a]
+  - @vinxi/server-components@0.0.36
+  - @vinxi/server-functions@0.0.36
+  - vinxi@0.0.44
+  - @vinxi/react@0.0.12
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [978b04a]
   - vinxi@0.0.43
-  - @vinxi/plugin-server-components@0.0.35
-  - @vinxi/plugin-server-functions@0.0.35
+  - @vinxi/server-components@0.0.35
+  - @vinxi/server-functions@0.0.35
 
 ## null
 
@@ -16,26 +37,26 @@
 - Updated dependencies [e8fdad4]
 - Updated dependencies [291a5cf]
   - vinxi@0.0.42
-  - @vinxi/plugin-server-components@0.0.34
-  - @vinxi/plugin-server-functions@0.0.34
+  - @vinxi/server-components@0.0.34
+  - @vinxi/server-functions@0.0.34
 
 ## null
 
 ### Patch Changes
 
 - Updated dependencies [2e52d87]
-  - @vinxi/plugin-server-functions@0.0.33
+  - @vinxi/server-functions@0.0.33
   - vinxi@0.0.41
-  - @vinxi/plugin-server-components@0.0.33
+  - @vinxi/server-components@0.0.33
 
 ## null
 
 ### Patch Changes
 
 - Updated dependencies [0335776]
-  - @vinxi/plugin-server-components@0.0.32
+  - @vinxi/server-components@0.0.32
   - vinxi@0.0.40
-  - @vinxi/plugin-server-functions@0.0.32
+  - @vinxi/server-functions@0.0.32
 
 ## null
 
@@ -44,8 +65,8 @@
 - Updated dependencies [f237894]
 - Updated dependencies [d620072]
   - vinxi@0.0.39
-  - @vinxi/plugin-server-components@0.0.31
-  - @vinxi/plugin-server-functions@0.0.31
+  - @vinxi/server-components@0.0.31
+  - @vinxi/server-functions@0.0.31
 
 ## null
 
@@ -53,9 +74,9 @@
 
 - Updated dependencies [1284791]
 - Updated dependencies [930b2f2]
-  - @vinxi/plugin-server-functions@0.0.30
+  - @vinxi/server-functions@0.0.30
   - vinxi@0.0.38
-  - @vinxi/plugin-server-components@0.0.30
+  - @vinxi/server-components@0.0.30
 
 ## null
 
