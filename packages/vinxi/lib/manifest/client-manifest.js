@@ -25,6 +25,9 @@ const manifest = new Proxy(
 								? join(import.meta.env.BASE_URL, "@fs", chunk)
 								: join(import.meta.env.BASE_URL, chunk + ".js");
 							return {
+								import() {
+									return import(/* @vite-ignore */ outputPath);
+								},
 								output: {
 									path: outputPath,
 								},
@@ -42,6 +45,9 @@ const manifest = new Proxy(
 								? join(import.meta.env.BASE_URL, "@fs", input)
 								: window.manifest[input].output;
 							return {
+								async import() {
+									return import(/* @vite-ignore */ outputPath);
+								},
 								async assets() {
 									if (import.meta.env.DEV) {
 										const assetsPath =

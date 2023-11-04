@@ -56,9 +56,20 @@ export function createProdManifest(app) {
 						{
 							get(target, chunk) {
 								invariant(typeof chunk === "string", "Chunk expected");
+								const chunkPath = join(
+									router.outDir,
+									router.base,
+									chunk + ".js",
+								);
 								return {
+									import() {
+										if (globalThis.$$chunks[chunk + ".js"]) {
+											return globalThis.$$chunks[chunk + ".js"];
+										}
+										return import(/* @vite-ignore */ chunkPath);
+									},
 									output: {
-										path: join(router.outDir, router.base, chunk + ".js"),
+										path: chunkPath,
 									},
 								};
 							},
@@ -115,6 +126,14 @@ export function createProdManifest(app) {
 											? virtualId(handlerModule(router))
 											: input;
 									return {
+										import() {
+											return import(
+												/* @vite-ignore */ join(
+													router.base,
+													bundlerManifest[id].file,
+												)
+											);
+										},
 										assets() {
 											return findAssetsInViteManifest(bundlerManifest, id)
 												.filter((asset) => asset.endsWith(".css"))
