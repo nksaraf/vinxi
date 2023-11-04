@@ -1,5 +1,15 @@
 # @vinxi/plugin-references
 
+## 0.0.36
+
+### Patch Changes
+
+- b0029a2: added a stacks feature to quickly build up app config from the CLI (experimental)
+- Updated dependencies [b0029a2]
+- Updated dependencies [cbd8d4c]
+- Updated dependencies [0cc2f4a]
+  - vinxi@0.0.44
+
 ## 0.0.35
 
 ### Patch Changes

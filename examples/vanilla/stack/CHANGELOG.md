@@ -4,6 +4,16 @@
 
 ### Patch Changes
 
+- Updated dependencies [b0029a2]
+- Updated dependencies [cbd8d4c]
+- Updated dependencies [0cc2f4a]
+  - @vinxi/server-functions@0.0.36
+  - vinxi@0.0.44
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [355daea]
   - @vinxi/plugin-references@0.0.24
   - vinxi@0.0.34

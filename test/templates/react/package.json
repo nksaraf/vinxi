@@ -9,12 +9,12 @@
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
-    "@vinxi/react": "0.0.11",
+    "@vinxi/react": "0.0.12",
     "@vitejs/plugin-react": "^4.0.4",
     "path-to-regexp": "^6.2.1",
     "react": "0.0.0-experimental-035a41c4e-20230704",
     "react-dom": "0.0.0-experimental-035a41c4e-20230704",
-    "vinxi": "0.0.43"
+    "vinxi": "0.0.44"
   },
   "devDependencies": {
     "@types/react": "^18.2.21",

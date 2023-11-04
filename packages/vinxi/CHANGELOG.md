@@ -1,5 +1,14 @@
 # vinxi
 
+## 0.0.44
+
+### Patch Changes
+
+- b0029a2: added a stacks feature to quickly build up app config from the CLI (experimental)
+- cbd8d4c: added boxes for build logging to make it prettier
+- 0cc2f4a: added `import()` helpers to manifest
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.43
 
 ### Patch Changes
