@@ -1,5 +1,14 @@
 # @vinxi/plugin-references
 
+## 0.0.38
+
+### Patch Changes
+
+- a4512f5: new CLI infra using citty and server-function fix
+- Updated dependencies [a4512f5]
+  - vinxi@0.0.46
+  - @vinxi/plugin-directives@0.0.38
+
 ## 0.0.37
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.46
+
+### Patch Changes
+
+- a4512f5: new CLI infra using citty and server-function fix
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.45
 
 ### Patch Changes
