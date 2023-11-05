@@ -2,6 +2,7 @@ import invariant from "vinxi/lib/invariant";
 import { handlerModule, join, virtualId } from "vinxi/lib/path";
 
 import findAssetsInViteManifest from "./vite-manifest.js";
+import { pathToFileURL } from "node:url";
 
 /** @typedef {import("../app.js").App & { config: { buildManifest: { [key:string]: any } }}} ProdApp */
 
@@ -66,7 +67,7 @@ export function createProdManifest(app) {
 										if (globalThis.$$chunks[chunk + ".js"]) {
 											return globalThis.$$chunks[chunk + ".js"];
 										}
-										return import(/* @vite-ignore */ chunkPath);
+										return import(/* @vite-ignore */ pathToFileURL(chunkPath).href);
 									},
 									output: {
 										path: chunkPath,

@@ -1,0 +1,24 @@
+{
+  "name": "test-react-srv-fn",
+  "type": "module",
+  "private": true,
+  "version": null,
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "node .output/server/index.mjs"
+  },
+  "dependencies": {
+    "@vinxi/react": "workspace:*",
+    "@vitejs/plugin-react": "^4.0.4",
+    "@vinxi/server-functions": "workspace:*",
+    "path-to-regexp": "^6.2.1",
+    "react": "0.0.0-experimental-035a41c4e-20230704",
+    "react-dom": "0.0.0-experimental-035a41c4e-20230704",
+    "vinxi": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7"
+  }
+}

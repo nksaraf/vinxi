@@ -20,7 +20,7 @@ export type Manifest = {
 		[key: string]: {
 			/** Assets needed by this entry point */
 			assets(): Promise<Asset[]>;
-
+			import<T = { default: any; [k: string]: any }>(): Promise<T>;
 			output: {
 				/** Path to built artifact for this entry point. */
 				path: string;
