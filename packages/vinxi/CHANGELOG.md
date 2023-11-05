@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.47
+
+### Patch Changes
+
+- 8d24beb: improve path handling in windows, and the server-action handler
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.46
 
 ### Patch Changes
