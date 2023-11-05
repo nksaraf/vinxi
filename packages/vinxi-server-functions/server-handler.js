@@ -10,7 +10,11 @@ export async function handleServerAction(event) {
 		invariant(typeof serverReference === "string", "Invalid server action");
 		// This is the client-side case
 		const [filepath, name] = serverReference.split("#");
-		const action = (await import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME].chunks[filepath].import())[name];
+		const action = (
+			await import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME].chunks[
+				filepath
+			].import()
+		)[name];
 		const text = await new Promise((resolve) => {
 			const requestBody = [];
 			event.node.req.on("data", (chunks) => {
@@ -32,7 +36,13 @@ export async function handleServerAction(event) {
 			return JSON.stringify(response ?? null);
 		} catch (x) {
 			console.error(x);
-			return { error: x.message }
+			return new Response(JSON.stringify({ error: x.message }), {
+				status: 500,
+				headers: {
+					"Content-Type": "application/json",
+					"x-server-function": "error",
+				},
+			});
 		}
 	} else {
 		throw new Error("Invalid request");
