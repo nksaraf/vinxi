@@ -106,8 +106,7 @@ export async function createBuild(app, buildConfig) {
 		buildDir: ".vinxi",
 		handlers: [
 			...[...app.config.routers]
-				.sort((a, b) => a.base.length - b.base.length)
-				.reverse()
+				.sort((a, b) => b.base.length - a.base.length)
 				.map((router) => {
 					if (router.mode === "handler") {
 						invariant(router.handler, "Missing router.handler");
