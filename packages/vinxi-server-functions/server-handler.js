@@ -32,6 +32,7 @@ export async function handleServerAction(event) {
 			return JSON.stringify(response ?? null);
 		} catch (x) {
 			console.error(x);
+			return { error: x.message }
 		}
 	} else {
 		throw new Error("Invalid request");
