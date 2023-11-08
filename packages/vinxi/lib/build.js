@@ -246,9 +246,8 @@ export async function createBuild(app, buildConfig) {
 			...(app.config.routers.filter((router) => router.mode === "spa")
 				.reduce((virtuals, router) => {
 					virtuals[`#vinxi/spa/${router.name}`] = () => {
-						const subDir = relative(app.config.root, router.root);
 						const indexHtml = readFileSync(
-							join(router.outDir, router.base, subDir, "index.html"),
+							join(router.outDir, router.base, "index.html"),
 							"utf-8",
 						);
 						return `
@@ -647,6 +646,7 @@ function handerBuild() {
 				const { join } = await import("./path.js");
 				const input = await getEntries(router);
 				return {
+					root: router.root,
 					build: {
 						rollupOptions: {
 							input,
@@ -683,6 +683,7 @@ function browserBuild() {
 				const { join } = await import("./path.js");
 				console.log(await getEntries(router));
 				return {
+					root: router.root,
 					build: {
 						rollupOptions: {
 							input: await getEntries(router),
