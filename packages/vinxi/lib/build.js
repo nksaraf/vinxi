@@ -137,7 +137,7 @@ export async function createBuild(app, buildConfig) {
 						return [
 							{
 								route: router.base.length === 1 ? "/" : `${router.base}`,
-								handler: "#vinxi/spa",
+								handler: `#vinxi/spa/${router.name}`,
 								middleware: true,
 							},
 						];
@@ -243,25 +243,25 @@ export async function createBuild(app, buildConfig) {
         }
       `;
 			},
-			"#vinxi/spa": () => {
-				const router = app.config.routers.find(
-					(router) => router.mode === "spa",
-				);
-
-				invariant(router?.mode === "spa", "No SPA router found");
-
-				const indexHtml = readFileSync(
-					join(router.outDir, router.base, "index.html"),
-					"utf-8",
-				);
-				return `
-					import { eventHandler } from 'vinxi/server'
-					const html = ${JSON.stringify(indexHtml)}
-					export default eventHandler(event => {
-						return html
-					})
-				`;
-			},
+			...(app.config.routers.filter((router) => router.mode === "spa")
+				.reduce((virtuals, router) => {
+					virtuals[`#vinxi/spa/${router.name}`] = () => {
+						const subDir = relative(app.config.root, router.root);
+						const indexHtml = readFileSync(
+							join(router.outDir, router.base, subDir, "index.html"),
+							"utf-8",
+						);
+						return `
+							import { eventHandler } from 'vinxi/server'
+							const html = ${JSON.stringify(indexHtml)}
+							export default eventHandler(event => {
+								return html
+							})
+						`;
+					};
+					return virtuals; 
+				}, {})
+			),
 			"#vinxi/chunks": () => chunksServerVirtualModule()(app),
 
 			...(Object.fromEntries(
