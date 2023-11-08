@@ -119,7 +119,7 @@ const routerModes = {
 		resolveConfig(router, appConfig, order) {
 			invariant(router.mode === "static", "Invalid router mode");
 			const appRoot = appConfig.root ?? process.cwd();
-			const root = router.root ?? appRoot;
+			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
 			return {
 				...router,
 				base: router.base ?? "/",
@@ -157,7 +157,7 @@ const routerModes = {
 		resolveConfig(router, appConfig, order) {
 			invariant(router.mode === "build", "Invalid router mode");
 			const appRoot = appConfig.root ?? process.cwd();
-			const root = router.root ?? appRoot;
+			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
 			/** @type {BuildRouterSchema} */
 			const buildRouter = {
 				...router,
@@ -246,7 +246,7 @@ const routerModes = {
 		resolveConfig(router, appConfig, order) {
 			invariant(router.mode === "handler", "Invalid router mode");
 			const appRoot = appConfig.root ?? process.cwd();
-			const root = router.root ?? appRoot;
+			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
 			/** @type {HandlerRouterSchema} */
 			const handlerRouter = {
 				...router,
@@ -368,7 +368,7 @@ const routerModes = {
 		resolveConfig(router, appConfig, order) {
 			invariant(router.mode === "spa", "Invalid router mode");
 			const appRoot = appConfig.root ?? process.cwd();
-			const root = router.root ?? appRoot;
+			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
 			/** @type {SPARouterSchema} */
 			const spaRouter = {
 				...router,
