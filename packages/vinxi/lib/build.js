@@ -620,7 +620,7 @@ function toRouteId(route) {
  */
 export async function getEntries(router) {
 	return [
-		router.handler.endsWith(".html") ? router.handler : handlerModule(router),
+		router.handler.endsWith(".html") ? join(router.root, router.handler) : handlerModule(router),
 		...(
 			(await router.internals.routes?.getRoutes())?.map((r) =>
 				Object.entries(r)
