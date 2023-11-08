@@ -400,6 +400,7 @@ async function createRouterBuild(app, router) {
 	const viteBuildConfig = {
 		router: buildRouter,
 		app,
+		root: router.root,
 		plugins: [
 			routerModePlugin[buildRouter.internals.mode.name]?.(buildRouter) ?? [],
 			buildTargetPlugin[buildRouter.target]?.(buildRouter) ?? [],
@@ -646,7 +647,6 @@ function handerBuild() {
 				const { join } = await import("./path.js");
 				const input = await getEntries(router);
 				return {
-					root: router.root,
 					build: {
 						rollupOptions: {
 							input,
@@ -683,7 +683,6 @@ function browserBuild() {
 				const { join } = await import("./path.js");
 				console.log(await getEntries(router));
 				return {
-					root: router.root,
 					build: {
 						rollupOptions: {
 							input: await getEntries(router),

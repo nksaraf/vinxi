@@ -17,7 +17,6 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		manifest(),
 		config("appType", {
 			appType: "spa",
-			root: router.root,
 			ssr: {
 				noExternal: ["vinxi"],
 			},
@@ -61,7 +60,6 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		manifest(),
 		config("appType", {
 			appType: "custom",
-			root: router.root,
 			ssr: {
 				noExternal: ["vinxi"],
 			},
@@ -96,7 +94,6 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		manifest(),
 		config("appType", {
 			appType: "custom",
-			root: router.root,
 			ssr: {
 				noExternal: ["vinxi"],
 			},

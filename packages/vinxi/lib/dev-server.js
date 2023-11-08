@@ -59,6 +59,7 @@ export async function createViteHandler(router, app, serveConfig) {
 
 	const viteDevServer = await createViteDevServer({
 		configFile: false,
+		root: router.root,
 		base: router.base,
 		plugins,
 		optimizeDeps: {
