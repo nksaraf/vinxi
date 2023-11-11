@@ -47,14 +47,14 @@ test.describe("multi-spa-dev", () => {
 		let app = new PlaywrightFixture(appFixture, page);
 		await app.goto("/solid", true);
 
-		expect(await app.getHtml("[data-test-id=count]")).toBe(
-			prettyHtml(`<span data-test-id="count">0</span>`),
+		expect(await app.getHtml("[data-test-id=count-solid]")).toBe(
+			prettyHtml(`<span data-test-id="count-solid">0</span>`),
 		);
 
-		await app.clickElement("[data-test-id=button]");
+		await app.clickElement("[data-test-id=button-solid]");
 
-		expect(await app.getHtml("[data-test-id=count]")).toBe(
-			prettyHtml(`<span data-test-id="count">1</span>`),
+		expect(await app.getHtml("[data-test-id=count-solid]")).toBe(
+			prettyHtml(`<span data-test-id="count-solid">1</span>`),
 		);
 	});
 });
