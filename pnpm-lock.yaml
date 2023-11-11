@@ -1352,6 +1352,34 @@ importers:
         specifier: ^5.0.1
         version: 5.0.5
 
+  test/templates/multi-spa:
+    dependencies:
+      '@vitejs/plugin-react':
+        specifier: ^4.1.1
+        version: 4.1.1(vite@4.5.0)
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      solid-js:
+        specifier: ^1.8.5
+        version: 1.8.5
+      vinxi:
+        specifier: workspace:^
+        version: link:../../../packages/vinxi
+      vite-plugin-solid:
+        specifier: ^2.7.2
+        version: 2.7.2(solid-js@1.8.5)(vite@4.5.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.36
+        version: 18.2.37
+      '@types/react-dom':
+        specifier: ^18.2.14
+        version: 18.2.14
+
   test/templates/react:
     dependencies:
       '@vinxi/react':
@@ -3212,7 +3240,7 @@ packages:
       react: '>=16'
     dependencies:
       '@types/mdx': 2.0.9
-      '@types/react': 18.2.33
+      '@types/react': 18.2.37
       react: 0.0.0-experimental-035a41c4e-20230704
     dev: false
 
@@ -5476,6 +5504,13 @@ packages:
       '@types/scheduler': 0.16.5
       csstype: 3.1.2
 
+  /@types/react@18.2.37:
+    resolution: {integrity: sha512-RGAYMi2bhRgEXT3f4B92WTohopH6bIXw05FuGlmJEnv/omEn190+QYEIYxIAuIBdKgboYYdVved2p1AxZVQnaw==}
+    dependencies:
+      '@types/prop-types': 15.7.9
+      '@types/scheduler': 0.16.5
+      csstype: 3.1.2
+
   /@types/resolve@1.20.2:
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
     dev: false
@@ -5869,6 +5904,22 @@ packages:
       vite: 4.5.0(@types/node@14.18.63)
     transitivePeerDependencies:
       - supports-color
+
+  /@vitejs/plugin-react@4.1.1(vite@4.5.0):
+    resolution: {integrity: sha512-Jie2HERK+uh27e+ORXXwEP5h0Y2lS9T2PRGbfebiHGlwzDO0dEnd2aNtOR/qjBlPb1YgxwAONeblL1xqLikLag==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      vite: ^4.2.0
+    dependencies:
+      '@babel/core': 7.23.2
+      '@babel/plugin-transform-react-jsx-self': 7.22.5(@babel/core@7.23.2)
+      '@babel/plugin-transform-react-jsx-source': 7.22.5(@babel/core@7.23.2)
+      '@types/babel__core': 7.20.3
+      react-refresh: 0.14.0
+      vite: 4.5.0(@types/node@14.18.63)
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /@vitest/expect@0.28.5:
     resolution: {integrity: sha512-gqTZwoUTwepwGIatnw4UKpQfnoyV0Z9Czn9+Lo2/jLIt4/AXLTn+oVZxlQ7Ng8bzcNkR+3DqLJ08kNr8jRmdNQ==}
@@ -10003,6 +10054,16 @@ packages:
       scheduler: 0.0.0-experimental-dddfe6882-20231005
     dev: false
 
+  /react-dom@18.2.0(react@18.2.0):
+    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      loose-envify: 1.4.0
+      react: 18.2.0
+      scheduler: 0.23.0
+    dev: false
+
   /react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
@@ -10096,6 +10157,13 @@ packages:
 
   /react@0.0.0-experimental-dddfe6882-20231005:
     resolution: {integrity: sha512-d0QBz2CP70b7UzS18/xwK0CNyi5WmN0/345UWq02yGo2VyoIluxwCeNk8wQQHEzwMmDmchWblI2mqsM7Ra4QrQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
+
+  /react@18.2.0:
+    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
@@ -10402,6 +10470,12 @@ packages:
 
   /scheduler@0.0.0-experimental-dddfe6882-20231005:
     resolution: {integrity: sha512-Ju2D1ydSs5yLAYgX+2K8d/Qun3hWsZn7G0WBSNxFc3YMXvyNd+c3+tWAfdlsJQAYtBSz5XV4ZoklDD8DGRSFjA==}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
+
+  /scheduler@0.23.0:
+    resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
     dev: false

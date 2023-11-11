@@ -1,0 +1,23 @@
+{
+  "name": "test-multi-spa",
+  "type": "module",
+  "private": true,
+  "version": null,
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "node .output/server/index.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "solid-js": "^1.8.5",
+    "vinxi": "workspace:^",
+    "vite-plugin-solid": "^2.7.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.36",
+    "@types/react-dom": "^18.2.14"
+  }
+}
