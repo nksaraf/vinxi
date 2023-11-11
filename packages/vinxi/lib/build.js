@@ -342,7 +342,7 @@ async function createRouterBuild(app, router) {
 				ssr: true,
 				ssrManifest: true,
 				rollupOptions: {
-					input: { handler: router.handler },
+					input: { handler: join(router.root, router.handler) },
 				},
 				target: "esnext",
 				outDir: join(router.outDir + "_entry"),
@@ -381,18 +381,18 @@ async function createRouterBuild(app, router) {
 			html: htmlCode,
 		});
 
-		writeFileSync(join(process.cwd(), "index.html"), htmlCode.code);
+		writeFileSync(join(router.root, "index.html"), htmlCode.code);
 
 		await app.hooks.callHook("app:build:router:html:generate:write", {
 			app,
 			router,
 			html: htmlCode,
-			path: join(process.cwd(), "index.html"),
+			path: join(router.root, "index.html"),
 		});
 
 		buildRouter = {
 			...router,
-			handler: join(process.cwd(), "index.html"),
+			handler: "./index.html",
 		};
 	}
 
@@ -440,7 +440,7 @@ async function createRouterBuild(app, router) {
 	});
 
 	if (router.mode === "spa" && !router.handler.endsWith(".html")) {
-		await rm(join(process.cwd(), "index.html"));
+		await rm(join(router.root, "index.html"));
 	}
 
 	consola.success("build done");
