@@ -312,8 +312,12 @@ export async function createBuild(app, buildConfig) {
  * @param {import("vite").InlineConfig & { router?: any; app: any }} config
  */
 async function createViteBuild(config) {
+	const cwd = process.cwd();
+	process.chdir(config.root);
 	const vite = await import("vite");
-	return await vite.build({ ...config, configFile: false });
+	const output = await vite.build({ ...config, configFile: false });
+	process.chdir(cwd);
+	return output;
 }
 
 /**
@@ -337,6 +341,7 @@ async function createRouterBuild(app, router) {
 		});
 		await createViteBuild({
 			app: app,
+			router: router,
 			root: router.root,
 			build: {
 				ssr: true,
@@ -621,7 +626,7 @@ function toRouteId(route) {
  */
 export async function getEntries(router) {
 	return [
-		router.handler.endsWith(".html") ? join(router.root, router.handler) : handlerModule(router),
+		router.handler.endsWith(".html") ? router.handler : handlerModule(router),
 		...(
 			(await router.internals.routes?.getRoutes())?.map((r) =>
 				Object.entries(r)
