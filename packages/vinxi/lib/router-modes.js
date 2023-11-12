@@ -4,7 +4,7 @@ import * as v from "zod";
 import { isMainThread } from "node:worker_threads";
 
 import invariant from "./invariant.js";
-import { handlerModule, join } from "./path.js";
+import { handlerModule, isAbsolute, join } from "./path.js";
 import { resolve } from "./resolve.js";
 
 export { v };
@@ -354,10 +354,22 @@ const routerModes = {
 								);
 							});
 
-							const transformedHtml = await viteDevServer.transformIndexHtml(
+							let transformedHtml = await viteDevServer.transformIndexHtml(
 								getRequestURL(event).href,
-								text,
+								html,
 							);
+
+							const { JSDOM } = await import("jsdom");
+							const jsdom = new JSDOM(transformedHtml);
+							const nodes = jsdom.window.document.querySelectorAll("[src],[href]");
+							nodes.forEach(node => {
+								const attr = node.hasAttribute("href") ? "href" : "src";
+								const path = node.getAttribute(attr) || "/";
+								if (!isAbsolute(path)) {
+									node.setAttribute(attr, join(viteDevServer.config.base, path));
+								}
+							});
+							transformedHtml = jsdom.serialize();
 
 							return transformedHtml;
 						}),

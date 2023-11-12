@@ -154,6 +154,7 @@
     "h3": "1.8.0",
     "hookable": "^5.5.3",
     "http-proxy": "^1.18.1",
+    "jsdom": "^22.1.0",
     "micromatch": "^4.0.5",
     "mri": "^1.2.0",
     "nitropack": "2.6.1",
@@ -174,6 +175,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.5",
     "@types/node": "^18.17.11",
     "prettier": "^2.8.8"
   }
