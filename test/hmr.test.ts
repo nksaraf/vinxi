@@ -48,7 +48,7 @@ test.describe("hmr", () => {
 		let res = await fixture.requestDocument("/");
 		expect(res.status).toBe(200);
 		expect(res.headers.get("Content-Type")).toBe("text/html");
-		expect(selectHtml(await res.text(), "[data-test-id=content]")).toBe(
+		expect(await selectHtml(await res.text(), "[data-test-id=content]")).toBe(
 			prettyHtml(`<h1 data-test-id="content">Hello from Vinxi</h1>`),
 		);
 
