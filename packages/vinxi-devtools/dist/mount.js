@@ -1,4 +1,4 @@
-// /Users/admin/repos/vinxi/packages/vinxi-devtools/node_modules/preact/dist/preact.module.js
+// /Users/nikhilsaraf/garage/vinxi/packages/vinxi-devtools/node_modules/preact/dist/preact.module.js
 var h = function(n, l) {
   for (var u in l)
     n[u] = l[u];
@@ -287,7 +287,7 @@ n = s.slice, l = { __e: function(n2, l2, u2, t2) {
   return n2.__v.__b - l2.__v.__b;
 }, x.__r = 0, e = 0;
 
-// /Users/admin/repos/vinxi/packages/vinxi-devtools/node_modules/preact/hooks/dist/hooks.module.js
+// /Users/nikhilsaraf/garage/vinxi/packages/vinxi-devtools/node_modules/preact/hooks/dist/hooks.module.js
 var d2 = function(t2, u2) {
   l.__h && l.__h(r2, t2, o2 || u2), o2 = 0;
   var i2 = r2.__H || (r2.__H = { __: [], __h: [] });
@@ -430,7 +430,7 @@ var g2 = typeof requestAnimationFrame == "function";
 // mount.jsx
 import style2 from "./style.css?raw";
 
-// /Users/admin/repos/vinxi/packages/vinxi-devtools/node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js
+// /Users/nikhilsaraf/garage/vinxi/packages/vinxi-devtools/node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js
 var o3 = function(o4, e3, n2, t3, f3, l3) {
   var s3, u3, a3 = {};
   for (u3 in e3)
