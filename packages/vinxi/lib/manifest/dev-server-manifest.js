@@ -161,7 +161,12 @@ export function createDevManifest(app) {
 													? Object.entries(
 															await findStylesInModuleGraph(
 																viteServer,
-																[absolutePath],
+																[
+																	absolutePath.endsWith(".ts") &&
+																	router.mode === "spa"
+																		? undefined
+																		: absolutePath,
+																].filter(Boolean),
 																false,
 															),
 													  ).map(([key, value]) => ({

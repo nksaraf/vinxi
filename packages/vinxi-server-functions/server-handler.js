@@ -18,7 +18,6 @@ export async function handleServerAction(event) {
 		const text = await new Promise((resolve) => {
 			const requestBody = [];
 			event.node.req.on("data", (chunks) => {
-				console.log(chunks);
 				requestBody.push(chunks);
 			});
 			event.node.req.on("end", () => {

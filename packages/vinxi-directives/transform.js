@@ -667,13 +667,14 @@ export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
 							needsReference = true;
 							if (splits === options.split) {
 								pickedFn = types.builders.exportDefaultDeclaration(
-									types.builders.functionDeclaration(
-										name ? types.builders.identifier(name) : null,
-										path.node.declaration.params,
-										types.builders.blockStatement(
+									types.builders.functionDeclaration.from({
+										async: true,
+										id: name ? types.builders.identifier(name) : null,
+										params: path.node.declaration.params,
+										body: types.builders.blockStatement(
 											path.node.declaration.body.body.slice(1),
 										),
-									),
+									}),
 								);
 							}
 							splits++;
@@ -693,11 +694,14 @@ export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
 						needsReference = true;
 						if (splits === options.split) {
 							pickedFn = types.builders.exportDefaultDeclaration(
-								types.builders.functionDeclaration(
-									name,
-									path.node.params,
-									types.builders.blockStatement(path.node.body.body.slice(1)),
-								),
+								types.builders.functionDeclaration.from({
+									async: true,
+									id: name,
+									params: path.node.params,
+									body: types.builders.blockStatement(
+										path.node.body.body.slice(1),
+									),
+								}),
 							);
 						}
 						splits++;

@@ -14,6 +14,7 @@ export function server({
 	resolve = {
 		conditions: [],
 	},
+	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom"],
 	manifest = CLIENT_REFERENCES_MANIFEST,
 } = {}) {
 	let isBuild;
@@ -97,6 +98,27 @@ export function server({
 									process.env.NODE_ENV,
 								],
 							},
+							noExternal: true,
+						},
+					};
+				} else {
+					return {
+						ssr: {
+							resolve: {
+								externalConditions: [
+									...(resolve.conditions ?? []),
+									"node",
+									"import",
+									process.env.NODE_ENV,
+								],
+								conditions: [
+									...(resolve.conditions ?? []),
+									"node",
+									"import",
+									process.env.NODE_ENV,
+								],
+							},
+							external: transpileDeps,
 							noExternal: true,
 						},
 					};

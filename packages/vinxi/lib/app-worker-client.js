@@ -4,6 +4,7 @@ import { ReadableStream } from "node:stream/web";
 import { Worker } from "node:worker_threads";
 
 import invariant from "./invariant.js";
+import { c, consola, log } from "./logger.js";
 
 const require = createRequire(import.meta.url);
 
@@ -25,13 +26,15 @@ export class AppWorkerClient {
 	}
 
 	/**
-   *
-  //  * @param {() => void} onReload
-   */
-	async init(onReload) {
+	 *
+	 * @param {any} workerData
+	 * @param {() => void} onReload
+	 */
+	async init(workerData, onReload) {
 		if (this.worker) {
 			return;
 		}
+		log(`initializing ${c.magenta(workerData.name)} router worker`);
 		this.worker = new Worker(this.url, {
 			execArgv: ["--conditions", "react-server"],
 			env: {
@@ -42,7 +45,7 @@ export class AppWorkerClient {
 				NODE_ENV: process.env.NODE_ENV,
 				MINIFY: process.argv.includes("--minify") ? "true" : "false",
 			},
-			workerData: {},
+			workerData,
 		});
 
 		await new Promise((resolve, reject) => {
@@ -65,7 +68,7 @@ export class AppWorkerClient {
 			}
 
 			const res = this.responses.get(id);
-			invariant(res, `No response handler for id ${id}`);
+			invariant(res, `No response handler for id: ${id}`);
 			res(event);
 		});
 

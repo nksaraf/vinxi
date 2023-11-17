@@ -47,7 +47,7 @@ export const handlerRouterSchema = v.object({
 	/** @type {v.ZodOptionalType<v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>>} */
 	routes: v.optional(v.custom((value) => value !== null)),
 	outDir: v.string().optional(),
-	target: v.literal("server"),
+	target: v.literal("server").optional().default("server"),
 	plugins: v.optional(v.custom((value) => typeof value === "function")),
 });
 export const spaRouterSchema = v.object({
@@ -208,7 +208,10 @@ const routerModes = {
 							router.internals.appWorker,
 							"Router App Worker not initialized",
 						);
-						await router.internals.appWorker.init(() => {});
+						await router.internals.appWorker.init(
+							{ name: router.name, base: router.base },
+							() => {},
+						);
 						await router.internals.appWorker.handle(event);
 					});
 					return [

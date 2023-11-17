@@ -4,6 +4,12 @@ import { isBuiltin } from "node:module";
 
 import { join, resolve } from "../path.js";
 
+const skip = [
+	"react/jsx-dev-runtime",
+	"react",
+	"@vinxi/react-server-dom/runtime",
+];
+
 async function getViteModuleNode(vite, file, ssr) {
 	if (file.startsWith("node:") || isBuiltin(file)) {
 		return null;
@@ -44,6 +50,9 @@ async function getViteModuleNode(vite, file, ssr) {
 			}
 
 			if (ssr && !node.ssrTransformResult) {
+				if (skip.includes(file)) {
+					return null;
+				}
 				await vite.ssrLoadModule(file);
 				node = await vite.moduleGraph.getModuleById(normalizedPath);
 			}
@@ -54,6 +63,9 @@ async function getViteModuleNode(vite, file, ssr) {
 			}
 
 			if (ssr && !node.ssrTransformResult) {
+				if (skip.includes(file)) {
+					return null;
+				}
 				await vite.ssrLoadModule(normalizedPath);
 				node = await vite.moduleGraph.getModuleById(normalizedPath);
 			}
