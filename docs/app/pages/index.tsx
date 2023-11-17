@@ -121,9 +121,9 @@ const files: FileSystemTree = {
 export default function Hello({ assets }) {
 	return (
 		<>
-			<Suspense fallback={<div>Booting web container...</div>}>
+			{/* <Suspense fallback={<div>Booting web container...</div>}>
 				<Container files={files} />
-			</Suspense>
+			</Suspense> */}
 			<div>Hellsas\\dasd4</div>
 			<Link href="/hello">Hello</Link>
 			<Counter />

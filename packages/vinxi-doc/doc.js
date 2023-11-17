@@ -1,15 +1,23 @@
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 export async function doc(src) {
 	const require = createRequire(import.meta.url);
 	const mod = require("@vinxi/deno-doc");
 	const resolve = require("resolve");
-	const path = require("path");
+	// const path = require("path");
 	const Module = require("module");
 	const fs = require("fs");
+
+	const input = (
+		src instanceof URL
+			? src
+			: pathToFileURL(
+					path.isAbsolute(src) ? src : path.join(process.cwd(), src),
+			  )
+	).toString();
 
 	const resolveFrom = (fromDirectory, moduleId, silent) => {
 		if (typeof fromDirectory !== "string") {
@@ -100,7 +108,7 @@ export async function doc(src) {
 		}
 	}
 	return await mod.doc(
-		src,
+		input,
 		false,
 		async (id) => {
 			// if (!id.startsWith("file://")) {
