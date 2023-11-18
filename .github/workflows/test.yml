@@ -72,14 +72,15 @@ jobs:
         id: playwright-version
         shell: bash
         run: |
-          # Install jq if it's not already available
-          sudo apt-get install -y jq
-
-          # Extract Playwright version from package.json
-          playwright_version=$(jq -r '.dependencies["@playwright/test"]' test/package.json)
-
-          # Set the version as an output
-          echo "::set-output name=version::${playwright_version}"
+          echo $RUNNER_OS
+          if [[ $RUNNER_OS == 'Linux' ]]; then
+            sudo apt-get install -y jq
+            playwright_version=$(jq -r '.dependencies["@playwright/test"]' test/package.json)
+            echo "::set-output name=version::${playwright_version}"
+          elif [[ $RUNNER_OS == 'Windows' ]]; then
+            playwright_version=$(cat test/package.json | ConvertFrom-Json | Select-Object -ExpandProperty dependencies | Select-Object -ExpandProperty '@playwright/test')
+            echo "version=${playwright_version}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          fi
 
       - name: 🤖 Cache Playwright binaries
         uses: actions/cache@v3
