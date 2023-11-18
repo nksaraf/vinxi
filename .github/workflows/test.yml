@@ -62,17 +62,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # - name: Use Deno
-      #   if: matrix.adapter == 'solid-start-deno'
-      #   uses: denoland/setup-deno@v1
-      #   with:
-      #     deno-version: v1.x
-
-      - name: 🕵️‍♂️ Get current Playwright version
+      - name: 🕵️‍♂️ Get current Playwright Test version
         id: playwright-version
         shell: bash
         run: |
-          playwright_version=1.25.2
+          # Use Node.js to extract Playwright Test version from package.json
+          playwright_version=$(node -e "const pkg = require('./test/package.json'); console.log(pkg.dependencies['@playwright/test']);")
+
+          # Set the version as an output
           echo "::set-output name=version::${playwright_version}"
 
       - name: 🤖 Cache Playwright binaries
