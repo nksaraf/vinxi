@@ -909,6 +909,9 @@ importers:
       get-port:
         specifier: ^6.1.2
         version: 6.1.2
+      get-port-please:
+        specifier: ^3.1.1
+        version: 3.1.1
       h3:
         specifier: 1.8.0
         version: 1.8.0

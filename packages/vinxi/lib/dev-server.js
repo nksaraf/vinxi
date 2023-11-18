@@ -47,8 +47,8 @@ export async function createViteDevServer(config) {
  * @returns {Promise<import("vite").ViteDevServer>}
  */
 export async function createViteHandler(router, app, serveConfig) {
-	const { default: getPort } = await import("get-port");
-	const port = await getPort({ port: 9000 + router.order * 10 });
+	const { getRandomPort } = await import("get-port-please");
+	const port = await getRandomPort();
 	const plugins = [
 		...(serveConfig.devtools ? [inspect()] : []),
 		...(((await router.internals.mode.dev.plugins?.(router, app)) ?? []).filter(
