@@ -5,7 +5,6 @@ const config: PlaywrightTestConfig = {
 	testDir: ".",
 	testMatch: ["**/*.test.ts"],
 	fullyParallel: false,
-	workers: 1,
 	timeout: process.env.CI ? 120_000 : 30_000, // 2 minutes in CI, 30 seconds locally
 	expect: {
 		timeout: 5_000, // 5 second retries for assertions
