@@ -72,7 +72,13 @@ jobs:
         id: playwright-version
         shell: bash
         run: |
-          playwright_version=1.39.0
+          # Install jq if it's not already available
+          sudo apt-get install -y jq
+
+          # Extract Playwright version from package.json
+          playwright_version=$(jq -r '.dependencies["@playwright/test"]' test/package.json)
+
+          # Set the version as an output
           echo "::set-output name=version::${playwright_version}"
 
       - name: 🤖 Cache Playwright binaries
