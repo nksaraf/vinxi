@@ -852,9 +852,6 @@ importers:
 
   packages/vinxi:
     dependencies:
-      '@antfu/ni':
-        specifier: ^0.21.8
-        version: 0.21.8
       '@babel/core':
         specifier: ^7.22.11
         version: 7.23.2
@@ -1185,10 +1182,10 @@ importers:
         specifier: ^0.0.3
         version: 0.0.3(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)(vite@4.5.0)
       '@vinxi/server-components':
-        specifier: workspace:0.0.39
+        specifier: 0.0.39
         version: link:../vinxi-server-components
       '@vinxi/server-functions':
-        specifier: workspace:^
+        specifier: 0.0.39
         version: link:../vinxi-server-functions
       '@vitejs/plugin-react':
         specifier: ^4.0.4
@@ -1655,11 +1652,6 @@ packages:
       execa: 5.1.1
       find-up: 5.0.0
     dev: true
-
-  /@antfu/ni@0.21.8:
-    resolution: {integrity: sha512-90X8pU2szlvw0AJo9EZMbYc2eQKkmO7mAdC4tD4r5co2Mm56MT37MIG8EyB7p4WRheuzGxuLDxJ63mF6+Zajiw==}
-    hasBin: true
-    dev: false
 
   /@antfu/utils@0.7.6:
     resolution: {integrity: sha512-pvFiLP2BeOKA/ZOS6jxx4XhKzdVLHDhGlFEaZ2flWWYf2xOqVniqpk38I04DFRyz+L0ASggl7SkItTc+ZLju4w==}
