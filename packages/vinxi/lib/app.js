@@ -161,13 +161,14 @@ export function createApp({
 		async dev() {
 			if (isMainThread) {
 				const { createDevServer } = await import("./dev-server.js");
-				await createDevServer(app, {
+				const devServer = await createDevServer(app, {
 					port: Number(process.env.PORT ?? 3000),
 					force: process.argv.includes("--force"),
 					devtools:
 						process.argv.includes("--devtools") ||
 						Boolean(process.env.DEVTOOLS),
 				});
+				await devServer.listen();
 			}
 		},
 		async build() {
@@ -179,7 +180,7 @@ export function createApp({
 	hooks.callHook("app:created", { app });
 
 	if (process.argv.includes("--dev")) {
-		withLogger({ router: { name }, requestId: "dev" }, () => app.dev());
+		app.dev();
 	} else if (process.argv.includes("--build")) {
 		app.build();
 	}
