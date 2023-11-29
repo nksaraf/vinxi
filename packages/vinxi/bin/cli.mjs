@@ -94,7 +94,7 @@ const command = defineCommand({
 					devServer = await createDevServer(newApp, {
 						force: args.force,
 						devtools: args.devtools || Boolean(process.env.DEVTOOLS),
-						port: Number(process.env.PORT ?? 3000),
+						port: Number(args.port ?? process.env.PORT ?? 3000),
 					});
 					log("restarting dev server");
 					devServer.listen();
@@ -124,7 +124,7 @@ const command = defineCommand({
 				const { createDevServer } = await import("../lib/dev-server.js");
 				devServer = await createDevServer(app, {
 					force: args.force,
-					port: Number(process.env.PORT ?? 3000),
+					port: Number(args.port ?? process.env.PORT ?? 3000),
 					devtools: args.devtools || Boolean(process.env.DEVTOOLS),
 				});
 				devServer.listen();
