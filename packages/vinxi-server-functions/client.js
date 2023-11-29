@@ -6,7 +6,9 @@ import { normalize } from "vinxi/lib/path";
 import { CLIENT_REFERENCES_MANIFEST } from "./constants.js";
 
 export function client({
-	runtime = normalize(fileURLToPath(new URL("./references-runtime.js", import.meta.url))),
+	runtime = normalize(
+		fileURLToPath(new URL("./client-runtime.js", import.meta.url)),
+	),
 	manifest = CLIENT_REFERENCES_MANIFEST,
 } = {}) {
 	const serverModules = new Set();

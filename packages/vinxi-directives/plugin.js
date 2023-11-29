@@ -4,37 +4,7 @@
  * @returns {import('vinxi').Plugin}
  */
 
-export function directives({
-	hash = (str) => str,
-	onReference = (type, ref) => {},
-	runtime = "",
-	transforms = [
-		// decorateExportsPlugin({
-		// 	runtime: {
-		// 		module: runtime,
-		// 		function: "createServerReference",
-		// 	},
-		// 	onModuleFound: (mod) => onReference("server", mod),
-		// 	hash: hash,
-		// 	apply: (code, id, options) => {
-		// 		return options.ssr;
-		// 	},
-		// 	pragma: "use server",
-		// }),
-		// shimExportsPlugin({
-		// 	runtime: {
-		// 		module: runtime,
-		// 		function: "createClientReference",
-		// 	},
-		// 	onModuleFound: (mod) => onReference("client", mod),
-		// 	hash: hash,
-		// 	apply: (code, id, options) => {
-		// 		return options.ssr;
-		// 	},
-		// 	pragma: "use client",
-		// }),
-	],
-} = {}) {
+export function directives({ transforms = [] } = {}) {
 	let command;
 	return {
 		name: "vite-server-references",

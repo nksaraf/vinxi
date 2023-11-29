@@ -251,13 +251,13 @@ export function wrapExports({
 					node.declaration = types.builders.callExpression(
 						types.builders.identifier(runtime.function),
 						[
-							types.builders.functionExpression(
-								node.declaration.id,
-								node.declaration.params,
-								node.declaration.body,
-								node.declaration.generator,
-								node.declaration.async,
-							),
+							types.builders.functionExpression.from({
+								body: node.declaration.body,
+								params: node.declaration.params,
+								async: node.declaration.async,
+								id: node.declaration.id,
+								generator: node.declaration.generator,
+							}),
 							types.builders.stringLiteral(
 								options.command === "build" ? hash(id) : id,
 							),
@@ -310,13 +310,13 @@ export function wrapExports({
 								types.builders.callExpression(
 									types.builders.identifier(runtime.function),
 									[
-										types.builders.functionExpression(
-											node.declaration.id,
-											node.declaration.params,
-											node.declaration.body,
-											node.declaration.generator,
-											node.declaration.async,
-										),
+										types.builders.functionExpression.from({
+											body: node.declaration.body,
+											params: node.declaration.params,
+											async: node.declaration.async,
+											id: node.declaration.id,
+											generator: node.declaration.generator,
+										}),
 										types.builders.stringLiteral(
 											options.command === "build" ? hash(id) : id,
 										),
@@ -453,7 +453,92 @@ export function shimExportsPlugin({
 
 			let needsReference = false;
 			let splits = 0;
+			const declarations = [];
 			visit(body, {
+				visitExportDefaultDeclaration(path) {
+					if (
+						path.node.declaration &&
+						path.node.declaration.type === "FunctionDeclaration"
+					) {
+						const name = path.node.declaration.id?.name.toString();
+						const statements = path.get("declaration", "body", "body", 0);
+						if (
+							statements.node.type === "ExpressionStatement" &&
+							statements.node.directive == pragma
+						) {
+							needsReference = true;
+							const splitId = splits++;
+							declarations.push(
+								types.builders.exportNamedDeclaration.from({
+									declaration: types.builders.functionDeclaration.from({
+										async: path.node.declaration.async,
+										generator: path.node.declaration.generator,
+										id: types.builders.identifier(`$$function${splitId}`),
+										params: path.node.declaration.params,
+										body: types.builders.blockStatement([]),
+									}),
+								}),
+								...(name?.length
+									? [
+											types.builders.exportDefaultDeclaration(
+												types.builders.identifier(name),
+											),
+									  ]
+									: []),
+							);
+
+							if (name?.length) {
+								path.replace(
+									types.builders.variableDeclaration("let", [
+										types.builders.variableDeclarator(
+											types.builders.identifier(name),
+											types.builders.callExpression(
+												types.builders.identifier(runtime.function),
+												[
+													// types.builders.functionExpression.from({
+													// 	// ...path.node.declaration,
+													// 	params: path.node.declaration.params,
+													// 	async: path.node.declaration.async,
+													// 	body: types.builders.blockStatement([]),
+													// }),
+													types.builders.identifier(`$$function${splitId}`),
+													types.builders.stringLiteral(
+														options.command === "build" ? hash(id) : id,
+													),
+													types.builders.stringLiteral(`$$function${splitId}`),
+												],
+											),
+										),
+									]),
+								);
+							} else {
+								path.replace(
+									types.builders.exportDefaultDeclaration(
+										types.builders.callExpression(
+											types.builders.identifier(runtime.function),
+											[
+												// types.builders.functionExpression.from({
+												// 	// ...path.node.declaration,
+												// 	params: path.node.declaration.params,
+												// 	async: path.node.declaration.async,
+												// 	body: types.builders.blockStatement([]),
+												// }),
+												types.builders.identifier(`$$function${splitId}`),
+												types.builders.stringLiteral(
+													options.command === "build" ? hash(id) : id,
+												),
+												types.builders.stringLiteral(`$$function${splitId}`),
+											],
+										),
+									),
+								);
+							}
+
+							onModuleFound?.(id);
+						}
+					}
+					return this.traverse(path);
+				},
 				visitExportNamedDeclaration(path) {
 					if (
 						path.node.declaration &&
@@ -467,6 +552,17 @@ export function shimExportsPlugin({
 						) {
 							needsReference = true;
 							const splitId = splits++;
+							declarations.push(
+								types.builders.exportNamedDeclaration.from({
+									declaration: types.builders.functionDeclaration.from({
+										async: path.node.declaration.async,
+										generator: path.node.declaration.generator,
+										id: types.builders.identifier(`$$function${splitId}`),
+										params: path.node.declaration.params,
+										body: types.builders.blockStatement([]),
+									}),
+								}),
+							);
 							path.replace(
 								types.builders.exportNamedDeclaration(
 									types.builders.variableDeclaration("const", [
@@ -475,23 +571,24 @@ export function shimExportsPlugin({
 											types.builders.callExpression(
 												types.builders.identifier(runtime.function),
 												[
-													types.builders.arrowFunctionExpression(
-														[],
-														types.builders.blockStatement([]),
-													),
+													// types.builders.functionExpression.from({
+													// 	// ...path.node.declaration,
+													// 	params: path.node.declaration.params,
+													// 	async: path.node.declaration.async,
+													// 	body: types.builders.blockStatement([]),
+													// }),
+													types.builders.identifier(`$$function${splitId}`),
 													types.builders.stringLiteral(
-														options.command === "build"
-															? hash(id + `?split=${splitId}`)
-															: id + `?split=${splitId}`,
+														options.command === "build" ? hash(id) : id,
 													),
-													types.builders.stringLiteral("default"),
+													types.builders.stringLiteral(`$$function${splitId}`),
 												],
 											),
 										),
 									]),
 								),
 							);
-							onModuleFound?.(id + `?split=${splitId}`);
+							onModuleFound?.(id);
 						}
 					}
 
@@ -506,6 +603,18 @@ export function shimExportsPlugin({
 					) {
 						needsReference = true;
 						const splitId = splits++;
+
+						declarations.push(
+							types.builders.exportNamedDeclaration.from({
+								declaration: types.builders.functionDeclaration.from({
+									async: path.node.async,
+									generator: path.node.generator,
+									id: types.builders.identifier(`$$function${splitId}`),
+									params: path.node.params,
+									body: types.builders.blockStatement([]),
+								}),
+							}),
+						);
 						path.replace(
 							types.builders.variableDeclaration("const", [
 								types.builders.variableDeclarator(
@@ -513,22 +622,17 @@ export function shimExportsPlugin({
 									types.builders.callExpression(
 										types.builders.identifier(runtime.function),
 										[
-											types.builders.arrowFunctionExpression(
-												[],
-												types.builders.blockStatement([]),
-											),
+											types.builders.identifier(`$$function${splitId}`),
 											types.builders.stringLiteral(
-												options.command === "build"
-													? hash(id + `?split=${splitId}`)
-													: id + `?split=${splitId}`,
+												options.command === "build" ? hash(id) : id,
 											),
-											types.builders.stringLiteral("default"),
+											types.builders.stringLiteral(`$$function${splitId}`),
 										],
 									),
 								),
 							]),
 						);
-						onModuleFound?.(id + `?split=${splitId}`);
+						onModuleFound?.(id);
 						this.traverse(path);
 					}
 					return this.traverse(path);
@@ -544,24 +648,34 @@ export function shimExportsPlugin({
 					) {
 						needsReference = true;
 						const splitId = splits++;
+						declarations.push(
+							types.builders.exportNamedDeclaration.from({
+								declaration: types.builders.functionDeclaration.from({
+									async: path.node.async,
+									generator: path.node.generator,
+									id: types.builders.identifier(`$$function${splitId}`),
+									params: path.node.params,
+									body: types.builders.blockStatement([]),
+								}),
+							}),
+						);
 						path.replace(
 							types.builders.callExpression(
 								types.builders.identifier(runtime.function),
 								[
-									types.builders.arrowFunctionExpression(
-										[],
-										types.builders.blockStatement([]),
-									),
+									// types.builders.arrowFunctionExpression(
+									// 	[],
+									// 	types.builders.blockStatement([]),
+									// ),
+									types.builders.identifier(`$$function${splitId}`),
 									types.builders.stringLiteral(
-										options.command === "build"
-											? hash(id + `?split=${splitId}`)
-											: id + `?split=${splitId}`,
+										options.command === "build" ? hash(id) : id,
 									),
-									types.builders.stringLiteral("default"),
+									types.builders.stringLiteral(`$$function${splitId}`),
 								],
 							),
 						);
-						onModuleFound?.(id + `?split=${splitId}`);
+						onModuleFound?.(id);
 						this.traverse(path);
 					}
 					return false;
@@ -575,20 +689,26 @@ export function shimExportsPlugin({
 					) {
 						needsReference = true;
 						const splitId = splits++;
+						declarations.push(
+							types.builders.exportNamedDeclaration.from({
+								declaration: types.builders.functionDeclaration.from({
+									async: path.node.async,
+									generator: path.node.generator,
+									id: types.builders.identifier(`$$function${splitId}`),
+									params: path.node.params,
+									body: types.builders.blockStatement([]),
+								}),
+							}),
+						);
 						path.replace(
 							types.builders.callExpression(
 								types.builders.identifier(runtime.function),
 								[
-									types.builders.arrowFunctionExpression(
-										[],
-										types.builders.blockStatement([]),
-									),
+									types.builders.identifier(`$$function${splitId}`),
 									types.builders.stringLiteral(
-										options.command === "build"
-											? hash(id + `?split=${splitId}`)
-											: id + `?split=${splitId}`,
+										options.command === "build" ? hash(id) : id,
 									),
-									types.builders.stringLiteral("default"),
+									types.builders.stringLiteral(`$$function${splitId}`),
 								],
 							),
 						);
@@ -598,7 +718,9 @@ export function shimExportsPlugin({
 				},
 			});
 
-			ast.body = body;
+			console.log(declarations.length);
+
+			ast.body = [...body, ...declarations];
 
 			if (needsReference) {
 				return (
@@ -624,7 +746,7 @@ export function shimExportsPlugin({
 
 export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
 	return {
-		name: "shim-exports",
+		name: "split-exports",
 		async split(code, id, options) {
 			if (code.indexOf(pragma) === -1) {
 				return code;
@@ -811,7 +933,7 @@ export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
 // 					break;
 // 				}
 // 				if (node.directive === pragma) {
-// 					onModuleFound(id);
+// 					onModuleFound?.(id);
 // 					return await shimExports({
 // 						runtime,
 // 						ast: body,
@@ -1073,7 +1195,7 @@ export function wrapExportsPlugin({
 					break;
 				}
 				if (node.directive === pragma) {
-					onModuleFound(id);
+					onModuleFound?.(id);
 					return await wrapExports({
 						runtime,
 						ast,
@@ -1084,6 +1206,295 @@ export function wrapExportsPlugin({
 						directive: pragma,
 					});
 				}
+			}
+
+			let needsReference = false;
+			let splits = 0;
+
+			const declarations = [];
+			visit(body, {
+				visitExportDefaultDeclaration(path) {
+					if (
+						path.node.declaration &&
+						path.node.declaration.type === "FunctionDeclaration"
+					) {
+						const name = path.node.declaration.id?.name.toString();
+						const statements = path.get("declaration", "body", "body", 0);
+						if (
+							statements.node.type === "ExpressionStatement" &&
+							statements.node.directive == pragma
+						) {
+							needsReference = true;
+							const splitId = splits++;
+							declarations.push(
+								types.builders.exportNamedDeclaration.from({
+									declaration: types.builders.functionDeclaration.from({
+										async: path.node.declaration.async,
+										generator: path.node.declaration.generator,
+										id: types.builders.identifier(`$$function${splitId}`),
+										params: path.node.declaration.params,
+										body: types.builders.blockStatement(
+											path.node.declaration.body.body.slice(1),
+										),
+									}),
+								}),
+								...(name?.length
+									? [
+											types.builders.exportDefaultDeclaration(
+												types.builders.identifier(name),
+											),
+									  ]
+									: []),
+							);
+
+							if (name?.length) {
+								path.replace(
+									types.builders.variableDeclaration("let", [
+										types.builders.variableDeclarator(
+											types.builders.identifier(name),
+											types.builders.callExpression(
+												types.builders.identifier(runtime.function),
+												[
+													// types.builders.functionExpression.from({
+													// 	// ...path.node.declaration,
+													// 	params: path.node.declaration.params,
+													// 	async: path.node.declaration.async,
+													// 	body: types.builders.blockStatement([]),
+													// }),
+													types.builders.identifier(`$$function${splitId}`),
+													types.builders.stringLiteral(
+														options.command === "build" ? hash(id) : id,
+													),
+													types.builders.stringLiteral(`$$function${splitId}`),
+												],
+											),
+										),
+									]),
+								);
+							} else {
+								path.replace(
+									types.builders.exportDefaultDeclaration(
+										types.builders.callExpression(
+											types.builders.identifier(runtime.function),
+											[
+												// types.builders.functionExpression.from({
+												// 	// ...path.node.declaration,
+												// 	params: path.node.declaration.params,
+												// 	async: path.node.declaration.async,
+												// 	body: types.builders.blockStatement([]),
+												// }),
+												types.builders.identifier(`$$function${splitId}`),
+												types.builders.stringLiteral(
+													options.command === "build" ? hash(id) : id,
+												),
+												types.builders.stringLiteral(`$$function${splitId}`),
+											],
+										),
+									),
+								);
+							}
+
+							onModuleFound?.(id);
+						}
+					}
+					return this.traverse(path);
+				},
+				visitExportNamedDeclaration(path) {
+					if (
+						path.node.declaration &&
+						path.node.declaration.type === "FunctionDeclaration"
+					) {
+						const name = path.node.declaration.id?.name.toString();
+						const statements = path.get("declaration", "body", "body", 0);
+						if (
+							statements.node.type === "ExpressionStatement" &&
+							statements.node.directive == pragma
+						) {
+							needsReference = true;
+							const splitId = splits++;
+							declarations.push(
+								types.builders.exportNamedDeclaration.from({
+									declaration: types.builders.functionDeclaration.from({
+										async: path.node.declaration.async,
+										generator: path.node.declaration.generator,
+										id: types.builders.identifier(`$$function${splitId}`),
+										params: path.node.declaration.params,
+										body: types.builders.blockStatement(
+											path.node.declaration.body.body.slice(1),
+										),
+									}),
+								}),
+							);
+							path.replace(
+								types.builders.exportNamedDeclaration(
+									types.builders.variableDeclaration("const", [
+										types.builders.variableDeclarator(
+											types.builders.identifier(name),
+											types.builders.callExpression(
+												types.builders.identifier(runtime.function),
+												[
+													// types.builders.functionExpression.from({
+													// 	// ...path.node.declaration,
+													// 	params: path.node.declaration.params,
+													// 	async: path.node.declaration.async,
+													// 	body: types.builders.blockStatement([]),
+													// }),
+													types.builders.identifier(`$$function${splitId}`),
+													types.builders.stringLiteral(
+														options.command === "build" ? hash(id) : id,
+													),
+													types.builders.stringLiteral(`$$function${splitId}`),
+												],
+											),
+										),
+									]),
+								),
+							);
+							onModuleFound?.(id);
+						}
+					}
+
+					return this.traverse(path);
+				},
+				visitFunctionDeclaration(path) {
+					const statements = path.get("body", "body", 0);
+					const name = path.node.id;
+					if (
+						statements.node.type === "ExpressionStatement" &&
+						statements.node.directive == pragma
+					) {
+						needsReference = true;
+						const splitId = splits++;
+
+						declarations.push(
+							types.builders.exportNamedDeclaration.from({
+								declaration: types.builders.functionDeclaration.from({
+									async: path.node.async,
+									generator: path.node.generator,
+									id: types.builders.identifier(`$$function${splitId}`),
+									params: path.node.params,
+									body: types.builders.blockStatement(
+										path.node.body.body.slice(1),
+									),
+								}),
+							}),
+						);
+						path.replace(
+							types.builders.variableDeclaration("const", [
+								types.builders.variableDeclarator(
+									name,
+									types.builders.callExpression(
+										types.builders.identifier(runtime.function),
+										[
+											types.builders.identifier(`$$function${splitId}`),
+											types.builders.stringLiteral(
+												options.command === "build" ? hash(id) : id,
+											),
+											types.builders.stringLiteral(`$$function${splitId}`),
+										],
+									),
+								),
+							]),
+						);
+						onModuleFound?.(id);
+						this.traverse(path);
+					}
+					return this.traverse(path);
+				},
+				// 	}
+				// 	return false;
+				// },
+				visitArrowFunctionExpression(path) {
+					const statements = path.get("body", "body", 0);
+					if (
+						statements.node.type === "ExpressionStatement" &&
+						statements.node.directive == pragma
+					) {
+						needsReference = true;
+						const splitId = splits++;
+						declarations.push(
+							types.builders.exportNamedDeclaration.from({
+								declaration: types.builders.functionDeclaration.from({
+									async: path.node.async,
+									generator: path.node.generator,
+									id: types.builders.identifier(`$$function${splitId}`),
+									params: path.node.params,
+									body: types.builders.blockStatement(
+										path.node.body.body.slice(1),
+									),
+								}),
+							}),
+						);
+						path.replace(
+							types.builders.callExpression(
+								types.builders.identifier(runtime.function),
+								[
+									// types.builders.arrowFunctionExpression(
+									// 	[],
+									// 	types.builders.blockStatement([]),
+									// ),
+									types.builders.identifier(`$$function${splitId}`),
+									types.builders.stringLiteral(
+										options.command === "build" ? hash(id) : id,
+									),
+									types.builders.stringLiteral(`$$function${splitId}`),
+								],
+							),
+						);
+						onModuleFound?.(id);
+						this.traverse(path);
+					}
+					return false;
+				},
+				visitFunctionExpression(path) {
+					const name = path.node.id?.name.toString();
+					const statements = path.get("body", "body", 0);
+					if (
+						statements.node.type === "ExpressionStatement" &&
+						statements.node.directive == pragma
+					) {
+						needsReference = true;
+						const splitId = splits++;
+						declarations.push(
+							types.builders.exportNamedDeclaration.from({
+								declaration: types.builders.functionDeclaration.from({
+									async: path.node.async,
+									generator: path.node.generator,
+									id: types.builders.identifier(`$$function${splitId}`),
+									params: path.node.params,
+									body: types.builders.blockStatement(
+										path.node.body.body.slice(1),
+									),
+								}),
+							}),
+						);
+						path.replace(
+							types.builders.callExpression(
+								types.builders.identifier(runtime.function),
+								[
+									types.builders.identifier(`$$function${splitId}`),
+									types.builders.stringLiteral(
+										options.command === "build" ? hash(id) : id,
+									),
+									types.builders.stringLiteral(`$$function${splitId}`),
+								],
+							),
+						);
+						this.traverse(path);
+					}
+					return false;
+				},
+			});
+
+			console.log(declarations.length);
+
+			ast.program.body = [...body, ...declarations];
+
+			if (needsReference) {
+				return (
+					`import { ${runtime.function} } from '${runtime.module}';\n` +
+					print(ast).code
+				);
 			}
 
 			return code;

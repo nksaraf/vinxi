@@ -38,6 +38,7 @@ async function transformSSR(
 	const instance = plugin({
 		...args,
 	});
+
 	// const applied = await instance.apply(code, args.id, args.options);
 	// if (applied === false) {
 	// 	return code;
@@ -49,10 +50,12 @@ async function runTest(name, transform) {
 	it(name, async () => {
 		const code = await testFixtures[`./fixtures/${name}.ts`]();
 		const expected = await testFixtures[`./fixtures/${name}.snapshot.ts`]();
+		console.log(js(await transform(code)));
 		expect(js(await transform(code))).toEqual(js(expected));
 	});
 }
 
 runTest("wrap-exports", (code) => transformSSR(code, wrapExportsPlugin));
+runTest("wrap-exports-fn", (code) => transformSSR(code, wrapExportsPlugin));
 runTest("shim-exports", (code) => transformSSR(code, shimExportsPlugin));
 runTest("shim-exports-fn", (code) => transformSSR(code, shimExportsPlugin));

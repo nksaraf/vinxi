@@ -1,16 +1,71 @@
-export const f1 = function (input, options) {
+import db from "~/server/db";
+
+export const fn2 = () => {};
+export const fn3 = (param) => {
+	"use runtime";
+	console.log("hello", db.get(param));
+};
+export const fn31 = async (param, param2) => {
+	"use runtime";
+	console.log("hello", db.get(param), param2);
+};
+export const f1 = async function (param) {
+	"use runtime";
+	console.log("hello", db.get(param));
+};
+
+function Component() {
+	const fn = function () {
+		"use runtime";
+		console.log("hello");
+	};
+
+	const x = async (param) => {
+		"use runtime";
+		console.log("hello", db.get(param));
+	};
+
+	return (
+		<div
+			onClick={async () => {
+				"use runtime";
+				console.log("hello");
+			}}
+		/>
+	);
+}
+
+export const f2 = () => {
 	"use runtime";
 	console.log("hello");
 };
-const f11 = function (input, options) {
+
+export function y(param) {
 	"use runtime";
-	console.log("hello");
-};
-export const fn2 = (input, options) => {};
-export const f2 = (input, options) => {
+	console.log("hello", db.get(param));
+}
+
+function z(param) {
 	"use runtime";
-	console.log("hello");
+	console.log("hello", db.get(param));
+}
+
+export default function (param) {
+	"use runtime";
+	console.log("hello", db.get(param));
+}
+
+export default function hello(param) {
+	"use runtime";
+	console.log("hello", db.get(param));
+}
+
+export default (param) => {
+	"use runtime";
+	hello(param);
+	console.log("hello", db.get(param));
 };
+
 const f3 = (input, options) => {
 		"use runtime";
 		console.log("hello");
@@ -18,21 +73,14 @@ const f3 = (input, options) => {
 	f4 = function (input, options) {};
 export { f3, f4 };
 
-export function f5(input, options) {
-	"use runtime";
-	console.log("hello");
-}
 function if6(input, options) {
 	"use runtime";
 	console.log("hello");
 }
 export { if6 as f6 };
 
-// export default function f7() {
-// 	"use runtime";
-// 	console.log("hello");
-// }
+export const fnxy = (input, options) => {};
 
 export const x1 = 1;
 const x2 = 1;
-const y = <Abc />;
+const t = <Abc />;

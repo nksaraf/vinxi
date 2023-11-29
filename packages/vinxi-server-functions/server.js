@@ -1,7 +1,12 @@
-import { directives, splitPlugin } from "@vinxi/plugin-directives";
+import {
+	directives,
+	splitPlugin,
+	wrapExportsPlugin,
+} from "@vinxi/plugin-directives";
 import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
 import { chunkify } from "vinxi/lib/chunks";
-import { handlerModule, join } from "vinxi/lib/path";
+import { handlerModule, join, normalize } from "vinxi/lib/path";
 
 import { CLIENT_REFERENCES_MANIFEST } from "./constants.js";
 
@@ -16,17 +21,21 @@ export function server({
 	},
 	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom"],
 	manifest = CLIENT_REFERENCES_MANIFEST,
+	runtime = normalize(
+		fileURLToPath(new URL("./server-runtime.js", import.meta.url)),
+	),
+	// onReference
 } = {}) {
 	let isBuild;
 	let input;
 	return [
 		directives({
 			hash: chunkify,
-			runtime: "",
+			runtime: runtime,
 			transforms: [
-				splitPlugin({
+				wrapExportsPlugin({
 					runtime: {
-						module: "",
+						module: runtime,
 						function: "createServerReference",
 					},
 					// onModuleFound: (mod) => onReference("server", mod),
