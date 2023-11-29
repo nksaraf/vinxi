@@ -1,5 +1,17 @@
 # @vinxi/plugin-references
 
+## 0.0.40
+
+### Patch Changes
+
+- 4e4c047: make server functions worker work
+- 8ef044b: feat: add wrapper for server functions on the server
+- Updated dependencies [fc7494d]
+- Updated dependencies [4e4c047]
+- Updated dependencies [8ef044b]
+  - vinxi@0.0.48
+  - @vinxi/plugin-directives@0.0.40
+
 ## 0.0.39
 
 ### Patch Changes

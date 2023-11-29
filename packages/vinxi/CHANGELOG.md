@@ -1,5 +1,14 @@
 # vinxi
 
+## 0.0.48
+
+### Patch Changes
+
+- fc7494d: fix: --port flag for the dev server
+- 4e4c047: make server functions worker work
+- 8ef044b: feat: add wrapper for server functions on the server
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.47
 
 ### Patch Changes

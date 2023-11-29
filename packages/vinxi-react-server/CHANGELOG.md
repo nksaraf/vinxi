@@ -1,5 +1,15 @@
 # @vinxi/react-server
 
+## 0.0.28
+
+### Patch Changes
+
+- 4e4c047: make server functions worker work
+- Updated dependencies [4e4c047]
+- Updated dependencies [8ef044b]
+  - @vinxi/server-functions@0.0.40
+  - @vinxi/server-components@0.0.40
+
 ## 0.0.27
 
 ### Patch Changes

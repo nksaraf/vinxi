@@ -1,5 +1,12 @@
 # @vinxi/openapi
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [4e4c047]
+  - @vinxi/doc@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes
