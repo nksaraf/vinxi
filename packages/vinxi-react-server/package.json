@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/react-server",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
@@ -41,8 +41,8 @@
     "@vinxi/plugin-references": "0.0.29",
     "@vinxi/react": "0.0.12",
     "@vinxi/react-server-dom": "^0.0.3",
-    "@vinxi/server-components": "0.0.40",
-    "@vinxi/server-functions": "0.0.40",
+    "@vinxi/server-components": "0.0.41",
+    "@vinxi/server-functions": "0.0.41",
     "@vitejs/plugin-react": "^4.0.4"
   }
 }

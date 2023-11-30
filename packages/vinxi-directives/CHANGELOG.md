@@ -1,5 +1,11 @@
 # @vinxi/plugin-references
 
+## 0.0.41
+
+### Patch Changes
+
+- 619f69f: use better parser for typescript/jsx in directives
+
 ## 0.0.40
 
 ### Patch Changes
