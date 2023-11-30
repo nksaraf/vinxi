@@ -1,5 +1,11 @@
 # @vinxi/plugin-references
 
+## 0.0.44
+
+### Patch Changes
+
+- 47c9b78: fix: shim plugin to use advanced parser plugin-directives
+
 ## 0.0.43
 
 ### Patch Changes

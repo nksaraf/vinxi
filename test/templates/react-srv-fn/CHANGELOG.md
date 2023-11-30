@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- @vinxi/server-functions@0.0.44
+
+## null
+
+### Patch Changes
+
 - @vinxi/server-functions@0.0.43
 
 ## null
