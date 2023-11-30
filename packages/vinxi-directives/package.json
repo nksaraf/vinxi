@@ -5,6 +5,7 @@
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
     "*.js",
+    "*.cjs",
     "*.d.ts"
   ],
   "types": "./index.d.ts",
