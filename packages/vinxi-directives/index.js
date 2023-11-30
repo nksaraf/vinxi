@@ -1,3 +1,4 @@
 export { directives } from "./plugin.js";
-export { shimExportsPlugin, decorateExportsPlugin } from "./transform.js";
+export { decorateExportsPlugin } from "./transform.js";
 export { wrapExports, wrapExportsPlugin } from "./wrap-exports.js";
+export { shimExports, shimExportsPlugin } from "./shim-exports.js";
