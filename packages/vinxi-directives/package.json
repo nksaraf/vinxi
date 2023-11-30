@@ -34,6 +34,7 @@
     "acorn-typescript": "^1.4.3",
     "astring": "^1.8.6",
     "magicast": "^0.2.10",
-    "recast": "^0.23.4"
+    "recast": "^0.23.4",
+    "tslib": "^2.6.2"
   }
 }

@@ -1,6 +1,8 @@
 import db from "~/server/db";
 
 export const fn2 = () => {};
+const user = (path: string) =>
+	`https://hacker-news.firebaseio.com/v0/${path}.json`;
 export const fn3 = (param) => {
 	"use runtime";
 	console.log("hello", db.get(param));

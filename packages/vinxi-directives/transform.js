@@ -205,187 +205,6 @@ export function decorateExports({ code, id, ast, runtime, hash, options }) {
 	return newSrc;
 }
 
-export function wrapExports({
-	code,
-	id,
-	ast,
-	runtime,
-	hash,
-	options,
-	directive,
-}) {
-	// onServerReference(moduleId);
-
-	// If the same local name is exported more than once, we only need one of the names.
-	const localNames = new Map();
-	const localTypes = new Map();
-
-	for (let i = 0; i < ast.program.body.length; i++) {
-		const node = ast.program.body[i];
-		switch (node.type) {
-			case "ExportAllDeclaration":
-				// If export * is used, the other file needs to explicitly opt into "use server" too.
-				break;
-			case "ExportDefaultDeclaration":
-				if (node.declaration.type === "Identifier") {
-					localNames.set(node.declaration.name, "default");
-					// node.declaration = {
-					// 	type: "CallExpression",
-					// 	callee: {
-					// 		type: "Identifier",
-					// 		name: runtime.function,
-					// 	},
-					// 	arguments: [node.declaration],
-					// };
-					node.declaration = types.builders.callExpression(
-						types.builders.identifier(runtime.function),
-						[
-							node.declaration,
-							types.builders.stringLiteral(
-								options.command === "build" ? hash(id) : id,
-							),
-							types.builders.stringLiteral("default"),
-						],
-					);
-				} else if (node.declaration.type === "FunctionDeclaration") {
-					node.declaration = types.builders.callExpression(
-						types.builders.identifier(runtime.function),
-						[
-							types.builders.functionExpression.from({
-								body: node.declaration.body,
-								params: node.declaration.params,
-								async: node.declaration.async,
-								id: node.declaration.id,
-								generator: node.declaration.generator,
-							}),
-							types.builders.stringLiteral(
-								options.command === "build" ? hash(id) : id,
-							),
-							types.builders.stringLiteral("default"),
-						],
-					);
-					if (node.declaration.id) {
-						localNames.set(node.declaration.id.name, "default");
-						localTypes.set(node.declaration.id.name, "function");
-					} else {
-						// TODO: This needs to be rewritten inline because it doesn't have a local name.
-					}
-				}
-				continue;
-			case "ExportNamedDeclaration":
-				if (node.declaration) {
-					if (node.declaration.type === "VariableDeclaration") {
-						const declarations = node.declaration.declarations;
-						const newDeclarations = [];
-						for (let j = 0; j < declarations.length; j++) {
-							addLocalExportedNames(localNames, declarations[j].id);
-							const declaration = declarations[j];
-							const name = declaration.id.name;
-							newDeclarations.push(
-								types.builders.variableDeclarator(
-									types.builders.identifier(name),
-									types.builders.callExpression(
-										types.builders.identifier(runtime.function),
-										[
-											declaration.init,
-											types.builders.stringLiteral(
-												options.command === "build" ? hash(id) : id,
-											),
-											types.builders.stringLiteral(name),
-										],
-									),
-								),
-							);
-						}
-						node.declaration.declarations = newDeclarations;
-					} else {
-						const name = node.declaration.id.name;
-						localNames.set(name, name);
-						if (node.declaration.type === "FunctionDeclaration") {
-							localTypes.set(name, "function");
-						}
-						node.declaration = types.builders.variableDeclaration("const", [
-							types.builders.variableDeclarator(
-								types.builders.identifier(name),
-								types.builders.callExpression(
-									types.builders.identifier(runtime.function),
-									[
-										types.builders.functionExpression.from({
-											body: node.declaration.body,
-											params: node.declaration.params,
-											async: node.declaration.async,
-											id: node.declaration.id,
-											generator: node.declaration.generator,
-										}),
-										types.builders.stringLiteral(
-											options.command === "build" ? hash(id) : id,
-										),
-										types.builders.stringLiteral(name),
-									],
-								),
-							),
-						]);
-					}
-				}
-				if (node.specifiers) {
-					const specifiers = node.specifiers;
-					const newSpecifiers = [];
-					for (let j = 0; j < specifiers.length; j++) {
-						const specifier = specifiers[j];
-						localNames.set(specifier.local.name, specifier.exported.name);
-						const exportedName = specifier.exported.name;
-						const localName = specifier.local?.name ?? exportedName;
-						// add a new statement before i position in ast.program.body
-						ast.program.body = [
-							...ast.program.body.slice(0, i),
-							types.builders.variableDeclaration("const", [
-								types.builders.variableDeclarator(
-									types.builders.identifier(exportedName + "$ref"),
-									types.builders.callExpression(
-										types.builders.identifier(runtime.function),
-										[
-											types.builders.identifier(localName),
-											types.builders.stringLiteral(
-												options.command === "build" ? hash(id) : id,
-											),
-											types.builders.stringLiteral(exportedName),
-										],
-									),
-								),
-							]),
-							...ast.program.body.slice(i),
-						];
-						newSpecifiers.push(
-							types.builders.exportSpecifier.from({
-								exported: types.builders.identifier(exportedName),
-								local: types.builders.identifier(exportedName + "$ref"),
-							}),
-						);
-						i++;
-					}
-
-					node.specifiers = newSpecifiers;
-				}
-				continue;
-		}
-	}
-
-	ast.program.body = [
-		types.builders.importDeclaration(
-			[
-				types.builders.importSpecifier(
-					types.builders.identifier(runtime.function),
-				),
-			],
-			types.builders.stringLiteral(runtime.module),
-		),
-		...ast.program.body.filter((node) => node.directive !== directive),
-	];
-
-	let newSrc = print(ast).code;
-	return newSrc;
-}
-
 async function shimExports({ runtime, ast, id, code, hash, options }) {
 	const names = [];
 	await parseExportNamesInto(options.vite, ast, names, id);
@@ -425,13 +244,13 @@ export function shimExportsPlugin({
 				return code;
 			}
 
-			const ast = parseLoose(code);
+			let ast = parseLoose(code);
 
 			if (ast.length === 0) {
 				return code;
 			}
 
-			const body = ast.body;
+			let body = ast.body;
 
 			for (let i = 0; i < body.length; i++) {
 				const node = body[i];
@@ -451,6 +270,14 @@ export function shimExportsPlugin({
 				}
 			}
 
+			ast = parseAdvanced(code);
+
+			body = ast.program.body;
+
+			function hasDirective(node) {
+				return node.body.directives?.[0]?.value?.value === pragma;
+			}
+
 			let needsReference = false;
 			let splits = 0;
 			const declarations = [];
@@ -461,11 +288,7 @@ export function shimExportsPlugin({
 						path.node.declaration.type === "FunctionDeclaration"
 					) {
 						const name = path.node.declaration.id?.name.toString();
-						const statements = path.get("declaration", "body", "body", 0);
-						if (
-							statements.node.type === "ExpressionStatement" &&
-							statements.node.directive == pragma
-						) {
+						if (hasDirective(path.node.declaration)) {
 							needsReference = true;
 							const splitId = splits++;
 							declarations.push(
@@ -545,11 +368,7 @@ export function shimExportsPlugin({
 						path.node.declaration.type === "FunctionDeclaration"
 					) {
 						const name = path.node.declaration.id?.name.toString();
-						const statements = path.get("declaration", "body", "body", 0);
-						if (
-							statements.node.type === "ExpressionStatement" &&
-							statements.node.directive == pragma
-						) {
+						if (hasDirective(path.node.declaration)) {
 							needsReference = true;
 							const splitId = splits++;
 							declarations.push(
@@ -597,10 +416,7 @@ export function shimExportsPlugin({
 				visitFunctionDeclaration(path) {
 					const statements = path.get("body", "body", 0);
 					const name = path.node.id;
-					if (
-						statements.node.type === "ExpressionStatement" &&
-						statements.node.directive == pragma
-					) {
+					if (hasDirective(path.node)) {
 						needsReference = true;
 						const splitId = splits++;
 
@@ -642,10 +458,7 @@ export function shimExportsPlugin({
 				// },
 				visitArrowFunctionExpression(path) {
 					const statements = path.get("body", "body", 0);
-					if (
-						statements.node.type === "ExpressionStatement" &&
-						statements.node.directive == pragma
-					) {
+					if (hasDirective(path.node)) {
 						needsReference = true;
 						const splitId = splits++;
 						declarations.push(
@@ -682,11 +495,7 @@ export function shimExportsPlugin({
 				},
 				visitFunctionExpression(path) {
 					const name = path.node.id?.name.toString();
-					const statements = path.get("body", "body", 0);
-					if (
-						statements.node.type === "ExpressionStatement" &&
-						statements.node.directive == pragma
-					) {
+					if (hasDirective(path.node)) {
 						needsReference = true;
 						const splitId = splits++;
 						declarations.push(
@@ -718,9 +527,7 @@ export function shimExportsPlugin({
 				},
 			});
 
-			console.log(declarations.length);
-
-			ast.body = [...body, ...declarations];
+			ast.program.body = [...body, ...declarations];
 
 			if (needsReference) {
 				return (
@@ -744,157 +551,153 @@ export function shimExportsPlugin({
 	};
 }
 
-export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
-	return {
-		name: "split-exports",
-		async split(code, id, options) {
-			if (code.indexOf(pragma) === -1) {
-				return code;
-			}
+// export function splitPlugin({ runtime, hash, pragma, apply, onModuleFound }) {
+// 	return {
+// 		name: "split-exports",
+// 		async split(code, id, options) {
+// 			if (code.indexOf(pragma) === -1) {
+// 				return code;
+// 			}
 
-			const shouldApply = apply(code, id, options);
+// 			const shouldApply = apply(code, id, options);
 
-			if (!shouldApply) {
-				return code;
-			}
+// 			if (!shouldApply) {
+// 				return code;
+// 			}
 
-			const ast = parseLoose(code, {
-				ecmaVersion: "2024",
-				sourceType: "module",
-			});
+// 			const ast = parseLoose(code, {
+// 				ecmaVersion: "2024",
+// 				sourceType: "module",
+// 			});
 
-			if (ast.length === 0) {
-				return code;
-			}
+// 			if (ast.length === 0) {
+// 				return code;
+// 			}
 
-			const body = ast.body;
+// 			const body = ast.body;
 
-			let needsReference = false;
-			let splits = 0;
+// 			let needsReference = false;
+// 			let splits = 0;
 
-			let pickedFn = null;
+// 			let pickedFn = null;
 
-			visit(body, {
-				visitExportNamedDeclaration(path) {
-					if (
-						path.node.declaration &&
-						path.node.declaration.type === "FunctionDeclaration"
-					) {
-						const name = path.node.declaration.id?.name.toString();
-						const statements = path.get("declaration", "body", "body", 0);
-						if (
-							statements.node.type === "ExpressionStatement" &&
-							statements.node.directive == pragma
-						) {
-							needsReference = true;
-							if (splits === options.split) {
-								pickedFn = types.builders.exportDefaultDeclaration(
-									types.builders.functionDeclaration.from({
-										async: true,
-										id: name ? types.builders.identifier(name) : null,
-										params: path.node.declaration.params,
-										body: types.builders.blockStatement(
-											path.node.declaration.body.body.slice(1),
-										),
-									}),
-								);
-							}
-							splits++;
-							return false;
-						}
-					}
+// 			visit(body, {
+// 				visitExportNamedDeclaration(path) {
+// 					if (
+// 						path.node.declaration &&
+// 						path.node.declaration.type === "FunctionDeclaration"
+// 					) {
+// 						const name = path.node.declaration.id?.name.toString();
+// 						if (hasDirective(path.node.declaration)) {
+// 							needsReference = true;
+// 							if (splits === options.split) {
+// 								pickedFn = types.builders.exportDefaultDeclaration(
+// 									types.builders.functionDeclaration.from({
+// 										async: true,
+// 										id: name ? types.builders.identifier(name) : null,
+// 										params: path.node.declaration.params,
+// 										body: types.builders.blockStatement(
+// 											path.node.declaration.body.body.slice(1),
+// 										),
+// 									}),
+// 								);
+// 							}
+// 							splits++;
+// 							return false;
+// 						}
+// 					}
 
-					return this.traverse(path);
-				},
-				visitFunctionDeclaration(path) {
-					const statements = path.get("body", "body", 0);
-					const name = path.node.id;
-					if (
-						statements.node.type === "ExpressionStatement" &&
-						statements.node.directive == pragma
-					) {
-						needsReference = true;
-						if (splits === options.split) {
-							pickedFn = types.builders.exportDefaultDeclaration(
-								types.builders.functionDeclaration.from({
-									async: true,
-									id: name,
-									params: path.node.params,
-									body: types.builders.blockStatement(
-										path.node.body.body.slice(1),
-									),
-								}),
-							);
-						}
-						splits++;
-						return false;
-					}
-					return this.traverse(path);
-				},
-				visitArrowFunctionExpression(path) {
-					const statements = path.get("body", "body", 0);
-					if (
-						statements.node.type === "ExpressionStatement" &&
-						statements.node.directive == pragma
-					) {
-						needsReference = true;
-						if (splits === options.split) {
-							pickedFn = types.builders.exportDefaultDeclaration(
-								types.builders.arrowFunctionExpression(
-									path.node.params,
-									types.builders.blockStatement(path.node.body.body.slice(1)),
-								),
-							);
-						}
-						splits++;
-						return false;
-					}
-					return false;
-				},
-				// visitFunctionExpression(path) {
-				// 	const name = path.node.id?.name.toString();
-				// 	const statements = path.get("body", "body", 0);
-				// 	if (
-				// 		statements.node.type === "ExpressionStatement" &&
-				// 		statements.node.directive == pragma
-				// 	) {
-				// 		needsReference = true;
-				// 		path.replace(
-				// 			types.builders.callExpression(
-				// 				types.builders.identifier(runtime.function),
-				// 				[
-				// 					types.builders.arrowFunctionExpression(
-				// 						[],
-				// 						types.builders.blockStatement([]),
-				// 					),
-				// 					types.builders.stringLiteral(
-				// 						options.command === "build"
-				// 							? hash(id)
-				// 							: id + `?split=${splits++}`,
-				// 					),
-				// 					types.builders.stringLiteral("default"),
-				// 				],
-				// 			),
-				// 		);
-				// 		this.traverse(path);
-				// 	}
-				// 	return false;
-				// },
-			});
+// 					return this.traverse(path);
+// 				},
+// 				visitFunctionDeclaration(path) {
+// 					const statements = path.get("body", "body", 0);
+// 					const name = path.node.id;
+// 					if (
+// 						statements.node.type === "ExpressionStatement" &&
+// 						statements.node.directive == pragma
+// 					) {
+// 						needsReference = true;
+// 						if (splits === options.split) {
+// 							pickedFn = types.builders.exportDefaultDeclaration(
+// 								types.builders.functionDeclaration.from({
+// 									async: true,
+// 									id: name,
+// 									params: path.node.params,
+// 									body: types.builders.blockStatement(
+// 										path.node.body.body.slice(1),
+// 									),
+// 								}),
+// 							);
+// 						}
+// 						splits++;
+// 						return false;
+// 					}
+// 					return this.traverse(path);
+// 				},
+// 				visitArrowFunctionExpression(path) {
+// 					const statements = path.get("body", "body", 0);
+// 					if (
+// 						statements.node.type === "ExpressionStatement" &&
+// 						statements.node.directive == pragma
+// 					) {
+// 						needsReference = true;
+// 						if (splits === options.split) {
+// 							pickedFn = types.builders.exportDefaultDeclaration(
+// 								types.builders.arrowFunctionExpression(
+// 									path.node.params,
+// 									types.builders.blockStatement(path.node.body.body.slice(1)),
+// 								),
+// 							);
+// 						}
+// 						splits++;
+// 						return false;
+// 					}
+// 					return false;
+// 				},
+// 				// visitFunctionExpression(path) {
+// 				// 	const name = path.node.id?.name.toString();
+// 				// 	const statements = path.get("body", "body", 0);
+// 				// 	if (
+// 				// 		statements.node.type === "ExpressionStatement" &&
+// 				// 		statements.node.directive == pragma
+// 				// 	) {
+// 				// 		needsReference = true;
+// 				// 		path.replace(
+// 				// 			types.builders.callExpression(
+// 				// 				types.builders.identifier(runtime.function),
+// 				// 				[
+// 				// 					types.builders.arrowFunctionExpression(
+// 				// 						[],
+// 				// 						types.builders.blockStatement([]),
+// 				// 					),
+// 				// 					types.builders.stringLiteral(
+// 				// 						options.command === "build"
+// 				// 							? hash(id)
+// 				// 							: id + `?split=${splits++}`,
+// 				// 					),
+// 				// 					types.builders.stringLiteral("default"),
+// 				// 				],
+// 				// 			),
+// 				// 		);
+// 				// 		this.traverse(path);
+// 				// 	}
+// 				// 	return false;
+// 				// },
+// 			});
 
-			ast.body = [pickedFn];
+// 			ast.body = [pickedFn];
 
-			// if (needsReference) {
-			// 	return (
-			// 		`import { ${runtime.function} } from '${runtime.module}';\n` +
-			// 		print(ast).code
-			// 	);
-			// }
+// 			// if (needsReference) {
+// 			// 	return (
+// 			// 		`import { ${runtime.function} } from '${runtime.module}';\n` +
+// 			// 		print(ast).code
+// 			// 	);
+// 			// }
 
-			return print(ast).code;
-		},
-	};
-}
+// 			return print(ast).code;
+// 		},
+// 	};
+// }
 
 // export function shimExportsPlugin({
 // 	runtime,
@@ -1154,347 +957,6 @@ export function decorateExportsPlugin({
 						options,
 					});
 				}
-			}
-
-			return code;
-		},
-	};
-}
-
-export function wrapExportsPlugin({
-	runtime,
-	hash,
-	pragma,
-	apply,
-	onModuleFound,
-}) {
-	return {
-		name: "wrap-exports",
-		async transform(code, id, options) {
-			if (code.indexOf(pragma) === -1) {
-				return code;
-			}
-
-			const shouldApply = apply(code, id, options);
-
-			if (!shouldApply) {
-				return code;
-			}
-
-			const ast = parseAdvanced(code);
-
-			if (ast.length === 0) {
-				return code;
-			}
-
-			const body = ast.program.body;
-
-			for (let i = 0; i < body.length; i++) {
-				const node = body[i];
-				if (node.type !== "ExpressionStatement" || !node.directive) {
-					break;
-				}
-				if (node.directive === pragma) {
-					onModuleFound?.(id);
-					return await wrapExports({
-						runtime,
-						ast,
-						id,
-						code,
-						hash,
-						options,
-						directive: pragma,
-					});
-				}
-			}
-
-			let needsReference = false;
-			let splits = 0;
-
-			const declarations = [];
-			visit(body, {
-				visitExportDefaultDeclaration(path) {
-					if (
-						path.node.declaration &&
-						path.node.declaration.type === "FunctionDeclaration"
-					) {
-						const name = path.node.declaration.id?.name.toString();
-						const statements = path.get("declaration", "body", "body", 0);
-						if (
-							statements.node.type === "ExpressionStatement" &&
-							statements.node.directive == pragma
-						) {
-							needsReference = true;
-							const splitId = splits++;
-							declarations.push(
-								types.builders.exportNamedDeclaration.from({
-									declaration: types.builders.functionDeclaration.from({
-										async: path.node.declaration.async,
-										generator: path.node.declaration.generator,
-										id: types.builders.identifier(`$$function${splitId}`),
-										params: path.node.declaration.params,
-										body: types.builders.blockStatement(
-											path.node.declaration.body.body.slice(1),
-										),
-									}),
-								}),
-								...(name?.length
-									? [
-											types.builders.exportDefaultDeclaration(
-												types.builders.identifier(name),
-											),
-									  ]
-									: []),
-							);
-
-							if (name?.length) {
-								path.replace(
-									types.builders.variableDeclaration("let", [
-										types.builders.variableDeclarator(
-											types.builders.identifier(name),
-											types.builders.callExpression(
-												types.builders.identifier(runtime.function),
-												[
-													// types.builders.functionExpression.from({
-													// 	// ...path.node.declaration,
-													// 	params: path.node.declaration.params,
-													// 	async: path.node.declaration.async,
-													// 	body: types.builders.blockStatement([]),
-													// }),
-													types.builders.identifier(`$$function${splitId}`),
-													types.builders.stringLiteral(
-														options.command === "build" ? hash(id) : id,
-													),
-													types.builders.stringLiteral(`$$function${splitId}`),
-												],
-											),
-										),
-									]),
-								);
-							} else {
-								path.replace(
-									types.builders.exportDefaultDeclaration(
-										types.builders.callExpression(
-											types.builders.identifier(runtime.function),
-											[
-												// types.builders.functionExpression.from({
-												// 	// ...path.node.declaration,
-												// 	params: path.node.declaration.params,
-												// 	async: path.node.declaration.async,
-												// 	body: types.builders.blockStatement([]),
-												// }),
-												types.builders.identifier(`$$function${splitId}`),
-												types.builders.stringLiteral(
-													options.command === "build" ? hash(id) : id,
-												),
-												types.builders.stringLiteral(`$$function${splitId}`),
-											],
-										),
-									),
-								);
-							}
-
-							onModuleFound?.(id);
-						}
-					}
-					return this.traverse(path);
-				},
-				visitExportNamedDeclaration(path) {
-					if (
-						path.node.declaration &&
-						path.node.declaration.type === "FunctionDeclaration"
-					) {
-						const name = path.node.declaration.id?.name.toString();
-						const statements = path.get("declaration", "body", "body", 0);
-						if (
-							statements.node.type === "ExpressionStatement" &&
-							statements.node.directive == pragma
-						) {
-							needsReference = true;
-							const splitId = splits++;
-							declarations.push(
-								types.builders.exportNamedDeclaration.from({
-									declaration: types.builders.functionDeclaration.from({
-										async: path.node.declaration.async,
-										generator: path.node.declaration.generator,
-										id: types.builders.identifier(`$$function${splitId}`),
-										params: path.node.declaration.params,
-										body: types.builders.blockStatement(
-											path.node.declaration.body.body.slice(1),
-										),
-									}),
-								}),
-							);
-							path.replace(
-								types.builders.exportNamedDeclaration(
-									types.builders.variableDeclaration("const", [
-										types.builders.variableDeclarator(
-											types.builders.identifier(name),
-											types.builders.callExpression(
-												types.builders.identifier(runtime.function),
-												[
-													// types.builders.functionExpression.from({
-													// 	// ...path.node.declaration,
-													// 	params: path.node.declaration.params,
-													// 	async: path.node.declaration.async,
-													// 	body: types.builders.blockStatement([]),
-													// }),
-													types.builders.identifier(`$$function${splitId}`),
-													types.builders.stringLiteral(
-														options.command === "build" ? hash(id) : id,
-													),
-													types.builders.stringLiteral(`$$function${splitId}`),
-												],
-											),
-										),
-									]),
-								),
-							);
-							onModuleFound?.(id);
-						}
-					}
-
-					return this.traverse(path);
-				},
-				visitFunctionDeclaration(path) {
-					const statements = path.get("body", "body", 0);
-					const name = path.node.id;
-					if (
-						statements.node.type === "ExpressionStatement" &&
-						statements.node.directive == pragma
-					) {
-						needsReference = true;
-						const splitId = splits++;
-
-						declarations.push(
-							types.builders.exportNamedDeclaration.from({
-								declaration: types.builders.functionDeclaration.from({
-									async: path.node.async,
-									generator: path.node.generator,
-									id: types.builders.identifier(`$$function${splitId}`),
-									params: path.node.params,
-									body: types.builders.blockStatement(
-										path.node.body.body.slice(1),
-									),
-								}),
-							}),
-						);
-						path.replace(
-							types.builders.variableDeclaration("const", [
-								types.builders.variableDeclarator(
-									name,
-									types.builders.callExpression(
-										types.builders.identifier(runtime.function),
-										[
-											types.builders.identifier(`$$function${splitId}`),
-											types.builders.stringLiteral(
-												options.command === "build" ? hash(id) : id,
-											),
-											types.builders.stringLiteral(`$$function${splitId}`),
-										],
-									),
-								),
-							]),
-						);
-						onModuleFound?.(id);
-						this.traverse(path);
-					}
-					return this.traverse(path);
-				},
-				// 	}
-				// 	return false;
-				// },
-				visitArrowFunctionExpression(path) {
-					const statements = path.get("body", "body", 0);
-					if (
-						statements.node.type === "ExpressionStatement" &&
-						statements.node.directive == pragma
-					) {
-						needsReference = true;
-						const splitId = splits++;
-						declarations.push(
-							types.builders.exportNamedDeclaration.from({
-								declaration: types.builders.functionDeclaration.from({
-									async: path.node.async,
-									generator: path.node.generator,
-									id: types.builders.identifier(`$$function${splitId}`),
-									params: path.node.params,
-									body: types.builders.blockStatement(
-										path.node.body.body.slice(1),
-									),
-								}),
-							}),
-						);
-						path.replace(
-							types.builders.callExpression(
-								types.builders.identifier(runtime.function),
-								[
-									// types.builders.arrowFunctionExpression(
-									// 	[],
-									// 	types.builders.blockStatement([]),
-									// ),
-									types.builders.identifier(`$$function${splitId}`),
-									types.builders.stringLiteral(
-										options.command === "build" ? hash(id) : id,
-									),
-									types.builders.stringLiteral(`$$function${splitId}`),
-								],
-							),
-						);
-						onModuleFound?.(id);
-						this.traverse(path);
-					}
-					return false;
-				},
-				visitFunctionExpression(path) {
-					const name = path.node.id?.name.toString();
-					const statements = path.get("body", "body", 0);
-					if (
-						statements.node.type === "ExpressionStatement" &&
-						statements.node.directive == pragma
-					) {
-						needsReference = true;
-						const splitId = splits++;
-						declarations.push(
-							types.builders.exportNamedDeclaration.from({
-								declaration: types.builders.functionDeclaration.from({
-									async: path.node.async,
-									generator: path.node.generator,
-									id: types.builders.identifier(`$$function${splitId}`),
-									params: path.node.params,
-									body: types.builders.blockStatement(
-										path.node.body.body.slice(1),
-									),
-								}),
-							}),
-						);
-						path.replace(
-							types.builders.callExpression(
-								types.builders.identifier(runtime.function),
-								[
-									types.builders.identifier(`$$function${splitId}`),
-									types.builders.stringLiteral(
-										options.command === "build" ? hash(id) : id,
-									),
-									types.builders.stringLiteral(`$$function${splitId}`),
-								],
-							),
-						);
-						this.traverse(path);
-					}
-					return false;
-				},
-			});
-
-			console.log(declarations.length);
-
-			ast.program.body = [...body, ...declarations];
-
-			if (needsReference) {
-				return (
-					`import { ${runtime.function} } from '${runtime.module}';\n` +
-					print(ast).code
-				);
 			}
 
 			return code;

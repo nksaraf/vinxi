@@ -2,12 +2,9 @@ import { prettyPrint } from "recast";
 import { describe, expect, it } from "vitest";
 
 import { parseAdvanced } from "./parse.js";
-import {
-	decorateExports,
-	shimExportsPlugin,
-	wrapExports,
-	wrapExportsPlugin,
-} from "./transform.js";
+import { decorateExports, shimExportsPlugin } from "./transform.js";
+import { wrapExports } from "./wrap-exports.js";
+import { wrapExportsPlugin } from "./wrap-exports.js";
 
 const testFixtures = import.meta.glob("./fixtures/**/*.ts", {
 	as: "raw",
@@ -50,7 +47,7 @@ async function runTest(name, transform) {
 	it(name, async () => {
 		const code = await testFixtures[`./fixtures/${name}.ts`]();
 		const expected = await testFixtures[`./fixtures/${name}.snapshot.ts`]();
-		console.log(js(await transform(code)));
+		console.log(await transform(code));
 		expect(js(await transform(code))).toEqual(js(expected));
 	});
 }
@@ -59,3 +56,4 @@ runTest("wrap-exports", (code) => transformSSR(code, wrapExportsPlugin));
 runTest("wrap-exports-fn", (code) => transformSSR(code, wrapExportsPlugin));
 runTest("shim-exports", (code) => transformSSR(code, shimExportsPlugin));
 runTest("shim-exports-fn", (code) => transformSSR(code, shimExportsPlugin));
+runTest("example-1", (code) => transformSSR(code, wrapExportsPlugin));

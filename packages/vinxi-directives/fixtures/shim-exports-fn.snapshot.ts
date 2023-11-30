@@ -2,6 +2,8 @@ import { createReference } from "~/runtime";
 import db from "~/server/db";
 
 export const fn2 = () => {};
+const user = (path: string) =>
+	`https://hacker-news.firebaseio.com/v0/${path}.json`;
 export const fn3 = createReference($$function0, "test", "$$function0");
 export const fn31 = createReference($$function1, "test", "$$function1");
 export const f1 = createReference($$function2, "test", "$$function2");
@@ -9,7 +11,11 @@ export const f1 = createReference($$function2, "test", "$$function2");
 function Component() {
 	const fn = createReference($$function3, "test", "$$function3");
 	const x = createReference($$function4, "test", "$$function4");
-	return <div onClick={createReference($$function5, "test", "$$function5")} />;
+	return (
+		<div 
+			onClick={createReference($$function5, "test", "$$function5")} 
+		/>
+	);
 }
 
 export const f2 = createReference($$function6, "test", "$$function6");
@@ -56,4 +62,4 @@ export function $$function11(param) {}
 
 export function $$function12(input, options) {}
 
-export function $$function13(input, options) {}
+export function $$function13(input: string, options) {}
