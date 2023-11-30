@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@vinxi/react-server": "0.0.30",
+    "@vinxi/react-server": "0.0.31",
     "@vinxi/react-server-dom": "0.0.3",
     "autoprefixer": "^10.4.15",
     "react": "0.0.0-experimental-035a41c4e-20230704",

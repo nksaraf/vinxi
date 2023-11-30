@@ -1,5 +1,11 @@
 # @vinxi/plugin-references
 
+## 0.0.43
+
+### Patch Changes
+
+- f35751c: fix: include babel.cjs in package.json files plugin-directives
+
 ## 0.0.42
 
 ### Patch Changes
