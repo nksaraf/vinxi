@@ -1,5 +1,11 @@
 # @vinxi/plugin-references
 
+## 0.0.45
+
+### Patch Changes
+
+- 800f557: refactor:simplify server-functions server side plugin
+
 ## 0.0.44
 
 ### Patch Changes

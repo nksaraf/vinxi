@@ -4,6 +4,13 @@
 
 ### Patch Changes
 
+- Updated dependencies [800f557]
+  - @vinxi/server-functions@0.0.45
+
+## null
+
+### Patch Changes
+
 - @vinxi/server-components@0.0.44
 - @vinxi/server-functions@0.0.44
 
