@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- @vinxi/react-server@0.0.30
+
+## null
+
+### Patch Changes
+
 - @vinxi/react-server@0.0.29
 
 ## null

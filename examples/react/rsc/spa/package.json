@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@vinxi/server-components": "0.0.41",
-    "@vinxi/server-functions": "0.0.41",
+    "@vinxi/server-components": "0.0.42",
+    "@vinxi/server-functions": "0.0.42",
     "@vinxi/react": "0.0.12",
     "@vinxi/react-server-dom": "0.0.3",
     "@vitejs/plugin-react": "^4.0.4",

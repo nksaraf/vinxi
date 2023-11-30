@@ -1,5 +1,11 @@
 # @vinxi/plugin-references
 
+## 0.0.42
+
+### Patch Changes
+
+- 89832f7: fix: export wrapExports from index.js plugin-directives
+
 ## 0.0.41
 
 ### Patch Changes
