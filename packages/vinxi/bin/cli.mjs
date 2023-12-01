@@ -1,14 +1,7 @@
 #!/usr/bin/env node
-import chokidar from "chokidar";
 import { defineCommand, runMain } from "citty";
 import fs from "fs";
-// import mri from "mri";
 import { fileURLToPath } from "url";
-
-import { exec } from "node:child_process";
-
-import { loadApp } from "../lib/load-app.js";
-import { log } from "../lib/logger.js";
 
 const packageJson = JSON.parse(
 	fs.readFileSync(
@@ -64,6 +57,9 @@ const command = defineCommand({
 				},
 			},
 			async run({ args }) {
+				const chokidar = await import("chokidar");
+				const { loadApp } = await import("../lib/load-app.js");
+				const { log } = await import("../lib/logger.js");
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
 				const app = await loadApp(configFile, args);
@@ -153,10 +149,45 @@ const command = defineCommand({
 			async run({ args }) {
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
+				const { loadApp } = await import("../lib/load-app.js");
 				const app = await loadApp(configFile, args);
 				process.env.NODE_ENV = "production";
 				const { createBuild } = await import("../lib/build.js");
 				await createBuild(app, { preset: args.preset });
+			},
+		},
+		start: {
+			meta: {
+				name: "start",
+				version: packageJson.version,
+				description: "Start your built Vinxi app",
+			},
+			args: {
+				config: {
+					type: "string",
+					description: "Path to config file (default: app.config.js)",
+				},
+				stack: {
+					type: "string",
+					description: "Stacks",
+				},
+				preset: {
+					type: "string",
+					description: "Server preset (default: node-server)",
+				},
+				port: {
+					type: "number",
+					description: "Port to listen on (default: 3000)",
+				},
+				host: {
+					type: "boolean",
+					description: "Expose to host (default: false)",
+				},
+			},
+			async run({ args }) {
+				process.env.PORT ??= args.port ?? 3000;
+				process.env.HOST ??= args.host;
+				await import(process.cwd() + "/.output/server/index.mjs");
 			},
 		},
 	}),
