@@ -1,5 +1,5 @@
-import { Fragment, h, render } from "preact";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { createEffect, createSignal } from "solid-js";
+import { render } from "solid-js/web";
 
 import style from "./style.css?raw";
 
@@ -97,11 +97,10 @@ export default async function mount() {
 	// };
 
 	function App(props) {
-		const [isOpen, setIsOpen] = useState(false);
-		const ref = useRef();
-
-		const [isHovering, setIsHovering] = useState(false);
-		useEffect(() => {
+		const [isOpen, setIsOpen] = createSignal(true);
+		let ref;
+		const [isHovering, setIsHovering] = createSignal(false);
+		createEffect(() => {
 			// autoAnimate(ref.current, (el, action, oldCoords, newCoords) => {
 			// 	console.log(action);
 			// 	let keyframes;
@@ -167,13 +166,13 @@ export default async function mount() {
 			// 	});
 			// });
 			// autoAnimate(ref.current);
-		}, [ref.current]);
+		});
 		return (
 			<>
 				<style>{style}</style>
 				<div
 					id="nuxt-devtools-anchor"
-					className={!isHovering ? "nuxt-devtools-hide" : ""}
+					// className={!isHovering ? "nuxt-devtools-hide" : ""}
 					style={{
 						left: "50%",
 					}}
@@ -181,7 +180,7 @@ export default async function mount() {
 						setIsHovering(true);
 					}}
 				>
-					<div className="nuxt-devtools-glowing" />
+					<div class="nuxt-devtools-glowing" />
 					<div
 						ref={ref}
 						className="nuxt-devtools-panel"
@@ -221,29 +220,28 @@ export default async function mount() {
 							</defs>
 						</svg>
 					</div>
-					$
-					{isOpen ? (
+					{isOpen() ? (
 						<div
-							className="nuxt-devtools-frame"
+							class="nuxt-devtools-frame"
 							style={{
 								position: "absolute",
 								bottom: "1rem",
 								left: "0px",
-								zIndex: 9999998,
+								"z-index": 9999998,
 								transform: "translate(-50%, 0)",
-								backgroundColor: "black",
+								"background-color": "black",
 								width: "70vw",
-								borderRadius: "0.5rem",
+								"border-radius": "0.5rem",
 								height: "45vh",
 								border: "1px solid #3336",
 								display: "flex",
-								flexDirection: "row",
+								"flex-direction": "row",
 								overflow: "hidden",
 								transition: "all",
-								alignItems: "center",
-								justifyContent: "center",
+								"align-items": "center",
+								"justify-content": "center",
 								// nice box shadow
-								boxShadow: "rgba(99, 99, 99, 0.2) 0px 8px 16px 0px",
+								"box-shadow": "rgba(99, 99, 99, 0.2) 0px 8px 16px 0px",
 							}}
 						>
 							<iframe src="/__devtools/client/index.html" />
@@ -254,5 +252,5 @@ export default async function mount() {
 		);
 	}
 
-	render(<App />, shadow.shadowRoot);
+	render(() => <App />, shadow.shadowRoot);
 }

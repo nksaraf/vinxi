@@ -1,18 +1,9 @@
-import {
-	Box,
-	Button,
-	Container,
-	Flex,
-	Theme,
-	ThemePanel,
-} from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
+import { A, Route, Router, Routes } from "@solidjs/router";
 import "@unocss/reset/tailwind.css";
 import { cva } from "class-variance-authority";
 import { clsx } from "clsx";
-import { use } from "react";
-import { createRoot } from "react-dom/client";
-import { BrowserRouter, Link, NavLink, Route, Routes } from "react-router-dom";
+import { render } from "solid-js/web";
 import { twMerge } from "tailwind-merge";
 import "virtual:uno.css";
 
@@ -97,7 +88,7 @@ const buttonVariants = cva(
 
 function Devtools() {
 	return (
-		<Theme appearance="dark">
+		<div className="dark-mode">
 			<div className="h-screen w-full flex flex-col bg-sky1 font-sans n-panel-grids">
 				{/* <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700">
 					<h1 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
@@ -107,33 +98,29 @@ function Devtools() {
 				<div className="flex flex-1 overflow-hidden">
 					<div className="border-r n-border-base text-sky1-fg w-12 flex flex-col gap-1 items-center py-1 n-bg-base">
 						<div className="py-1 border-b n-border-base w-full flex items-center justify-center">
-							<NavLink
-								className={({ isActive }) =>
-									buttonVariants({
-										variant: "ghost",
-										size: "sm",
-										className: isActive ? "text-sky8" : null,
-									})
-								}
-								to={`/index.html`}
+							<A
+								activeClass={buttonVariants({
+									variant: "ghost",
+									size: "sm",
+									className: "text-sky8",
+								})}
+								href={`/index.html`}
 							>
 								<VinxiLogo />
-							</NavLink>
+							</A>
 						</div>
 
 						{plugins.map((plugin) => (
-							<NavLink
-								className={({ isActive }) =>
-									buttonVariants({
-										variant: "ghost",
-										size: "sm",
-										className: isActive ? "text-sky8" : null,
-									})
-								}
-								to={`/${plugin.id}`}
+							<A
+								className={buttonVariants({
+									variant: "ghost",
+									size: "sm",
+									className: "text-sky8",
+								})}
+								href={`/${plugin.id}`}
 							>
 								<span className={cn(plugin.icon, "text-lg")} />
-							</NavLink>
+							</A>
 						))}
 					</div>
 					<Routes>
@@ -156,7 +143,7 @@ function Devtools() {
 					</Routes>
 				</div>
 			</div>
-		</Theme>
+		</div>
 	);
 }
 
@@ -199,8 +186,11 @@ function Input({ icon, ...props }) {
 	);
 }
 
-createRoot(document.getElementById("devtools")).render(
-	<BrowserRouter basename="/__devtools/client">
-		<Devtools />
-	</BrowserRouter>,
+render(
+	() => (
+		<Router base="/__devtools/client">
+			<Devtools />
+		</Router>
+	),
+	document.getElementById("devtools"),
 );

@@ -6,7 +6,7 @@ import { server } from "./server.js";
 export const serverFunctions = {
 	client: client,
 	server: server,
-	router: ({ runtime, ...overrides }) => ({
+	router: ({ runtime, ...overrides } = {}) => ({
 		name: "server-fns",
 		mode: "handler",
 		base: "/_server",

@@ -517,7 +517,6 @@ async function mount() {
                 ]
               })
             }),
-            "$",
             isOpen ? o3("div", {
               className: "nuxt-devtools-frame",
               style: {
