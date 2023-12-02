@@ -145,14 +145,14 @@ function wouterFileRouter(config) {
 
 export default createApp({
 	server: {
-		routeRules: {
-			"**/*": {
-				headers: {
-					"Cross-Origin-Embedder-Policy": "require-corp",
-					"Cross-Origin-Opener-Policy": "same-origin",
-				},
-			},
-		},
+		// routeRules: {
+		// 	"**/*": {
+		// 		headers: {
+		// 			"Cross-Origin-Embedder-Policy": "require-corp",
+		// 			"Cross-Origin-Opener-Policy": "same-origin",
+		// 		},
+		// 	},
+		// },
 	},
 	routers: [
 		{
@@ -167,12 +167,6 @@ export default createApp({
 			routes: wouterFileRouter({ dir: "./app/pages" }),
 			target: "browser",
 			plugins: () => [
-				config("headers", {
-					server: {
-						"Cross-Origin-Embedder-Policy": "require-corp",
-						"Cross-Origin-Opener-Policy": "same-origin",
-					},
-				}),
 				tsconfigPaths(),
 				mdx.withImports({
 					react: "React",
