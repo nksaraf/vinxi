@@ -186,7 +186,7 @@ const command = defineCommand({
 			},
 			async run({ args }) {
 				process.env.PORT ??= args.port ?? 3000;
-				process.env.HOST ??= args.host;
+				process.env.HOST ??= args.host ?? "0.0.0.0";
 				await import(process.cwd() + "/.output/server/index.mjs");
 			},
 		},

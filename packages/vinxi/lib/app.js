@@ -4,15 +4,15 @@ import resolve from "resolve";
 import { isMainThread } from "worker_threads";
 
 import invariant, { InvariantError } from "./invariant.js";
-import { c, consola, log, withLogger } from "./logger.js";
+import { c, consola, withLogger } from "./logger.js";
 import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 
-/** @typedef {{ 
-	devtools?: boolean; 
-	routers?: import("./router-modes.js").RouterSchemaInput[]; 
-	name?: 
-	string; 
-	server?: import('nitropack').NitroConfig; 
+/** @typedef {{
+	devtools?: boolean;
+	routers?: import("./router-modes.js").RouterSchemaInput[];
+	name?:
+	string;
+	server?: import('nitropack').NitroConfig;
 	root?: string
 }} AppOptions */
 

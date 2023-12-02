@@ -1,38 +1,9 @@
 /// <reference types="vinxi/types/client" />
 import "vinxi/client";
 
-import { sayHello } from "./actions";
-import { world } from "./server-functions";
 import "./style.css";
+import { world2 } from "./inline";
 
-export async function world2(x) {
-	"use server";
-	console.log("hello world 2", x);
-}
-
-async function world3(x, y) {
-	"use server";
-	console.log("hello world 3", x, y);
-}
-
-const world4 = async (x, y) => {
-	"use server";
-	console.log("hello world 4", x, y);
-};
-
-const world5 = async (x) => {
-	"use server";
-	console.log("hello world 4", x);
-};
-
-console.log(
-	await world(),
-	await world2(1),
-	await world3(2, 3),
-	await world4(5, 6),
-	await sayHello(),
-	await world5({ hello: 1, world: "aasd", x: true }),
-);
-console.log("Hello world!");
+await world2(10);
 
 document.getElementById("app").innerHTML = `Hello World`;

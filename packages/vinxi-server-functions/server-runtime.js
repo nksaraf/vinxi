@@ -1,5 +1,4 @@
 export function createServerReference(fn, id, name) {
-	console.log("creating reference");
 	return new Proxy(fn, {
 		get(target, prop, receiver) {
 			if (prop === "url") {

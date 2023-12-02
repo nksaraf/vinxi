@@ -29,6 +29,7 @@
     "vinxi": "^0.0.48"
   },
   "dependencies": {
+    "@babel/parser": "^7.23.5",
     "acorn": "^8.10.0",
     "acorn-jsx": "^5.3.2",
     "acorn-loose": "^8.3.0",
