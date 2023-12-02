@@ -85,9 +85,9 @@ export default createApp({
 
 ---
 
-- The name of the router can be used to reference the router in other routers. For example, to access the manifest of a different router, use `import.meta.env.MANIFEST['<name>']`. 
+- The name of the router can be used to reference the router in other routers. For example, to access the manifest of a different router, use `import.meta.env.MANIFEST['<name>']`.
 
-    The manifest contains information about the router like the `inputs`, `routes`, `handler`, `mode`, etc. which can be used to drive the logic of other routers. For example an OpenAPI spec router that generates the spec with routes from other routers. 
+    The manifest contains information about the router like the `inputs`, `routes`, `handler`, `mode`, etc. which can be used to drive the logic of other routers. For example an OpenAPI spec router that generates the spec with routes from other routers.
 
     This works both in client and server targets. The restriction is that the client can only access it's own manifest, whereas the server can access all manifests.
 
@@ -131,7 +131,7 @@ export default eventHandler(() => {
 
 
 ---
-- The name of the router that the code is currently executing in is available as `import.meta.env.ROUTER_NAME`. This can be used to get the current router's manifest which harcoding a name in the code.
+- The name of the router that the code is currently executing in is available as `import.meta.env.\0ROUTER_NAME`. This can be used to get the current router's manifest which harcoding a name in the code.
 
 <CH.Code>
 
@@ -244,7 +244,7 @@ export default createApp({
 
 - The directory to serve files from.
 - The directory is relative to the current working directory.
-- 
+-
 
 ```ts app.config.js focus=8
 import { createApp } from "vinxi";
@@ -293,7 +293,7 @@ export default createApp({
 
 ---
 
-- Use the handler from this router as the `src` to render a script tag in the SSR response. 
+- Use the handler from this router as the `src` to render a script tag in the SSR response.
 
 <CH.Code>
 
@@ -345,7 +345,7 @@ const scriptTag = `
 
 ## `mode: "handler"`
 
-- A router typically targetting the server. 
+- A router typically targetting the server.
 - The router responds to requests matching the `base` path with the event handler exported from the `handler` file.
 - It can also include a file system router to map files to sub routes
 ```ts
@@ -383,13 +383,13 @@ export default createApp({
 ## `base`
 
 
-- The base path of the router. Default is `/`. It is the path that the router will be mounted at. 
+- The base path of the router. Default is `/`. It is the path that the router will be mounted at.
 
-  For example, if the base is `"/foo"`, then the router will be mounted at `"/foo"` and will respond to requests matching `"/foo/**/*"`. 
+  For example, if the base is `"/foo"`, then the router will be mounted at `"/foo"` and will respond to requests matching `"/foo/**/*"`.
 
 - The base path is available in your code as `import.meta.env.BASE_URL`.
 
-- Avoid having multiple routers with the same base path. 
+- Avoid having multiple routers with the same base path.
 
 
 ```ts app.config.js focus=10

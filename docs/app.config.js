@@ -3,6 +3,7 @@ import { slugifyWithCounter } from "@sindresorhus/slugify";
 import pkg from "@vinxi/plugin-mdx";
 import reactRefresh from "@vitejs/plugin-react";
 import acorn from "acorn";
+import remarkGfm from "remark-gfm";
 import { visit } from "unist-util-visit";
 import { createApp, resolve } from "vinxi";
 import {
@@ -109,9 +110,9 @@ class WouterFileSystemRouter extends BaseFileSystemRouter {
 		return {
 			$component: {
 				src: src,
-				pick: src.endsWith(".mdx") ? [] : ["default", "$css"],
+				pick: src.match(/\.mdx?$/) ? [] : ["default", "$css"],
 			},
-			$$sections: src.endsWith(".mdx")
+			$$sections: src.match(/\.mdx?$/)
 				? {
 						src: src,
 						pick: ["sections"],
@@ -128,7 +129,14 @@ function wouterFileRouter(config) {
 		new WouterFileSystemRouter(
 			{
 				dir: resolve.absolute(config.dir, router.root),
-				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx", "mdx"],
+				extensions: config.extensions ?? [
+					"js",
+					"jsx",
+					"ts",
+					"tsx",
+					"mdx",
+					"md",
+				],
 			},
 			router,
 			app,

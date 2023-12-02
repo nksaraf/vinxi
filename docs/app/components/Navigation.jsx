@@ -5,9 +5,9 @@ import { Tag } from "@/components/Tag";
 import { remToPx } from "@/lib/remToPx";
 import clsx from "clsx";
 import { AnimatePresence, motion, useIsPresent } from "framer-motion";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 
 function useInitialValue(value, condition = true) {
 	let initialValue = useRef(value).current;
@@ -18,7 +18,7 @@ function TopLevelNavItem({ href, children }) {
 	return (
 		<li className="md:hidden">
 			<Link
-				href={href}
+				to={href}
 				className="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
 			>
 				{children}
@@ -30,7 +30,7 @@ function TopLevelNavItem({ href, children }) {
 function NavLink({ href, tag, active, isAnchorLink = false, children }) {
 	return (
 		<Link
-			href={href}
+			to={href}
 			aria-current={active ? "page" : undefined}
 			className={clsx(
 				"flex justify-between gap-2 py-1 pr-3 text-sm transition",
@@ -188,13 +188,14 @@ export const navigation = [
 		title: "Guides",
 		links: [
 			{ title: "Introduction", href: "/" },
-			{ title: "Quickstart", href: "/hello" },
+			{ title: "Quickstart", href: "/quickstart" },
+			{ title: "Story", href: "/story" },
+			{ title: "`vinxi` CLI", href: "/cli" },
 			{ title: "What is a router?", href: "/what-is-a-router" },
-			{ title: "SDKs", href: "/sdks" },
-			{ title: "Authentication", href: "/authentication" },
-			{ title: "Pagination", href: "/pagination" },
-			{ title: "Errors", href: "/errors" },
-			{ title: "Webhooks", href: "/webhooks" },
+			{ title: "Manifest API", href: "/manifest" },
+			{ title: "File System Routing", href: "/file-system-routing" },
+			{ title: "Server Runtime", href: "/server-runtime" },
+			{ title: "Deployment", href: "/deployment" },
 		],
 	},
 	{

@@ -6,8 +6,6 @@ import React, { Suspense, cache, use } from "react";
 import { createContext, useContext, useEffect, useRef } from "react";
 import { Link } from "wouter";
 
-import "./hello.css";
-
 const webContainerContext = createContext({
 	files: {},
 });

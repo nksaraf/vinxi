@@ -1,0 +1,138 @@
+# Server Runtime
+
+Vinxi takes care of your server runtime needs. It's based on `unjs/h3`. Our philosophy is to abstract over all the different runtimes/platforms. Vinxi provides a set of helpers that covers all the usual use cases of the app to interact with the server platform. Apart from that it exposes the bare platform native objects for you to manipulate as necessary
+
+## Utilities
+
+H3 has a concept of composable utilities that accept `event` (from `eventHandler((event) => {})`) as their first argument. This has several performance benefits over injecting them to `event` or `app` instances in global middleware commonly used in Node.js frameworks, such as Express. This concept means only required code is evaluated and bundled, and the rest of the utilities can be tree-shaken when not used.
+
+👉 You can check list of exported built-in utils from [JSDocs Documentation](https://www.jsdocs.io/package/h3#package-functions).
+
+### Body
+
+#### Read the raw request body
+
+Reads body of the request and returns encoded raw string (default), or Buffer if encoding is falsy.
+
+```ts
+function readRawBody<E extends Encoding = 'utf8'>(
+    event: FetchEvent,
+    encoding?: E
+) => E extends false ? Promise<Buffer | undefined> : Promise<string | undefined>
+```
+
+#### Read the request body as JSON
+
+Reads request body and tries to safely parse using [destr](https://github.com/unjs/destr).
+
+```ts
+function readBody<
+    T,
+    Event extends H3Event<EventHandlerRequest> = H3Event<EventHandlerRequest>,
+    _T = InferEventInput<'body', Event, T>
+>(
+    event: Event,
+    options?: { strict?: boolean }
+) => Promise<_T>;
+```
+
+- `readValidatedBody(event, validate)`
+- `readMultipartFormData(event)`
+
+### Request
+
+#### Get query
+
+```ts
+function getQuery<
+    T,
+    Event extends H3Event<EventHandlerRequest> = H3Event<EventHandlerRequest>,
+    _T = Exclude<InferEventInput<'query', Event, T>, undefined>
+>(
+    event: Event
+) => _T;
+```
+
+- `getValidatedQuery(event, validate)`
+- `getRouterParams(event, { decode? })`
+- `getRouterParam(event, name, { decode? })`
+- `getValidatedRouterParams(event, validate, { decode? })`
+- `getMethod(event, default?)`
+- `isMethod(event, expected, allowHead?)`
+- `assertMethod(event, expected, allowHead?)`
+- `getRequestHeaders(event, headers)` (alias: `getHeaders`)
+- `getRequestHeader(event, name)` (alias: `getHeader`)
+- `getRequestURL(event)`
+- `getRequestHost(event)`
+- `getRequestProtocol(event)`
+- `getRequestPath(event)`
+- `getRequestIP(event, { xForwardedFor: boolean })`
+
+#### Response
+
+- `send(event, data, type?)`
+- `sendNoContent(event, code = 204)`
+- `setResponseStatus(event, status)`
+- `getResponseStatus(event)`
+- `getResponseStatusText(event)`
+- `getResponseHeaders(event)`
+- `getResponseHeader(event, name)`
+- `setResponseHeaders(event, headers)` (alias: `setHeaders`)
+- `setResponseHeader(event, name, value)` (alias: `setHeader`)
+- `appendResponseHeaders(event, headers)` (alias: `appendHeaders`)
+- `appendResponseHeader(event, name, value)` (alias: `appendHeader`)
+- `defaultContentType(event, type)`
+- `sendRedirect(event, location, code=302)`
+- `isStream(data)`
+- `sendStream(event, data)`
+- `writeEarlyHints(event, links, callback)`
+
+#### Sanitize
+
+- `sanitizeStatusMessage(statusMessage)`
+- `sanitizeStatusCode(statusCode, default = 200)`
+
+#### Error
+
+- `sendError(event, error, debug?)`
+- `createError({ statusCode, statusMessage, data? })`
+
+#### Route
+
+- `useBase(base, handler)`
+
+#### Proxy
+
+- `sendProxy(event, { target, ...options })`
+- `proxyRequest(event, { target, ...options })`
+- `fetchWithEvent(event, req, init, { fetch? }?)`
+- `getProxyRequestHeaders(event)`
+
+#### Cookie
+
+- `parseCookies(event)`
+- `getCookie(event, name)`
+- `setCookie(event, name, value, opts?)`
+- `deleteCookie(event, name, opts?)`
+- `splitCookiesString(cookiesString)`
+
+#### Session
+
+- `useSession(event, config = { password, maxAge?, name?, cookie?, seal?, crypto? })`
+- `getSession(event, config)`
+- `updateSession(event, config, update)`
+- `sealSession(event, config)`
+- `unsealSession(event, config, sealed)`
+- `clearSession(event, config)`
+
+#### Cache
+
+- `handleCacheHeaders(event, opts)`
+
+#### Cors
+
+- `handleCors(options)` (see [h3-cors](https://github.com/NozomuIkuta/h3-cors) for more detail about options)
+- `isPreflightRequest(event)`
+- `isCorsOriginAllowed(event)`
+- `appendCorsHeaders(event, options)` (see [h3-cors](https://github.com/NozomuIkuta/h3-cors) for more detail about options)
+- `appendCorsPreflightHeaders(event, options)` (see [h3-cors](https://github.com/NozomuIkuta/h3-cors) for more detail about options)
