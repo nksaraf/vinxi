@@ -21,6 +21,7 @@ import { WebSocketServer } from "ws";
 
 import { createServerResponse } from "./http-stream.js";
 import { resolve } from "./path.js";
+import { createRouteRulesHandler } from "./route-rules.js";
 
 // import { createVFSHandler } from './vfs'
 // import defaultErrorHandler from './error'
@@ -134,8 +135,19 @@ export function createDevServer(nitro) {
 	// App
 	const app = createApp();
 
+	// Create local fetch callers
+	const localCall = createCall(promisifyNodeListener(toNodeListener(app)));
+	const localFetch = createLocalFetch(localCall, globalThis.fetch);
+
 	// Debugging endpoint to view vfs
 	// app.use("/_vfs", createVFSHandler(nitro));
+	//
+	app.use(
+		createRouteRulesHandler({
+			localFetch,
+			routeRules: nitro.options.routeRules,
+		}),
+	);
 
 	// Serve asset dirs
 	for (const asset of nitro.options.publicAssets) {
@@ -257,10 +269,6 @@ export function createDevServer(nitro) {
 		listeners = [];
 	}
 	nitro.hooks.hook("close", close);
-
-	// Create local fetch callers
-	const localCall = createCall(promisifyNodeListener(toNodeListener(app)));
-	const localFetch = createLocalFetch(localCall, globalThis.fetch);
 
 	return {
 		// reload,

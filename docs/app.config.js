@@ -145,14 +145,14 @@ function wouterFileRouter(config) {
 
 export default createApp({
 	server: {
-		// routeRules: {
-		// 	"**/*": {
-		// 		headers: {
-		// 			"Cross-Origin-Embedder-Policy": "require-corp",
-		// 			"Cross-Origin-Opener-Policy": "same-origin",
-		// 		},
-		// 	},
-		// },
+		routeRules: {
+			"/**": {
+				headers: {
+					"Cross-Origin-Embedder-Policy": "require-corp",
+					"Cross-Origin-Opener-Policy": "same-origin",
+				},
+			},
+		},
 	},
 	routers: [
 		{

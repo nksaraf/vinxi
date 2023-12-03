@@ -53,7 +53,7 @@ function createRouter() {
 				route.$component,
 				import.meta.env.MANIFEST["client"],
 			),
-
+			...(route.$$meta ? { meta: route.$$meta } : {}),
 			children: route.children?.map(createRoute),
 			...(route.$$loader
 				? {

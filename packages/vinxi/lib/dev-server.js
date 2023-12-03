@@ -112,8 +112,8 @@ export async function createDevServer(
 		app.addRouter(devtoolsClient());
 		app.addRouter(devtoolsRpc());
 	}
+	const { createNitro, writeTypes } = await import("nitropack");
 
-	const { createNitro } = await import("nitropack");
 	const nitro = await createNitro({
 		...app.config.server,
 		rootDir: "",
@@ -135,6 +135,7 @@ export async function createDevServer(
 			...(app.config.server.publicAssets ?? []),
 		],
 		buildDir: ".vinxi",
+		imports: false,
 		devHandlers: [
 			...(
 				await Promise.all(

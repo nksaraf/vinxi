@@ -37,9 +37,25 @@ The surface layer we are intending to tackle:
 
 ## Try it out
 
-```bash
+<CH.Code>
+
+```bash pnpm
+pnpm install vinxi
+```
+
+```bash npm
 npm install vinxi
 ```
+
+```bash yarn
+yarn add vinxi
+```
+
+```bash bun
+bun install vinxi
+```
+
+</CH.Code>
 
 ### React SSR
 
@@ -58,7 +74,6 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			target: "browser",
 			plugins: () => [reactRefresh()],
 			base: "/_build",
 		},
@@ -66,7 +81,6 @@ export default createApp({
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			target: "server",
 		},
 	],
 });
@@ -89,7 +103,6 @@ export default createApp({
 			name: "client",
 			mode: "build",
 			handler: "./app/client.tsx",
-			target: "browser",
 			plugins: () => [solid({ ssr: true })],
 			base: "/_build",
 		},
@@ -97,7 +110,6 @@ export default createApp({
 			name: "ssr",
 			mode: "handler",
 			handler: "./app/server.tsx",
-			target: "server",
 			plugins: () => [solid({ ssr: true })],
 		},
 	],

@@ -29,7 +29,7 @@ export const buildRouterSchema = z.object({
 	routes: z.optional(z.custom((value) => value !== null)),
 	extensions: z.array(z.string()).optional(),
 	outDir: z.string().optional(),
-	target: z.literal("browser").optional().default("browser"),
+	target: z.enum(["browser"]).default("browser").optional(),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
 });
 export const handlerRouterSchema = z.object({
@@ -46,7 +46,7 @@ export const handlerRouterSchema = z.object({
 	/** @type {z.ZodOptionalType<z.ZodType<RouterStyleFn, z.ZodTypeDef, RouterStyleFn>>} */
 	routes: z.optional(z.custom((value) => value !== null)),
 	outDir: z.string().optional(),
-	target: z.literal("server").optional().default("server"),
+	target: z.enum(["server"]).default("server").optional(),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
 });
 export const spaRouterSchema = z.object({
@@ -58,7 +58,7 @@ export const spaRouterSchema = z.object({
 	routes: z.optional(z.custom((value) => value !== null)),
 	handler: z.string(),
 	outDir: z.string().optional(),
-	target: z.literal("browser").optional().default("browser"),
+	target: z.enum(["browser"]).default("browser").optional(),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
 });
 const customRouterSchema = z.object({
@@ -86,6 +86,7 @@ export const routerSchema = {
 /** @typedef {z.infer<typeof customRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} CustomRouterSchema */
 /** @typedef {z.infer<typeof staticRouterSchema> & { outDir: string; base: string; order: number; internals: Internals }} StaticRouterSchema */
 /** @typedef {z.infer<typeof handlerRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} HandlerRouterSchema */
+/** @typedef {z.infer<typeof handlerRouterSchema>} HandlerRouterInput */
 /** @typedef {z.infer<typeof spaRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} SPARouterSchema */
 /** @typedef {(HandlerRouterSchema | BuildRouterSchema | SPARouterSchema | StaticRouterSchema | CustomRouterSchema )} RouterSchema  */
 /** @typedef {(z.infer<typeof buildRouterSchema> | z.infer<typeof staticRouterSchema> | z.infer<typeof spaRouterSchema> |  z.infer<typeof handlerRouterSchema> | z.infer<typeof customRouterSchema>)} RouterSchemaInput  */
