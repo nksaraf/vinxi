@@ -2,7 +2,7 @@ import boxen from "boxen";
 import { mkdir, rm, writeFile } from "fs/promises";
 import { H3Event, createApp } from "h3";
 import { createRequire } from "module";
-import { build, copyPublicAssets, createNitro } from "nitropack";
+import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
 
 import { writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -89,6 +89,7 @@ export async function createBuild(app, buildConfig) {
 				"node-fetch-native/polyfill",
 			),
 			"unstorage/drivers/fs-lite": require.resolve("unstorage/drivers/fs-lite"),
+			"unstorage/drivers/fs": require.resolve("unstorage/drivers/fs"),
 			defu: require.resolve("defu"),
 			pathe: require.resolve("pathe"),
 			unstorage: require.resolve("unstorage"),
@@ -300,6 +301,7 @@ export async function createBuild(app, buildConfig) {
 	await app.hooks.callHook("app:build:nitro:assets:copy:end", { app, nitro });
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
 
+	await prerender(nitro);
 	await app.hooks.callHook("app:build:nitro:start", { app, nitro });
 	await build(nitro);
 	await app.hooks.callHook("app:build:nitro:end", { app, nitro });
