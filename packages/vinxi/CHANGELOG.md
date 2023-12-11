@@ -1,5 +1,15 @@
 # vinxi
 
+## 0.0.49
+
+### Patch Changes
+
+- 0f9a5df: route rules for dev server
+- e6205a4: prerender
+- d8ef7c9: fix: clean up old console logs
+- e7313f4: feat: vinxi start command (just works with node target right now)
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.48
 
 ### Patch Changes
