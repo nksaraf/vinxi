@@ -299,6 +299,11 @@ export async function createBuild(app, buildConfig) {
 
 	await copyPublicAssets(nitro);
 	await app.hooks.callHook("app:build:nitro:assets:copy:end", { app, nitro });
+
+	await app.hooks.callHook("app:build:nitro:prerender:start", { app, nitro });
+	await prerender(nitro);
+	await app.hooks.callHook("app:build:nitro:prerender:end", { app, nitro });
+
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
 
 	await prerender(nitro);
