@@ -2,7 +2,7 @@ import boxen from "boxen";
 import { mkdir, rm, writeFile } from "fs/promises";
 import { H3Event, createApp } from "h3";
 import { createRequire } from "module";
-import { build, copyPublicAssets, createNitro } from "nitropack";
+import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
 
 import { writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -298,6 +298,11 @@ export async function createBuild(app, buildConfig) {
 
 	await copyPublicAssets(nitro);
 	await app.hooks.callHook("app:build:nitro:assets:copy:end", { app, nitro });
+
+	await app.hooks.callHook("app:build:nitro:prerender:start", { app, nitro });
+	await prerender(nitro);
+	await app.hooks.callHook("app:build:nitro:prerender:end", { app, nitro });
+
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
 
 	await app.hooks.callHook("app:build:nitro:start", { app, nitro });
