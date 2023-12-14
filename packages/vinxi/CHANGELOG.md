@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.51
+
+### Patch Changes
+
+- 7276f73: fix prerender twice
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.50
 
 ### Patch Changes
