@@ -4,6 +4,14 @@
 
 ### Patch Changes
 
+- Updated dependencies [e4a6251]
+  - vinxi@0.0.50
+  - @vinxi/react-server@0.0.35
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [0f9a5df]
 - Updated dependencies [e6205a4]
 - Updated dependencies [d8ef7c9]

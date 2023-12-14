@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.50
+
+### Patch Changes
+
+- e4a6251: remove build aliases to fix pre-render
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.49
 
 ### Patch Changes
