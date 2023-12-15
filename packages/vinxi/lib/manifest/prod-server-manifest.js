@@ -7,6 +7,23 @@ import findAssetsInViteManifest from "./vite-manifest.js";
 
 /** @typedef {import("../app.js").App & { config: { buildManifest: { [key:string]: any } }}} ProdApp */
 
+function createHtmlTagsForAssets(router, assets) {
+	return assets.filter(
+		(asset) =>
+			asset.endsWith(".css") || asset.endsWith(".js"),
+	)
+	.map((asset) => ({
+		tag: "link",
+		attrs: {
+			href: join(router.base, asset),
+			key: join(router.base, asset),
+			...(asset.endsWith(".css")
+				? { rel: "stylesheet", precendence: "high" }
+				: { rel: "modulepreload" }),
+		},
+	}));
+}
+
 /**
  *
  * @param {ProdApp} app
@@ -104,21 +121,7 @@ export function createProdManifest(app) {
 											: input;
 									return {
 										assets() {
-											return findAssetsInViteManifest(bundlerManifest, id)
-												.filter(
-													(asset) =>
-														asset.endsWith(".css") || asset.endsWith(".js"),
-												)
-												.map((asset) => ({
-													tag: "link",
-													attrs: {
-														href: join(router.base, asset),
-														key: join(router.base, asset),
-														...(asset.endsWith(".css")
-															? { rel: "stylesheet", precendence: "high" }
-															: { rel: "modulepreload" }),
-													},
-												}));
+											return createHtmlTagsForAssets(router, findAssetsInViteManifest(bundlerManifest, id));
 										},
 										output: {
 											path: join(
@@ -143,21 +146,7 @@ export function createProdManifest(app) {
 											);
 										},
 										assets() {
-											return findAssetsInViteManifest(bundlerManifest, id)
-												.filter(
-													(asset) =>
-														asset.endsWith(".css") || asset.endsWith(".js"),
-												)
-												.map((asset) => ({
-													tag: "link",
-													attrs: {
-														href: join(router.base, asset),
-														key: join(router.base, asset),
-														...(asset.endsWith(".css")
-															? { rel: "stylesheet", precendence: "high" }
-															: { rel: "modulepreload" }),
-													},
-												}));
+											return createHtmlTagsForAssets(router, findAssetsInViteManifest(bundlerManifest, id));
 										},
 										output: {
 											path: join(router.base, bundlerManifest[id].file),
