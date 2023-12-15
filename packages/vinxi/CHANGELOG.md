@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.52
+
+### Patch Changes
+
+- 366b29b: fix: include more than css assets
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.51
 
 ### Patch Changes
