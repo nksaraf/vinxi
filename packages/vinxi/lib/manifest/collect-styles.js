@@ -15,61 +15,55 @@ async function getViteModuleNode(vite, file, ssr) {
 		return null;
 	}
 
-	const resolvedId = await vite.pluginContainer.resolveId(file, undefined, {
-		ssr: ssr,
-	});
+	let nodePath = file;
 
-	if (!resolvedId) {
-		console.log("not found");
-		return;
+	let node = await vite.moduleGraph.getModuleById(nodePath);
+	if (!node) {
+		const resolvedId = await vite.pluginContainer.resolveId(file, undefined, {
+			ssr: ssr,
+		});
+
+		if (!resolvedId) {
+			console.log("not found");
+			return;
+		}
+		nodePath = resolvedId.id;
+		node = await vite.moduleGraph.getModuleById(nodePath);
 	}
 
-	const id = resolvedId.id;
+	if (!node) {
+		nodePath = resolve(nodePath);
+		node = await vite.moduleGraph.getModuleByUrl(nodePath);
+	}
 
-	const normalizedPath = resolve(id);
+	// Only not sure what to do with absolutePath as this is currently also not used.
+	// https://github.com/nksaraf/vinxi/blob/06700abbbbae34015faeba84830797daf4f54817/packages/vinxi/lib/manifest/collect-styles.js#L35
+
+	// if (!node) {
+	// 	nodePath = resolve(file); // absolute path
+	// 	node = await vite.moduleGraph.getModuleByUrl(nodePath);
+	// }
+
+	if (!node) {
+		await vite.moduleGraph.ensureEntryFromUrl(nodePath, ssr);
+		node = await vite.moduleGraph.getModuleById(nodePath);
+	}
+
 
 	try {
-		let node = await vite.moduleGraph.getModuleById(normalizedPath);
-
-		if (!node) {
-			const absolutePath = resolve(file);
-			node = await vite.moduleGraph.getModuleByUrl(normalizedPath);
-			if (!node) {
-				if (ssr) {
-					await vite.moduleGraph.ensureEntryFromUrl(normalizedPath, ssr);
-					node = await vite.moduleGraph.getModuleById(normalizedPath);
-				} else {
-					await vite.moduleGraph.ensureEntryFromUrl(normalizedPath);
-					node = await vite.moduleGraph.getModuleById(normalizedPath);
-				}
-			}
-
-			if (!node.transformResult && !ssr) {
-				await vite.transformRequest(normalizedPath);
-				node = await vite.moduleGraph.getModuleById(normalizedPath);
-			}
-
-			if (ssr && !node.ssrTransformResult) {
-				if (skip.includes(file)) {
-					return null;
-				}
-				await vite.ssrLoadModule(file);
-				node = await vite.moduleGraph.getModuleById(normalizedPath);
-			}
-		} else {
-			if (!node.transformResult && !ssr) {
-				await vite.transformRequest(normalizedPath);
-				node = await vite.moduleGraph.getModuleById(normalizedPath);
-			}
-
-			if (ssr && !node.ssrTransformResult) {
-				if (skip.includes(file)) {
-					return null;
-				}
-				await vite.ssrLoadModule(normalizedPath);
-				node = await vite.moduleGraph.getModuleById(normalizedPath);
-			}
+		if (!node.transformResult && !ssr) {
+			await vite.transformRequest(nodePath);
+			node = await vite.moduleGraph.getModuleById(nodePath);
 		}
+
+		if (ssr && !node.ssrTransformResult) {
+			if (skip.includes(file)) {
+				return null;
+			}
+			await vite.ssrLoadModule(file);
+			node = await vite.moduleGraph.getModuleById(nodePath);
+		}
+
 		return node;
 	} catch (e) {
 		console.error(e);
