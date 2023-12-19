@@ -123,7 +123,7 @@ export function createDevManifest(app) {
 									let pluginAssets = [];
 									for (let plugin of plugins) {
 										// @ts-ignore
-										let transformedHtml = await plugin.transformIndexHtml(
+										let transformedHtml = await (plugin.transformIndexHtml.transform || plugin.transformIndexHtml)(
 											"/",
 											``,
 											`/`,
