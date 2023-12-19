@@ -16,6 +16,7 @@
     "// Remove caches": "",
     "clean": "git clean -Xdff"
   },
+  "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
   "files": [
     "dist"
