@@ -11,14 +11,9 @@ import { chunksServerVirtualModule } from "./chunks.js";
 import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
 import { c, consola, log, withLogger } from "./logger.js";
+import { viteManifestPath } from "./manifest-path.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
-import {
-	handlerModule,
-	join,
-	relative,
-	virtualId,
-	viteManifestPath,
-} from "./path.js";
+import { handlerModule, join, relative, virtualId } from "./path.js";
 import { config } from "./plugins/config.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
