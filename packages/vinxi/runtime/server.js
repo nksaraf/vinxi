@@ -1,10 +1,8 @@
-import { H3Event } from "h3";
-
 export * from "h3";
 
 /**
  *
- * @param {H3Event} event
+ * @param {import('h3').H3Event} event
  * @param {string} key
  * @param {any} value
  */
@@ -14,7 +12,7 @@ export function setContext(event, key, value) {
 
 /**
  *
- * @param {H3Event} event
+ * @param {import('h3').H3Event} event
  * @param {string} key
  */
 export function getContext(event, key) {
