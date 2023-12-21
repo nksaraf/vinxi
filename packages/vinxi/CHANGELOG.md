@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.54
+
+### Patch Changes
+
+- 7ec78e2: remove console logs, nit
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.53
 
 ### Patch Changes

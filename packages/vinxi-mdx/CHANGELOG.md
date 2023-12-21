@@ -1,5 +1,11 @@
 # @vinxi/plugin-mdx
 
+## 3.6.7
+
+### Patch Changes
+
+- 7ec78e2: remove console logs, nit
+
 ## 3.6.6
 
 ### Patch Changes
