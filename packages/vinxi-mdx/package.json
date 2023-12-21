@@ -17,7 +17,9 @@
     "clean": "git clean -Xdff"
   },
   "main": "dist/index.cjs",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
     "@mdx-js/mdx": "<3"
   },
@@ -35,12 +37,15 @@
     "@types/resolve": "^1.20.2",
     "@types/unist": "^2.0.7",
     "typescript": "^5.2.2",
-    "vite": "5.0.10"
+    "vite": "4.5.0"
   },
   "description": "Vite plugin for MDX",
   "license": "MIT",
   "repository": "https://github.com/brillout/vite-plugin-mdx",
-  "keywords": ["vite", "mdx"],
+  "keywords": [
+    "vite",
+    "mdx"
+  ],
   "publishConfig": {
     "access": "public"
   }

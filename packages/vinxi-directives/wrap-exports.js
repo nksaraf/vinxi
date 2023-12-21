@@ -38,7 +38,7 @@ export function wrapExportsPlugin({
 			}
 
 			if (hasDir(ast.program)) {
-				return await wrapExports({
+				let result = await wrapExports({
 					runtime,
 					ast,
 					id,
@@ -47,6 +47,8 @@ export function wrapExportsPlugin({
 					options,
 					directive: pragma,
 				});
+				onModuleFound?.(id);
+				return result;
 			}
 
 			const body = ast.program.body;
