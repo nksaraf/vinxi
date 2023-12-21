@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node dev.js --dev --force",
     "build": "node build.js --build",
-    "build:mount": "bun build --jsx-runtime=classic --jsx-import-source=preact --external '*?raw' --outdir dist mount.jsx"
+    "build:mount": "bun build --jsx-runtime=classic --jsx-import-source=preact --external '*?raw' --outdir out mount.jsx"
   },
   "dependencies": {
     "@preact/preset-vite": "^2.7.0",
@@ -20,20 +20,20 @@
   "exports": {
     ".": {
       "import": "./index.js",
-      "types": "./dist/types/index.d.ts"
+      "types": "./out/types/index.d.ts"
     },
     "./mount": {
-      "import": "./dist/mount.js",
-      "types": "./dist/types/mount.d.ts"
+      "import": "./out/mount.js",
+      "types": "./out/types/mount.d.ts"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
-        "./dist/types/index.d.ts"
+        "./out/types/index.d.ts"
       ],
       "mount": [
-        "./dist/types/mount.d.ts"
+        "./out/types/mount.d.ts"
       ]
     }
   },

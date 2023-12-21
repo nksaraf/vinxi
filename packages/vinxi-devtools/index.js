@@ -19,7 +19,7 @@ export const devtoolsClient = () => {
 	return {
 		name: "devtools-client",
 		mode: "static",
-		dir: fileURLToPath(new URL("./dist/client", import.meta.url)),
+		dir: fileURLToPath(new URL("./out/client", import.meta.url)),
 		base: "/__devtools/client",
 	};
 };

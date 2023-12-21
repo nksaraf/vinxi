@@ -17,7 +17,7 @@
 		"skipLibCheck": true,
 		"emitDeclarationOnly": true,
 		"types": ["vinxi/types/client"],
-		"outDir": "./dist/types"
+		"outDir": "./out/types"
 	},
 	"include": ["./mount.jsx", "./index.js"]
 }

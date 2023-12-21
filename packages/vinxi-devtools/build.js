@@ -33,14 +33,14 @@ app.hooks.hook("app:build:router:vite:config", async ({ vite }) => {
 app.hooks.hook("app:build:end", async () => {
 	const { default: fs } = await import("fs/promises");
 	try {
-		await fs.open("dist");
-		await fs.rmdir("dist", { recursive: true });
-		await fs.mkdir("dist");
+		await fs.open("out");
+		await fs.rmdir("out", { recursive: true });
+		await fs.mkdir("out");
 	} catch (e) {
-		await fs.mkdir("dist");
+		await fs.mkdir("out");
 	}
-	await $`cp -r .vinxi/build/devtools-client/__devtools/client dist/client`;
-	await $`cp style.css dist/style.css`;
+	await $`cp -r .vinxi/build/devtools-client/__devtools/client out/client`;
+	await $`cp style.css out/style.css`;
 	console.log((await $`npm run build:mount`).stdout);
 });
 
