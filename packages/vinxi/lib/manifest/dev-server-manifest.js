@@ -115,19 +115,53 @@ export function createDevManifest(app) {
 								let isHandler = router.handler === relativePath;
 
 								async function getVitePluginAssets() {
-									const plugins = router.internals?.devServer
-										? router.internals.devServer.config.plugins.filter(
-												(plugin) => "transformIndexHtml" in plugin,
-										  )
+									const pluginList = router.internals?.devServer
+										? router.internals.devServer.config.plugins
 										: [];
+									// @ts-ignore
+									const indexHtmlTransformers = [];
+									for (
+										let i = 0, pre = 0, post = 0;
+										i < pluginList.length;
+										i++
+									) {
+										const plugin = pluginList[i];
+										if (plugin != null && plugin.transformIndexHtml != null) {
+											const order =
+												typeof plugin.transformIndexHtml === "function"
+													? null
+													: plugin.transformIndexHtml.order ??
+													  plugin.transformIndexHtml.enforce;
+											const func =
+												typeof plugin.transformIndexHtml === "function"
+													? plugin.transformIndexHtml
+													: "handler" in plugin.transformIndexHtml
+													? plugin.transformIndexHtml.handler
+													: plugin.transformIndexHtml.transform;
+											if (order === "pre") {
+												// @ts-ignore
+												indexHtmlTransformers.splice(pre, 0, func);
+												pre++;
+											} else if (order === "post") {
+												// @ts-ignore
+												indexHtmlTransformers.splice(post, 0, func);
+												post++;
+											} else {
+												// @ts-ignore
+												indexHtmlTransformers.splice(
+													Math.max(post - 1, 0),
+													0,
+													func,
+												);
+												post++;
+											}
+										}
+									}
 									let pluginAssets = [];
-									for (let plugin of plugins) {
+									// @ts-ignore
+									for (let transformer of indexHtmlTransformers) {
 										// @ts-ignore
-										let transformedHtml = await (plugin.transformIndexHtml.transform || plugin.transformIndexHtml)(
-											"/",
-											``,
-											`/`,
-										);
+										let transformedHtml = await transformer("/", ``, `/`);
 
 										if (!transformedHtml) continue;
 										if (Array.isArray(transformedHtml)) {
