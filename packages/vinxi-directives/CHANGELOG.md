@@ -1,5 +1,14 @@
 # @vinxi/plugin-references
 
+## 0.0.49
+
+### Patch Changes
+
+- b601463: keep vite 4 (for now) and bug fix in wrap exports (@vinxi/plugin-directives)
+- Updated dependencies [b601463]
+- Updated dependencies [68cab94]
+  - vinxi@0.0.53
+
 ## 0.0.48
 
 ### Patch Changes

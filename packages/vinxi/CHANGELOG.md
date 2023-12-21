@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.0.53
+
+### Patch Changes
+
+- b601463: keep vite 4 (for now) and bug fix in wrap exports (@vinxi/plugin-directives)
+- 68cab94: vite 5
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.52
 
 ### Patch Changes
