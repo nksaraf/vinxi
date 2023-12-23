@@ -200,6 +200,13 @@ export async function createDevServer(
 	return {
 		...devApp,
 		listen: () => devApp.listen(port, {}),
-		close: () => devApp.close(),
+		close: async () => {
+			await devApp.close();
+			await Promise.all(
+				app.config.routers
+					.filter(router => router.internals.devServer)
+					.map(router => router.internals.devServer?.close())
+			);
+		},
 	};
 }
