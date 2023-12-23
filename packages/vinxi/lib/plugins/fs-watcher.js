@@ -11,19 +11,19 @@ function setupWatcher(watcher, router) {
 	if (router.internals?.routes) {
 		watcher.on("unlink", async (path) => {
 			if (router.internals?.routes) {
-				await router.internals?.routes.removeRoute(normalize(path));
+				await router.internals?.routes.removeRoute(path);
 			}
 		});
 
 		watcher.on("add", async (path) => {
 			if (router.internals?.routes) {
-				await router.internals?.routes.addRoute(normalize(path));
+				await router.internals?.routes.addRoute(path);
 			}
 		});
 
 		watcher.on("change", async (path) => {
 			if (router.internals?.routes) {
-				await router.internals?.routes.updateRoute(normalize(path));
+				await router.internals?.routes.updateRoute(path);
 			}
 		});
 	}
