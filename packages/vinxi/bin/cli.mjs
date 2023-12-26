@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 import { defineCommand, runMain } from "citty";
 import fs from "fs";
-import { fileURLToPath, pathToFileURL } from "url";
 import { emitKeypressEvents } from "readline";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const packageJson = JSON.parse(
 	fs.readFileSync(
