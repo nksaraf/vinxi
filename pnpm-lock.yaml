@@ -645,9 +645,9 @@ importers:
       '@solidjs/meta':
         specifier: ^0.28.6
         version: 0.28.7(solid-js@1.8.5)
-      '@vinxi/plugin-references':
-        specifier: 0.0.29
-        version: 0.0.29(vinxi@packages+vinxi)
+      '@vinxi/server-functions':
+        specifier: 0.0.51
+        version: link:../../../../packages/vinxi-server-functions
       '@vinxi/solid':
         specifier: 0.0.14
         version: link:../../../../packages/vinxi-solid

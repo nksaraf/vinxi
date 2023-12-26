@@ -2,6 +2,8 @@
 import { defineCommand, runMain } from "citty";
 import fs from "fs";
 import { fileURLToPath, pathToFileURL } from "url";
+import { emitKeypressEvents } from "readline";
+import { fileURLToPath } from "url";
 
 const packageJson = JSON.parse(
 	fs.readFileSync(
@@ -83,7 +85,14 @@ const command = defineCommand({
 						restartDevServer(newApp);
 					});
 				}
-
+				function createKeypressWatcher() {
+					emitKeypressEvents(process.stdin);
+					process.stdin.on("keypress", async (_, key) => {
+						if (key.name === "r") {
+							restartDevServer(app);
+						}
+					});
+				}
 				async function restartDevServer(newApp) {
 					const { createDevServer } = await import("../lib/dev-server.js");
 					await devServer?.close();
@@ -117,6 +126,7 @@ const command = defineCommand({
 					return;
 				}
 				createWatcher();
+				createKeypressWatcher();
 				const { createDevServer } = await import("../lib/dev-server.js");
 				devServer = await createDevServer(app, {
 					force: args.force,

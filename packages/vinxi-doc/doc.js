@@ -3,6 +3,11 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+/**
+ *
+ * @param {string} src
+ * @returns {Promise<import('./types.d.ts').DocNode[]>}
+ */
 export async function doc(src) {
 	const require = createRequire(import.meta.url);
 	const mod = require("@vinxi/deno-doc");
@@ -66,6 +71,12 @@ export async function doc(src) {
 
 	function resolvePackage(specifier, referrer) {
 		try {
+			// console.log("resolvePackage", specifier, referrer);
+
+			if (specifier.startsWith("node:")) {
+				return new URL("./empty.d.ts", import.meta.url).toString();
+			}
+
 			const resolved = resolve.sync(specifier, {
 				preserveSymlinks: false,
 				basedir: path.dirname(new URL(referrer).pathname),
@@ -80,7 +91,7 @@ export async function doc(src) {
 			return "file://" + resolved;
 		} catch (e) {
 			console.error(e);
-			return null;
+			return new URL("./empty.d.ts", import.meta.url).toString();
 		}
 	}
 
