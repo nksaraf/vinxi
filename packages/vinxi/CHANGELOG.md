@@ -1,5 +1,19 @@
 # vinxi
 
+## 0.0.55
+
+### Patch Changes
+
+- 88201f3: use file url to import server in start command
+- cbba2d7: fix: normalize paths from fs watcher
+- c5a94cf: (feat): deep support for `server.baseURL` API from nitro in dev & prod,
+- e53f24a: (fix): decorate exports use parse-advanced, fixes #36
+- 9325a54: (feat): css modules support
+- a0974f0: (fix): css hmr happens in vinxi/client for all css assets, not only for lazyRoutes
+- c4b76ed: Add 'r' keypress to restart dev server
+- 7af0a15: (fix): static assets imports in server side handler
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.54
 
 ### Patch Changes

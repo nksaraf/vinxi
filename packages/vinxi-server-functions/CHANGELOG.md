@@ -1,5 +1,21 @@
 # @vinxi/plugin-references
 
+## 0.0.52
+
+### Patch Changes
+
+- c5a94cf: (feat): deep support for `server.baseURL` API from nitro in dev & prod,
+- Updated dependencies [88201f3]
+- Updated dependencies [cbba2d7]
+- Updated dependencies [c5a94cf]
+- Updated dependencies [e53f24a]
+- Updated dependencies [9325a54]
+- Updated dependencies [a0974f0]
+- Updated dependencies [c4b76ed]
+- Updated dependencies [7af0a15]
+  - vinxi@0.0.55
+  - @vinxi/plugin-directives@0.0.51
+
 ## 0.0.51
 
 ### Patch Changes

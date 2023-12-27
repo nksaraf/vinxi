@@ -4,6 +4,21 @@
 
 ### Patch Changes
 
+- a0974f0: (fix): css hmr happens in vinxi/client for all css assets, not only for lazyRoutes
+- Updated dependencies [88201f3]
+- Updated dependencies [cbba2d7]
+- Updated dependencies [c5a94cf]
+- Updated dependencies [e53f24a]
+- Updated dependencies [9325a54]
+- Updated dependencies [a0974f0]
+- Updated dependencies [c4b76ed]
+- Updated dependencies [7af0a15]
+  - vinxi@0.0.55
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [7ec78e2]
   - vinxi@0.0.54
 
