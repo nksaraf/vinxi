@@ -6,6 +6,7 @@ import fs from "fs";
 import micromatch from "micromatch";
 import { posix } from "path";
 import { pathToRegexp } from "path-to-regexp";
+import { normalize } from "./path";
 
 export { pathToRegexp };
 
@@ -158,6 +159,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	 * @param {string} src
 	 */
 	async addRoute(src) {
+		src = normalize(src);
 		if (this.isRoute(src)) {
 			const route = await this.toRoute(src);
 			if (route) {
@@ -187,6 +189,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	 * @param {string} src
 	 */
 	async updateRoute(src) {
+		src = normalize(src);
 		if (this.isRoute(src)) {
 			const route = await this.toRoute(src);
 			if (route) {
@@ -203,6 +206,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	 * @returns
 	 */
 	removeRoute(src) {
+		src = normalize(src);
 		if (this.isRoute(src)) {
 			const path = this.toPath(src);
 			if (path === undefined) {
