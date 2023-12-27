@@ -29,7 +29,7 @@ export function manifest() {
 						"import.meta.env.ROUTER_NAME": JSON.stringify(router.name),
 						"import.meta.env.ROUTER_HANDLER": JSON.stringify(router.handler),
 						"import.meta.env.CWD": JSON.stringify(router.root),
-						"import.meta.env.APP_BASE_URL": JSON.stringify(
+						"import.meta.env.SERVER_BASE_URL": JSON.stringify(
 							app.config.server.baseURL ?? "",
 						),
 						"import.meta.env.ROUTERS": JSON.stringify(
