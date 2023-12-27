@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/router",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "",
   "module": "index.js",
   "type": "module",
@@ -20,9 +20,9 @@
     "./spa": "./spa.js"
   },
   "peerDependencies": {
-    "vinxi": "0.0.55"
+    "vinxi": "0.0.56"
   },
   "devDependencies": {
-    "vinxi": "0.0.55"
+    "vinxi": "0.0.56"
   }
 }

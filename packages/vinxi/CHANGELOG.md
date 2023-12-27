@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.0.56
+
+### Patch Changes
+
+- d5262b3: (feat): add additional CLI shortcuts (u -> show URL, h -> show help, r -> restart dev server)
+- 5694f29: (feat): support devProxy nitro options, in vinxi dev server
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.55
 
 ### Patch Changes

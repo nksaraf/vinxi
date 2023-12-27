@@ -4,6 +4,15 @@
 
 ### Patch Changes
 
+- Updated dependencies [d5262b3]
+- Updated dependencies [5694f29]
+  - vinxi@0.0.56
+  - @vinxi/server-functions@0.0.53
+
+## null
+
+### Patch Changes
+
 - c5a94cf: (feat): deep support for `server.baseURL` API from nitro in dev & prod,
 - 9325a54: (feat): css modules support
 - 7af0a15: (fix): static assets imports in server side handler
