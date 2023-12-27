@@ -204,8 +204,8 @@ export async function createDevServer(
 			await devApp.close();
 			await Promise.all(
 				app.config.routers
-					.filter(router => router.internals.devServer)
-					.map(router => router.internals.devServer?.close())
+					.filter((router) => router.internals.devServer)
+					.map((router) => router.internals.devServer?.close()),
 			);
 		},
 	};

@@ -186,6 +186,16 @@ const routerModes = {
 	handler: createRouterMode(handlerRouterSchema, {
 		name: "handler",
 		dev: {
+			publicAssets: (router) => {
+				/**
+				 * Added here to support static asset imports. Vite transforms these using the server base path. During development it expects that the file system will be available. So we need to serve the whole src diectory (including node_modules) during dev.
+				 */
+				return {
+					dir: join(router.root),
+					baseURL: router.base,
+					fallthrough: true,
+				};
+			},
 			plugins: async (router) => {
 				const { ROUTER_MODE_DEV_PLUGINS } = await import(
 					"./router-dev-plugins.js"
