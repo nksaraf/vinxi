@@ -11,7 +11,11 @@ import { ServerComponent } from "./server-component";
 document.addEventListener("click", async (e) => {
 	console.log(sayHello, "hello");
 
-	const result = await fetchServerAction("/_server", sayHello["$$id"], []);
+	const result = await fetchServerAction(
+		import.meta.env.SERVER_BASE_URL + "/_server",
+		sayHello["$$id"],
+		[],
+	);
 	console.log(result);
 	// sayHello();
 });
