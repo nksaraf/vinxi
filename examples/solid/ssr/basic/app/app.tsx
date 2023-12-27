@@ -1,4 +1,5 @@
 import { Counter } from "./Counter";
+import Logo from "./logo.png";
 import "./style.css";
 
 export default function App({ assets, scripts }) {
@@ -11,6 +12,7 @@ export default function App({ assets, scripts }) {
 			<body>
 				<section>
 					<h1>Hello AgentConf with ya asdo!!!</h1>
+					<img src={Logo} />
 					<Counter />
 				</section>
 				{scripts}
