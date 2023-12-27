@@ -12,7 +12,9 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 	routers?: import("./router-modes.js").RouterSchemaInput[];
 	name?:
 	string;
-	server?: import('nitropack').NitroConfig;
+	server?: import('nitropack').NitroConfig & {
+		baseURL?: string;
+	};
 	root?: string
 }} AppOptions */
 

@@ -6,7 +6,7 @@ export default function App({ assets, scripts }) {
 	return (
 		<html lang="en">
 			<head>
-				<link rel="icon" href="/favicon.ico" />
+				<link rel="icon" href={`${import.meta.env.APP_BASE_URL}/favicon.ico`} />
 				{assets}
 			</head>
 			<body>

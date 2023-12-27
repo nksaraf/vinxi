@@ -3,7 +3,7 @@ import { inspect } from "@vinxi/devtools";
 import { fileURLToPath } from "node:url";
 
 import { consola, withLogger } from "./logger.js";
-import { normalize } from "./path.js";
+import { join, normalize } from "./path.js";
 
 export * from "./router-dev-plugins.js";
 
@@ -57,9 +57,12 @@ export async function createViteHandler(router, app, serveConfig) {
 		...(((await router.plugins?.(router)) ?? []).filter(Boolean) || []),
 	].filter(Boolean);
 
+	let base = join(app.config.server.baseURL ?? "/", router.base);
+
+	console.log(base);
 	const viteDevServer = await createViteDevServer({
 		configFile: false,
-		base: router.base,
+		base,
 		plugins,
 		optimizeDeps: {
 			force: serveConfig.force,
@@ -122,7 +125,7 @@ export async function createDevServer(
 		publicAssets: [
 			...app.config.routers
 				.map((router) => {
-					return router.internals.mode.dev.publicAssets?.(router, app.config);
+					return router.internals.mode.dev.publicAssets?.(router, app);
 				})
 				.filter(
 					/**

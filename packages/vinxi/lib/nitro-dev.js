@@ -168,7 +168,10 @@ export function createDevServer(nitro) {
 
 	// Dev-only handlers
 	for (const handler of nitro.options.devHandlers) {
-		app.use(handler.route || "/", handler.handler);
+		app.use(
+			joinURL(nitro.options.runtimeConfig.app.baseURL, handler.route ?? "/"),
+			handler.handler,
+		);
 	}
 
 	// User defined dev proxy
