@@ -16,6 +16,8 @@ export function createDevManifest(app) {
 
 				let router = app.getRouter(bundlerName);
 
+				let base = join(app.config.server.baseURL ?? "", router.base);
+
 				if (router.mode === "static") {
 					return {
 						json() {
@@ -27,7 +29,7 @@ export function createDevManifest(app) {
 						routes() {
 							return [];
 						},
-						base: router.base,
+						base,
 						target: "static",
 						mode: router.mode,
 						handler: undefined,
@@ -64,7 +66,7 @@ export function createDevManifest(app) {
 						return {};
 					},
 					handler: router.handler,
-					base: router.base,
+					base,
 					target: router.target,
 					mode: router.mode,
 					chunks: new Proxy(
@@ -83,7 +85,7 @@ export function createDevManifest(app) {
 								if (router.target === "browser") {
 									return {
 										output: {
-											path: join(router.base, "@fs", absolutePath),
+											path: join(base, "@fs", absolutePath),
 										},
 									};
 								} else {
@@ -234,7 +236,7 @@ export function createDevManifest(app) {
 																attrs: {
 																	key: "vite-client",
 																	type: "module",
-																	src: join(router.base, "@vite", "client"),
+																	src: join(base, "@vite", "client"),
 																},
 															},
 													  ]
@@ -242,7 +244,7 @@ export function createDevManifest(app) {
 											].filter(Boolean);
 										},
 										output: {
-											path: join(router.base, "@fs", absolutePath),
+											path: join(base, "@fs", absolutePath),
 										},
 									};
 								} else {

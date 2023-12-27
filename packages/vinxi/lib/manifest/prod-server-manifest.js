@@ -1,3 +1,4 @@
+import { joinURL } from "ufo";
 import invariant from "vinxi/lib/invariant";
 import { handlerModule, join, virtualId } from "vinxi/lib/path";
 
@@ -7,21 +8,19 @@ import findAssetsInViteManifest from "./vite-manifest.js";
 
 /** @typedef {import("../app.js").App & { config: { buildManifest: { [key:string]: any } }}} ProdApp */
 
-function createHtmlTagsForAssets(router, assets) {
-	return assets.filter(
-		(asset) =>
-			asset.endsWith(".css") || asset.endsWith(".js"),
-	)
-	.map((asset) => ({
-		tag: "link",
-		attrs: {
-			href: join(router.base, asset),
-			key: join(router.base, asset),
-			...(asset.endsWith(".css")
-				? { rel: "stylesheet", precendence: "high" }
-				: { rel: "modulepreload" }),
-		},
-	}));
+function createHtmlTagsForAssets(router, app, assets) {
+	return assets
+		.filter((asset) => asset.endsWith(".css") || asset.endsWith(".js"))
+		.map((asset) => ({
+			tag: "link",
+			attrs: {
+				href: joinURL(app.config.server.baseURL ?? "", router.base, asset),
+				key: join(app.config.server.baseURL ?? "", router.base, asset),
+				...(asset.endsWith(".css")
+					? { rel: "stylesheet", precendence: "high" }
+					: { rel: "modulepreload" }),
+			},
+		}));
 }
 
 /**
@@ -121,7 +120,11 @@ export function createProdManifest(app) {
 											: input;
 									return {
 										assets() {
-											return createHtmlTagsForAssets(router, findAssetsInViteManifest(bundlerManifest, id));
+											return createHtmlTagsForAssets(
+												router,
+												app,
+												findAssetsInViteManifest(bundlerManifest, id),
+											);
 										},
 										output: {
 											path: join(
@@ -139,17 +142,26 @@ export function createProdManifest(app) {
 									return {
 										import() {
 											return import(
-												/* @vite-ignore */ join(
+												/* @vite-ignore */ joinURL(
+													app.config.server.baseURL ?? "",
 													router.base,
 													bundlerManifest[id].file,
 												)
 											);
 										},
 										assets() {
-											return createHtmlTagsForAssets(router, findAssetsInViteManifest(bundlerManifest, id));
+											return createHtmlTagsForAssets(
+												router,
+												app,
+												findAssetsInViteManifest(bundlerManifest, id),
+											);
 										},
 										output: {
-											path: join(router.base, bundlerManifest[id].file),
+											path: joinURL(
+												app.config.server.baseURL ?? "",
+												router.base,
+												bundlerManifest[id].file,
+											),
 										},
 									};
 								}
