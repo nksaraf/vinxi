@@ -49,7 +49,6 @@ async function getViteModuleNode(vite, file, ssr) {
 		node = await vite.moduleGraph.getModuleById(nodePath);
 	}
 
-
 	try {
 		if (!node.transformResult && !ssr) {
 			await vite.transformRequest(nodePath);
@@ -113,12 +112,6 @@ async function findDeps(vite, node, deps, ssr) {
 	await Promise.all(branches);
 }
 
-// Vite doesn't expose this so we just copy the list for now
-// https://github.com/vitejs/vite/blob/3edd1af56e980aef56641a5a51cf2932bb580d41/packages/vite/src/node/plugins/css.ts#L96
-const STYLE_ASSET_REGEX = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
-const MODULE_STYLE_ASSET_REGEX =
-	/\.module\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
-
 /**
  *
  * @param {import('vite').ViteDevServer} vite
@@ -141,6 +134,17 @@ async function findDependencies(vite, match, ssr) {
 	return deps;
 }
 
+// Vite doesn't expose these so we just copy the list for now
+// https://github.com/vitejs/vite/blob/d6bde8b03d433778aaed62afc2be0630c8131908/packages/vite/src/node/constants.ts#L49C23-L50
+const cssFileRegExp =
+	/\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\?)/;
+// https://github.com/vitejs/vite/blob/d6bde8b03d433778aaed62afc2be0630c8131908/packages/vite/src/node/plugins/css.ts#L160
+const cssModulesRegExp = new RegExp(`\\.module${cssFileRegExp.source}`);
+
+const isCssFile = (/** @type {string} */ file) => cssFileRegExp.test(file);
+export const isCssModulesFile = (/** @type {string} */ file) =>
+	cssModulesRegExp.test(file);
+
 /**
  *
  * @param {import('vite').ViteDevServer} vite
@@ -155,14 +159,14 @@ async function findStylesInModuleGraph(vite, match, ssr) {
 		const parsed = new URL(dep.url, "http://localhost/");
 		const query = parsed.searchParams;
 
-		if (STYLE_ASSET_REGEX.test(dep.file ?? "")) {
+		if (isCssFile(dep.url ?? "")) {
 			try {
 				const mod = await vite.ssrLoadModule(dep.url);
-				// if (module_STYLE_ASSET_REGEX.test(dep.file)) {
-				// 	styles[dep.url] = env.cssModules?.[dep.file];
-				// } else {
-				styles[join(vite.config.root, dep.url)] = mod.default;
-				// }
+				if (isCssModulesFile(dep.file)) {
+					styles[join(vite.config.root, dep.url)] = vite.cssModules?.[dep.file];
+				} else {
+					styles[join(vite.config.root, dep.url)] = mod.default;
+				}
 			} catch {
 				// this can happen with dynamically imported modules, I think
 				// because the Vite module graph doesn't distinguish between
