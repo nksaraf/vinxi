@@ -1,7 +1,7 @@
 import { print, types, visit } from "recast";
 
-import { parseAdvanced, parseLoose } from "./parse.js";
-import { parseExportNamesInto } from "./transform.js";
+import { parseAdvanced, parseLoose } from "../parse.js";
+import { parseExportNamesInto } from "../utils.js";
 
 export function shimExportsPlugin({
 	runtime,

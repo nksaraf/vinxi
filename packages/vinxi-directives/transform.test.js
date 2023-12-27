@@ -2,10 +2,13 @@ import { prettyPrint } from "recast";
 import { describe, expect, it } from "vitest";
 
 import { parseAdvanced } from "./parse.js";
-import { shimExportsPlugin } from "./shim-exports.js";
-import { decorateExports } from "./transform.js";
-import { wrapExports } from "./wrap-exports.js";
-import { wrapExportsPlugin } from "./wrap-exports.js";
+import {
+	decorateExports,
+	decorateExportsPlugin,
+} from "./plugins/decorate-exports.js";
+import { shimExportsPlugin } from "./plugins/shim-exports.js";
+import { wrapExports } from "./plugins/wrap-exports.js";
+import { wrapExportsPlugin } from "./plugins/wrap-exports.js";
 
 const testFixtures = import.meta.glob("./fixtures/**/*.ts", {
 	as: "raw",
@@ -80,7 +83,6 @@ async function runTest(name, transform, f) {
 		const expected = await testFixtures[
 			`./fixtures/${name}${f ? "." + f : ""}.snapshot.ts`
 		]();
-		console.log(await transform(code));
 		expect(js(await transform(code))).toEqual(js(expected));
 	});
 }
@@ -88,6 +90,9 @@ async function runTest(name, transform, f) {
 runTest("wrap-exports", (code) => transformSSR(code, wrapExportsPlugin));
 runTest("wrap-exports-fn", (code) => transformSSR(code, wrapExportsPlugin));
 runTest("shim-exports", (code) => transformSSR(code, shimExportsPlugin));
+runTest("decorate-exports", (code) =>
+	transformSSR(code, decorateExportsPlugin),
+);
 runTest("shim-exports-fn", (code) => transformSSR(code, shimExportsPlugin));
 runTest("example-1", (code) => transformSSR(code, wrapExportsPlugin));
 runTest("example-2", (code) => transformSSR(code, wrapExportsPlugin), "wrap");

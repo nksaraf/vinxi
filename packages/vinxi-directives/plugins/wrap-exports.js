@@ -1,7 +1,7 @@
 import { print, types, visit } from "recast";
 
-import { parseAdvanced } from "./parse.js";
-import { addLocalExportedNames } from "./transform.js";
+import { parseAdvanced } from "../parse.js";
+import { addLocalExportedNames } from "../utils.js";
 
 export function wrapExportsPlugin({
 	runtime,
