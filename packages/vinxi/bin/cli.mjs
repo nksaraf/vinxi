@@ -66,6 +66,8 @@ const command = defineCommand({
 				const app = await loadApp(configFile, args);
 
 				let devServer;
+				/** @type {import('@vinxi/listhen').Listener} */
+				let listener;
 				/** @type {import('chokidar').FSWatcher} */
 				let watcher;
 
@@ -87,8 +89,20 @@ const command = defineCommand({
 				function createKeypressWatcher() {
 					emitKeypressEvents(process.stdin);
 					process.stdin.on("keypress", async (_, key) => {
-						if (key.name === "r") {
-							restartDevServer(app);
+						switch (key.name) {
+							case "r":
+								restartDevServer(app);
+								break;
+							case "u":
+								listener.showURL();
+								break;
+							case "q":
+								process.exit(0);
+							case "h":
+								log("Shortcuts:\n");
+								log("  r - Restart dev server");
+								log("  u - Show server URL");
+								log("  h - Show help");
 						}
 					});
 				}
@@ -101,7 +115,7 @@ const command = defineCommand({
 						port: Number(args.port ?? process.env.PORT ?? 3000),
 					});
 					log("restarting dev server");
-					devServer.listen();
+					listener = await devServer.listen();
 				}
 
 				if (!app) {
@@ -132,7 +146,7 @@ const command = defineCommand({
 					port: Number(args.port ?? process.env.PORT ?? 3000),
 					devtools: args.devtools || Boolean(process.env.DEVTOOLS),
 				});
-				devServer.listen();
+				listener = await devServer.listen();
 			},
 		},
 		build: {
@@ -196,7 +210,9 @@ const command = defineCommand({
 			async run({ args }) {
 				process.env.PORT ??= args.port ?? 3000;
 				process.env.HOST ??= args.host ?? "0.0.0.0";
-				await import(pathToFileURL(process.cwd() + "/.output/server/index.mjs").href);
+				await import(
+					pathToFileURL(process.cwd() + "/.output/server/index.mjs").href
+				);
 			},
 		},
 	}),
