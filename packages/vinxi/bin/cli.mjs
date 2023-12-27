@@ -96,6 +96,8 @@ const command = defineCommand({
 									`http://localhost:${args.port ?? process.env.PORT ?? 3000}`,
 								);
 								break;
+							case "q":
+								process.exit(0);
 							case "h":
 								log("Shortcuts:\n");
 								log("  r - Restart dev server");
