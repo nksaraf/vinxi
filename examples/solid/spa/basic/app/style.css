@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+	@apply bg-red-100;
+}
+
 * {
-  color: red;
+	color: red;
 }
