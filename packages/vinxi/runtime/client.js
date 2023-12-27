@@ -7,4 +7,14 @@ if (import.meta.env.DEVTOOLS && import.meta.env.DEV) {
 	};
 }
 
+if (typeof window !== "undefined" && import.meta.hot) {
+	import.meta.hot.on("css-update", (data) => {
+		for (const el of document.querySelectorAll(
+			`style[data-vite-dev-id="${data.file}"]`,
+		)) {
+			el.innerHTML = data.contents;
+		}
+	});
+}
+
 globalThis.MANIFEST = manifest;

@@ -1,7 +1,7 @@
 /**
- * 
- * @param {*} styles 
- * @param {*} data 
+ *
+ * @param {*} styles
+ * @param {*} data
  */
 export function updateStyles(styles, data) {
 	let styleAsset = styles.find(
@@ -9,12 +9,6 @@ export function updateStyles(styles, data) {
 	);
 	if (styleAsset) {
 		styleAsset.children = data.contents;
-	}
-
-	for (const el of document.querySelectorAll(
-		`style[data-vite-dev-id="${data.file}"]`,
-	)) {
-		el.innerHTML = data.contents;
 	}
 }
 
