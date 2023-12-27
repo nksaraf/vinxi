@@ -31,7 +31,6 @@ Inspired by the [Bun.App](https://bun.sh/blog/bun-bundler#sneak-peek-bun-app) AP
 | Solid     | SPA      | Basic                 | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/solid/spa/basic) |
 |           | SSR      | Basic                 | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/solid/ssr/basic) |
 |           |          | Solid Router          | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/solid/ssr/solid-router) |
-|           |          | Solid Start           | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/solid/ssr/solid-start) |
 | Vanilla   |          | SPA                 | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/vanilla/spa) |
 |           |          | TRPC             | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/vanilla/trpc) |
 
