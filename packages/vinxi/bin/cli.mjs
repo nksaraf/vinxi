@@ -2,7 +2,7 @@
 import { defineCommand, runMain } from "citty";
 import fs from "fs";
 import { emitKeypressEvents } from "readline";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const packageJson = JSON.parse(
 	fs.readFileSync(
@@ -196,7 +196,7 @@ const command = defineCommand({
 			async run({ args }) {
 				process.env.PORT ??= args.port ?? 3000;
 				process.env.HOST ??= args.host ?? "0.0.0.0";
-				await import(process.cwd() + "/.output/server/index.mjs");
+				await import(pathToFileURL(process.cwd() + "/.output/server/index.mjs").href);
 			},
 		},
 	}),
