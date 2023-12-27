@@ -37,6 +37,25 @@ export function createDevManifest(app) {
 				}
 
 				const viteServer = router.internals.devServer;
+
+				async function viteAssets(paths, ssr) {
+					invariant(viteServer, "Vite server expected");
+					return Object.entries(
+						await findStylesInModuleGraph(
+							viteServer,
+							paths.filter(Boolean),
+							ssr,
+						),
+					).map(([key, value]) => ({
+						tag: "style",
+						attrs: {
+							type: "text/css",
+							key,
+							"data-vite-dev-id": key,
+						},
+						children: value,
+					}));
+				}
 				return {
 					json() {
 						return {};
@@ -192,26 +211,20 @@ export function createDevManifest(app) {
 										async assets() {
 											return [
 												...(viteServer
-													? Object.entries(
-															await findStylesInModuleGraph(
-																viteServer,
+													? (
+															await viteAssets(
 																[
 																	absolutePath.endsWith(".ts") &&
 																	router.mode === "spa"
 																		? undefined
 																		: absolutePath,
-																].filter(Boolean),
+																],
 																false,
-															),
-													  ).map(([key, value]) => ({
-															tag: "style",
-															attrs: {
-																type: "text/css",
-																key,
-																"data-vite-dev-id": key,
-															},
-															children: value,
-													  }))
+															)
+													  ).filter(
+															(asset) =>
+																!asset.attrs.key.includes("vinxi-devtools"),
+													  )
 													: []),
 												...(isHandler
 													? [
@@ -242,21 +255,10 @@ export function createDevManifest(app) {
 										async assets() {
 											return [
 												...(viteServer
-													? Object.entries(
-															await findStylesInModuleGraph(
-																viteServer,
-																[input],
-																true,
-															),
-													  ).map(([key, value]) => ({
-															tag: "style",
-															attrs: {
-																type: "text/css",
-																key,
-																"data-vite-dev-id": key,
-															},
-															children: value,
-													  }))
+													? (await viteAssets([input], true)).filter(
+															(asset) =>
+																!asset.attrs.key.includes("vinxi-devtools"),
+													  )
 													: []),
 											];
 										},
