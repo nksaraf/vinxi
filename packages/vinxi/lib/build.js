@@ -83,6 +83,7 @@ export async function createBuild(app, buildConfig) {
 			"node-fetch-native/polyfill": require.resolve(
 				"node-fetch-native/polyfill",
 			),
+			...(app.config.server.alias ?? {}),
 			// "unstorage/drivers/fs-lite": require.resolve("unstorage/drivers/fs-lite"),
 			// "unstorage/drivers/fs": require.resolve("unstorage/drivers/fs"),
 			// defu: require.resolve("defu"),
