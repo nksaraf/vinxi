@@ -29,7 +29,9 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install  --no-frozen-lockfile
-
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
       - name: Create Release Pull Request
         uses: changesets/action@v1
         with:
