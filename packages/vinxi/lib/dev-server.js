@@ -59,7 +59,6 @@ export async function createViteHandler(router, app, serveConfig) {
 
 	let base = join(app.config.server.baseURL ?? "/", router.base);
 
-	console.log(base);
 	const viteDevServer = await createViteDevServer({
 		configFile: false,
 		base,
@@ -109,6 +108,8 @@ export async function createDevServer(
 			port: wsPort,
 		},
 	};
+
+	await app.hooks.callHook("app:dev:start", { app, serveConfig });
 
 	if (devtools) {
 		const { devtoolsClient, devtoolsRpc } = await import("@vinxi/devtools");
@@ -167,6 +168,8 @@ export async function createDevServer(
 	nitro.options.appConfigFiles = [];
 	nitro.logger = consola.withTag(app.config.name);
 
+	await app.hooks.callHook("app:dev:nitro:config", { app, nitro });
+
 	// During development, we use our own nitro dev server instead of the one provided by nitro.
 	// it's very similar to the one provided by nitro, but it has different defaults. Most importantly, it
 	// doesn't run the server in a worker.
@@ -175,6 +178,8 @@ export async function createDevServer(
 	);
 
 	const devApp = createNitroDevServer(nitro);
+
+	await app.hooks.callHook("app:dev:server:created", { app, devApp });
 
 	for (const router of app.config.routers) {
 		if (router.internals && router.internals.routes) {
@@ -202,14 +207,28 @@ export async function createDevServer(
 
 	return {
 		...devApp,
-		listen: () => devApp.listen(port, {}),
+		listen: async () => {
+			await app.hooks.callHook("app:dev:server:listener:creating", {
+				app,
+				devApp,
+			});
+			const listener = await devApp.listen(port, {});
+			await app.hooks.callHook("app:dev:server:listener:created", {
+				app,
+				devApp,
+				listener,
+			});
+			return listener;
+		},
 		close: async () => {
+			await app.hooks.callHook("app:dev:server:closing", { app, devApp });
 			await devApp.close();
 			await Promise.all(
 				app.config.routers
 					.filter((router) => router.internals.devServer)
 					.map((router) => router.internals.devServer?.close()),
 			);
+			await app.hooks.callHook("app:dev:server:closed", { app, devApp });
 		},
 	};
 }
