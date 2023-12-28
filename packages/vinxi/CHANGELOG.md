@@ -1,5 +1,14 @@
 # vinxi
 
+## 0.0.57
+
+### Patch Changes
+
+- ff03255: chore: fix logging and make hooks only log in DEBUG mode
+- 783d22b: (feat): native bun support, without any other module loader, runtime detection for all cli commands
+- 0160b5c: (perf): avoid jiti if loading a js/mjs/cjs file
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.56
 
 ### Patch Changes

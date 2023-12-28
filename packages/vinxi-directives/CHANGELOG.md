@@ -1,5 +1,16 @@
 # @vinxi/plugin-references
 
+## 0.0.53
+
+### Patch Changes
+
+- d4801c2: fix: add plugins to package.json "files"
+- 0160b5c: (perf): avoid jiti if loading a js/mjs/cjs file
+- Updated dependencies [ff03255]
+- Updated dependencies [783d22b]
+- Updated dependencies [0160b5c]
+  - vinxi@0.0.57
+
 ## 0.0.52
 
 ### Patch Changes
