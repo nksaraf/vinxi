@@ -73,8 +73,11 @@ export async function createBuild(app, buildConfig) {
 		preset:
 			buildConfig.preset ??
 			process.env.TARGET ??
+			process.env.PRESET ??
 			process.env.SERVER_PRESET ??
+			process.env.SERVER_TARGET ??
 			process.env.NITRO_PRESET ??
+			process.env.NITRO_TARGET ??
 			app.config.server.preset,
 		alias: {
 			/**
@@ -293,7 +296,9 @@ export async function createBuild(app, buildConfig) {
 
 	await app.hooks.callHook("app:build:nitro:assets:copy:start", { app, nitro });
 
+	await mkdir(join(nitro.options.output.publicDir), { recursive: true });
 	await copyPublicAssets(nitro);
+
 	await app.hooks.callHook("app:build:nitro:assets:copy:end", { app, nitro });
 
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });

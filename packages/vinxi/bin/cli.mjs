@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { defineCommand, runMain } from "citty";
 import fs from "fs";
-import { emitKeypressEvents } from "readline";
 import { fileURLToPath, pathToFileURL } from "url";
+
+import { log } from "../lib/logger.js";
 
 const packageJson = JSON.parse(
 	fs.readFileSync(
@@ -86,7 +87,8 @@ const command = defineCommand({
 						restartDevServer(newApp);
 					});
 				}
-				function createKeypressWatcher() {
+				async function createKeypressWatcher() {
+					const { emitKeypressEvents } = await import("readline");
 					emitKeypressEvents(process.stdin);
 					process.stdin.on("keypress", async (_, key) => {
 						switch (key.name) {
@@ -139,7 +141,7 @@ const command = defineCommand({
 					return;
 				}
 				createWatcher();
-				createKeypressWatcher();
+				await createKeypressWatcher();
 				const { createDevServer } = await import("../lib/dev-server.js");
 				devServer = await createDevServer(app, {
 					force: args.force,
@@ -172,6 +174,16 @@ const command = defineCommand({
 			async run({ args }) {
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
+				args.preset ??=
+					process.env.TARGET ??
+					process.env.PRESET ??
+					process.env.SERVER_PRESET ??
+					process.env.SERVER_TARGET ??
+					process.env.NITRO_PRESET ??
+					process.env.NITRO_TARGET ??
+					(process.versions.bun !== undefined ? "bun" : "node-server");
+
+				console.log(args.preset, process.versions.bun);
 				const { loadApp } = await import("../lib/load-app.js");
 				const app = await loadApp(configFile, args);
 				process.env.NODE_ENV = "production";
@@ -210,9 +222,97 @@ const command = defineCommand({
 			async run({ args }) {
 				process.env.PORT ??= args.port ?? 3000;
 				process.env.HOST ??= args.host ?? "0.0.0.0";
-				await import(
-					pathToFileURL(process.cwd() + "/.output/server/index.mjs").href
-				);
+
+				process.env.SERVER_PRESET ??=
+					args.preset ??
+					process.env.TARGET ??
+					process.env.PRESET ??
+					process.env.SERVER_PRESET ??
+					process.env.SERVER_TARGET ??
+					process.env.NITRO_PRESET ??
+					process.env.NITRO_TARGET ??
+					(process.versions.bun !== undefined ? "bun" : "node-server");
+
+				console.log(process.env.SERVER_PRESET);
+
+				switch (process.env.SERVER_PRESET) {
+					case "node-server":
+						await import(
+							pathToFileURL(process.cwd() + "/.output/server/index.mjs").href
+						);
+						break;
+
+					case "bun":
+						if (process.versions.bun !== undefined) {
+							await import(
+								pathToFileURL(process.cwd() + "/.output/server/index.mjs").href
+							);
+						} else {
+							const { $ } = await import("execa");
+
+							const p = await $`bun run .output/server/index.mjs`.pipeStdout(
+								process.stdout,
+							);
+						}
+						break;
+					default:
+						log(
+							"Couldn't run an app built with the ${} preset locally. Deploy the app to a provider that supports it.",
+						);
+				}
+			},
+		},
+		deploy: {
+			meta: {
+				name: "deploy",
+				version: packageJson.version,
+				description: "Deploy your built Vinxi app to any provider",
+			},
+			args: {
+				preset: {
+					type: "string",
+					description: "Server preset (default: node-server)",
+				},
+				port: {
+					type: "number",
+					description: "Port to listen on (default: 3000)",
+				},
+				host: {
+					type: "boolean",
+					description: "Expose to host (default: false)",
+				},
+			},
+			async run({ args }) {
+				process.env.PORT ??= args.port ?? 3000;
+				process.env.HOST ??= args.host ?? "0.0.0.0";
+
+				process.env.SERVER_PRESET ??=
+					args.preset ??
+					process.env.TARGET ??
+					process.env.PRESET ??
+					process.env.SERVER_PRESET ??
+					process.env.SERVER_TARGET ??
+					process.env.NITRO_PRESET ??
+					process.env.NITRO_TARGET ??
+					"node-server";
+
+				switch (process.env.SERVER_PRESET) {
+					case "node-server":
+						await import(
+							pathToFileURL(process.cwd() + "/.output/server/index.mjs").href
+						);
+						break;
+
+					case "bun":
+						const { $ } = await import("execa");
+
+						await $`bun run .output/server/index.mjs`;
+						break;
+					default:
+						log(
+							"Couldn't run an app built with the ${} preset locally. Deploy the app to a provider that supports it.",
+						);
+				}
 			},
 		},
 	}),

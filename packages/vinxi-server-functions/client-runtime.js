@@ -3,6 +3,7 @@ async function fetchServerAction(base, id, args) {
 		method: "POST",
 		headers: {
 			Accept: "application/json",
+			"Content-Type": "application/json",
 			"server-action": id,
 		},
 		body: JSON.stringify(args),

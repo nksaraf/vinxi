@@ -1,6 +1,6 @@
 /// <reference types="vinxi/types/server" />
 import invariant from "vinxi/lib/invariant";
-import { eventHandler, toWebRequest } from "vinxi/server";
+import { eventHandler, readBody, toWebRequest } from "vinxi/server";
 
 export async function handleServerAction(event) {
 	invariant(event.method === "POST", "Invalid method");
@@ -15,16 +15,7 @@ export async function handleServerAction(event) {
 				filepath
 			].import()
 		)[name];
-		const text = await new Promise((resolve) => {
-			const requestBody = [];
-			event.node.req.on("data", (chunks) => {
-				requestBody.push(chunks);
-			});
-			event.node.req.on("end", () => {
-				resolve(requestBody.join(""));
-			});
-		});
-		const json = JSON.parse(text);
+		const json = await readBody(event);
 		const result = action.apply(null, json);
 		try {
 			// Wait for any mutations
