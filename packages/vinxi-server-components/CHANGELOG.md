@@ -1,5 +1,16 @@
 # @vinxi/plugin-references
 
+## 0.0.53
+
+### Patch Changes
+
+- Updated dependencies [ff03255]
+- Updated dependencies [d4801c2]
+- Updated dependencies [783d22b]
+- Updated dependencies [0160b5c]
+  - vinxi@0.0.57
+  - @vinxi/plugin-directives@0.0.53
+
 ## 0.0.52
 
 ### Patch Changes
