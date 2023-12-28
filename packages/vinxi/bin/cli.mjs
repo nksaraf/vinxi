@@ -61,11 +61,13 @@ const command = defineCommand({
 			async run({ args }) {
 				const chokidar = await import("chokidar");
 				const { loadApp } = await import("../lib/load-app.js");
-				const { log } = await import("../lib/logger.js");
+				const { log, c } = await import("../lib/logger.js");
+				log(c.dim(c.yellow(packageJson.version)));
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
 				const app = await loadApp(configFile, args);
 
+				log(c.dim(c.green("starting dev server")));
 				let devServer;
 				/** @type {import('@vinxi/listhen').Listener} */
 				let listener;
@@ -80,8 +82,8 @@ const command = defineCommand({
 						},
 					);
 					watcher.on("all", async (ctx, path) => {
-						log("change detected in", path);
-						log("reloading app");
+						log(c.dim(c.green("change detected in " + path)));
+						log(c.dim(c.green("reloading app")));
 						const newApp = await loadApp(configFile, args);
 						if (!newApp) return;
 						restartDevServer(newApp);
@@ -127,7 +129,7 @@ const command = defineCommand({
 						port: Number(args.port ?? process.env.PORT ?? 3000),
 						preset: preset,
 					});
-					log("restarting dev server");
+					log(c.dim(c.green("restarting dev server")));
 					listener = await devServer.listen();
 				}
 
@@ -140,8 +142,8 @@ const command = defineCommand({
 						},
 					));
 					fsWatcher.on("all", async (path) => {
-						log("change detected in", path);
-						log("reloading app");
+						log(c.dim(c.green("change detected in " + path)));
+						log(c.dim(c.green("reloading app")));
 						const newApp = await loadApp(configFile, args);
 						if (!newApp) return;
 
@@ -195,6 +197,7 @@ const command = defineCommand({
 			async run({ args }) {
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
+				const { log, c } = await import("../lib/logger.js");
 				args.preset ??=
 					process.env.TARGET ??
 					process.env.PRESET ??
@@ -204,7 +207,7 @@ const command = defineCommand({
 					process.env.NITRO_TARGET ??
 					(process.versions.bun !== undefined ? "bun" : "node-server");
 
-				console.log(args.preset, process.versions.bun);
+				log(c.dim(c.yellow(packageJson.version)));
 				const { loadApp } = await import("../lib/load-app.js");
 				const app = await loadApp(configFile, args);
 				process.env.NODE_ENV = "production";
