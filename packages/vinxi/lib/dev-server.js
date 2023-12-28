@@ -181,14 +181,14 @@ export async function createDevServer(
 
 	await app.hooks.callHook("app:dev:server:created", { app, devApp });
 
-	for (const router of app.config.routers) {
-		if (router.internals && router.internals.routes) {
-			const routes = await router.internals.routes.getRoutes();
-			for (const route of routes) {
-				withLogger({ router }, () => console.log(route.path));
-			}
-		}
-	}
+	// for (const router of app.config.routers) {
+	// 	if (router.internals && router.internals.routes) {
+	// 		const routes = await router.internals.routes.getRoutes();
+	// 		for (const route of routes) {
+	// 			withLogger({ router }, () => console.log(route.path));
+	// 		}
+	// 	}
+	// }
 
 	// We do this so that we can access the app in plugins using globalThis.app just like we do in production.
 	// @ts-ignore
