@@ -1,7 +1,8 @@
 /// <reference types="bun-types" />
 import { loadConfig } from "c12";
 import { existsSync } from "fs";
-import { fileURLToPath } from "url";
+import { joinURL } from "ufo";
+import { fileURLToPath, pathToFileURL } from "url";
 
 import { createApp } from "./app.js";
 import { log } from "./logger.js";
@@ -32,21 +33,26 @@ async function loadFile({ ...options }) {
 
 	if (options.name) {
 		if (existsSync(process.cwd() + "/" + options.name + ".config.js")) {
-			return import(process.cwd() + "/" + options.name + ".config.js").then(
-				(m) => ({
-					config: m.default,
-				}),
-			);
+			return import(joinURL(
+				pathToFileURL(process.cwd()).href,
+				`${options.name}.config.js`,
+			),).then((m) => ({
+				config: m.default,
+			}));
 		} else if (existsSync(process.cwd() + "/" + options.name + ".config.mjs")) {
-			return import(process.cwd() + "/" + options.name + ".config.mjs").then(
-				(m) => ({
-					config: m.default,
-				}),
-			);
+			return import(joinURL(
+				pathToFileURL(process.cwd()).href,
+				`${options.name}.config.mjs`,
+			),).then((m) => ({
+				config: m.default,
+			}));
 		}
 	} else if (options.configFile) {
 		if (options.configFile.endsWith("js")) {
-			return import(process.cwd() + "/" + options.configFile).then((m) => ({
+			return import(joinURL(
+				pathToFileURL(process.cwd()).href,
+				`${options.configFile}`,
+			),).then((m) => ({
 				config: m.default,
 			}));
 		}
