@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.59
+
+### Patch Changes
+
+- 44f46ae: fix syntax in load-app file
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.58
 
 ### Patch Changes
