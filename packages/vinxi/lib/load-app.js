@@ -33,26 +33,23 @@ async function loadFile({ ...options }) {
 
 	if (options.name) {
 		if (existsSync(process.cwd() + "/" + options.name + ".config.js")) {
-			return import(joinURL(
-				pathToFileURL(process.cwd()).href,
-				`${options.name}.config.js`,
-			),).then((m) => ({
+			return import(
+				joinURL(pathToFileURL(process.cwd()).href, `${options.name}.config.js`)
+			).then((m) => ({
 				config: m.default,
 			}));
 		} else if (existsSync(process.cwd() + "/" + options.name + ".config.mjs")) {
-			return import(joinURL(
-				pathToFileURL(process.cwd()).href,
-				`${options.name}.config.mjs`,
-			),).then((m) => ({
+			return import(
+				joinURL(pathToFileURL(process.cwd()).href, `${options.name}.config.mjs`)
+			).then((m) => ({
 				config: m.default,
 			}));
 		}
 	} else if (options.configFile) {
 		if (options.configFile.endsWith("js")) {
-			return import(joinURL(
-				pathToFileURL(process.cwd()).href,
-				`${options.configFile}`,
-			),).then((m) => ({
+			return import(
+				joinURL(pathToFileURL(process.cwd()).href, `${options.configFile}`)
+			).then((m) => ({
 				config: m.default,
 			}));
 		}
