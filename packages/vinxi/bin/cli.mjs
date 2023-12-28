@@ -111,10 +111,21 @@ const command = defineCommand({
 				async function restartDevServer(newApp) {
 					const { createDevServer } = await import("../lib/dev-server.js");
 					await devServer?.close();
+					let preset =
+						args.preset ??
+						process.env.TARGET ??
+						process.env.PRESET ??
+						process.env.SERVER_PRESET ??
+						process.env.SERVER_TARGET ??
+						process.env.NITRO_PRESET ??
+						process.env.NITRO_TARGET ??
+						(process.versions.bun !== undefined ? "bun" : "node-server");
+
 					devServer = await createDevServer(newApp, {
 						force: args.force,
 						devtools: args.devtools || Boolean(process.env.DEVTOOLS),
 						port: Number(args.port ?? process.env.PORT ?? 3000),
+						preset: preset,
 					});
 					log("restarting dev server");
 					listener = await devServer.listen();
@@ -143,10 +154,20 @@ const command = defineCommand({
 				createWatcher();
 				await createKeypressWatcher();
 				const { createDevServer } = await import("../lib/dev-server.js");
+				let preset =
+					args.preset ??
+					process.env.TARGET ??
+					process.env.PRESET ??
+					process.env.SERVER_PRESET ??
+					process.env.SERVER_TARGET ??
+					process.env.NITRO_PRESET ??
+					process.env.NITRO_TARGET ??
+					(process.versions.bun !== undefined ? "bun" : "node-server");
 				devServer = await createDevServer(app, {
 					force: args.force,
 					port: Number(args.port ?? process.env.PORT ?? 3000),
 					devtools: args.devtools || Boolean(process.env.DEVTOOLS),
+					preset: preset,
 				});
 				listener = await devServer.listen();
 			},

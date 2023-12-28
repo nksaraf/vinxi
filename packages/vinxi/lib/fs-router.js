@@ -6,7 +6,8 @@ import fs from "fs";
 import micromatch from "micromatch";
 import { posix } from "path";
 import { pathToRegexp } from "path-to-regexp";
-import { normalize } from "./path";
+
+import { normalize } from "./path.js";
 
 export { pathToRegexp };
 

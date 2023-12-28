@@ -6,7 +6,8 @@
   "files": [
     "*.js",
     "*.cjs",
-    "*.d.ts"
+    "*.d.ts",
+    "plugins"
   ],
   "types": "./index.d.ts",
   "exports": {

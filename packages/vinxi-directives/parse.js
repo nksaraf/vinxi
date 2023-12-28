@@ -2,7 +2,10 @@ import * as acorn from "acorn";
 import jsx from "acorn-jsx";
 import * as acornLoose from "acorn-loose";
 import tsPlugin from "acorn-typescript";
+import { createRequire } from "module";
 import { parse as recastParse } from "recast";
+
+const require = createRequire(import.meta.url);
 
 /** @typedef {acorn.Node & { comments: any[]; tokens: any[] }} AST */
 /** @type {any} */
