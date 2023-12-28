@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.58
+
+### Patch Changes
+
+- b654e60: chore: remove logging of fs routes
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.57
 
 ### Patch Changes
