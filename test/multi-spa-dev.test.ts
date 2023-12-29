@@ -28,7 +28,7 @@ test.describe("multi-spa-dev", () => {
 		});
 	});
 
-	test("react", async ({ page }) => {
+	test("root", async ({ page }) => {
 		let app = new PlaywrightFixture(appFixture, page);
 		await app.goto("/", true);
 
@@ -40,6 +40,21 @@ test.describe("multi-spa-dev", () => {
 
 		expect(await app.getHtml("[data-test-id=count]")).toBe(
 			prettyHtml(`<span data-test-id="count">1</span>`),
+		);
+	});
+
+	test("react", async ({ page }) => {
+		let app = new PlaywrightFixture(appFixture, page);
+		await app.goto("/react", true);
+
+		expect(await app.getHtml("[data-test-id=count-react]")).toBe(
+			prettyHtml(`<span data-test-id="count-react">0</span>`),
+		);
+
+		await app.clickElement("[data-test-id=button-react]");
+
+		expect(await app.getHtml("[data-test-id=count-react]")).toBe(
+			prettyHtml(`<span data-test-id="count-react">1</span>`),
 		);
 	});
 

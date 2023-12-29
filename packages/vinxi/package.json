@@ -155,7 +155,6 @@
     "h3": "1.9.0",
     "hookable": "^5.5.3",
     "http-proxy": "^1.18.1",
-    "jsdom": "^22.1.0",
     "micromatch": "^4.0.5",
     "mri": "^1.2.0",
     "nitropack": "2.8.1",

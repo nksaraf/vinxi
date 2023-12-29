@@ -5,10 +5,10 @@ export function Counter() {
 
 	return (
 		<div>
-			<button data-test-id="button-react" onClick={() => setCount(count + 1)}>
+			<button data-test-id="button" onClick={() => setCount(count + 1)}>
 				Click me
 			</button>
-			<span data-test-id="count-react">{count}</span>
+			<span data-test-id="count">{count}</span>
 		</div>
 	);
 }

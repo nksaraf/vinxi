@@ -3,7 +3,7 @@ import * as z from "zod";
 import { isMainThread } from "node:worker_threads";
 
 import invariant from "./invariant.js";
-import { handlerModule, isAbsolute, join } from "./path.js";
+import { handlerModule, join } from "./path.js";
 import { resolve } from "./resolve.js";
 
 export { z };
@@ -366,22 +366,11 @@ const routerModes = {
 								);
 							});
 
-							let transformedHtml = await viteDevServer.transformIndexHtml(
-								getRequestURL(event).href,
-								html,
+							const transformedHtml = await viteDevServer.transformIndexHtml(
+								"/index.html",
+								text,
+								getRequestURL(event).href
 							);
-
-							const { JSDOM } = await import("jsdom");
-							const jsdom = new JSDOM(transformedHtml);
-							const nodes = jsdom.window.document.querySelectorAll("[src],[href]");
-							nodes.forEach(node => {
-								const attr = node.hasAttribute("href") ? "href" : "src";
-								const path = node.getAttribute(attr) || "/";
-								if (!isAbsolute(path)) {
-									node.setAttribute(attr, join(viteDevServer.config.base, path));
-								}
-							});
-							transformedHtml = jsdom.serialize();
 
 							return transformedHtml;
 						}),

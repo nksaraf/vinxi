@@ -10,10 +10,18 @@ const app = createApp({
 			dir: "./public",
 		},
 		{
+			name: "root",
+			mode: "spa",
+			handler: "./src/index.ts",
+			target: "browser",
+			plugins: () => [react()]
+		},
+		{
 			name: "react",
 			mode: "spa",
 			root: "./react",
 			handler: "./index.html",
+			base: "/react",
 			target: "browser",
 			plugins: () => [react()]
 		},
