@@ -41,6 +41,9 @@ test.describe("multi-spa-prod", () => {
 		expect(await app.getHtml("[data-test-id=count]")).toBe(
 			prettyHtml(`<span data-test-id="count">1</span>`),
 		);
+
+		expect(await app.getHtml("[data-test-id=asset-image]")).toContain('data-loaded="true"');
+		expect(await app.getHtml("[data-test-id=public-image]")).toContain('data-loaded="true"');
 	});
 
 	test("react", async ({ page }) => {
@@ -56,6 +59,9 @@ test.describe("multi-spa-prod", () => {
 		expect(await app.getHtml("[data-test-id=count-react]")).toBe(
 			prettyHtml(`<span data-test-id="count-react">1</span>`),
 		);
+
+		expect(await app.getHtml("[data-test-id=asset-image-react]")).toContain('data-loaded="true"');
+		expect(await app.getHtml("[data-test-id=public-image-react]")).toContain('data-loaded="true"');
 	});
 
 	test("solid", async ({ page }) => {
@@ -71,5 +77,8 @@ test.describe("multi-spa-prod", () => {
 		expect(await app.getHtml("[data-test-id=count-solid]")).toBe(
 			prettyHtml(`<span data-test-id="count-solid">1</span>`),
 		);
+
+		expect(await app.getHtml("[data-test-id=asset-image-solid]")).toContain('data-loaded="true"');
+		expect(await app.getHtml("[data-test-id=public-image-solid]")).toContain('data-loaded="true"');
 	});
 });

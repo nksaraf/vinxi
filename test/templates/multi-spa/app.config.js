@@ -29,7 +29,7 @@ const app = createApp({
 			name: "solid",
 			mode: "spa",
 			root: "./solid",
-			handler: "./index.ts",
+			handler: "./src/index.ts",
 			base: "/solid",
 			target: "browser",
 			plugins: () => [solid()]

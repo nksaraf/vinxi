@@ -11,7 +11,7 @@ export default eventHandler((event) => {
     </head>
     <body>
       <div id="root"></div>
-      <script src="./client.tsx" type="module"></script>
+      <script src="./src/client.tsx" type="module"></script>
     </body>
   </html>
   `);
