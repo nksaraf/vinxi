@@ -228,6 +228,11 @@ const routerModes = {
 				const { createViteHandler } = await import("./dev-server.js");
 				const viteServer = await createViteHandler(router, app, serveConfig);
 				const handler = eventHandler(async (event) => {
+					const originalURL = event.node.req.url;
+					let base = join(app.config.server.baseURL ?? "/", router.base);
+					// @ts-expect-error _skip_transform is a private property
+					event.node.req._skip_transform = !originalURL.startsWith(base);
+
 					const { default: handler } = await viteServer.ssrLoadModule(
 						handlerModule(router),
 					);
