@@ -1,9 +1,7 @@
-import { usePathname } from "wouter/use-location";
-
-export { useRouter as useWouter } from "wouter";
+import { useLocation } from "react-router-dom";
 
 export function useRouter() {
 	return {
-		pathname: usePathname(),
+		pathname: useLocation().pathname,
 	};
 }

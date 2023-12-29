@@ -8,7 +8,7 @@
     "test:unit": "vitest run"
   },
   "dependencies": {
-    "@playwright/test": "1.27.0",
+    "@playwright/test": "1.39.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@types/cross-spawn": "^6.0.2",
     "@types/fs-extra": "^11.0.1",
@@ -24,7 +24,6 @@
     "strip-indent": "^4.0.0",
     "undici": "^5.23.0",
     "vinxi": "0.0.23",
-    "vite": "4.5.0",
     "vitest": "^0.28.5",
     "wait-on": "^7.0.1"
   },

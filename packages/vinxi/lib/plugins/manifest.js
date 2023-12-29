@@ -23,13 +23,15 @@ export function manifest() {
 					throw new Error("Missing router or app");
 				}
 
-				console.log(router.name, router.handler);
 				return {
 					define: {
 						"import.meta.env.MANIFEST": `globalThis.MANIFEST`,
 						"import.meta.env.ROUTER_NAME": JSON.stringify(router.name),
 						"import.meta.env.ROUTER_HANDLER": JSON.stringify(router.handler),
 						"import.meta.env.CWD": JSON.stringify(router.root),
+						"import.meta.env.SERVER_BASE_URL": JSON.stringify(
+							app.config.server.baseURL ?? "",
+						),
 						"import.meta.env.ROUTERS": JSON.stringify(
 							app.config.routers.map((router) => router.name),
 						),
@@ -68,10 +70,13 @@ export function manifest() {
 export function injectVinxiClient() {
 	/** @type {import('../router-mode.js').Router} */
 	let router;
+	/** @type {import('../app.js').App} */
+	let app;
 	return {
 		name: "vinxi:inject-client-runtime",
 		configResolved(config) {
 			router = config.router;
+			app = config.app;
 		},
 		apply: "serve",
 		transformIndexHtml(html) {
@@ -81,6 +86,7 @@ export function injectVinxiClient() {
 					attrs: {
 						type: "module",
 						src: join(
+							app.config.server.baseURL ?? "",
 							router.base,
 							"@fs",
 							`${fileURLToPath(

@@ -6,6 +6,7 @@ export default function App({ assets }) {
 	return (
 		<html lang="en">
 			<head>
+				<title>Document 1</title>
 				<link rel="icon" href="/favicon.ico" />
 				{assets}
 			</head>

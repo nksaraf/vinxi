@@ -1,10 +1,27 @@
+import { joinURL } from "ufo";
 import invariant from "vinxi/lib/invariant";
 import { handlerModule, join, virtualId } from "vinxi/lib/path";
 
-import findAssetsInViteManifest from "./vite-manifest.js";
 import { pathToFileURL } from "node:url";
 
+import findAssetsInViteManifest from "./vite-manifest.js";
+
 /** @typedef {import("../app.js").App & { config: { buildManifest: { [key:string]: any } }}} ProdApp */
+
+function createHtmlTagsForAssets(router, app, assets) {
+	return assets
+		.filter((asset) => asset.endsWith(".css") || asset.endsWith(".js"))
+		.map((asset) => ({
+			tag: "link",
+			attrs: {
+				href: joinURL(app.config.server.baseURL ?? "", router.base, asset),
+				key: join(app.config.server.baseURL ?? "", router.base, asset),
+				...(asset.endsWith(".css")
+					? { rel: "stylesheet", precendence: "high" }
+					: { rel: "modulepreload" }),
+			},
+		}));
+}
 
 /**
  *
@@ -67,7 +84,9 @@ export function createProdManifest(app) {
 										if (globalThis.$$chunks[chunk + ".js"]) {
 											return globalThis.$$chunks[chunk + ".js"];
 										}
-										return import(/* @vite-ignore */ pathToFileURL(chunkPath).href);
+										return import(
+											/* @vite-ignore */ pathToFileURL(chunkPath).href
+										);
 									},
 									output: {
 										path: chunkPath,
@@ -101,17 +120,11 @@ export function createProdManifest(app) {
 											: input;
 									return {
 										assets() {
-											return findAssetsInViteManifest(bundlerManifest, id)
-												.filter((asset) => asset.endsWith(".css"))
-												.map((asset) => ({
-													tag: "link",
-													attrs: {
-														href: join(router.base, asset),
-														key: join(router.base, asset),
-														rel: "stylesheet",
-														precendence: "high",
-													},
-												}));
+											return createHtmlTagsForAssets(
+												router,
+												app,
+												findAssetsInViteManifest(bundlerManifest, id),
+											);
 										},
 										output: {
 											path: join(
@@ -129,27 +142,26 @@ export function createProdManifest(app) {
 									return {
 										import() {
 											return import(
-												/* @vite-ignore */ join(
+												/* @vite-ignore */ joinURL(
+													app.config.server.baseURL ?? "",
 													router.base,
 													bundlerManifest[id].file,
 												)
 											);
 										},
 										assets() {
-											return findAssetsInViteManifest(bundlerManifest, id)
-												.filter((asset) => asset.endsWith(".css"))
-												.map((asset) => ({
-													tag: "link",
-													attrs: {
-														href: join(router.base, asset),
-														key: join(router.base, asset),
-														rel: "stylesheet",
-														precendence: "high",
-													},
-												}));
+											return createHtmlTagsForAssets(
+												router,
+												app,
+												findAssetsInViteManifest(bundlerManifest, id),
+											);
 										},
 										output: {
-											path: join(router.base, bundlerManifest[id].file),
+											path: joinURL(
+												app.config.server.baseURL ?? "",
+												router.base,
+												bundlerManifest[id].file,
+											),
 										},
 									};
 								}

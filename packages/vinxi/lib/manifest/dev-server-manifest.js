@@ -16,6 +16,8 @@ export function createDevManifest(app) {
 
 				let router = app.getRouter(bundlerName);
 
+				let base = join(app.config.server.baseURL ?? "", router.base);
+
 				if (router.mode === "static") {
 					return {
 						json() {
@@ -27,7 +29,7 @@ export function createDevManifest(app) {
 						routes() {
 							return [];
 						},
-						base: router.base,
+						base,
 						target: "static",
 						mode: router.mode,
 						handler: undefined,
@@ -37,6 +39,25 @@ export function createDevManifest(app) {
 				}
 
 				const viteServer = router.internals.devServer;
+
+				async function viteAssets(paths, ssr) {
+					invariant(viteServer, "Vite server expected");
+					return Object.entries(
+						await findStylesInModuleGraph(
+							viteServer,
+							paths.filter(Boolean),
+							ssr,
+						),
+					).map(([key, value]) => ({
+						tag: "style",
+						attrs: {
+							type: "text/css",
+							key,
+							"data-vite-dev-id": key,
+						},
+						children: value,
+					}));
+				}
 				return {
 					json() {
 						return {};
@@ -45,7 +66,7 @@ export function createDevManifest(app) {
 						return {};
 					},
 					handler: router.handler,
-					base: router.base,
+					base,
 					target: router.target,
 					mode: router.mode,
 					chunks: new Proxy(
@@ -64,7 +85,7 @@ export function createDevManifest(app) {
 								if (router.target === "browser") {
 									return {
 										output: {
-											path: join(router.base, "@fs", absolutePath),
+											path: join(base, "@fs", absolutePath),
 										},
 									};
 								} else {
@@ -115,19 +136,53 @@ export function createDevManifest(app) {
 								let isHandler = router.handler === relativePath;
 
 								async function getVitePluginAssets() {
-									const plugins = router.internals?.devServer
-										? router.internals.devServer.config.plugins.filter(
-												(plugin) => "transformIndexHtml" in plugin,
-										  )
+									const pluginList = router.internals?.devServer
+										? router.internals.devServer.config.plugins
 										: [];
+									// @ts-ignore
+									const indexHtmlTransformers = [];
+									for (
+										let i = 0, pre = 0, post = 0;
+										i < pluginList.length;
+										i++
+									) {
+										const plugin = pluginList[i];
+										if (plugin != null && plugin.transformIndexHtml != null) {
+											const order =
+												typeof plugin.transformIndexHtml === "function"
+													? null
+													: plugin.transformIndexHtml.order ??
+													  plugin.transformIndexHtml.enforce;
+											const func =
+												typeof plugin.transformIndexHtml === "function"
+													? plugin.transformIndexHtml
+													: "handler" in plugin.transformIndexHtml
+													? plugin.transformIndexHtml.handler
+													: plugin.transformIndexHtml.transform;
+											if (order === "pre") {
+												// @ts-ignore
+												indexHtmlTransformers.splice(pre, 0, func);
+												pre++;
+											} else if (order === "post") {
+												// @ts-ignore
+												indexHtmlTransformers.splice(post, 0, func);
+												post++;
+											} else {
+												// @ts-ignore
+												indexHtmlTransformers.splice(
+													Math.max(post - 1, 0),
+													0,
+													func,
+												);
+												post++;
+											}
+										}
+									}
 									let pluginAssets = [];
-									for (let plugin of plugins) {
+									// @ts-ignore
+									for (let transformer of indexHtmlTransformers) {
 										// @ts-ignore
-										let transformedHtml = await plugin.transformIndexHtml(
-											"/",
-											``,
-											`/`,
-										);
+										let transformedHtml = await transformer("/", ``, `/`);
 
 										if (!transformedHtml) continue;
 										if (Array.isArray(transformedHtml)) {
@@ -158,21 +213,20 @@ export function createDevManifest(app) {
 										async assets() {
 											return [
 												...(viteServer
-													? Object.entries(
-															await findStylesInModuleGraph(
-																viteServer,
-																[absolutePath],
+													? (
+															await viteAssets(
+																[
+																	absolutePath.endsWith(".ts") &&
+																	router.mode === "spa"
+																		? undefined
+																		: absolutePath,
+																],
 																false,
-															),
-													  ).map(([key, value]) => ({
-															tag: "style",
-															attrs: {
-																type: "text/css",
-																key,
-																"data-vite-dev-id": key,
-															},
-															children: value,
-													  }))
+															)
+													  ).filter(
+															(asset) =>
+																!asset.attrs.key.includes("vinxi-devtools"),
+													  )
 													: []),
 												...(isHandler
 													? [
@@ -182,7 +236,7 @@ export function createDevManifest(app) {
 																attrs: {
 																	key: "vite-client",
 																	type: "module",
-																	src: join(router.base, "@vite", "client"),
+																	src: join(base, "@vite", "client"),
 																},
 															},
 													  ]
@@ -190,7 +244,7 @@ export function createDevManifest(app) {
 											].filter(Boolean);
 										},
 										output: {
-											path: join(router.base, "@fs", absolutePath),
+											path: join(base, "@fs", absolutePath),
 										},
 									};
 								} else {
@@ -203,21 +257,10 @@ export function createDevManifest(app) {
 										async assets() {
 											return [
 												...(viteServer
-													? Object.entries(
-															await findStylesInModuleGraph(
-																viteServer,
-																[input],
-																true,
-															),
-													  ).map(([key, value]) => ({
-															tag: "style",
-															attrs: {
-																type: "text/css",
-																key,
-																"data-vite-dev-id": key,
-															},
-															children: value,
-													  }))
+													? (await viteAssets([input], true)).filter(
+															(asset) =>
+																!asset.attrs.key.includes("vinxi-devtools"),
+													  )
 													: []),
 											];
 										},

@@ -1,5 +1,131 @@
 # @vinxi/react-server
 
+## 0.0.44
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.55
+- @vinxi/server-functions@0.0.56
+
+## 0.0.43
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.54
+- @vinxi/server-functions@0.0.55
+
+## 0.0.42
+
+### Patch Changes
+
+- Updated dependencies [783d22b]
+  - @vinxi/server-functions@0.0.54
+  - @vinxi/server-components@0.0.53
+
+## 0.0.41
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.52
+- @vinxi/server-functions@0.0.53
+
+## 0.0.40
+
+### Patch Changes
+
+- Updated dependencies [c5a94cf]
+  - @vinxi/server-functions@0.0.52
+  - @vinxi/server-components@0.0.51
+
+## 0.0.39
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.50
+- @vinxi/server-functions@0.0.51
+
+## 0.0.38
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.49
+- @vinxi/server-functions@0.0.50
+
+## 0.0.37
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.48
+- @vinxi/server-functions@0.0.49
+
+## 0.0.36
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.47
+- @vinxi/server-functions@0.0.48
+
+## 0.0.35
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.46
+- @vinxi/server-functions@0.0.47
+
+## 0.0.34
+
+### Patch Changes
+
+- Updated dependencies [0f9a5df]
+- Updated dependencies [d8ef7c9]
+  - @vinxi/server-functions@0.0.46
+  - @vinxi/server-components@0.0.45
+
+## 0.0.33
+
+### Patch Changes
+
+- Updated dependencies [800f557]
+  - @vinxi/server-functions@0.0.45
+
+## 0.0.32
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.44
+- @vinxi/server-functions@0.0.44
+
+## 0.0.31
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.43
+- @vinxi/server-functions@0.0.43
+
+## 0.0.30
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.42
+- @vinxi/server-functions@0.0.42
+
+## 0.0.29
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.41
+- @vinxi/server-functions@0.0.41
+
+## 0.0.28
+
+### Patch Changes
+
+- 4e4c047: make server functions worker work
+- Updated dependencies [4e4c047]
+- Updated dependencies [8ef044b]
+  - @vinxi/server-functions@0.0.40
+  - @vinxi/server-components@0.0.40
+
 ## 0.0.27
 
 ### Patch Changes

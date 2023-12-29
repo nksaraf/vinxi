@@ -1,5 +1,136 @@
 # @vinxi/plugin-references
 
+## 0.0.55
+
+### Patch Changes
+
+- Updated dependencies [44f46ae]
+  - vinxi@0.0.59
+
+## 0.0.54
+
+### Patch Changes
+
+- Updated dependencies [b654e60]
+  - vinxi@0.0.58
+
+## 0.0.53
+
+### Patch Changes
+
+- d4801c2: fix: add plugins to package.json "files"
+- 0160b5c: (perf): avoid jiti if loading a js/mjs/cjs file
+- Updated dependencies [ff03255]
+- Updated dependencies [783d22b]
+- Updated dependencies [0160b5c]
+  - vinxi@0.0.57
+
+## 0.0.52
+
+### Patch Changes
+
+- Updated dependencies [d5262b3]
+- Updated dependencies [5694f29]
+  - vinxi@0.0.56
+
+## 0.0.51
+
+### Patch Changes
+
+- e53f24a: (fix): decorate exports use parse-advanced, fixes #36
+- Updated dependencies [88201f3]
+- Updated dependencies [cbba2d7]
+- Updated dependencies [c5a94cf]
+- Updated dependencies [e53f24a]
+- Updated dependencies [9325a54]
+- Updated dependencies [a0974f0]
+- Updated dependencies [c4b76ed]
+- Updated dependencies [7af0a15]
+  - vinxi@0.0.55
+
+## 0.0.50
+
+### Patch Changes
+
+- Updated dependencies [7ec78e2]
+  - vinxi@0.0.54
+
+## 0.0.49
+
+### Patch Changes
+
+- b601463: keep vite 4 (for now) and bug fix in wrap exports (@vinxi/plugin-directives)
+- Updated dependencies [b601463]
+- Updated dependencies [68cab94]
+  - vinxi@0.0.53
+
+## 0.0.48
+
+### Patch Changes
+
+- Updated dependencies [366b29b]
+  - vinxi@0.0.52
+
+## 0.0.47
+
+### Patch Changes
+
+- Updated dependencies [7276f73]
+  - vinxi@0.0.51
+
+## 0.0.46
+
+### Patch Changes
+
+- Updated dependencies [e4a6251]
+  - vinxi@0.0.50
+
+## 0.0.45
+
+### Patch Changes
+
+- d8ef7c9: fix: clean up old console logs
+- Updated dependencies [0f9a5df]
+- Updated dependencies [e6205a4]
+- Updated dependencies [d8ef7c9]
+- Updated dependencies [e7313f4]
+  - vinxi@0.0.49
+
+## 0.0.44
+
+### Patch Changes
+
+- 47c9b78: fix: shim plugin to use advanced parser plugin-directives
+
+## 0.0.43
+
+### Patch Changes
+
+- f35751c: fix: include babel.cjs in package.json files plugin-directives
+
+## 0.0.42
+
+### Patch Changes
+
+- 89832f7: fix: export wrapExports from index.js plugin-directives
+
+## 0.0.41
+
+### Patch Changes
+
+- 619f69f: use better parser for typescript/jsx in directives
+
+## 0.0.40
+
+### Patch Changes
+
+- 4e4c047: make server functions worker work
+- 8ef044b: feat: add wrapper for server functions on the server
+- Updated dependencies [fc7494d]
+- Updated dependencies [4e4c047]
+- Updated dependencies [8ef044b]
+  - vinxi@0.0.48
+
 ## 0.0.39
 
 ### Patch Changes

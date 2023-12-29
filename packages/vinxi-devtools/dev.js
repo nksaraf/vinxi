@@ -1,6 +1,7 @@
 import { createApp } from "vinxi";
 import { config } from "vinxi/plugins/config";
 import inspect from "vite-plugin-inspect";
+import solid from "vite-plugin-solid";
 
 import { devtoolsClientDev } from "./devtools-dev.js";
 import { devtoolsRpc } from "./index.js";
@@ -15,6 +16,7 @@ export default createApp({
 			target: "browser",
 			plugins: () => [
 				inspect(),
+				solid(),
 				config("test-spa", {
 					build: {
 						rollupOptions: {

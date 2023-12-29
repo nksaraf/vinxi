@@ -2,7 +2,7 @@ import boxen from "boxen";
 import { mkdir, rm, writeFile } from "fs/promises";
 import { H3Event, createApp } from "h3";
 import { createRequire } from "module";
-import { build, copyPublicAssets, createNitro } from "nitropack";
+import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
 
 import { writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -11,14 +11,9 @@ import { chunksServerVirtualModule } from "./chunks.js";
 import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
 import { c, consola, log, withLogger } from "./logger.js";
+import { viteManifestPath } from "./manifest-path.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
-import {
-	handlerModule,
-	join,
-	relative,
-	virtualId,
-	viteManifestPath,
-} from "./path.js";
+import { handlerModule, join, relative, virtualId } from "./path.js";
 import { config } from "./plugins/config.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
@@ -78,8 +73,11 @@ export async function createBuild(app, buildConfig) {
 		preset:
 			buildConfig.preset ??
 			process.env.TARGET ??
+			process.env.PRESET ??
 			process.env.SERVER_PRESET ??
+			process.env.SERVER_TARGET ??
 			process.env.NITRO_PRESET ??
+			process.env.NITRO_TARGET ??
 			app.config.server.preset,
 		alias: {
 			/**
@@ -88,10 +86,12 @@ export async function createBuild(app, buildConfig) {
 			"node-fetch-native/polyfill": require.resolve(
 				"node-fetch-native/polyfill",
 			),
-			"unstorage/drivers/fs-lite": require.resolve("unstorage/drivers/fs-lite"),
-			defu: require.resolve("defu"),
-			pathe: require.resolve("pathe"),
-			unstorage: require.resolve("unstorage"),
+			...(app.config.server.alias ?? {}),
+			// "unstorage/drivers/fs-lite": require.resolve("unstorage/drivers/fs-lite"),
+			// "unstorage/drivers/fs": require.resolve("unstorage/drivers/fs"),
+			// defu: require.resolve("defu"),
+			// pathe: require.resolve("pathe"),
+			// unstorage: require.resolve("unstorage"),
 		},
 		// externals: {
 		// 	inline: ["node-fetch-native/polyfill"],
@@ -295,9 +295,16 @@ export async function createBuild(app, buildConfig) {
 
 	await app.hooks.callHook("app:build:nitro:assets:copy:start", { app, nitro });
 
+	await mkdir(join(nitro.options.output.publicDir), { recursive: true });
 	await copyPublicAssets(nitro);
+
 	await app.hooks.callHook("app:build:nitro:assets:copy:end", { app, nitro });
+
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
+
+	await app.hooks.callHook("app:build:nitro:prerender:start", { app, nitro });
+	await prerender(nitro);
+	await app.hooks.callHook("app:build:nitro:prerender:end", { app, nitro });
 
 	await app.hooks.callHook("app:build:nitro:start", { app, nitro });
 	await build(nitro);

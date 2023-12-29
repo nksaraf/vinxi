@@ -1,11 +1,15 @@
+import { isCssModulesFile } from "../manifest/collect-styles.js";
+
 export function css() {
 	/** @type {import('vite').ViteDevServer} */
 	let viteServer;
+	let cssModules = {};
 	/** @type {import('../vite-dev.d.ts').Plugin} */
 	const plugin = {
 		name: "vinxi:css-hmr",
 		configureServer(dev) {
 			viteServer = dev;
+			viteServer.cssModules = cssModules;
 		},
 		async handleHotUpdate({ file, read, server, modules }) {
 			if (file.endsWith(".css")) {
@@ -24,6 +28,11 @@ export function css() {
 					},
 				});
 				return [];
+			}
+		},
+		transform(code, id) {
+			if (isCssModulesFile(id)) {
+				cssModules[id] = code;
 			}
 		},
 	};

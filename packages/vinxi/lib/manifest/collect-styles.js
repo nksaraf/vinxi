@@ -4,60 +4,65 @@ import { isBuiltin } from "node:module";
 
 import { join, resolve } from "../path.js";
 
+const skip = [
+	"react/jsx-dev-runtime",
+	"react",
+	"@vinxi/react-server-dom/runtime",
+];
+
 async function getViteModuleNode(vite, file, ssr) {
 	if (file.startsWith("node:") || isBuiltin(file)) {
 		return null;
 	}
 
-	const resolvedId = await vite.pluginContainer.resolveId(file, undefined, {
-		ssr: ssr,
-	});
+	let nodePath = file;
 
-	if (!resolvedId) {
-		console.log("not found");
-		return;
+	let node = await vite.moduleGraph.getModuleById(nodePath);
+	if (!node) {
+		const resolvedId = await vite.pluginContainer.resolveId(file, undefined, {
+			ssr: ssr,
+		});
+
+		if (!resolvedId) {
+			console.log("not found");
+			return;
+		}
+		nodePath = resolvedId.id;
+		node = await vite.moduleGraph.getModuleById(nodePath);
 	}
 
-	const id = resolvedId.id;
+	if (!node) {
+		nodePath = resolve(nodePath);
+		node = await vite.moduleGraph.getModuleByUrl(nodePath);
+	}
 
-	const normalizedPath = resolve(id);
+	// Only not sure what to do with absolutePath as this is currently also not used.
+	// https://github.com/nksaraf/vinxi/blob/06700abbbbae34015faeba84830797daf4f54817/packages/vinxi/lib/manifest/collect-styles.js#L35
+
+	// if (!node) {
+	// 	nodePath = resolve(file); // absolute path
+	// 	node = await vite.moduleGraph.getModuleByUrl(nodePath);
+	// }
+
+	if (!node) {
+		await vite.moduleGraph.ensureEntryFromUrl(nodePath, ssr);
+		node = await vite.moduleGraph.getModuleById(nodePath);
+	}
 
 	try {
-		let node = await vite.moduleGraph.getModuleById(normalizedPath);
-
-		if (!node) {
-			const absolutePath = resolve(file);
-			node = await vite.moduleGraph.getModuleByUrl(normalizedPath);
-			if (!node) {
-				if (ssr) {
-					await vite.moduleGraph.ensureEntryFromUrl(normalizedPath, ssr);
-					node = await vite.moduleGraph.getModuleById(normalizedPath);
-				} else {
-					await vite.moduleGraph.ensureEntryFromUrl(normalizedPath);
-					node = await vite.moduleGraph.getModuleById(normalizedPath);
-				}
-			}
-
-			if (!node.transformResult && !ssr) {
-				await vite.transformRequest(normalizedPath);
-				node = await vite.moduleGraph.getModuleById(normalizedPath);
-			}
-
-			if (ssr && !node.ssrTransformResult) {
-				await vite.ssrLoadModule(file);
-				node = await vite.moduleGraph.getModuleById(normalizedPath);
-			}
-		} else {
-			if (!node.transformResult && !ssr) {
-				await vite.transformRequest(normalizedPath);
-				node = await vite.moduleGraph.getModuleById(normalizedPath);
-			}
-
-			if (ssr && !node.ssrTransformResult) {
-				await vite.ssrLoadModule(normalizedPath);
-				node = await vite.moduleGraph.getModuleById(normalizedPath);
-			}
+		if (!node.transformResult && !ssr) {
+			await vite.transformRequest(nodePath);
+			node = await vite.moduleGraph.getModuleById(nodePath);
 		}
+
+		if (ssr && !node.ssrTransformResult) {
+			if (skip.includes(file)) {
+				return null;
+			}
+			await vite.ssrLoadModule(file);
+			node = await vite.moduleGraph.getModuleById(nodePath);
+		}
+
 		return node;
 	} catch (e) {
 		console.error(e);
@@ -107,12 +112,6 @@ async function findDeps(vite, node, deps, ssr) {
 	await Promise.all(branches);
 }
 
-// Vite doesn't expose this so we just copy the list for now
-// https://github.com/vitejs/vite/blob/3edd1af56e980aef56641a5a51cf2932bb580d41/packages/vite/src/node/plugins/css.ts#L96
-const STYLE_ASSET_REGEX = /\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
-const MODULE_STYLE_ASSET_REGEX =
-	/\.module\.(css|less|sass|scss|styl|stylus|pcss|postcss)$/;
-
 /**
  *
  * @param {import('vite').ViteDevServer} vite
@@ -135,6 +134,17 @@ async function findDependencies(vite, match, ssr) {
 	return deps;
 }
 
+// Vite doesn't expose these so we just copy the list for now
+// https://github.com/vitejs/vite/blob/d6bde8b03d433778aaed62afc2be0630c8131908/packages/vite/src/node/constants.ts#L49C23-L50
+const cssFileRegExp =
+	/\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\?)/;
+// https://github.com/vitejs/vite/blob/d6bde8b03d433778aaed62afc2be0630c8131908/packages/vite/src/node/plugins/css.ts#L160
+const cssModulesRegExp = new RegExp(`\\.module${cssFileRegExp.source}`);
+
+const isCssFile = (/** @type {string} */ file) => cssFileRegExp.test(file);
+export const isCssModulesFile = (/** @type {string} */ file) =>
+	cssModulesRegExp.test(file);
+
 /**
  *
  * @param {import('vite').ViteDevServer} vite
@@ -149,14 +159,14 @@ async function findStylesInModuleGraph(vite, match, ssr) {
 		const parsed = new URL(dep.url, "http://localhost/");
 		const query = parsed.searchParams;
 
-		if (STYLE_ASSET_REGEX.test(dep.file ?? "")) {
+		if (isCssFile(dep.url ?? "")) {
 			try {
 				const mod = await vite.ssrLoadModule(dep.url);
-				// if (module_STYLE_ASSET_REGEX.test(dep.file)) {
-				// 	styles[dep.url] = env.cssModules?.[dep.file];
-				// } else {
-				styles[join(vite.config.root, dep.url)] = mod.default;
-				// }
+				if (isCssModulesFile(dep.file)) {
+					styles[join(vite.config.root, dep.url)] = vite.cssModules?.[dep.file];
+				} else {
+					styles[join(vite.config.root, dep.url)] = mod.default;
+				}
 			} catch {
 				// this can happen with dynamically imported modules, I think
 				// because the Vite module graph doesn't distinguish between

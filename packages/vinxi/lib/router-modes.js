@@ -1,5 +1,4 @@
-import { setHeader } from "h3";
-import * as v from "zod";
+import * as z from "zod";
 
 import { isMainThread } from "node:worker_threads";
 
@@ -7,74 +6,74 @@ import invariant from "./invariant.js";
 import { handlerModule, isAbsolute, join } from "./path.js";
 import { resolve } from "./resolve.js";
 
-export { v };
+export { z };
 /**
  * @typedef {{ routes?: CompiledRouter; devServer?: import('vite').ViteDevServer; appWorker?: import('./app-worker-client.js').AppWorkerClient; mode: import("./router-mode.js").RouterMode }} Internals
  * @typedef {{ getRoutes(): Promise<any[]>; } & EventTarget} CompiledRouter
  * @typedef {(router: RouterSchemaInput, app: import("./app.js").AppOptions) => CompiledRouter} RouterStyleFn
  * */
-export const staticRouterSchema = v.object({
-	name: v.string(),
-	base: v.optional(v.string().default("/")),
-	mode: v.literal("static"),
-	dir: v.string(),
-	root: v.optional(v.string()),
+export const staticRouterSchema = z.object({
+	name: z.string(),
+	base: z.optional(z.string().default("/")),
+	mode: z.literal("static"),
+	dir: z.string(),
+	root: z.optional(z.string()),
 });
-export const buildRouterSchema = v.object({
-	name: v.string(),
-	base: v.optional(v.string().default("/")),
-	root: v.optional(v.string()),
-	mode: v.literal("build"),
-	handler: v.string(),
-	/** @type {v.ZodOptionalType<v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>>} */
-	routes: v.optional(v.custom((value) => value !== null)),
-	extensions: v.array(v.string()).optional(),
-	outDir: v.string().optional(),
-	target: v.literal("browser"),
-	plugins: v.optional(v.custom((value) => typeof value === "function")),
+export const buildRouterSchema = z.object({
+	name: z.string(),
+	base: z.optional(z.string().default("/")),
+	root: z.optional(z.string()),
+	mode: z.literal("build"),
+	handler: z.string(),
+	/** @type {z.ZodOptionalType<z.ZodType<RouterStyleFn, z.ZodTypeDef, RouterStyleFn>>} */
+	routes: z.optional(z.custom((value) => value !== null)),
+	extensions: z.array(z.string()).optional(),
+	outDir: z.string().optional(),
+	target: z.enum(["browser"]).default("browser").optional(),
+	plugins: z.optional(z.custom((value) => typeof value === "function")),
 });
-export const handlerRouterSchema = v.object({
-	name: v.string(),
-	base: v.optional(v.string().default("/")),
-	root: v.optional(v.string()),
+export const handlerRouterSchema = z.object({
+	name: z.string(),
+	base: z.optional(z.string().default("/")),
+	root: z.optional(z.string()),
 
-	mode: v.literal("handler"),
+	mode: z.literal("handler"),
 
-	build: v.optional(v.boolean()),
-	worker: v.optional(v.boolean()),
-	handler: v.string(),
-	middleware: v.optional(v.string()),
-	/** @type {v.ZodOptionalType<v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>>} */
-	routes: v.optional(v.custom((value) => value !== null)),
-	outDir: v.string().optional(),
-	target: v.literal("server"),
-	plugins: v.optional(v.custom((value) => typeof value === "function")),
+	build: z.optional(z.boolean()),
+	worker: z.optional(z.boolean()),
+	handler: z.string(),
+	middleware: z.optional(z.string()),
+	/** @type {z.ZodOptionalType<z.ZodType<RouterStyleFn, z.ZodTypeDef, RouterStyleFn>>} */
+	routes: z.optional(z.custom((value) => value !== null)),
+	outDir: z.string().optional(),
+	target: z.enum(["server"]).default("server").optional(),
+	plugins: z.optional(z.custom((value) => typeof value === "function")),
 });
-export const spaRouterSchema = v.object({
-	name: v.string(),
-	base: v.optional(v.string().default("/")),
-	root: v.optional(v.string()),
-	mode: v.literal("spa"),
-	/** @type {v.ZodOptionalType<v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>>} */
-	routes: v.optional(v.custom((value) => value !== null)),
-	handler: v.string(),
-	outDir: v.string().optional(),
-	target: v.literal("browser").optional().default("browser"),
-	plugins: v.optional(v.custom((value) => typeof value === "function")),
+export const spaRouterSchema = z.object({
+	name: z.string(),
+	base: z.optional(z.string().default("/")),
+	root: z.optional(z.string()),
+	mode: z.literal("spa"),
+	/** @type {z.ZodOptionalType<z.ZodType<RouterStyleFn, z.ZodTypeDef, RouterStyleFn>>} */
+	routes: z.optional(z.custom((value) => value !== null)),
+	handler: z.string(),
+	outDir: z.string().optional(),
+	target: z.enum(["browser"]).default("browser").optional(),
+	plugins: z.optional(z.custom((value) => typeof value === "function")),
 });
-const customRouterSchema = v.object({
-	name: v.string(),
-	base: v.optional(v.string().default("/")),
-	root: v.optional(v.string()),
-	mode: v.object({
-		resolveConfig: v.function().args(v.any(), v.any()).returns(v.any()),
+const customRouterSchema = z.object({
+	name: z.string(),
+	base: z.optional(z.string().default("/")),
+	root: z.optional(z.string()),
+	mode: z.object({
+		resolveConfig: z.function().args(z.any(), z.any()).returns(z.any()),
 	}),
-	/** @type {v.ZodOptionalType<v.ZodType<RouterStyleFn, v.ZodTypeDef, RouterStyleFn>>} */
-	routes: v.optional(v.custom((value) => value !== null)),
-	handler: v.string(),
-	outDir: v.string().optional(),
-	target: v.literal("server"),
-	plugins: v.optional(v.custom((value) => typeof value === "function")),
+	/** @type {z.ZodOptionalType<z.ZodType<RouterStyleFn, z.ZodTypeDef, RouterStyleFn>>} */
+	routes: z.optional(z.custom((value) => value !== null)),
+	handler: z.string(),
+	outDir: z.string().optional(),
+	target: z.literal("server"),
+	plugins: z.optional(z.custom((value) => typeof value === "function")),
 });
 export const routerSchema = {
 	static: staticRouterSchema,
@@ -83,20 +82,20 @@ export const routerSchema = {
 	handler: handlerRouterSchema,
 	custom: customRouterSchema,
 };
-/** @typedef {v.infer<typeof buildRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} BuildRouterSchema */
-/** @typedef {v.infer<typeof customRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} CustomRouterSchema */
-/** @typedef {v.infer<typeof staticRouterSchema> & { outDir: string; base: string; order: number; internals: Internals }} StaticRouterSchema */
-/** @typedef {v.infer<typeof handlerRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} HandlerRouterSchema */
-/** @typedef {v.infer<typeof spaRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} SPARouterSchema */
+/** @typedef {z.infer<typeof buildRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} BuildRouterSchema */
+/** @typedef {z.infer<typeof customRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} CustomRouterSchema */
+/** @typedef {z.infer<typeof staticRouterSchema> & { outDir: string; base: string; order: number; internals: Internals }} StaticRouterSchema */
+/** @typedef {z.infer<typeof handlerRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} HandlerRouterSchema */
+/** @typedef {z.infer<typeof handlerRouterSchema>} HandlerRouterInput */
+/** @typedef {z.infer<typeof spaRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} SPARouterSchema */
 /** @typedef {(HandlerRouterSchema | BuildRouterSchema | SPARouterSchema | StaticRouterSchema | CustomRouterSchema )} RouterSchema  */
-/** @typedef {(v.infer<typeof buildRouterSchema> | v.infer<typeof staticRouterSchema> | v.infer<typeof spaRouterSchema> |  v.infer<typeof handlerRouterSchema> | v.infer<typeof customRouterSchema>)} RouterSchemaInput  */
+/** @typedef {(z.infer<typeof buildRouterSchema> | z.infer<typeof staticRouterSchema> | z.infer<typeof spaRouterSchema> |  z.infer<typeof handlerRouterSchema> | z.infer<typeof customRouterSchema>)} RouterSchemaInput  */
 
 /**
  * @template X
- * @template T
  * @param {X} schema
- * @param {import("./router-mode.js").RouterMode<v.z.infer<X>>} mode
- * @returns {import("./router-mode.js").RouterMode<v.z.infer<X>>}
+ * @param {import("./router-mode.js").RouterMode<z.z.infer<X>>} mode
+ * @returns {import("./router-mode.js").RouterMode<z.z.infer<X>>}
  */
 export function createRouterMode(schema, mode) {
 	return mode;
@@ -187,6 +186,16 @@ const routerModes = {
 	handler: createRouterMode(handlerRouterSchema, {
 		name: "handler",
 		dev: {
+			publicAssets: (router) => {
+				/**
+				 * Added here to support static asset imports. Vite transforms these using the server base path. During development it expects that the file system will be available. So we need to serve the whole src diectory (including node_modules) during dev.
+				 */
+				return {
+					dir: join(router.root),
+					baseURL: router.base,
+					fallthrough: true,
+				};
+			},
 			plugins: async (router) => {
 				const { ROUTER_MODE_DEV_PLUGINS } = await import(
 					"./router-dev-plugins.js"
@@ -208,7 +217,10 @@ const routerModes = {
 							router.internals.appWorker,
 							"Router App Worker not initialized",
 						);
-						await router.internals.appWorker.init(() => {});
+						await router.internals.appWorker.init(
+							{ name: router.name, base: router.base },
+							() => {},
+						);
 						await router.internals.appWorker.handle(event);
 					});
 					return [

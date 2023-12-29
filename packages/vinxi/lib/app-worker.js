@@ -1,7 +1,7 @@
 import { H3Event } from "h3";
 
 import { AsyncLocalStorage } from "node:async_hooks";
-import { parentPort } from "node:worker_threads";
+import { parentPort, workerData } from "node:worker_threads";
 
 import { createDevServer } from "./dev-server.js";
 import { createIncomingMessage, createServerResponse } from "./http-stream.js";
@@ -52,11 +52,10 @@ class AppWorker {
 		this.initPromise = (async () => {
 			const app = await loadApp();
 			app.config.routers = app.config.routers.filter(
-				(router) => router.name === "rsc" || router.name === "client",
+				(router) => router.name === workerData.name || router.name === "client",
 			);
 			this.server = await createDevServer(app, {
 				port: 8989,
-				dev: true,
 				ws: { port: 10002 },
 			});
 		})();
@@ -93,7 +92,11 @@ class AppWorker {
 				try {
 					await this.initialize();
 					this.bodies ??= {};
-					const req = createIncomingMessage("/_rsc" + url, method, headers);
+					const req = createIncomingMessage(
+						workerData.base + url,
+						method,
+						headers,
+					);
 					this.bodies[rest.id] = req;
 					const res = createServerResponse(rest.id, {
 						onChunk: (chunk, encoding) => {

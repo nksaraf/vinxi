@@ -1,5 +1,158 @@
 # @vinxi/plugin-references
 
+## 0.0.56
+
+### Patch Changes
+
+- Updated dependencies [44f46ae]
+  - vinxi@0.0.59
+  - @vinxi/plugin-directives@0.0.55
+
+## 0.0.55
+
+### Patch Changes
+
+- Updated dependencies [b654e60]
+  - vinxi@0.0.58
+  - @vinxi/plugin-directives@0.0.54
+
+## 0.0.54
+
+### Patch Changes
+
+- 783d22b: (feat): native bun support, without any other module loader, runtime detection for all cli commands
+- Updated dependencies [ff03255]
+- Updated dependencies [d4801c2]
+- Updated dependencies [783d22b]
+- Updated dependencies [0160b5c]
+  - vinxi@0.0.57
+  - @vinxi/plugin-directives@0.0.53
+
+## 0.0.53
+
+### Patch Changes
+
+- Updated dependencies [d5262b3]
+- Updated dependencies [5694f29]
+  - vinxi@0.0.56
+  - @vinxi/plugin-directives@0.0.52
+
+## 0.0.52
+
+### Patch Changes
+
+- c5a94cf: (feat): deep support for `server.baseURL` API from nitro in dev & prod,
+- Updated dependencies [88201f3]
+- Updated dependencies [cbba2d7]
+- Updated dependencies [c5a94cf]
+- Updated dependencies [e53f24a]
+- Updated dependencies [9325a54]
+- Updated dependencies [a0974f0]
+- Updated dependencies [c4b76ed]
+- Updated dependencies [7af0a15]
+  - vinxi@0.0.55
+  - @vinxi/plugin-directives@0.0.51
+
+## 0.0.51
+
+### Patch Changes
+
+- Updated dependencies [7ec78e2]
+  - vinxi@0.0.54
+  - @vinxi/plugin-directives@0.0.50
+
+## 0.0.50
+
+### Patch Changes
+
+- Updated dependencies [b601463]
+- Updated dependencies [68cab94]
+  - @vinxi/plugin-directives@0.0.49
+  - vinxi@0.0.53
+
+## 0.0.49
+
+### Patch Changes
+
+- Updated dependencies [366b29b]
+  - vinxi@0.0.52
+  - @vinxi/plugin-directives@0.0.48
+
+## 0.0.48
+
+### Patch Changes
+
+- Updated dependencies [7276f73]
+  - vinxi@0.0.51
+  - @vinxi/plugin-directives@0.0.47
+
+## 0.0.47
+
+### Patch Changes
+
+- Updated dependencies [e4a6251]
+  - vinxi@0.0.50
+  - @vinxi/plugin-directives@0.0.46
+
+## 0.0.46
+
+### Patch Changes
+
+- 0f9a5df: route rules for dev server
+- d8ef7c9: fix: clean up old console logs
+- Updated dependencies [0f9a5df]
+- Updated dependencies [e6205a4]
+- Updated dependencies [d8ef7c9]
+- Updated dependencies [e7313f4]
+  - vinxi@0.0.49
+  - @vinxi/plugin-directives@0.0.45
+
+## 0.0.45
+
+### Patch Changes
+
+- 800f557: refactor:simplify server-functions server side plugin
+
+## 0.0.44
+
+### Patch Changes
+
+- Updated dependencies [47c9b78]
+  - @vinxi/plugin-directives@0.0.44
+
+## 0.0.43
+
+### Patch Changes
+
+- Updated dependencies [f35751c]
+  - @vinxi/plugin-directives@0.0.43
+
+## 0.0.42
+
+### Patch Changes
+
+- Updated dependencies [89832f7]
+  - @vinxi/plugin-directives@0.0.42
+
+## 0.0.41
+
+### Patch Changes
+
+- Updated dependencies [619f69f]
+  - @vinxi/plugin-directives@0.0.41
+
+## 0.0.40
+
+### Patch Changes
+
+- 4e4c047: make server functions worker work
+- 8ef044b: feat: add wrapper for server functions on the server
+- Updated dependencies [fc7494d]
+- Updated dependencies [4e4c047]
+- Updated dependencies [8ef044b]
+  - vinxi@0.0.48
+  - @vinxi/plugin-directives@0.0.40
+
 ## 0.0.39
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/plugin-mdx",
-  "version": "3.6.5",
+  "version": "3.6.7",
   "type": "module",
   "scripts": {
     "// User Scripts": "",
@@ -11,7 +11,7 @@
     "tsc:once": "tsc --build",
     "build:cjs": "esbuild --bundle --platform=node --external:esbuild --external:vite --external:@mdx-js/mdx src/index.ts > dist/index.cjs",
     "// Release": "",
-    "prepublishOnly": "pnpm run build",
+    "prepublishOnly": "pnpm run build:cjs",
     "release": "npm version patch && npm publish && git push && git push --tags",
     "// Remove caches": "",
     "clean": "git clean -Xdff"
@@ -21,8 +21,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "@mdx-js/mdx": "<3",
-    "vite": "<5"
+    "@mdx-js/mdx": "<3"
   },
   "dependencies": {
     "@alloc/quick-lru": "^5.2.0",
@@ -38,7 +37,7 @@
     "@types/resolve": "^1.20.2",
     "@types/unist": "^2.0.7",
     "typescript": "^5.2.2",
-    "vite": "^4.5.0"
+    "vite": "4.5.0"
   },
   "description": "Vite plugin for MDX",
   "license": "MIT",

@@ -1,5 +1,18 @@
 # @vinxi/plugin-mdx
 
+## 3.6.7
+
+### Patch Changes
+
+- 7ec78e2: remove console logs, nit
+
+## 3.6.6
+
+### Patch Changes
+
+- b601463: keep vite 4 (for now) and bug fix in wrap exports (@vinxi/plugin-directives)
+- 68cab94: vite 5
+
 ## 3.6.5
 
 ### Patch Changes

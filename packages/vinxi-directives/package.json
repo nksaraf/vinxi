@@ -1,11 +1,13 @@
 {
   "name": "@vinxi/plugin-directives",
-  "version": "0.0.39",
+  "version": "0.0.55",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
     "*.js",
-    "*.d.ts"
+    "*.cjs",
+    "*.d.ts",
+    "plugins"
   ],
   "types": "./index.d.ts",
   "exports": {
@@ -21,19 +23,21 @@
   },
   "devDependencies": {
     "@vitest/ui": "^0.34.6",
-    "vinxi": "^0.0.47",
+    "vinxi": "^0.0.59",
     "vitest": "^0.28.5"
   },
   "peerDependencies": {
-    "vinxi": "^0.0.47"
+    "vinxi": "^0.0.59"
   },
   "dependencies": {
+    "@babel/parser": "^7.23.5",
     "acorn": "^8.10.0",
     "acorn-jsx": "^5.3.2",
     "acorn-loose": "^8.3.0",
     "acorn-typescript": "^1.4.3",
     "astring": "^1.8.6",
     "magicast": "^0.2.10",
-    "recast": "^0.23.4"
+    "recast": "^0.23.4",
+    "tslib": "^2.6.2"
   }
 }

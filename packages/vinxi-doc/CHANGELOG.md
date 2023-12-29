@@ -1,5 +1,11 @@
 # @vinxi/doc
 
+## 0.0.4
+
+### Patch Changes
+
+- 4e4c047: make server functions worker work
+
 ## 0.0.3
 
 ### Patch Changes

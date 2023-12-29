@@ -8,12 +8,34 @@
 
 # `vinxi`
 
+Compose full stack applications (and frameworks) using [**Vite**](https://github.com/vitejs/vite), the versatile bundler and dev server, and [**Nitro**](https://github.com/unjs/nitro), the universal production server. The core primitive in `vinxi` is a **router**.
 
-Compose full stack applications (and frameworks) using [**Vite**](https://github.com/vitejs/vite), the versatile bundler and dev server, and [**Nitro**](https://github.com/unjs/nitro), the universal production server. The core primitive in `vinxi` is a **router**. 
-
-Inspired by the [Bun.App](https://bun.sh/blog/bun-bundler#sneak-peek-bun-app) API. 
+Inspired by the [Bun.App](https://bun.sh/blog/bun-bundler#sneak-peek-bun-app) API.
 
 - **Routers** are handlers that tell us how specific URLs should be handled. We support various router modes: "static", "spa", "handler", "node-handler" (and new ones can be added). Routers specify the handler file (entrypoint) to use for their `base`-prefixed routes. They can also specify a `dir` and `style` in some router modes to include a file system router that is provided to the handler. Routers specify their bundler configuration, via the `build` property. The routers tell the bundler what entry points to build, what vite plugins to use, etc.
+
+## Examples
+
+| Framework | Category | Example               | StackBlitz Link                                                                                                                                            |
+|-----------|----------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| React     | RSC      | SPA                     | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/rsc)       |
+|           | SPA      | Basic                 | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/spa/basic) |
+|           |          | MDX                   | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/spa/mdx)   |
+|           |          | TanStack Router (Pages)      | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/spa/tanstack-router) |
+|           |          | TanStack Router (App)   | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/spa/tanstack-router-app) |
+|           |          | Wouter                | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/spa/wouter) |
+|           | SSR      | Basic                 | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/ssr/basic) |
+|           |          | Basic w/Cloudflare      | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/ssr/basic-cloudflare) |
+|           |          | TanStack Router (App)   | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/ssr/tanstack-router-app) |
+|           |          | Wouter                | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/ssr/wouter) |
+| Solid     | SPA      | Basic                 | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/solid/spa/basic) |
+|           | SSR      | Basic                 | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/solid/ssr/basic) |
+|           |          | Solid Router          | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/solid/ssr/solid-router) |
+| Vanilla   |          | SPA                 | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/vanilla/spa) |
+|           |          | TRPC             | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/vanilla/trpc) |
+
+
+
 
 ## Goals
 
@@ -33,7 +55,7 @@ The surface layer we are intending to tackle:
 ## Roadmap
 
 - [ ] `vinxi deploy`
-- [ ] hooks throughout the app licycle:
+- [x] hooks throughout the app licycle:
 	- dev: app:created, app:started, router:created
 
 ## Try it out

@@ -1,5 +1,105 @@
 # vinxi
 
+## 0.0.59
+
+### Patch Changes
+
+- 44f46ae: fix syntax in load-app file
+  - @vinxi/devtools@0.0.5
+
+## 0.0.58
+
+### Patch Changes
+
+- b654e60: chore: remove logging of fs routes
+  - @vinxi/devtools@0.0.5
+
+## 0.0.57
+
+### Patch Changes
+
+- ff03255: chore: fix logging and make hooks only log in DEBUG mode
+- 783d22b: (feat): native bun support, without any other module loader, runtime detection for all cli commands
+- 0160b5c: (perf): avoid jiti if loading a js/mjs/cjs file
+  - @vinxi/devtools@0.0.5
+
+## 0.0.56
+
+### Patch Changes
+
+- d5262b3: (feat): add additional CLI shortcuts (u -> show URL, h -> show help, r -> restart dev server)
+- 5694f29: (feat): support devProxy nitro options, in vinxi dev server
+  - @vinxi/devtools@0.0.5
+
+## 0.0.55
+
+### Patch Changes
+
+- 88201f3: use file url to import server in start command
+- cbba2d7: fix: normalize paths from fs watcher
+- c5a94cf: (feat): deep support for `server.baseURL` API from nitro in dev & prod,
+- e53f24a: (fix): decorate exports use parse-advanced, fixes #36
+- 9325a54: (feat): css modules support
+- a0974f0: (fix): css hmr happens in vinxi/client for all css assets, not only for lazyRoutes
+- c4b76ed: Add 'r' keypress to restart dev server
+- 7af0a15: (fix): static assets imports in server side handler
+  - @vinxi/devtools@0.0.5
+
+## 0.0.54
+
+### Patch Changes
+
+- 7ec78e2: remove console logs, nit
+  - @vinxi/devtools@0.0.5
+
+## 0.0.53
+
+### Patch Changes
+
+- b601463: keep vite 4 (for now) and bug fix in wrap exports (@vinxi/plugin-directives)
+- 68cab94: vite 5
+  - @vinxi/devtools@0.0.5
+
+## 0.0.52
+
+### Patch Changes
+
+- 366b29b: fix: include more than css assets
+  - @vinxi/devtools@0.0.5
+
+## 0.0.51
+
+### Patch Changes
+
+- 7276f73: fix prerender twice
+  - @vinxi/devtools@0.0.5
+
+## 0.0.50
+
+### Patch Changes
+
+- e4a6251: remove build aliases to fix pre-render
+  - @vinxi/devtools@0.0.5
+
+## 0.0.49
+
+### Patch Changes
+
+- 0f9a5df: route rules for dev server
+- e6205a4: prerender
+- d8ef7c9: fix: clean up old console logs
+- e7313f4: feat: vinxi start command (just works with node target right now)
+  - @vinxi/devtools@0.0.5
+
+## 0.0.48
+
+### Patch Changes
+
+- fc7494d: fix: --port flag for the dev server
+- 4e4c047: make server functions worker work
+- 8ef044b: feat: add wrapper for server functions on the server
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.47
 
 ### Patch Changes

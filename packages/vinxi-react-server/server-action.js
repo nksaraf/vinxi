@@ -6,18 +6,6 @@ import { eventHandler, sendStream } from "vinxi/server";
 // import App from "./app";
 
 export default eventHandler(async (event) => {
-	async function loadModule(id) {
-		if (import.meta.env.DEV) {
-			return await import(
-				import.meta.env.MANIFEST["rsc"].chunks[id].output.path
-			);
-		}
-
-		if (globalThis.$$chunks[id + ".js"]) {
-			return globalThis.$$chunks[id + ".js"];
-		}
-		return await import(import.meta.env.MANIFEST["rsc"].chunks[id].output.path);
-	}
 	if (event.node.req.method === "POST") {
 		const {
 			renderToPipeableStream,
@@ -29,7 +17,9 @@ export default eventHandler(async (event) => {
 		if (serverReference) {
 			// This is the client-side case
 			const [filepath, name] = serverReference.split("#");
-			const action = (await loadModule(filepath))[name];
+			const action = (
+				await import.meta.env.MANIFEST["server-fns"].chunks[filepath].import()
+			)[name];
 			// Validate that this is actually a function we intended to expose and
 			// not the client trying to invoke arbitrary functions. In a real app,
 			// you'd have a manifest verifying this before even importing it.

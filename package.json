@@ -8,6 +8,7 @@
     "clean": "rm -rf **/*/.{nitro,output}",
     "test": "pnpm --filter tests clean && pnpm --filter tests test --",
     "ci": "pnpm -r --stream run ci",
+    "release": "pnpm run build && pnpm --filter vinxi run types && changeset publish",
     "test:packages": "pnpm -r --stream run test",
     "test:prettier": "prettier --check --ignore-path .gitignore --ignore-unknown . '!pnpm-lock.yaml'",
     "format": "prettier --ignore-path .gitignore --ignore-unknown . '!pnpm-lock.yaml' --write"

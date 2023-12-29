@@ -1,15 +1,28 @@
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
+/**
+ *
+ * @param {string} src
+ * @returns {Promise<import('./types.d.ts').DocNode[]>}
+ */
 export async function doc(src) {
 	const require = createRequire(import.meta.url);
 	const mod = require("@vinxi/deno-doc");
 	const resolve = require("resolve");
-	const path = require("path");
+	// const path = require("path");
 	const Module = require("module");
 	const fs = require("fs");
+
+	const input = (
+		src instanceof URL
+			? src
+			: pathToFileURL(
+					path.isAbsolute(src) ? src : path.join(process.cwd(), src),
+			  )
+	).toString();
 
 	const resolveFrom = (fromDirectory, moduleId, silent) => {
 		if (typeof fromDirectory !== "string") {
@@ -58,6 +71,12 @@ export async function doc(src) {
 
 	function resolvePackage(specifier, referrer) {
 		try {
+			// console.log("resolvePackage", specifier, referrer);
+
+			if (specifier.startsWith("node:")) {
+				return new URL("./empty.d.ts", import.meta.url).toString();
+			}
+
 			const resolved = resolve.sync(specifier, {
 				preserveSymlinks: false,
 				basedir: path.dirname(new URL(referrer).pathname),
@@ -72,7 +91,7 @@ export async function doc(src) {
 			return "file://" + resolved;
 		} catch (e) {
 			console.error(e);
-			return null;
+			return new URL("./empty.d.ts", import.meta.url).toString();
 		}
 	}
 
@@ -100,7 +119,7 @@ export async function doc(src) {
 		}
 	}
 	return await mod.doc(
-		src,
+		input,
 		false,
 		async (id) => {
 			// if (!id.startsWith("file://")) {

@@ -1,7 +1,7 @@
 /**
  *
  * @param {string} tag
- * @param {Omit<import('vite').InlineConfig, 'router'>} conf
+ * @param {import('../vite-dev.d.ts').CustomizableConfig} conf
  * @returns {import('../vite-dev.d.ts').Plugin}
  */
 export function config(tag, conf) {

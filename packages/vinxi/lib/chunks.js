@@ -1,5 +1,7 @@
 import { readFileSync } from "fs";
-import { join, viteManifestPath } from "vinxi/lib/path";
+import { join } from "vinxi/lib/path";
+
+import { viteManifestPath } from "./manifest-path.js";
 
 const CHUNK_PREFIX = "c_";
 

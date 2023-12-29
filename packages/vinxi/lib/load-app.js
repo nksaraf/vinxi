@@ -1,8 +1,68 @@
+/// <reference types="bun-types" />
 import { loadConfig } from "c12";
-import { fileURLToPath } from "url";
+import { existsSync } from "fs";
+import { joinURL } from "ufo";
+import { fileURLToPath, pathToFileURL } from "url";
 
 import { createApp } from "./app.js";
 import { log } from "./logger.js";
+
+async function loadFile({ ...options }) {
+	if (process.versions.bun) {
+		if (options.name) {
+			for (const ext of ["js", "ts", "mjs"]) {
+				if (
+					await Bun.file(
+						process.cwd() + "/" + options.name + ".config." + ext,
+					).exists()
+				)
+					return import(
+						process.cwd() + "/" + options.name + ".config." + ext
+					).then((m) => ({
+						config: m.default,
+					}));
+			}
+		} else if (options.configFile) {
+			if (await Bun.file(process.cwd() + "/" + options.configFile).exists()) {
+				return import(process.cwd() + "/" + options.configFile).then((m) => ({
+					config: m.default,
+				}));
+			}
+		}
+	}
+
+	if (options.name) {
+		if (existsSync(process.cwd() + "/" + options.name + ".config.js")) {
+			return import(
+				joinURL(pathToFileURL(process.cwd()).href, `${options.name}.config.js`)
+			).then((m) => ({
+				config: m.default,
+			}));
+		} else if (existsSync(process.cwd() + "/" + options.name + ".config.mjs")) {
+			return import(
+				joinURL(pathToFileURL(process.cwd()).href, `${options.name}.config.mjs`)
+			).then((m) => ({
+				config: m.default,
+			}));
+		}
+	} else if (options.configFile) {
+		if (options.configFile.endsWith("js")) {
+			return import(
+				joinURL(pathToFileURL(process.cwd()).href, `${options.configFile}`)
+			).then((m) => ({
+				config: m.default,
+			}));
+		}
+	}
+
+	return loadConfig({
+		jitiOptions: {
+			esmResolve: true,
+			nativeModules: ["acorn"],
+		},
+		...options,
+	});
+}
 
 /**
  *
@@ -13,37 +73,23 @@ export async function loadApp(configFile = undefined, args = {}) {
 	const stacks = typeof args.s === "string" ? [args.s] : args.s ?? [];
 	/** @type {{ config: import("./app.js").App }}*/
 	try {
-		let { config: app } = await loadConfig(
+		let { config: app } = await loadFile(
 			configFile
 				? {
 						configFile,
-						jitiOptions: {
-							esmResolve: true,
-							nativeModules: ["acorn"],
-						},
 				  }
 				: {
 						name: "app",
-						jitiOptions: {
-							esmResolve: true,
-							nativeModules: ["acorn"],
-						},
 				  },
 		);
 
 		if (!app.config) {
-			const { config } = await loadConfig({
+			const { config } = await loadFile({
 				name: "vite",
-				jitiOptions: {
-					esmResolve: true,
-					nativeModules: ["acorn"],
-				},
 			});
 
 			if (config.config) {
 				log("Found vite.config.js with app config");
-				// @ts-expect-error trying to send c12's config as app
-				//
 				return config;
 			} else {
 				log("No app config found. Assuming SPA app.");

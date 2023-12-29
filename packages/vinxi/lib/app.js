@@ -4,15 +4,15 @@ import resolve from "resolve";
 import { isMainThread } from "worker_threads";
 
 import invariant, { InvariantError } from "./invariant.js";
-import { c, consola, log, withLogger } from "./logger.js";
+import { c, consola, withLogger } from "./logger.js";
 import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 
-/** @typedef {{ 
-	devtools?: boolean; 
-	routers?: import("./router-modes.js").RouterSchemaInput[]; 
-	name?: 
-	string; 
-	server?: import('nitropack').NitroConfig; 
+/** @typedef {{
+	devtools?: boolean;
+	routers?: import("./router-modes.js").RouterSchemaInput[];
+	name?:
+	string;
+	server?: Omit<import('nitropack').NitroConfig, 'handlers' | 'devHandlers' | 'publicAssets' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual'>;
 	root?: string
 }} AppOptions */
 
@@ -20,7 +20,7 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 	config: {
 		name: string;
 		devtools: boolean;
-		server: import("nitropack").NitroConfig;
+		server: Omit<import('nitropack').NitroConfig, 'handlers' | 'devHandlers' | 'publicAssets' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual'>;
 		routers: import("./router-mode.js").Router[];
 		root: string;
 	};
@@ -48,14 +48,16 @@ export function createApp({
 } = {}) {
 	const hooks = createHooks();
 	hooks.afterEach((result) => {
-		const output = result.args[0].router
-			? [c.yellow(result.args[0].router?.name), result.name]
-			: [result.name];
-		consola.log(
-			c.dim(c.blue("vinxi")),
-			c.dim(c.green("hook")),
-			...output.map(c.dim),
-		);
+		if (process.env.DEBUG) {
+			const output = result.args[0].router
+				? [c.yellow(result.args[0].router?.name), result.name]
+				: [result.name];
+			consola.log(
+				c.dim(c.blue("vinxi")),
+				c.dim(c.green("hook")),
+				...output.map(c.dim),
+			);
+		}
 	});
 	// if (devtools) {
 	// 	routers = [devtoolsClient(), devtoolsRpc(), ...routers];
@@ -161,13 +163,14 @@ export function createApp({
 		async dev() {
 			if (isMainThread) {
 				const { createDevServer } = await import("./dev-server.js");
-				await createDevServer(app, {
+				const devServer = await createDevServer(app, {
 					port: Number(process.env.PORT ?? 3000),
 					force: process.argv.includes("--force"),
 					devtools:
 						process.argv.includes("--devtools") ||
 						Boolean(process.env.DEVTOOLS),
 				});
+				await devServer.listen();
 			}
 		},
 		async build() {
@@ -179,7 +182,7 @@ export function createApp({
 	hooks.callHook("app:created", { app });
 
 	if (process.argv.includes("--dev")) {
-		withLogger({ router: { name }, requestId: "dev" }, () => app.dev());
+		app.dev();
 	} else if (process.argv.includes("--build")) {
 		app.build();
 	}
