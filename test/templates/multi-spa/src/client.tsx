@@ -12,7 +12,7 @@ function App() {
         <>
             <div>
                 <img data-test-id="asset-image" ref={assetImage} src={logo} onLoad={() => markLoaded(assetImage.current)} />
-                <img data-test-id="public-image" ref={publicImage} src="/react/logo.png" onLoad={() => markLoaded(publicImage.current)} />
+                <img data-test-id="public-image" ref={publicImage} src="/favicon.ico" onLoad={() => markLoaded(publicImage.current)} />
             </div>
             <Counter/>
         </>

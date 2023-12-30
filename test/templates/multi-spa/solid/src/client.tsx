@@ -11,7 +11,7 @@ function App() {
         <>
             <div>
                 <img data-test-id="asset-image-solid" ref={setAssetImage} src={logo} onLoad={() => markLoaded(assetImage())} />
-                <img data-test-id="public-image-solid" ref={setPublicImage} src="/solid/logo.png" onLoad={() => markLoaded(publicImage())} />
+                <img data-test-id="public-image-solid" ref={setPublicImage} src="/solid/favicon.ico" onLoad={() => markLoaded(publicImage())} />
             </div>
             <Counter/>
         </>

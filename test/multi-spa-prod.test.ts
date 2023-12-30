@@ -28,57 +28,30 @@ test.describe("multi-spa-prod", () => {
 		});
 	});
 
-	test("root", async ({ page }) => {
-		let app = new PlaywrightFixture(appFixture, page);
-		await app.goto("/", true);
+	function createSPATest(title: string, base: string, id?: string) {
+		test(title, async ({ page }) => {
+			let app = new PlaywrightFixture(appFixture, page);
+			await app.goto(base, true);
 
-		expect(await app.getHtml("[data-test-id=count]")).toBe(
-			prettyHtml(`<span data-test-id="count">0</span>`),
-		);
+			expect(await app.getHtml(`[data-test-id=count${id ? "-" + id : ""}]`)).toBe(
+				prettyHtml(`<span data-test-id="count${id ? "-" + id : ""}">0</span>`),
+			);
+	
+			await app.clickElement(`[data-test-id=button${id ? "-" + id : ""}]`);
+	
+			expect(await app.getHtml(`[data-test-id=count${id ? "-" + id : ""}]`)).toBe(
+				prettyHtml(`<span data-test-id="count${id ? "-" + id : ""}">1</span>`),
+			);
+	
+			expect(await app.getHtml(`[data-test-id=asset-image${id ? "-" + id : ""}]`)).toContain('data-loaded="true"');
+			expect(await app.getHtml(`[data-test-id=public-image${id ? "-" + id : ""}]`)).toContain('data-loaded="true"');
+	
+			const res = await fixture.requestDocument(`${base + (base.endsWith("/") ? "" : "/")}not-defined`);
+			expect(res.status).toBe(200);
+		});
+	}
 
-		await app.clickElement("[data-test-id=button]");
-
-		expect(await app.getHtml("[data-test-id=count]")).toBe(
-			prettyHtml(`<span data-test-id="count">1</span>`),
-		);
-
-		expect(await app.getHtml("[data-test-id=asset-image]")).toContain('data-loaded="true"');
-		expect(await app.getHtml("[data-test-id=public-image]")).toContain('data-loaded="true"');
-	});
-
-	test("react", async ({ page }) => {
-		let app = new PlaywrightFixture(appFixture, page);
-		await app.goto("/react", true);
-
-		expect(await app.getHtml("[data-test-id=count-react]")).toBe(
-			prettyHtml(`<span data-test-id="count-react">0</span>`),
-		);
-
-		await app.clickElement("[data-test-id=button-react]");
-
-		expect(await app.getHtml("[data-test-id=count-react]")).toBe(
-			prettyHtml(`<span data-test-id="count-react">1</span>`),
-		);
-
-		expect(await app.getHtml("[data-test-id=asset-image-react]")).toContain('data-loaded="true"');
-		expect(await app.getHtml("[data-test-id=public-image-react]")).toContain('data-loaded="true"');
-	});
-
-	test("solid", async ({ page }) => {
-		let app = new PlaywrightFixture(appFixture, page);
-		await app.goto("/solid", true);
-
-		expect(await app.getHtml("[data-test-id=count-solid]")).toBe(
-			prettyHtml(`<span data-test-id="count-solid">0</span>`),
-		);
-
-		await app.clickElement("[data-test-id=button-solid]");
-
-		expect(await app.getHtml("[data-test-id=count-solid]")).toBe(
-			prettyHtml(`<span data-test-id="count-solid">1</span>`),
-		);
-
-		expect(await app.getHtml("[data-test-id=asset-image-solid]")).toContain('data-loaded="true"');
-		expect(await app.getHtml("[data-test-id=public-image-solid]")).toContain('data-loaded="true"');
-	});
+	createSPATest("root", "/");
+	createSPATest("react", "/react", "react");
+	createSPATest("solid", "/solid", "solid");
 });
