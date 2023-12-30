@@ -255,10 +255,10 @@ const routerModes = {
 
 				const { createViteHandler } = await import("./dev-server.js");
 				const viteServer = await createViteHandler(router, app, serveConfig);
-				const viteHandler = fromNodeMiddleware(viteServer.middlewares);
+				const viteMiddleware = fromNodeMiddleware(viteServer.middlewares);
 
 				const handler = eventHandler(async (event) => {
-					await viteHandler(event);
+					await viteMiddleware(event);
 					if (event.handled) {
 						return;
 					}
