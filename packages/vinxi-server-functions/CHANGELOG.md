@@ -1,5 +1,23 @@
 # @vinxi/plugin-references
 
+## 0.0.58
+
+### Patch Changes
+
+- 86982a4: fix: await plugins in server functions/comoponents overrides
+- Updated dependencies [86982a4]
+- Updated dependencies [b7332a6]
+  - vinxi@0.0.61
+  - @vinxi/plugin-directives@0.0.57
+
+## 0.0.57
+
+### Patch Changes
+
+- Updated dependencies [1261c16]
+  - vinxi@0.0.60
+  - @vinxi/plugin-directives@0.0.56
+
 ## 0.0.56
 
 ### Patch Changes

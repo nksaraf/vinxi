@@ -96,6 +96,8 @@ export async function createBuild(app, buildConfig) {
 		// externals: {
 		// 	inline: ["node-fetch-native/polyfill"],
 		// },
+
+		minify: process.env.MINIFY !== "false" ?? true,
 		plugins: [
 			"#vinxi/prod-app",
 			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
@@ -671,8 +673,10 @@ function handerBuild() {
 								...builtinModules.map((m) => `node:${m}`),
 							],
 							treeshake: true,
+							preserveEntrySignatures: "exports-only",
 						},
 						ssr: true,
+						minify: process.env.MINIFY !== "false" ?? true,
 						manifest: true,
 						target: "node18",
 						ssrEmitAssets: true,
@@ -703,7 +707,9 @@ function browserBuild() {
 						rollupOptions: {
 							input: await getEntries(router),
 							treeshake: true,
+							preserveEntrySignatures: "exports-only",
 						},
+						minify: process.env.MINIFY !== "false" ?? true,
 						manifest: true,
 						outDir: join(router.outDir, router.base),
 						target: "esnext",

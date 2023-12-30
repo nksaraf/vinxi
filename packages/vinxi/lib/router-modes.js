@@ -142,8 +142,24 @@ const routerModes = {
 			},
 			handler: async (router, app, serveConfig) => {
 				const { createViteHandler } = await import("./dev-server.js");
+				const { joinURL } = await import("ufo");
 				const { fromNodeMiddleware, eventHandler } = await import("h3");
 				const viteDevServer = await createViteHandler(router, app, serveConfig);
+
+				viteDevServer.middlewares.stack.unshift({
+					route: "",
+					handle: async (req, res, next) => {
+						// console.log(req.url, req.originalURL)
+						req.__preViteUrl = req.url;
+						req.url = joinURL(
+							app.config.server.baseURL ?? "",
+							router.base,
+							req.url,
+						);
+						await next();
+						req.url = req.__preViteUrl;
+					},
+				});
 
 				return {
 					route: router.base,
@@ -203,7 +219,9 @@ const routerModes = {
 				return await ROUTER_MODE_DEV_PLUGINS.handler(router);
 			},
 			handler: async (router, app, serveConfig) => {
-				const { eventHandler } = await import("../runtime/server.js");
+				const { eventHandler, fromNodeMiddleware } = await import(
+					"../runtime/server.js"
+				);
 				if (router.mode === "handler" && router.worker && isMainThread) {
 					if (!router.internals.appWorker) {
 						const { AppWorkerClient } = await import("./app-worker-client.js");
@@ -237,7 +255,13 @@ const routerModes = {
 
 				const { createViteHandler } = await import("./dev-server.js");
 				const viteServer = await createViteHandler(router, app, serveConfig);
+				const viteMiddleware = fromNodeMiddleware(viteServer.middlewares);
+
 				const handler = eventHandler(async (event) => {
+					await viteMiddleware(event);
+					if (event.handled) {
+						return;
+					}
 					const { default: handler } = await viteServer.ssrLoadModule(
 						handlerModule(router),
 					);
@@ -304,8 +328,23 @@ const routerModes = {
 					fromNodeMiddleware,
 					getRequestURL,
 				} = await import("../runtime/server.js");
-
+				const { joinURL } = await import("ufo");
 				const viteDevServer = await createViteHandler(router, app, serveConfig);
+
+				viteDevServer.middlewares.stack.unshift({
+					route: "",
+					handle: async (req, res, next) => {
+						// console.log(req.url, req.originalURL)
+						req.__preViteUrl = req.url;
+						req.url = joinURL(
+							app.config.server.baseURL ?? "",
+							router.base,
+							req.url,
+						);
+						await next();
+						req.url = req.__preViteUrl;
+					},
+				});
 
 				if (router.handler.endsWith(".html")) {
 					return [
