@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.0.61
+
+### Patch Changes
+
+- 86982a4: fix: await plugins in server functions/comoponents overrides
+- b7332a6: fix: reset req.url for vite middleware
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.60
 
 ### Patch Changes
