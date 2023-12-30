@@ -142,8 +142,32 @@ const routerModes = {
 			},
 			handler: async (router, app, serveConfig) => {
 				const { createViteHandler } = await import("./dev-server.js");
+				const { joinURL } = await import("ufo");
 				const { fromNodeMiddleware, eventHandler } = await import("h3");
 				const viteDevServer = await createViteHandler(router, app, serveConfig);
+
+				viteDevServer.middlewares.stack.unshift({
+					route: "",
+					handle: (req, res, next) => {
+						// console.log(req.url, req.originalURL)
+						req.__preViteUrl = req.url;
+						req.url = joinURL(
+							app.config.server.baseURL ?? "",
+							router.base,
+							req.url,
+						);
+						next();
+					},
+				});
+
+				viteDevServer.middlewares.stack.push({
+					route: "",
+					handle: (req, res, next) => {
+						// console.log(req.url, req.originalURL)
+						req.url = req.__preViteUrl;
+						next();
+					},
+				});
 
 				return {
 					route: router.base,
@@ -304,8 +328,31 @@ const routerModes = {
 					fromNodeMiddleware,
 					getRequestURL,
 				} = await import("../runtime/server.js");
-
+				const { joinURL } = await import("ufo");
 				const viteDevServer = await createViteHandler(router, app, serveConfig);
+
+				viteDevServer.middlewares.stack.unshift({
+					route: "",
+					handle: (req, res, next) => {
+						// console.log(req.url, req.originalURL)
+						req.__preViteUrl = req.url;
+						req.url = joinURL(
+							app.config.server.baseURL ?? "",
+							router.base,
+							req.url,
+						);
+						next();
+					},
+				});
+
+				viteDevServer.middlewares.stack.push({
+					route: "",
+					handle: (req, res, next) => {
+						// console.log(req.url, req.originalURL)
+						req.url = req.__preViteUrl;
+						next();
+					},
+				});
 
 				if (router.handler.endsWith(".html")) {
 					return [
