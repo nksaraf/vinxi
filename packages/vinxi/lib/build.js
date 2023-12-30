@@ -352,13 +352,12 @@ async function createRouterBuild(app, router) {
 		});
 		await createViteBuild({
 			app: app,
-			router: router,
 			root: router.root,
 			build: {
 				ssr: true,
 				ssrManifest: true,
 				rollupOptions: {
-					input: { handler: join(router.root, router.handler) },
+					input: { handler: router.handler },
 				},
 				target: "esnext",
 				outDir: join(router.outDir + "_entry"),
