@@ -227,7 +227,9 @@ const routerModes = {
 				return await ROUTER_MODE_DEV_PLUGINS.handler(router);
 			},
 			handler: async (router, app, serveConfig) => {
-				const { eventHandler } = await import("../runtime/server.js");
+				const { eventHandler, fromNodeMiddleware } = await import(
+					"../runtime/server.js"
+				);
 				if (router.mode === "handler" && router.worker && isMainThread) {
 					if (!router.internals.appWorker) {
 						const { AppWorkerClient } = await import("./app-worker-client.js");
@@ -261,7 +263,13 @@ const routerModes = {
 
 				const { createViteHandler } = await import("./dev-server.js");
 				const viteServer = await createViteHandler(router, app, serveConfig);
+				const viteHandler = fromNodeMiddleware(viteServer.middlewares);
+
 				const handler = eventHandler(async (event) => {
+					await viteHandler(event);
+					if (event.handled) {
+						return;
+					}
 					const { default: handler } = await viteServer.ssrLoadModule(
 						handlerModule(router),
 					);
