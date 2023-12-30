@@ -33,18 +33,20 @@ test.describe("multi-spa-dev", () => {
 			let app = new PlaywrightFixture(appFixture, page);
 			await app.goto(base, true);
 
-			expect(await app.getHtml(`[data-test-id=count${id ? "-" + id : ""}]`)).toBe(
-				prettyHtml(`<span data-test-id="count${id ? "-" + id : ""}">0</span>`),
+			const testId = id ? "-" + id : "";
+
+			expect(await app.getHtml(`[data-test-id=count${testId}]`)).toBe(
+				prettyHtml(`<span data-test-id="count${testId}">0</span>`),
 			);
 	
-			await app.clickElement(`[data-test-id=button${id ? "-" + id : ""}]`);
+			await app.clickElement(`[data-test-id=button${testId}]`);
 	
-			expect(await app.getHtml(`[data-test-id=count${id ? "-" + id : ""}]`)).toBe(
-				prettyHtml(`<span data-test-id="count${id ? "-" + id : ""}">1</span>`),
+			expect(await app.getHtml(`[data-test-id=count${testId}]`)).toBe(
+				prettyHtml(`<span data-test-id="count${testId}">1</span>`),
 			);
 	
-			expect(await app.getHtml(`[data-test-id=asset-image${id ? "-" + id : ""}]`)).toContain('data-loaded="true"');
-			expect(await app.getHtml(`[data-test-id=public-image${id ? "-" + id : ""}]`)).toContain('data-loaded="true"');
+			expect(await app.getHtml(`[data-test-id=asset-image${testId}]`)).toContain('data-loaded="true"');
+			expect(await app.getHtml(`[data-test-id=public-image${testId}]`)).toContain('data-loaded="true"');
 	
 			const res = await fixture.requestDocument(`${base + (base.endsWith("/") ? "" : "/")}not-defined`);
 			expect(res.status).toBe(200);
