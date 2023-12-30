@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.60
+
+### Patch Changes
+
+- 1261c16: feat: add process.env.MINIFY support for build, add preserveEntrySignatures fix (fixes [Issue] Plugin is not working #44)
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.59
 
 ### Patch Changes
