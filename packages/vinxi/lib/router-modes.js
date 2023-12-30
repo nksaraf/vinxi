@@ -341,7 +341,7 @@ const routerModes = {
 
 				viteDevServer.middlewares.stack.unshift({
 					route: "",
-					handle: (req, res, next) => {
+					handle: async (req, res, next) => {
 						// console.log(req.url, req.originalURL)
 						req.__preViteUrl = req.url;
 						req.url = joinURL(
@@ -349,16 +349,8 @@ const routerModes = {
 							router.base,
 							req.url,
 						);
-						next();
-					},
-				});
-
-				viteDevServer.middlewares.stack.push({
-					route: "",
-					handle: (req, res, next) => {
-						// console.log(req.url, req.originalURL)
+						await next();
 						req.url = req.__preViteUrl;
-						next();
 					},
 				});
 
