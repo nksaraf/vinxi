@@ -106,5 +106,4 @@ jobs:
       - name: 👀 Run Integration Tests
         env:
           START_ADAPTER: ${{ matrix.adapter }}
-          MINIFY: false
         run: npm run test
