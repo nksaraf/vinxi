@@ -10,6 +10,18 @@ const app = createApp({
 			dir: "./public",
 		},
 		{
+			name: "public-react",
+			mode: "static",
+			dir: "./react/public",
+			base: "/react"
+		},
+		{
+			name: "public-solid",
+			mode: "static",
+			dir: "./solid/public",
+			base: "/solid"
+		},
+		{
 			name: "root",
 			mode: "spa",
 			handler: "./src/index.ts",

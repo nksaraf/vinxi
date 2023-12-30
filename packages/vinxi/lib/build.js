@@ -155,6 +155,7 @@ export async function createBuild(app, buildConfig) {
 							dir: router.dir,
 							baseURL: router.base,
 							passthrough: true,
+							fallthrough: true,
 						};
 					} else if (router.mode === "handler") {
 						return {
@@ -167,6 +168,7 @@ export async function createBuild(app, buildConfig) {
 							dir: join(router.outDir, router.base),
 							baseURL: router.base,
 							passthrough: true,
+							...(router.mode === "spa" ? { fallthrough: true } : {}),
 						};
 					}
 				})
@@ -358,6 +360,7 @@ async function createRouterBuild(app, router) {
 				},
 				target: "esnext",
 				outDir: join(router.outDir + "_entry"),
+				emptyOutDir: true,
 			},
 		});
 
