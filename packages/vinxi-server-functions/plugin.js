@@ -25,6 +25,9 @@ export const serverFunctions = {
 			handler: fileURLToPath(new URL("./server-handler.js", import.meta.url)),
 			target: "server",
 			...(overrides ?? {}),
-			plugins: () => [server({ runtime }), ...(overrides?.plugins?.() ?? [])],
+			plugins: async () => [
+				server({ runtime }),
+				...((await overrides?.plugins?.()) ?? []),
+			],
 		}),
 };

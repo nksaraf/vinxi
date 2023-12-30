@@ -15,6 +15,6 @@ export const serverComponents = {
 		handler: fileURLToPath(new URL("./server-handler.js", import.meta.url)),
 		target: "server",
 		...(overrides ?? {}),
-		plugins: () => [server(), ...(overrides?.plugins?.() ?? [])],
+		plugins: async () => [server(), ...((await overrides?.plugins?.()) ?? [])],
 	}),
 };
