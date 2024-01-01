@@ -35,13 +35,13 @@ jobs:
         # - solid-start-deno
         os:
           - ubuntu-latest
-          # - macos-latest
+          - macos-latest
           - windows-latest
         include:
           - os: ubuntu-latest
             playwright_binary_path: ~/.cache/ms-playwright
-          # - os: macos-latest
-          #   playwright_binary_path: ~/Library/Caches/ms-playwright
+          - os: macos-latest
+            playwright_binary_path: ~/Library/Caches/ms-playwright
           - os: windows-latest
             playwright_binary_path: '~\\AppData\\Local\\ms-playwright'
 
@@ -93,12 +93,12 @@ jobs:
         run: pnpm --filter tests install:playwright
 
       - uses: oven-sh/setup-bun@v1
-        if: runner.os == 'ubuntu-latest'
+        if: runner.os == 'ubuntu-latest' || runner.os == 'macos-latest'
         with:
           bun-version: latest
 
       - name: 👀 Build things that need to be built
-        if: runner.os == 'ubuntu-latest'
+        if: runner.os == 'ubuntu-latest' || runner.os == 'macos-latest'
         env:
           START_ADAPTER: ${{ matrix.adapter }}
         run: npm run build
@@ -107,3 +107,11 @@ jobs:
         env:
           START_ADAPTER: ${{ matrix.adapter }}
         run: npm run test
+
+      # - name: Archive test results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: test-results
+      #     path: |
+      #       test/.fixtures
+      #       !test/.fixtures/**/node_modules

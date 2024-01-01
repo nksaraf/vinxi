@@ -1,0 +1,68 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "name": "Install Dependencies",
+      "command": "pnpm install"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "dev": {
+      "name": "dev",
+      "command": "pnpm dev",
+      "runAtStart": true
+    },
+    "build": {
+      "name": "build",
+      "command": "pnpm build",
+      "runAtStart": false
+    },
+    "clean:test": {
+      "name": "clean:test",
+      "command": "pnpm clean:test",
+      "runAtStart": false
+    },
+    "clean": {
+      "name": "clean",
+      "command": "pnpm clean",
+      "runAtStart": false
+    },
+    "test": {
+      "name": "test",
+      "command": "pnpm test",
+      "runAtStart": false
+    },
+    "ci": {
+      "name": "ci",
+      "command": "pnpm ci",
+      "runAtStart": false
+    },
+    "release": {
+      "name": "release",
+      "command": "pnpm release",
+      "runAtStart": false
+    },
+    "test:packages": {
+      "name": "test:packages",
+      "command": "pnpm test:packages",
+      "runAtStart": false
+    },
+    "test:prettier": {
+      "name": "test:prettier",
+      "command": "pnpm test:prettier",
+      "runAtStart": false
+    },
+    "format": {
+      "name": "format",
+      "command": "pnpm format",
+      "runAtStart": false
+    },
+    "pnpm --filter solid-ssr-basic dev": {
+      "name": "pnpm --filter solid-ssr-basic dev",
+      "command": "pnpm --filter solid-ssr-basic dev",
+      "runAtStart": true
+    }
+  }
+}

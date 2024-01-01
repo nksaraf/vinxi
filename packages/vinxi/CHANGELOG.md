@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.62
+
+### Patch Changes
+
+- b236b2a: fix: remove nitro minify
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.61
 
 ### Patch Changes

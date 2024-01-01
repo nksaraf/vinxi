@@ -96,8 +96,7 @@ export async function createBuild(app, buildConfig) {
 		// externals: {
 		// 	inline: ["node-fetch-native/polyfill"],
 		// },
-
-		minify: process.env.MINIFY !== "false" ?? true,
+		// minify: process.env.MINIFY !== "false" ?? true,
 		plugins: [
 			"#vinxi/prod-app",
 			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
