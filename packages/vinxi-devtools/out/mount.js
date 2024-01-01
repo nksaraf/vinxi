@@ -1,4 +1,4 @@
-// /Users/nikhilsaraf/garage/vinxi/packages/vinxi-devtools/node_modules/solid-js/dist/solid.js
+// /home/runner/work/vinxi/vinxi/packages/vinxi-devtools/node_modules/solid-js/dist/solid.js
 var setHydrateContext = function(context) {
   sharedConfig.context = context;
 };
@@ -251,7 +251,7 @@ var runComputation = function(node, value, time) {
     return handleError(err);
   }
   if (!node.updatedAt || node.updatedAt <= time) {
-    if (node.updatedAt != null && ("observers" in node)) {
+    if (node.updatedAt != null && "observers" in node) {
       writeSignal(node, nextValue, true);
     } else if (Transition && Transition.running && node.pure) {
       Transition.sources.add(node);
@@ -383,7 +383,7 @@ var completeUpdates = function(wait) {
       Effects.push.apply(Effects, Transition.effects);
       res = Transition.resolve;
       for (const e2 of Effects) {
-        ("tState" in e2) && (e2.state = e2.tState);
+        "tState" in e2 && (e2.state = e2.tState);
         delete e2.tState;
       }
       Transition = null;
@@ -636,7 +636,7 @@ var SuspenseContext;
 var FALLBACK = Symbol("fallback");
 var SuspenseListContext = createContext();
 
-// /Users/nikhilsaraf/garage/vinxi/packages/vinxi-devtools/node_modules/solid-js/web/dist/web.js
+// /home/runner/work/vinxi/vinxi/packages/vinxi-devtools/node_modules/solid-js/web/dist/web.js
 var reconcileArrays = function(parentNode, a, b) {
   let bLength = b.length, aEnd = a.length, bEnd = bLength, aStart = 0, bStart = 0, after = a[aEnd - 1].nextSibling, map = null;
   while (aStart < aEnd || bStart < bEnd) {

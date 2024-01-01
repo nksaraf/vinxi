@@ -28,8 +28,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
+        run: pnpm install  --no-frozen-lockfile
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
       - name: Create Release Pull Request
         uses: changesets/action@v1
         with:
@@ -38,3 +40,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: stefanzweifel/git-auto-commit-action@v5

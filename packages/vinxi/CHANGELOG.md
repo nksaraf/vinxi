@@ -1,5 +1,34 @@
 # vinxi
 
+## 0.0.61
+
+### Patch Changes
+
+- 86982a4: fix: await plugins in server functions/comoponents overrides
+- b7332a6: fix: reset req.url for vite middleware
+  - @vinxi/devtools@0.0.5
+
+## 0.0.60
+
+### Patch Changes
+
+- 1261c16: feat: add process.env.MINIFY support for build, add preserveEntrySignatures fix (fixes [Issue] Plugin is not working #44)
+  - @vinxi/devtools@0.0.5
+
+## 0.0.59
+
+### Patch Changes
+
+- 44f46ae: fix syntax in load-app file
+  - @vinxi/devtools@0.0.5
+
+## 0.0.58
+
+### Patch Changes
+
+- b654e60: chore: remove logging of fs routes
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.57
 
 ### Patch Changes
