@@ -1,5 +1,12 @@
 # @vinxi/react-server
 
+## 0.0.47
+
+### Patch Changes
+
+- @vinxi/server-components@0.0.58
+- @vinxi/server-functions@0.0.59
+
 ## 0.0.46
 
 ### Patch Changes
