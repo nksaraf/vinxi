@@ -93,12 +93,12 @@ jobs:
         run: pnpm --filter tests install:playwright
 
       - uses: oven-sh/setup-bun@v1
-        if: runner.os != 'window-latest'
+        if: runner.os != 'windows-latest'
         with:
           bun-version: latest
 
       - name: 👀 Build things that need to be built
-        if: runner.os != 'window-latest'
+        if: runner.os != 'windows-latest'
         env:
           START_ADAPTER: ${{ matrix.adapter }}
         run: npm run build
