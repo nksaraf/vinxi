@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/server-functions",
-  "version": "0.0.58",
+  "version": "0.0.59",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
@@ -20,14 +20,14 @@
     }
   },
   "devDependencies": {
-    "vinxi": "^0.0.61",
+    "vinxi": "^0.0.62",
     "vitest": "^0.28.5"
   },
   "peerDependencies": {
-    "vinxi": "^0.0.61"
+    "vinxi": "^0.0.62"
   },
   "dependencies": {
-    "@vinxi/plugin-directives": "0.0.57",
+    "@vinxi/plugin-directives": "0.0.58",
     "acorn": "^8.10.0",
     "acorn-loose": "^8.3.0",
     "acorn-typescript": "^1.4.3",
