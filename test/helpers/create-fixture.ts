@@ -171,7 +171,7 @@ export async function createFixture(init: FixtureInit) {
 
 	let ip = "localhost";
 	let port = await getPort();
-	let proc = spawn("node", [".output/server/index.mjs"], {
+	let proc = spawn("node", ["node_modules/vinxi/bin/cli.mjs", "start"], {
 		cwd: projectDir,
 		env: {
 			...process.env,
