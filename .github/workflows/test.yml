@@ -93,12 +93,12 @@ jobs:
         run: pnpm --filter tests install:playwright
 
       - uses: oven-sh/setup-bun@v1
-        if: runner.os != 'window-latest'
+        if: runner.os == 'ubuntu-latest' || runner.os == 'macos-latest'
         with:
           bun-version: latest
 
       - name: 👀 Build things that need to be built
-        if: runner.os != 'window-latest'
+        if: runner.os == 'ubuntu-latest' || runner.os == 'macos-latest'
         env:
           START_ADAPTER: ${{ matrix.adapter }}
         run: npm run build
@@ -108,10 +108,10 @@ jobs:
           START_ADAPTER: ${{ matrix.adapter }}
         run: npm run test
 
-      - name: Archive test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: |
-            test/.fixtures
-            !test/.fixtures/**/node_modules
+      # - name: Archive test results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: test-results
+      #     path: |
+      #       test/.fixtures
+      #       !test/.fixtures/**/node_modules
