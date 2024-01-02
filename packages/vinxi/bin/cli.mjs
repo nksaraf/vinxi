@@ -197,16 +197,7 @@ const command = defineCommand({
 			async run({ args }) {
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
-				const { log, c } = await import("../lib/logger.js");
-				args.preset ??=
-					process.env.TARGET ??
-					process.env.PRESET ??
-					process.env.SERVER_PRESET ??
-					process.env.SERVER_TARGET ??
-					process.env.NITRO_PRESET ??
-					process.env.NITRO_TARGET ??
-					(process.versions.bun !== undefined ? "bun" : "node-server");
-
+				const { log, c } = await import("../lib/logger.js");					
 				log(c.dim(c.yellow(packageJson.version)));
 				const { loadApp } = await import("../lib/load-app.js");
 				const app = await loadApp(configFile, args);
