@@ -14,7 +14,7 @@ function createHtmlTagsForAssets(router, app, assets) {
 		.map((asset) => ({
 			tag: "link",
 			attrs: {
-				href: joinURL(app.config.server.baseURL ?? "", router.base, asset),
+				href: joinURL(app.config.server.baseURL ?? "/", router.base, asset),
 				key: join(app.config.server.baseURL ?? "", router.base, asset),
 				...(asset.endsWith(".css")
 					? { rel: "stylesheet", precendence: "high" }
