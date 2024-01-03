@@ -1324,9 +1324,6 @@ importers:
       undici:
         specifier: ^5.23.0
         version: 5.27.0
-      vinxi:
-        specifier: 0.1.1
-        version: link:../packages/vinxi
       vitest:
         specifier: ^0.28.5
         version: 0.28.5(@vitest/ui@0.34.6)
@@ -1372,7 +1369,7 @@ importers:
   test/templates/react:
     dependencies:
       '@vinxi/react':
-        specifier: 0.1.0
+        specifier: workspace:^
         version: link:../../../packages/vinxi-react
       '@vitejs/plugin-react':
         specifier: ^4.0.4
@@ -1387,7 +1384,7 @@ importers:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704(react@0.0.0-experimental-035a41c4e-20230704)
       vinxi:
-        specifier: 0.1.1
+        specifier: workspace:^
         version: link:../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -1403,16 +1400,16 @@ importers:
         specifier: ^1.5.10
         version: 1.5.10
       '@vinxi/react':
-        specifier: 0.1.0
+        specifier: workspace:^
         version: link:../../../packages/vinxi-react
       '@vinxi/react-server-dom':
         specifier: 0.0.3
         version: 0.0.3(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)(vite@4.5.0)
       '@vinxi/server-components':
-        specifier: 0.1.0
+        specifier: workspace:^
         version: link:../../../packages/vinxi-server-components
       '@vinxi/server-functions':
-        specifier: 0.1.0
+        specifier: workspace:^
         version: link:../../../packages/vinxi-server-functions
       '@vitejs/plugin-react':
         specifier: ^4.0.4
@@ -1433,7 +1430,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.5
       vinxi:
-        specifier: 0.1.1
+        specifier: workspace:^
         version: link:../../../packages/vinxi
     devDependencies:
       '@types/react':
@@ -1480,7 +1477,7 @@ importers:
         specifier: ^1.5.10
         version: 1.5.10
       '@vinxi/react':
-        specifier: 0.1.0
+        specifier: workspace:^
         version: link:../../../packages/vinxi-react
       '@vitejs/plugin-react':
         specifier: ^4.0.4
@@ -1501,7 +1498,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.5
       vinxi:
-        specifier: 0.1.1
+        specifier: workspace:^
         version: link:../../../packages/vinxi
       wouter:
         specifier: ^2.11.0

@@ -2,7 +2,6 @@
   "name": "test-react-srv-fn",
   "type": "module",
   "private": true,
-  "version": null,
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",

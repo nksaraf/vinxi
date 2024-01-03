@@ -2,7 +2,6 @@
   "name": "example-react-ssr-basic",
   "type": "module",
   "private": true,
-  "version": null,
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",

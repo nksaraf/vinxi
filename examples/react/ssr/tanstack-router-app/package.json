@@ -2,7 +2,6 @@
   "name": "react-ssr-tanstack-router-app",
   "type": "module",
   "private": true,
-  "version": null,
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
