@@ -1,5 +1,17 @@
 # vinxi
 
+## 0.1.0
+
+### Minor Changes
+
+- e31abb2: chore: bring things to 0.1.x
+
+### Patch Changes
+
+- b2ef06f: replace passthrough with fallthrough
+- Updated dependencies [e31abb2]
+  - @vinxi/devtools@0.1.0
+
 ## 0.0.64
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @vinxi/doc
 
+## 0.1.0
+
+### Minor Changes
+
+- e31abb2: chore: bring things to 0.1.x
+
+### Patch Changes
+
+- Updated dependencies [e31abb2]
+  - @vinxi/deno-doc@0.1.0
+
 ## 0.0.4
 
 ### Patch Changes

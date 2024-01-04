@@ -1,5 +1,17 @@
 # @vinxi/plugin-references
 
+## 1.0.0
+
+### Minor Changes
+
+- e31abb2: chore: bring things to 0.1.x
+
+### Patch Changes
+
+- Updated dependencies [e31abb2]
+- Updated dependencies [b2ef06f]
+  - vinxi@0.1.0
+
 ## 0.0.60
 
 ### Patch Changes
