@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.0.64
+
+### Patch Changes
+
+- 2c65c91: feat: multiple SPA routers
+- 8c87b24: fix: preset always node-server because of cli default
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.63
 
 ### Patch Changes
