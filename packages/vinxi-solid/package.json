@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/solid",
-  "version": "0.0.14",
+  "version": "0.1.0",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
@@ -37,6 +37,6 @@
   "devDependencies": {
     "@solidjs/meta": "^0.28.6",
     "solid-js": "^1.7.11",
-    "vinxi": "0.0.64"
+    "vinxi": "0.1.0"
   }
 }

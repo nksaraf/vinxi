@@ -1,5 +1,11 @@
 # @vinxi/plugin-mdx
 
+## 3.7.0
+
+### Minor Changes
+
+- e31abb2: chore: bring things to 0.1.x
+
 ## 3.6.7
 
 ### Patch Changes

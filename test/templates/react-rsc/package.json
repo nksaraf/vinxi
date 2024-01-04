@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@vinxi/server-functions": "0.0.61",
-    "@vinxi/server-components": "0.0.60",
-    "@vinxi/react": "0.0.12",
+    "@vinxi/server-functions": "1.0.0",
+    "@vinxi/server-components": "1.0.0",
+    "@vinxi/react": "0.1.0",
     "@vinxi/react-server-dom": "0.0.3",
     "@vitejs/plugin-react": "^4.0.4",
     "acorn-loose": "^8.3.0",
@@ -20,7 +20,7 @@
     "react": "0.0.0-experimental-035a41c4e-20230704",
     "react-dom": "0.0.0-experimental-035a41c4e-20230704",
     "tailwindcss": "^3.3.3",
-    "vinxi": "0.0.64"
+    "vinxi": "0.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.21",

@@ -1,5 +1,11 @@
 # @vinxi/doc
 
+## 0.1.0
+
+### Minor Changes
+
+- e31abb2: chore: bring things to 0.1.x
+
 ## 0.0.3
 
 ### Patch Changes
