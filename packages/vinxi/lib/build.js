@@ -139,7 +139,7 @@ export async function createBuild(app, buildConfig) {
 						return [
 							{
 								route: router.base.length === 1 ? "/" : `${router.base}`,
-								handler: "#vinxi/spa",
+								handler: `#vinxi/spa/${router.name}`,
 								middleware: true,
 							},
 						];
@@ -157,6 +157,7 @@ export async function createBuild(app, buildConfig) {
 							dir: router.dir,
 							baseURL: router.base,
 							passthrough: true,
+							fallthrough: true,
 						};
 					} else if (router.mode === "handler") {
 						return {
@@ -169,6 +170,7 @@ export async function createBuild(app, buildConfig) {
 							dir: join(router.outDir, router.base),
 							baseURL: router.base,
 							passthrough: true,
+							...(router.mode === "spa" ? { fallthrough: true } : {}),
 						};
 					}
 				})
@@ -245,25 +247,24 @@ export async function createBuild(app, buildConfig) {
         }
       `;
 			},
-			"#vinxi/spa": () => {
-				const router = app.config.routers.find(
-					(router) => router.mode === "spa",
-				);
-
-				invariant(router?.mode === "spa", "No SPA router found");
-
-				const indexHtml = readFileSync(
-					join(router.outDir, router.base, "index.html"),
-					"utf-8",
-				);
-				return `
-					import { eventHandler } from 'vinxi/server'
-					const html = ${JSON.stringify(indexHtml)}
-					export default eventHandler(event => {
-						return html
-					})
-				`;
-			},
+			...(app.config.routers.filter((router) => router.mode === "spa")
+				.reduce((virtuals, router) => {
+					virtuals[`#vinxi/spa/${router.name}`] = () => {
+						const indexHtml = readFileSync(
+							join(router.outDir, router.base, "index.html"),
+							"utf-8",
+						);
+						return `
+							import { eventHandler } from 'vinxi/server'
+							const html = ${JSON.stringify(indexHtml)}
+							export default eventHandler(event => {
+								return html
+							})
+						`;
+					};
+					return virtuals; 
+				}, {})
+			),
 			"#vinxi/chunks": () => chunksServerVirtualModule()(app),
 
 			...(Object.fromEntries(
@@ -322,8 +323,12 @@ export async function createBuild(app, buildConfig) {
  * @param {import("vite").InlineConfig & { router?: any; app: any }} config
  */
 async function createViteBuild(config) {
+	const cwd = process.cwd();
+	process.chdir(config.root);
 	const vite = await import("vite");
-	return await vite.build({ ...config, configFile: false });
+	const output = await vite.build({ ...config, configFile: false });
+	process.chdir(cwd);
+	return output;
 }
 
 /**
@@ -347,6 +352,7 @@ async function createRouterBuild(app, router) {
 		});
 		await createViteBuild({
 			app: app,
+			root: router.root,
 			build: {
 				ssr: true,
 				ssrManifest: true,
@@ -355,6 +361,7 @@ async function createRouterBuild(app, router) {
 				},
 				target: "esnext",
 				outDir: join(router.outDir + "_entry"),
+				emptyOutDir: true,
 			},
 		});
 
@@ -390,18 +397,18 @@ async function createRouterBuild(app, router) {
 			html: htmlCode,
 		});
 
-		writeFileSync(join(process.cwd(), "index.html"), htmlCode.code);
+		writeFileSync(join(router.root, "index.html"), htmlCode.code);
 
 		await app.hooks.callHook("app:build:router:html:generate:write", {
 			app,
 			router,
 			html: htmlCode,
-			path: join(process.cwd(), "index.html"),
+			path: join(router.root, "index.html"),
 		});
 
 		buildRouter = {
 			...router,
-			handler: join(process.cwd(), "index.html"),
+			handler: "./index.html",
 		};
 	}
 
@@ -410,6 +417,7 @@ async function createRouterBuild(app, router) {
 	const viteBuildConfig = {
 		router: buildRouter,
 		app,
+		root: router.root,
 		plugins: [
 			routerModePlugin[buildRouter.internals.mode.name]?.(buildRouter) ?? [],
 			buildTargetPlugin[buildRouter.target]?.(buildRouter) ?? [],
@@ -448,7 +456,7 @@ async function createRouterBuild(app, router) {
 	});
 
 	if (router.mode === "spa" && !router.handler.endsWith(".html")) {
-		await rm(join(process.cwd(), "index.html"));
+		await rm(join(router.root, "index.html"));
 	}
 
 	consola.success("build done");
