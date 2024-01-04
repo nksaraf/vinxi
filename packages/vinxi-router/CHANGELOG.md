@@ -1,5 +1,19 @@
 # @vinxi/router
 
+## 0.0.43
+
+### Patch Changes
+
+- Updated dependencies [6f695e2]
+  - vinxi@0.0.63
+
+## 0.0.42
+
+### Patch Changes
+
+- Updated dependencies [b236b2a]
+  - vinxi@0.0.62
+
 ## 0.0.41
 
 ### Patch Changes

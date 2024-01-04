@@ -78,7 +78,8 @@ export async function createBuild(app, buildConfig) {
 			process.env.SERVER_TARGET ??
 			process.env.NITRO_PRESET ??
 			process.env.NITRO_TARGET ??
-			app.config.server.preset,
+			app.config.server.preset ??
+			(process.versions.bun !== undefined ? "bun" : "node-server"),
 		alias: {
 			/**
 			 * These
@@ -96,8 +97,7 @@ export async function createBuild(app, buildConfig) {
 		// externals: {
 		// 	inline: ["node-fetch-native/polyfill"],
 		// },
-
-		minify: process.env.MINIFY !== "false" ?? true,
+		// minify: process.env.MINIFY !== "false" ?? true,
 		plugins: [
 			"#vinxi/prod-app",
 			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),

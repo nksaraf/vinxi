@@ -2,7 +2,8 @@ packages:
   - "packages/**"
   - "examples/**"
   - "frameworks/**"
-  - "test/**"
+  - "test/"
+  - "test/templates/**"
   - "docs/**"
   - 'talks/**'
   - "!**/.tmp/**"

@@ -39,7 +39,7 @@ export async function createDevFixture(init: FixtureInit) {
 
 	let ip = "localhost";
 	let port = await getPort();
-	let proc = spawn("npm", ["run", "dev"], {
+	let proc = spawn("node", ["node_modules/vinxi/bin/cli.mjs", "dev"], {
 		cwd: projectDir,
 		env: {
 			...process.env,
@@ -171,7 +171,7 @@ export async function createFixture(init: FixtureInit) {
 
 	let ip = "localhost";
 	let port = await getPort();
-	let proc = spawn("npm", ["run", "start"], {
+	let proc = spawn("node", [".output/server/index.mjs"], {
 		cwd: projectDir,
 		env: {
 			...process.env,
