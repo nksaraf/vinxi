@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.0.63
+
+### Patch Changes
+
+- 6f695e2: fix: css asset href is relative
+  - @vinxi/devtools@0.0.5
+
 ## 0.0.62
 
 ### Patch Changes
