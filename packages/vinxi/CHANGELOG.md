@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.1.1
+
+### Patch Changes
+
+- 9c60b73: devtools out
+- Updated dependencies [9c60b73]
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

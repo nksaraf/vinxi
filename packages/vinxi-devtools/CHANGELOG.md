@@ -1,5 +1,11 @@
 # @vinxi/openapi
 
+## 0.1.1
+
+### Patch Changes
+
+- 9c60b73: devtools out
+
 ## 0.1.0
 
 ### Minor Changes
