@@ -41,7 +41,7 @@
     "devtools-rpc.js",
     "index.js",
     "rpc.js",
-    "dist"
+    "out"
   ],
   "devDependencies": {
     "@iconify/json": "^2.2.130",
