@@ -156,21 +156,19 @@ export async function createBuild(app, buildConfig) {
 							// @ts-expect-error
 							dir: router.dir,
 							baseURL: router.base,
-							passthrough: true,
 							fallthrough: true,
 						};
 					} else if (router.mode === "handler") {
 						return {
 							dir: join(router.outDir, router.base, "assets"),
 							baseURL: join(router.base, "assets"),
-							passthrough: true,
+							fallthrough: true,
 						};
 					} else if (router.mode === "spa" || router.mode === "build") {
 						return {
 							dir: join(router.outDir, router.base),
 							baseURL: router.base,
-							passthrough: true,
-							...(router.mode === "spa" ? { fallthrough: true } : {}),
+							fallthrough: true,
 						};
 					}
 				})
