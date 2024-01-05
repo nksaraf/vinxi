@@ -10,7 +10,10 @@ import { treeShake } from "./plugins/tree-shake.js";
 import { virtual } from "./plugins/virtual.js";
 
 export const ROUTER_MODE_DEV_PLUGINS = {
-	spa: (/** @type {import("./router-modes.js").SPARouterSchema} */ router) => [
+	spa: (
+		/** @type {import("./router-modes.js").SPARouterSchema} */ router,
+		/** @type { { cert: string, key: string } | false } */ https = false
+	) => [
 		css(),
 		routes(),
 		devEntries(),
@@ -26,12 +29,16 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			define: {
 				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},
+			server: {
+				https
+			},
 		}),
 		treeShake(),
 		router.internals.routes ? fileSystemWatcher() : null,
 	],
 	handler: (
 		/** @type {import("./router-modes.js").HandlerRouterSchema} */ router,
+		/** @type { { cert: string, key: string } | false } */ https = false
 	) => [
 		virtual({
 			[handlerModule(router)]: ({ config }) => {
@@ -69,12 +76,16 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			define: {
 				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},
+			server: {
+				https
+			},
 		}),
 		treeShake(),
 		router.internals.routes ? fileSystemWatcher() : null,
 	],
 	build: (
 		/** @type {import("./router-modes.js").BuildRouterSchema} */ router,
+		/** @type { { cert: string, key: string } | false } */ https = false
 	) => [
 		css(),
 		virtual(
@@ -103,6 +114,9 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			define: {
 				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},
+			server: {
+				https
+			}
 		}),
 		treeShake(),
 		router.internals.routes ? fileSystemWatcher() : null,

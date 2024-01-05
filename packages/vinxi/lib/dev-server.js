@@ -7,8 +7,8 @@ import { join, normalize } from "./path.js";
 
 export * from "./router-dev-plugins.js";
 
-/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number } }} DevConfigInput */
-/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number } }} DevConfig */
+/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: { cert: string; key: string; }; }} DevConfigInput */
+/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https: { cert: string; key: string; } | false; }} DevConfig */
 
 /**
  *
@@ -51,7 +51,7 @@ export async function createViteHandler(router, app, serveConfig) {
 	const port = await getRandomPort();
 	const plugins = [
 		...(serveConfig.devtools ? [inspect()] : []),
-		...(((await router.internals.mode.dev.plugins?.(router, app)) ?? []).filter(
+		...(((await router.internals.mode.dev.plugins?.(router, app, serveConfig)) ?? []).filter(
 			Boolean,
 		) || []),
 		...(((await router.plugins?.(router)) ?? []).filter(Boolean) || []),
@@ -101,6 +101,16 @@ export async function createDevServer(
 		ws: { port: wsPort = undefined } = {},
 	},
 ) {
+	/**
+	 * @param { { cert: string, key: string } | undefined } options 
+	 * @returns { { cert: string, key: string } | false }
+	 */
+	const resolveCertificate = (options) => {
+		return typeof options === "object" && options.cert && options.key
+			? { cert: options.cert, key: options.key }
+			: false;
+	}
+
 	const serveConfig = {
 		port,
 		force,
@@ -108,6 +118,7 @@ export async function createDevServer(
 		ws: {
 			port: wsPort,
 		},
+		https: resolveCertificate(app.config.server.https)
 	};
 
 	await app.hooks.callHook("app:dev:start", { app, serveConfig });
@@ -213,7 +224,9 @@ export async function createDevServer(
 				app,
 				devApp,
 			});
-			const listener = await devApp.listen(port, {});
+			const listener = await devApp.listen(port, {
+				https: serveConfig.https
+			});
 			await app.hooks.callHook("app:dev:server:listener:created", {
 				app,
 				devApp,

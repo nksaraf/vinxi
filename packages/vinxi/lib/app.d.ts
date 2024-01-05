@@ -2,7 +2,7 @@ export type App = {
 	config: {
 		name: string;
 		devtools: boolean;
-		server: import("nitropack").NitroConfig;
+		server: import("nitropack").NitroConfig & { https?: { cert: string, key: string } };
 		routers: import("./router-mode.js").Router[];
 		root: string;
 	};
