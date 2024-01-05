@@ -102,8 +102,14 @@ export function decorateExports({
 		(node) => node.value !== directive,
 	);
 
-	let newSrc = print(ast).code;
-	return newSrc;
+	const result = print(ast, {
+		sourceMapName: id,
+		inputSourceMap: options.map,
+	});
+	return {
+		code: result.code,
+		map: result.map,
+	};
 }
 
 export function decorateExportsPlugin({
@@ -117,13 +123,13 @@ export function decorateExportsPlugin({
 		name: "decorate-exports",
 		async transform(code, id, options, ctx) {
 			if (code.indexOf(pragma) === -1) {
-				return code;
+				return { code, map: options.map };
 			}
 
 			const shouldApply = apply(code, id, options);
 
 			if (!shouldApply) {
-				return code;
+				return { code, map: options.map };
 			}
 
 			function hasDir(node) {
@@ -134,10 +140,13 @@ export function decorateExportsPlugin({
 				return hasDir(node.body);
 			}
 
-			const ast = parseAdvanced(code);
+			const ast = parseAdvanced(code, {
+				sourceFileName: id,
+				inputSourceMap: options.map,
+			});
 
 			if (ast.length === 0) {
-				return code;
+				return { code, map: options.map };
 			}
 
 			if (hasDir(ast.program)) {
@@ -155,7 +164,7 @@ export function decorateExportsPlugin({
 				return result;
 			}
 
-			return code;
+			return { code, map: options.map };
 		},
 	};
 }

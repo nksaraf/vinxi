@@ -15,14 +15,18 @@ const looseParser = acornLoose.LooseParser.extend(jsx());
 
 export function parseLoose(code) {
 	return parser.parse(code, {
-		ecmaVersion: "2024",
+		ecmaVersion: "latest",
 		sourceType: "module",
 	});
 }
-export function parseAdvanced(code) {
+export function parseAdvanced(code, options) {
 	return recastParse(
 		code,
-		{ parser: require("./babel.cjs") },
+		{
+			parser: require("./babel.cjs"),
+			sourceFileName: options.sourceFileName,
+			inputSourceMap: options.inputSourceMap,
+		},
 		// 	, {
 		// 	parser: {
 		// 		parse(source) {

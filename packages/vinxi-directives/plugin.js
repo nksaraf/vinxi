@@ -25,6 +25,7 @@ export function directives({ transforms = [] } = {}) {
 			if (searchParams.has("split")) {
 				for (var transform of transforms) {
 					if (transform.split) {
+						console.log(transform.name, id);
 						try {
 							const splitCode = await transform.split(code, id, {
 								...opts,
@@ -44,13 +45,18 @@ export function directives({ transforms = [] } = {}) {
 				return;
 			}
 
-			for (var transform of transforms) {
+			let result = { code, map: null };
+
+			for (const transform of transforms) {
 				if (transform.transform) {
-					code = await transform.transform(code, id, opts);
+					result = await transform.transform(result.code, id, {
+						...opts,
+						map: result.map,
+					});
 				}
 			}
 
-			return code;
+			return result;
 		},
 	};
 }

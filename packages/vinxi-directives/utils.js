@@ -46,7 +46,7 @@ export async function parseExportNamesInto(vite, ast, names, parentURL) {
 
 					const clientImportCode = readFileSync(url, "utf8");
 
-					const childAst = parseAdvanced(clientImportCode ?? "");
+					const childAst = parseAdvanced(clientImportCode ?? "", {});
 
 					await parseExportNamesInto(vite, childAst.program.body, names, url);
 					continue;

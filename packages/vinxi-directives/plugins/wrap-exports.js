@@ -14,13 +14,13 @@ export function wrapExportsPlugin({
 		name: "wrap-exports",
 		async transform(code, id, options) {
 			if (code.indexOf(pragma) === -1) {
-				return code;
+				return { code, map: options.map };
 			}
 
 			const shouldApply = apply(code, id, options);
 
 			if (!shouldApply) {
-				return code;
+				return { code, map: options.map };
 			}
 
 			function hasDir(node) {
@@ -31,10 +31,13 @@ export function wrapExportsPlugin({
 				return hasDir(node.body);
 			}
 
-			const ast = parseAdvanced(code);
+			const ast = parseAdvanced(code, {
+				sourceFileName: id,
+				inputSourceMap: options.map,
+			});
 
 			if (ast.length === 0) {
-				return code;
+				return { code, map: options.map };
 			}
 
 			if (hasDir(ast.program)) {
@@ -259,13 +262,17 @@ export function wrapExportsPlugin({
 			ast.program.body = [...body, ...declarations];
 
 			if (needsReference) {
-				return (
-					`import { ${runtime.function} } from '${runtime.module}';\n` +
-					print(ast).code
-				);
+				const result = print(ast, {
+					sourceMapName: id,
+					inputSourceMap: options.map,
+				});
+				return {
+					code: `import { ${runtime.function} } from '${runtime.module}';\n` + result.code,
+					map: result.map,
+				};
 			}
 
-			return code;
+			return { code, map: options.map };
 		},
 	};
 }
@@ -448,7 +455,12 @@ export function wrapExports({
 	ast.program.directives = ast.program.directives?.filter(
 		(node) => node.value === directive,
 	);
-
-	let newSrc = print(ast).code;
-	return newSrc;
+	const result = print(ast, {
+		sourceMapName: id,
+		inputSourceMap: options.map,
+	});
+	return {
+		code: result.code,
+		map: result.map,
+	};
 }
