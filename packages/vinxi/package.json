@@ -48,7 +48,7 @@
     },
     "./server": {
       "import": "./runtime/server.js",
-      "types": "./dist/types/runtime/server.d.ts"
+      "types": "./runtime/server-types.d.ts"
     },
     "./party": {
       "import": "./runtime/party.js",
