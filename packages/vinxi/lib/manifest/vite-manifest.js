@@ -9,10 +9,16 @@
  * @returns Array of asset URLs
  */
 const findAssetsInViteManifest = (manifest, id, assetMap = new Map()) => {
+	const stack = [];
+
 	/**
 	 * @param {string} id
 	 */
 	function traverse(id) {
+		if (stack.includes(id)) {
+			return [];
+		}
+
 		const cached = assetMap.get(id);
 		if (cached) {
 			return cached;
@@ -21,6 +27,9 @@ const findAssetsInViteManifest = (manifest, id, assetMap = new Map()) => {
 		if (!chunk) {
 			return [];
 		}
+
+		stack.push(id);
+
 		const assets = [
 			...(chunk.assets || []),
 			...(chunk.css || []),
@@ -30,6 +39,9 @@ const findAssetsInViteManifest = (manifest, id, assetMap = new Map()) => {
 		const all = [...assets, ...imports].filter(Boolean);
 		all.push(chunk.file);
 		assetMap.set(id, all);
+
+		stack.pop();
+
 		return Array.from(new Set(all));
 	}
 	return traverse(id);
