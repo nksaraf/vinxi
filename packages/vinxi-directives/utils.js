@@ -56,6 +56,12 @@ export async function parseExportNamesInto(vite, ast, names, parentURL) {
 				continue;
 			case "ExportNamedDeclaration":
 				if (node.declaration) {
+					if (
+						node.declaration.type === "TSInterfaceDeclaration" ||
+						node.declaration.type === "TSTypeAliasDeclaration"
+					) {
+						continue;
+					}
 					if (node.declaration.type === "VariableDeclaration") {
 						const declarations = node.declaration.declarations;
 						for (let j = 0; j < declarations.length; j++) {
@@ -66,8 +72,14 @@ export async function parseExportNamesInto(vite, ast, names, parentURL) {
 					}
 				}
 				if (node.specifiers) {
+					if (node.exportKind === "type") {
+						continue;
+					}
 					const specifiers = node.specifiers;
 					for (let j = 0; j < specifiers.length; j++) {
+						if (specifiers[j].exportKind === "type") {
+							continue;
+						}
 						addExportNames(names, specifiers[j].exported);
 					}
 				}

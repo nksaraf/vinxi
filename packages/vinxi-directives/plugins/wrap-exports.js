@@ -367,6 +367,13 @@ export function wrapExports({
 						if (node.declaration.type === "FunctionDeclaration") {
 							localTypes.set(name, "function");
 						}
+
+						if (
+							node.declaration.type === "TSTypeAliasDeclaration" ||
+							node.declaration.type === "TSInterfaceDeclaration"
+						) {
+							continue;
+						}
 						node.declaration = types.builders.variableDeclaration("const", [
 							types.builders.variableDeclarator(
 								types.builders.identifier(name),
@@ -391,10 +398,17 @@ export function wrapExports({
 					}
 				}
 				if (node.specifiers) {
+					if (node.exportKind === "type") {
+						continue;
+					}
 					const specifiers = node.specifiers;
 					const newSpecifiers = [];
 					for (let j = 0; j < specifiers.length; j++) {
 						const specifier = specifiers[j];
+						if (specifier.exportKind === "type") {
+							newSpecifiers.push(specifier);
+							continue;
+						}
 						localNames.set(specifier.local.name, specifier.exported.name);
 						const exportedName = specifier.exported.name;
 						const localName = specifier.local?.name ?? exportedName;
