@@ -13,6 +13,6 @@
     "@vinxi/plugin-references": "0.0.29",
     "autoprefixer": "^10.4.15",
     "tailwindcss": "^3.3.3",
-    "vinxi": "0.1.1"
+    "vinxi": "0.1.2"
   }
 }

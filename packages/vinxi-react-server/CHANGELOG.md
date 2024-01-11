@@ -1,5 +1,14 @@
 # @vinxi/react-server
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [a011795]
+  - @vinxi/react@0.1.1
+  - @vinxi/server-components@0.1.1
+  - @vinxi/server-functions@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

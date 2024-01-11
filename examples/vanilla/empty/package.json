@@ -9,6 +9,6 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "vinxi": "0.1.1"
+    "vinxi": "0.1.2"
   }
 }

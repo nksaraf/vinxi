@@ -67,6 +67,6 @@
     "tailwind-merge": "^1.14.0",
     "unocss": "^0.56.5",
     "unocss-preset-radix": "^2.5.5",
-    "vinxi": "0.1.1"
+    "vinxi": "0.1.2"
   }
 }
