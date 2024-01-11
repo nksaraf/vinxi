@@ -1,5 +1,16 @@
 # vinxi
 
+## 0.1.2
+
+### Patch Changes
+
+- 769a055: fix: config changes not applied on server restart
+- 08cd450: fixes Exporting type definitions from a "use server" file doesn't work. #106
+- 2e85423: findAssetsInViteManifest: Prevent recursive parsing of same ids
+- bb16563: fix: toWebRequest lazily creates readable stream for `body` access
+- a011795: fixes css bundling differences and issues between file-based routes and config-based routes #115
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.1
 
 ### Patch Changes
