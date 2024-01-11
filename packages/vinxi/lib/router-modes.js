@@ -134,11 +134,11 @@ const routerModes = {
 	build: createRouterMode(buildRouterSchema, {
 		name: "build",
 		dev: {
-			plugins: async (router, app, serveConfig) => {
+			plugins: async (router) => {
 				const { ROUTER_MODE_DEV_PLUGINS } = await import(
 					"./router-dev-plugins.js"
 				);
-				return await ROUTER_MODE_DEV_PLUGINS.build(router, serveConfig.https);
+				return await ROUTER_MODE_DEV_PLUGINS.build(router);
 			},
 			handler: async (router, app, serveConfig) => {
 				const { createViteHandler } = await import("./dev-server.js");
@@ -212,11 +212,11 @@ const routerModes = {
 					fallthrough: true,
 				};
 			},
-			plugins: async (router, app, serveConfig) => {
+			plugins: async (router) => {
 				const { ROUTER_MODE_DEV_PLUGINS } = await import(
 					"./router-dev-plugins.js"
 				);
-				return await ROUTER_MODE_DEV_PLUGINS.handler(router, serveConfig.https);
+				return await ROUTER_MODE_DEV_PLUGINS.handler(router);
 			},
 			handler: async (router, app, serveConfig) => {
 				const { eventHandler, fromNodeMiddleware } = await import(
@@ -312,11 +312,11 @@ const routerModes = {
 	spa: createRouterMode(spaRouterSchema, {
 		name: "spa",
 		dev: {
-			plugins: async (router, app, serveConfig) => {
+			plugins: async (router) => {
 				const { ROUTER_MODE_DEV_PLUGINS } = await import(
 					"./router-dev-plugins.js"
 				);
-				return await ROUTER_MODE_DEV_PLUGINS.spa(router, serveConfig.https);
+				return await ROUTER_MODE_DEV_PLUGINS.spa(router);
 			},
 			handler: async (router, app, serveConfig) => {
 				const { createViteHandler } = await import("./dev-server.js");

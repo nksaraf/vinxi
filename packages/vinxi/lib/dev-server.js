@@ -51,7 +51,7 @@ export async function createViteHandler(router, app, serveConfig) {
 	const port = await getRandomPort();
 	const plugins = [
 		...(serveConfig.devtools ? [inspect()] : []),
-		...(((await router.internals.mode.dev.plugins?.(router, app, serveConfig)) ?? []).filter(
+		...(((await router.internals.mode.dev.plugins?.(router, app)) ?? []).filter(
 			Boolean,
 		) || []),
 		...(((await router.plugins?.(router)) ?? []).filter(Boolean) || []),
@@ -78,6 +78,7 @@ export async function createViteHandler(router, app, serveConfig) {
 			hmr: {
 				port,
 			},
+			https: serveConfig.https
 		},
 	});
 
