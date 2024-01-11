@@ -12,6 +12,26 @@ export function updateStyles(styles, data) {
 	}
 }
 
+export function preloadStyles(styles) {
+	styles.forEach((style) => {
+		if (!style.attrs.href) {
+			return;
+		}
+
+		let element = document.head.querySelector(
+			`link[href="${styles.attrs.href}"]`,
+		);
+		if (!element) {
+			// create a link preload element for the css file so it starts loading but doesnt get attached
+			element = document.createElement("link");
+			element.setAttribute("rel", "preload");
+			element.setAttribute("as", "style");
+			element.setAttribute("href", style.attrs.href);
+			document.head.appendChild(element);
+		}
+	});
+}
+
 export function appendStyles(styles) {
 	styles.forEach((style) => {
 		let element = document.head.querySelector(
