@@ -1,10 +1,15 @@
 /// <reference types="vinxi/types/client" />
 
 /** @jsxImportSource solid-js */
+/// <reference types="vinxi/types/client" />
 import { createComponent, lazy, onCleanup } from "solid-js";
-import { appendStyles, cleanupStyles, updateStyles } from "vinxi/css";
+import {
+	appendStyles,
+	cleanupStyles,
+	preloadStyles,
+	updateStyles,
+} from "vinxi/css";
 
-import invariant from "./invariant";
 import { renderAsset } from "./render-asset";
 
 export default function lazyRoute(
@@ -18,10 +23,8 @@ export default function lazyRoute(
 			let manifest = import.meta.env.SSR ? serverManifest : clientManifest;
 
 			const mod = await manifest.inputs[component.src].import();
-			invariant(
-				mod[exported],
-				`Module ${component.src} does not export ${exported}`,
-			);
+			if (!mod[exported])
+				console.error(`Module ${component.src} does not export ${exported}`);
 			const Component = mod[exported];
 			let assets = await clientManifest.inputs?.[component.src].assets();
 			const styles = assets.filter((asset) => asset.tag === "style");
@@ -53,9 +56,15 @@ export default function lazyRoute(
 			const mod = await component.import();
 			const Component = mod[exported];
 			let assets = await clientManifest.inputs?.[component.src].assets();
+			const styles = assets.filter(
+				(asset) => asset.tag === "style" || asset.attrs.rel === "stylesheet",
+			);
+			if (typeof window !== "undefined") {
+				preloadStyles(styles);
+			}
 			const Comp = (props) => {
 				return [
-					...assets.map((asset) => renderAsset(asset)),
+					...styles.map((asset) => renderAsset(asset)),
 					createComponent(Component, props),
 				];
 			};
