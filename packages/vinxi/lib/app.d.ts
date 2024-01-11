@@ -1,8 +1,10 @@
+import { HTTPSOptions } from "@vinxi/listhen";
+
 export type App = {
 	config: {
 		name: string;
 		devtools: boolean;
-		server: import("nitropack").NitroConfig & { https?: { cert: string, key: string } };
+		server: import("nitropack").NitroConfig & { https?: HTTPSOptions | boolean };
 		routers: import("./router-mode.js").Router[];
 		root: string;
 	};

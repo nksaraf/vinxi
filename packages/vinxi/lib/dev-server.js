@@ -4,11 +4,12 @@ import { fileURLToPath } from "node:url";
 
 import { consola, withLogger } from "./logger.js";
 import { join, normalize } from "./path.js";
+import { resolveCertificate } from "./https.js";
 
 export * from "./router-dev-plugins.js";
 
-/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: { cert: string; key: string; }; }} DevConfigInput */
-/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https: { cert: string; key: string; } | false; }} DevConfig */
+/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: import('@vinxi/listhen').HTTPSOptions } | boolean} DevConfigInput */
+/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https: import('@vinxi/listhen').HTTPSOptions; }} DevConfig */
 
 /**
  *
@@ -102,16 +103,6 @@ export async function createDevServer(
 		ws: { port: wsPort = undefined } = {},
 	},
 ) {
-	/**
-	 * @param { { cert: string, key: string } | undefined } options 
-	 * @returns { { cert: string, key: string } | false }
-	 */
-	const resolveCertificate = (options) => {
-		return typeof options === "object" && options.cert && options.key
-			? { cert: options.cert, key: options.key }
-			: false;
-	}
-
 	const serveConfig = {
 		port,
 		force,
@@ -119,7 +110,7 @@ export async function createDevServer(
 		ws: {
 			port: wsPort,
 		},
-		https: resolveCertificate(app.config.server.https)
+		https: app.config.server.https ? await resolveCertificate(app.config.server.https) : false
 	};
 
 	await app.hooks.callHook("app:dev:start", { app, serveConfig });
