@@ -19,7 +19,7 @@ export function preloadStyles(styles) {
 		}
 
 		let element = document.head.querySelector(
-			`link[href="${styles.attrs.href}"]`,
+			`link[href="${style.attrs.href}"]`,
 		);
 		if (!element) {
 			// create a link preload element for the css file so it starts loading but doesnt get attached
