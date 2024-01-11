@@ -97,6 +97,7 @@ import {
 	toNodeListener,
 	toPlainHandler,
 	toWebHandler,
+	toWebRequest,
 	unsealSession,
 	updateSession,
 	use,
@@ -131,26 +132,6 @@ export function getContext(event, key) {
  */
 export function defineMiddleware(options) {
 	return options;
-}
-
-export function toWebRequest(/** @type {H3Event} */ event) {
-	/**
-	 * @type {ReadableStream | undefined}
-	 */
-	let readableStream;
-	return new Request(getRequestURL(event), {
-		// @ts-ignore Undici option
-		duplex: "half",
-		method: event.method,
-		headers: event.headers,
-		get body() {
-			if (readableStream) {
-				return readableStream;
-			}
-			readableStream = getRequestWebStream(event);
-			return readableStream;
-		},
-	});
 }
 
 export {
@@ -252,6 +233,7 @@ export {
 	toNodeListener,
 	toPlainHandler,
 	toWebHandler,
+	toWebRequest,
 	unsealSession,
 	updateSession,
 	use,
