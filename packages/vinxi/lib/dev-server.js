@@ -9,7 +9,7 @@ import { resolveCertificate } from "./https.js";
 export * from "./router-dev-plugins.js";
 
 /** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: import('@vinxi/listhen').HTTPSOptions } | boolean} DevConfigInput */
-/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https: import('@vinxi/listhen').HTTPSOptions; }} DevConfig */
+/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https: import('@vinxi/listhen').Certificate | false; }} DevConfig */
 
 /**
  *
