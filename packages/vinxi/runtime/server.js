@@ -97,6 +97,7 @@ import {
 	toNodeListener,
 	toPlainHandler,
 	toWebHandler,
+	toWebRequest as toWebRequestH3,
 	unsealSession,
 	updateSession,
 	use,
@@ -133,24 +134,17 @@ export function defineMiddleware(options) {
 	return options;
 }
 
-export function toWebRequest(/** @type {H3Event} */ event) {
-	/**
-	 * @type {ReadableStream | undefined}
-	 */
-	let readableStream;
-	return new Request(getRequestURL(event), {
-		// @ts-ignore Undici option
-		duplex: "half",
-		method: event.method,
-		headers: event.headers,
-		get body() {
-			if (readableStream) {
-				return readableStream;
-			}
-			readableStream = getRequestWebStream(event);
-			return readableStream;
-		},
-	});
+/**
+ * @param {H3Event} event 
+ * @returns {Request}
+ */
+export function toWebRequest(event) {
+	event.web ??= {
+		request: toWebRequestH3(event),
+		url: getRequestURL(event)
+	};
+	// @ts-ignore
+	return event.web.request;
 }
 
 export {
