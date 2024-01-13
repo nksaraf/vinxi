@@ -1514,6 +1514,37 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
 
+  test/templates/react-to-web-request:
+    dependencies:
+      '@vinxi/react':
+        specifier: workspace:*
+        version: link:../../../packages/vinxi-react
+      '@vinxi/server-functions':
+        specifier: workspace:*
+        version: link:../../../packages/vinxi-server-functions
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.1.1(vite@4.5.0)
+      path-to-regexp:
+        specifier: ^6.2.1
+        version: 6.2.1
+      react:
+        specifier: 0.0.0-experimental-035a41c4e-20230704
+        version: 0.0.0-experimental-035a41c4e-20230704
+      react-dom:
+        specifier: 0.0.0-experimental-035a41c4e-20230704
+        version: 0.0.0-experimental-035a41c4e-20230704(react@0.0.0-experimental-035a41c4e-20230704)
+      vinxi:
+        specifier: workspace:*
+        version: link:../../../packages/vinxi
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.21
+        version: 18.2.37
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.2.14
+
 packages:
 
   /@adobe/css-tools@4.3.1:
@@ -1685,7 +1716,7 @@ packages:
       '@babel/helper-compilation-targets': 7.22.15
       '@babel/helper-module-transforms': 7.23.0(@babel/core@7.23.2)
       '@babel/helpers': 7.23.2
-      '@babel/parser': 7.23.0
+      '@babel/parser': 7.23.5
       '@babel/template': 7.22.15
       '@babel/traverse': 7.23.2
       '@babel/types': 7.23.0
@@ -1885,7 +1916,6 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.23.0
-    dev: false
 
   /@babel/plugin-syntax-jsx@7.22.5(@babel/core@7.23.2):
     resolution: {integrity: sha512-gvyP4hZrgrs/wWMaocvxZ44Hw0b3W8Pe+cMxc8V1ULQ07oh8VNbIRaoD1LRZVTvD+0nieDKjfgKg89sD7rrKrg==}
