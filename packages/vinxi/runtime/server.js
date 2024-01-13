@@ -134,16 +134,11 @@ export function defineMiddleware(options) {
 	return options;
 }
 
-/**
- * @param {H3Event} event 
- * @returns {Request}
- */
 export function toWebRequest(event) {
 	event.web ??= {
 		request: toWebRequestH3(event),
 		url: getRequestURL(event)
 	};
-	// @ts-ignore
 	return event.web.request;
 }
 
