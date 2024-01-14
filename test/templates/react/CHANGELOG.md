@@ -4,6 +4,15 @@
 
 ### Patch Changes
 
+- Updated dependencies [ee9611f]
+- Updated dependencies [2dad740]
+  - vinxi@0.1.4
+  - @vinxi/react@0.1.1
+
+## null
+
+### Patch Changes
+
 - 583364f: fix: concurrent getSession calls
 - fd5740c: fix: non-blocking `readBody` with web requests
 - Updated dependencies [583364f]

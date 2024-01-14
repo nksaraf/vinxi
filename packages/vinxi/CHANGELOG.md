@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.1.4
+
+### Patch Changes
+
+- ee9611f: fix: proper source maps and handling ts declaration functions with vinxi/plugin-directives
+- 2dad740: fix: server runtime types in package.json
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.3
 
 ### Patch Changes
