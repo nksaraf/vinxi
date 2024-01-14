@@ -14,19 +14,22 @@ export function shimExportsPlugin({
 		name: "shim-exports",
 		async transform(code, id, options, applied) {
 			if (code.indexOf(pragma) === -1) {
-				return code;
+				return { code, map: options.map };
 			}
 
 			const shouldApply = apply(code, id, options);
 
 			if (!shouldApply) {
-				return code;
+				return { code, map: options.map };
 			}
 
-			let ast = parseAdvanced(code);
+			let ast = parseAdvanced(code, {
+				sourceFileName: id,
+				inputSourceMap: options.map,
+			});
 
 			if (ast.program.body.length === 0) {
-				return code;
+				return { code, map: options.map };
 			}
 
 			function hasDir(node) {
@@ -303,13 +306,18 @@ export function shimExportsPlugin({
 			ast.program.body = [...body, ...declarations];
 
 			if (needsReference) {
-				return (
-					`import { ${runtime.function} } from '${runtime.module}';\n` +
-					print(ast).code
-				);
+				const result = print(ast, {
+					sourceMapName: id,
+					inputSourceMap: options.map,
+				});
+
+				return {
+					code: `import { ${runtime.function} } from '${runtime.module}';\n` + result.code,
+					map: result.map,
+				};
 			}
 
-			return code;
+			return { code, map: options.map };
 
 			// const body = await shimExports({
 			// 	runtime,
@@ -339,5 +347,5 @@ export async function shimExports({ runtime, ast, id, code, hash, options }) {
 			options.command === "build" ? hash(id) : id
 		}", "${name}");\n`;
 	}
-	return newSrc;
+	return { code: newSrc, map: null };
 }

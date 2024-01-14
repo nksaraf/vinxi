@@ -9,6 +9,9 @@
     "*.d.ts",
     "plugins"
   ],
+  "scripts": {
+    "test": "vitest --run"
+  },
   "types": "./index.d.ts",
   "exports": {
     ".": "./index.js",
