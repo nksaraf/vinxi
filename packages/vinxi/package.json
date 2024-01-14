@@ -94,7 +94,7 @@
         "./dist/types/lib/dev-server.d.ts"
       ],
       "server": [
-        "./dist/types/runtime/server.d.ts"
+        "./runtime/server-types.d.ts"
       ],
       "party": [
         "./dist/types/runtime/party.d.ts"
