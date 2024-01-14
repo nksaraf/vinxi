@@ -97,3 +97,5 @@ runTest("shim-exports-fn", (code) => transformSSR(code, shimExportsPlugin));
 runTest("example-1", (code) => transformSSR(code, wrapExportsPlugin));
 runTest("example-2", (code) => transformSSR(code, wrapExportsPlugin), "wrap");
 runTest("example-2", (code) => transformSSR(code, shimExportsPlugin), "shim");
+runTest("example-3", (code) => transformSSR(code, wrapExportsPlugin), "wrap");
+runTest("example-3", (code) => transformSSR(code, shimExportsPlugin), "shim");

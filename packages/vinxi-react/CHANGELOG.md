@@ -1,5 +1,11 @@
 # @vinxi/react
 
+## 0.1.1
+
+### Patch Changes
+
+- a011795: fixes css bundling differences and issues between file-based routes and config-based routes #115
+
 ## 0.1.0
 
 ### Minor Changes

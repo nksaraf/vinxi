@@ -6,12 +6,13 @@
     "build": "pnpm -r --filter \"./packages/*\" run build",
     "clean:test": "rimraf ../.fixtures",
     "clean": "rm -rf **/*/.{nitro,output}",
-    "test": "pnpm --filter tests clean && pnpm --filter tests test --",
+    "test": "pnpm --filter vinxi-tests clean && pnpm --filter vinxi-tests test --",
     "ci": "pnpm -r --stream run ci",
     "release": "pnpm run build && pnpm --filter vinxi run types && changeset publish",
     "test:packages": "pnpm -r --stream run test",
     "test:prettier": "prettier --check --ignore-path .gitignore --ignore-unknown . '!pnpm-lock.yaml'",
-    "format": "prettier --ignore-path .gitignore --ignore-unknown . '!pnpm-lock.yaml' --write"
+    "format": "prettier --ignore-path .gitignore --ignore-unknown . '!pnpm-lock.yaml' --write",
+    "install:playwright": "pnpm --filter vinxi-tests install:playwright"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
