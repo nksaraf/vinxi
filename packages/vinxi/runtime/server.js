@@ -131,12 +131,10 @@ export function defineMiddleware(options) {
 	return options;
 }
 
-
-
 /**
- * The web request utils are copied from `h3` with a few bug fixes regaring multiple access to 
+ * The web request utils are copied from `h3` with a few bug fixes regaring multiple access to
  * `readBody` and when the body is an ArrayBuffer, such as in Deno, Edge Functions, etc.
- * 
+ *
  * We intend to remove this section once this is upstreamed in h3.
  */
 
@@ -174,9 +172,8 @@ function toWebRequestH3(/** @type {import('h3').H3Event} */ event) {
 }
 
 export function toWebRequest(/** @type {import('h3').H3Event} */ event) {
-	const request = toWebRequestH3(event);
-  event.web ??= {
-		request,
+	event.web ??= {
+		request: toWebRequestH3(event),
 		url: getRequestURL(event),
 	};
 	return event.web.request;
@@ -185,9 +182,9 @@ export function toWebRequest(/** @type {import('h3').H3Event} */ event) {
 /**
  * The session utils are copied from `h3` with a few bug fixe regaring locking when sealing happens
  * so things dont get stuck.
- * 
+ *
  * We intend to remove this section once this is upstreamed in h3.
- * 
+ *
  */
 
 const DEFAULT_NAME = "h3";
