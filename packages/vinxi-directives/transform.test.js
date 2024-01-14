@@ -99,3 +99,13 @@ runTest("example-3", (code) => transformSSR(code, wrapExportsPlugin), "wrap");
 runTest("example-3", (code) => transformSSR(code, shimExportsPlugin), "shim");
 runTest("example-4", (code) => transformSSR(code, shimExportsPlugin), "shim");
 runTest("example-4", (code) => transformSSR(code, wrapExportsPlugin), "wrap");
+runTest(
+	"example-4-fn",
+	(code) => transformSSR(code, wrapExportsPlugin),
+	"wrap",
+);
+runTest(
+	"example-4-fn",
+	(code) => transformSSR(code, shimExportsPlugin),
+	"shim",
+);
