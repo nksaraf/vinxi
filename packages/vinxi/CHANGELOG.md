@@ -1,5 +1,14 @@
 # vinxi
 
+## 0.1.3
+
+### Patch Changes
+
+- 583364f: fix: concurrent getSession calls
+- c45633c: upstreams Fix server functions hanging on edge functions solidjs/solid-start#1255
+- fd5740c: fix: non-blocking `readBody` with web requests
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.2
 
 ### Patch Changes
