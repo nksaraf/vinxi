@@ -267,7 +267,9 @@ export function wrapExportsPlugin({
 					inputSourceMap: options.map,
 				});
 				return {
-					code: `import { ${runtime.function} } from '${runtime.module}';\n` + result.code,
+					code:
+						`import { ${runtime.function} } from '${runtime.module}';\n` +
+						result.code,
 					map: result.map,
 				};
 			}
@@ -377,7 +379,8 @@ export function wrapExports({
 
 						if (
 							node.declaration.type === "TSTypeAliasDeclaration" ||
-							node.declaration.type === "TSInterfaceDeclaration"
+							node.declaration.type === "TSInterfaceDeclaration" ||
+							node.declaration.type === "TSDeclareFunction"
 						) {
 							continue;
 						}
