@@ -1,5 +1,25 @@
 # vinxi
 
+## 0.1.3
+
+### Patch Changes
+
+- 583364f: fix: concurrent getSession calls
+- c45633c: upstreams Fix server functions hanging on edge functions solidjs/solid-start#1255
+- fd5740c: fix: non-blocking `readBody` with web requests
+  - @vinxi/devtools@0.1.1
+
+## 0.1.2
+
+### Patch Changes
+
+- 769a055: fix: config changes not applied on server restart
+- 08cd450: fixes Exporting type definitions from a "use server" file doesn't work. #106
+- 2e85423: findAssetsInViteManifest: Prevent recursive parsing of same ids
+- bb16563: fix: toWebRequest lazily creates readable stream for `body` access
+- a011795: fixes css bundling differences and issues between file-based routes and config-based routes #115
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.1
 
 ### Patch Changes

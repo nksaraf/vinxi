@@ -90,12 +90,12 @@ function ActivePageMarker({ group, pathname }) {
 	let itemHeight = remToPx(2);
 	let offset = remToPx(0.25);
 	let activePageIndex = group.links.findIndex((link) => link.href === pathname);
-	let top = offset + activePageIndex * itemHeight;
+	let top = activePageIndex * (itemHeight - offset);
 
 	return (
 		<motion.div
 			layout
-			className="absolute left-2 h-6 w-px bg-emerald-500"
+			className="absolute left-2 h-7 w-px bg-emerald-500"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1, transition: { delay: 0.2 } }}
 			exit={{ opacity: 0 }}

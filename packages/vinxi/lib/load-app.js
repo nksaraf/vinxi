@@ -1,57 +1,46 @@
 /// <reference types="bun-types" />
 import { loadConfig } from "c12";
 import { existsSync } from "fs";
-import { joinURL } from "ufo";
 import { fileURLToPath, pathToFileURL } from "url";
 
 import { createApp } from "./app.js";
 import { log } from "./logger.js";
+import { join } from "./path.js";
+
+function isBun() {
+	return !!process.versions.bun;
+}
+
+async function fileExists(path) {
+	return isBun() ? Bun.file(path).exists() : existsSync(path);
+}
 
 async function loadFile({ ...options }) {
-	if (process.versions.bun) {
-		if (options.name) {
-			for (const ext of ["js", "ts", "mjs"]) {
-				if (
-					await Bun.file(
-						process.cwd() + "/" + options.name + ".config." + ext,
-					).exists()
-				)
-					return import(
-						process.cwd() + "/" + options.name + ".config." + ext
-					).then((m) => ({
+	if (options.name) {
+		for (const ext of ["js", "mjs", "ts"]) {
+			if (ext === "ts" && !isBun()) 
+				continue;
+
+			const filepath = join(process.cwd(), `${options.name}.config.${ext}`);
+			
+			if (await fileExists(filepath)) {
+				return import(pathToFileURL(filepath).href + `?time=${Date.now()}`)
+					.then((m) => ({
 						config: m.default,
 					}));
 			}
-		} else if (options.configFile) {
-			if (await Bun.file(process.cwd() + "/" + options.configFile).exists()) {
-				return import(process.cwd() + "/" + options.configFile).then((m) => ({
-					config: m.default,
-				}));
-			}
 		}
 	}
-
-	if (options.name) {
-		if (existsSync(process.cwd() + "/" + options.name + ".config.js")) {
-			return import(
-				joinURL(pathToFileURL(process.cwd()).href, `${options.name}.config.js`)
-			).then((m) => ({
-				config: m.default,
-			}));
-		} else if (existsSync(process.cwd() + "/" + options.name + ".config.mjs")) {
-			return import(
-				joinURL(pathToFileURL(process.cwd()).href, `${options.name}.config.mjs`)
-			).then((m) => ({
-				config: m.default,
-			}));
-		}
-	} else if (options.configFile) {
-		if (options.configFile.endsWith("js")) {
-			return import(
-				joinURL(pathToFileURL(process.cwd()).href, `${options.configFile}`)
-			).then((m) => ({
-				config: m.default,
-			}));
+	else if (options.configFile) {
+		const ext = options.configFile.slice(options.configFile.lastIndexOf(".") + 1);
+		if (["js", "mjs", "ts"].includes(ext) && (ext !== "ts" || isBun())) {
+			const filepath = join(process.cwd(), options.configFile);
+			if (await fileExists(filepath)) {
+				return import(pathToFileURL(filepath).href + `?time=${Date.now()}`)
+					.then((m) => ({
+						config: m.default,
+					}));
+			}
 		}
 	}
 

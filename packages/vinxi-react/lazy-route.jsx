@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from "react";
 import { Fragment, createElement, forwardRef, lazy } from "react";
-import { cleanupStyles, updateStyles } from "vinxi/css";
+import { cleanupStyles, preloadStyles, updateStyles } from "vinxi/css";
 
 import invariant from "./invariant.js";
 import { renderAsset } from "./render-asset";
@@ -57,6 +57,14 @@ export default function lazyRoute(
 
 			const Component = mod[exported];
 			let assets = await clientManifest.inputs?.[component.src].assets();
+
+			if (typeof window !== "undefined") {
+				const styles = assets.filter(
+					(asset) => asset.attrs.rel === "stylesheet",
+				);
+				preloadStyles(styles);
+			}
+
 			const Comp = forwardRef((props, ref) => {
 				return createElement(
 					Fragment,

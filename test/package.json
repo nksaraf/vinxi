@@ -25,7 +25,6 @@
     "prettier": "^2.8.8",
     "strip-indent": "^4.0.0",
     "undici": "^5.23.0",
-    "vinxi": "0.1.1",
     "vitest": "^0.28.5",
     "wait-on": "^7.0.1"
   },
