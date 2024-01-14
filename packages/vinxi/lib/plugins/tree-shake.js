@@ -1,6 +1,6 @@
 // import jsx from "@babel/plugin-syntax-jsx";
 // import typescript from "@babel/plugin-syntax-typescript";
-import path from 'path';
+import { basename } from '../path.js';
 import plugin from "./tree-shake.babel.js";
 
 /**
@@ -28,7 +28,7 @@ export function treeShake() {
 						'typescript',
 					],
 				},
-				filename: path.basename(id),
+				filename: basename(id),
 				ast: false,
 				sourceMaps: true,
 				configFile: false,
