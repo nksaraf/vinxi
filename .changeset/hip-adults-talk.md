@@ -3,4 +3,4 @@
 "vinxi": patch
 ---
 
-fix: proper source maps
+fix: proper source maps and handling ts declaration functions with vinxi/plugin-directives
