@@ -1,5 +1,14 @@
 # @vinxi/plugin-references
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [ee9611f]
+- Updated dependencies [2dad740]
+  - @vinxi/plugin-directives@0.1.2
+  - vinxi@0.1.4
+
 ## 0.1.1
 
 ### Patch Changes

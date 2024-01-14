@@ -4,6 +4,16 @@
 
 ### Patch Changes
 
+- Updated dependencies [ee9611f]
+- Updated dependencies [2dad740]
+  - vinxi@0.1.4
+  - @vinxi/server-functions@0.1.2
+  - @vinxi/react@0.1.1
+
+## null
+
+### Patch Changes
+
 - fd5740c: fix: non-blocking `readBody` with web requests
 - Updated dependencies [583364f]
 - Updated dependencies [c45633c]
