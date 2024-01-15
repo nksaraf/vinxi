@@ -1,6 +1,6 @@
-import jsx from "@babel/plugin-syntax-jsx";
-import typescript from "@babel/plugin-syntax-typescript";
-
+// import jsx from "@babel/plugin-syntax-jsx";
+// import typescript from "@babel/plugin-syntax-typescript";
+import { basename } from '../path.js';
 import plugin from "./tree-shake.babel.js";
 
 /**
@@ -18,12 +18,22 @@ export function treeShake() {
 		const query = new URLSearchParams(queryString);
 		if (query.has("pick")) {
 			const babel = await import("@babel/core");
-			const transformed = babel.transform(code, {
+			const transformed = await babel.transformAsync(code, {
 				plugins: [
-					jsx,
-					[typescript, { isTSX: true }],
 					[plugin, { pick: query.getAll("pick") }],
 				],
+				parserOpts: {
+					plugins: [
+						'jsx',
+						'typescript',
+					],
+				},
+				filename: basename(id),
+				ast: false,
+				sourceMaps: true,
+				configFile: false,
+				babelrc: false,
+				sourceFileName: id,
 			});
 
 			return transformed;

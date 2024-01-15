@@ -1,5 +1,14 @@
 # @vinxi/plugin-references
 
+## 0.1.2
+
+### Patch Changes
+
+- ee9611f: fix: proper source maps and handling ts declaration functions with vinxi/plugin-directives
+- Updated dependencies [ee9611f]
+- Updated dependencies [2dad740]
+  - vinxi@0.1.4
+
 ## 0.1.1
 
 ### Patch Changes

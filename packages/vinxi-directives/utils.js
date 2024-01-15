@@ -46,7 +46,7 @@ export async function parseExportNamesInto(vite, ast, names, parentURL) {
 
 					const clientImportCode = readFileSync(url, "utf8");
 
-					const childAst = parseAdvanced(clientImportCode ?? "");
+					const childAst = parseAdvanced(clientImportCode ?? "", {});
 
 					await parseExportNamesInto(vite, childAst.program.body, names, url);
 					continue;
@@ -58,7 +58,8 @@ export async function parseExportNamesInto(vite, ast, names, parentURL) {
 				if (node.declaration) {
 					if (
 						node.declaration.type === "TSInterfaceDeclaration" ||
-						node.declaration.type === "TSTypeAliasDeclaration"
+						node.declaration.type === "TSTypeAliasDeclaration" ||
+						node.declaration.type === "TSDeclareFunction"
 					) {
 						continue;
 					}

@@ -14,7 +14,7 @@ const testFixtures = import.meta.glob("./fixtures/**/*.ts", {
 	as: "raw",
 });
 
-const js = (args) => prettyPrint(parseAdvanced(args)).code;
+const js = (args) => prettyPrint(parseAdvanced(args.code, {})).code;
 
 async function transformSSR(
 	code,
@@ -40,11 +40,9 @@ async function transformSSR(
 		...args,
 	});
 
-	// const applied = await instance.apply(code, args.id, args.options);
-	// if (applied === false) {
-	// 	return code;
-	// }
-	return js(await instance.transform(code, args.id, args.options));
+	let result = await instance.transform(code, args.id, args.options);
+	const data = js(result);
+	return data;
 }
 async function transformClient(
 	code,
@@ -83,7 +81,7 @@ async function runTest(name, transform, f) {
 		const expected = await testFixtures[
 			`./fixtures/${name}${f ? "." + f : ""}.snapshot.ts`
 		]();
-		expect(js(await transform(code))).toEqual(js(expected));
+		expect(await transform(code)).toEqual(js({ code: expected }));
 	});
 }
 
@@ -99,3 +97,15 @@ runTest("example-2", (code) => transformSSR(code, wrapExportsPlugin), "wrap");
 runTest("example-2", (code) => transformSSR(code, shimExportsPlugin), "shim");
 runTest("example-3", (code) => transformSSR(code, wrapExportsPlugin), "wrap");
 runTest("example-3", (code) => transformSSR(code, shimExportsPlugin), "shim");
+runTest("example-4", (code) => transformSSR(code, shimExportsPlugin), "shim");
+runTest("example-4", (code) => transformSSR(code, wrapExportsPlugin), "wrap");
+runTest(
+	"example-4-fn",
+	(code) => transformSSR(code, wrapExportsPlugin),
+	"wrap",
+);
+runTest(
+	"example-4-fn",
+	(code) => transformSSR(code, shimExportsPlugin),
+	"shim",
+);
