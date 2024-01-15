@@ -1,5 +1,14 @@
 # vinxi
 
+## 0.1.5
+
+### Patch Changes
+
+- 557b35c: feat: make https configurable for dev, use `server.dev.https: true` or `server.dev.https: options`
+- 922a51b: bump listhen (fork) to 1.5.6 with resolveCertificate exported
+- fae6e44: fix: @vinxi/plugin-directives: Add onModuleFound callback to shimExportsPlugin, fixes #129, solidjs/solid-start#1261
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.4
 
 ### Patch Changes

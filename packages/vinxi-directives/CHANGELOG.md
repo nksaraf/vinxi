@@ -1,5 +1,15 @@
 # @vinxi/plugin-references
 
+## 0.1.3
+
+### Patch Changes
+
+- fae6e44: fix: @vinxi/plugin-directives: Add onModuleFound callback to shimExportsPlugin, fixes #129, solidjs/solid-start#1261
+- Updated dependencies [557b35c]
+- Updated dependencies [922a51b]
+- Updated dependencies [fae6e44]
+  - vinxi@0.1.5
+
 ## 0.1.2
 
 ### Patch Changes
