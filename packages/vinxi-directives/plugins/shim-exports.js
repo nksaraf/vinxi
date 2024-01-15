@@ -297,6 +297,7 @@ export function shimExportsPlugin({
 								],
 							),
 						);
+						onModuleFound?.(id);
 						this.traverse(path);
 					}
 					return false;
@@ -312,7 +313,9 @@ export function shimExportsPlugin({
 				});
 
 				return {
-					code: `import { ${runtime.function} } from '${runtime.module}';\n` + result.code,
+					code:
+						`import { ${runtime.function} } from '${runtime.module}';\n` +
+						result.code,
 					map: result.map,
 				};
 			}
