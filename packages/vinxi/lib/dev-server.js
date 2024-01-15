@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { consola, withLogger } from "./logger.js";
 import { join, normalize } from "./path.js";
-import { resolveCertificate } from "./https.js";
+import { resolveCertificate } from "@vinxi/listhen";
 
 export * from "./router-dev-plugins.js";
 
@@ -103,6 +103,7 @@ export async function createDevServer(
 		ws: { port: wsPort = undefined } = {},
 	},
 ) {
+	const https = app.config.server.https;
 	const serveConfig = {
 		port,
 		force,
@@ -110,7 +111,10 @@ export async function createDevServer(
 		ws: {
 			port: wsPort,
 		},
-		https: app.config.server.https ? await resolveCertificate(app.config.server.https) : false
+		https: (https 
+			? await resolveCertificate(typeof https === "object" ? https : {}) 
+			: false
+		)
 	};
 
 	await app.hooks.callHook("app:dev:start", { app, serveConfig });
