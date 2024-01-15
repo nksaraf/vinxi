@@ -1,5 +1,5 @@
 import { prettyPrint } from "recast";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { parseAdvanced } from "./parse.js";
 import {
@@ -36,12 +36,15 @@ async function transformSSR(
 		pragma: "use runtime",
 	},
 ) {
+	const onModuleFound = vi.fn();
 	const instance = plugin({
 		...args,
+		onModuleFound,
 	});
 
 	let result = await instance.transform(code, args.id, args.options);
 	const data = js(result);
+	expect(onModuleFound.mock.calls.length).toBeGreaterThan(0);
 	return data;
 }
 async function transformClient(
