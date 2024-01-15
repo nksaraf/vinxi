@@ -906,7 +906,7 @@ importers:
         version: 1.22.8
       rollup-plugin-visualizer:
         specifier: ^5.9.2
-        version: 5.9.2(rollup@4.9.0)
+        version: 5.9.2
       serve-placeholder:
         specifier: ^2.0.1
         version: 2.0.1
@@ -11191,6 +11191,22 @@ packages:
       open: 8.4.2
       picomatch: 2.3.1
       rollup: 4.9.0
+      source-map: 0.7.4
+      yargs: 17.7.2
+    dev: false
+
+  /rollup-plugin-visualizer@5.9.2:
+    resolution: {integrity: sha512-waHktD5mlWrYFrhOLbti4YgQCn1uR24nYsNuXxg7LkPH8KdTXVWR9DNY1WU0QqokyMixVXJS4J04HNrVTMP01A==}
+    engines: {node: '>=14'}
+    hasBin: true
+    peerDependencies:
+      rollup: 2.x || 3.x
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      open: 8.4.2
+      picomatch: 2.3.1
       source-map: 0.7.4
       yargs: 17.7.2
     dev: false

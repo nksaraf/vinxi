@@ -4,11 +4,12 @@ import { fileURLToPath } from "node:url";
 
 import { consola, withLogger } from "./logger.js";
 import { join, normalize } from "./path.js";
+import { resolveCertificate } from "@vinxi/listhen";
 
 export * from "./router-dev-plugins.js";
 
-/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number } }} DevConfigInput */
-/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number } }} DevConfig */
+/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: import('@vinxi/listhen').HTTPSOptions } | boolean} DevConfigInput */
+/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https: import('@vinxi/listhen').Certificate | false; }} DevConfig */
 
 /**
  *
@@ -78,6 +79,7 @@ export async function createViteHandler(router, app, serveConfig) {
 			hmr: {
 				port,
 			},
+			https: serveConfig.https
 		},
 	});
 
@@ -101,6 +103,7 @@ export async function createDevServer(
 		ws: { port: wsPort = undefined } = {},
 	},
 ) {
+	const https = app.config.server.https;
 	const serveConfig = {
 		port,
 		force,
@@ -108,6 +111,10 @@ export async function createDevServer(
 		ws: {
 			port: wsPort,
 		},
+		https: (https 
+			? await resolveCertificate(typeof https === "object" ? https : {}) 
+			: false
+		)
 	};
 
 	await app.hooks.callHook("app:dev:start", { app, serveConfig });
@@ -213,7 +220,9 @@ export async function createDevServer(
 				app,
 				devApp,
 			});
-			const listener = await devApp.listen(port, {});
+			const listener = await devApp.listen(port, {
+				https: serveConfig.https
+			});
 			await app.hooks.callHook("app:dev:server:listener:created", {
 				app,
 				devApp,
