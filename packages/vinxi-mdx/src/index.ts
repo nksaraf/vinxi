@@ -5,6 +5,7 @@ import { NamedImports } from "./imports";
 import { createTransformer } from "./transform";
 import { MdxOptions, MdxPlugin } from "./types";
 import { viteMdxTransclusion } from "./viteMdxTransclusion";
+import { VFile, VFileCompatible } from "vfile";
 
 export { MdxOptions, MdxPlugin };
 
@@ -37,7 +38,7 @@ function createPlugin(
 	let reactRefresh: Plugin | undefined;
 	let transformMdx:
 		| ((
-				code_mdx: string,
+				code_mdx: VFileCompatible,
 				mdxOptions?: MdxOptions | undefined,
 		  ) => Promise<string>)
 		| undefined;
@@ -74,10 +75,10 @@ function createPlugin(
 					globalMdxOptions,
 					getMdxOptions?.(path),
 				);
-				// @ts-ignore
-				// mdxOptions.filepath = path;
 
-				code = await transformMdx(code, { ...mdxOptions });
+				const input = new VFile({ value: code, path })
+
+				code = await transformMdx(input, { ...mdxOptions });
 				// @ts-ignore
 				const refreshResult = await reactRefresh?.transform!.call(
 					this,

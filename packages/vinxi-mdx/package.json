@@ -27,7 +27,8 @@
     "@alloc/quick-lru": "^5.2.0",
     "esbuild": "0.18.7",
     "resolve": "^1.22.4",
-    "unified": "^9.2.2"
+    "unified": "^9.2.2",
+    "vfile": "^5.0.0"
   },
   "devDependencies": {
     "@mdx-js/mdx": "2.3.0",

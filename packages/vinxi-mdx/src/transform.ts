@@ -1,6 +1,6 @@
 import { transform } from "esbuild";
-
-import { assertImportExists, inferNamedImports, requireMdx } from "./imports";
+import { VFileCompatible } from "vfile";
+import { assertImportExists, inferNamedImports } from "./imports";
 import { MdxOptions } from "./types";
 
 export function createTransformer(
@@ -16,7 +16,7 @@ export function createTransformer(
 		},
 	);
 
-	return async function transform(code_mdx: string, mdxOptions?: MdxOptions) {
+	return async function transform(code_mdx: VFileCompatible, mdxOptions?: MdxOptions) {
 		const mdx = await import("@mdx-js/mdx");
 		let code_jsx = await mdx.compile(code_mdx, mdxOptions as any);
 		let code = !mdxOptions.jsx
