@@ -195,7 +195,6 @@ export class BaseFileSystemRouter extends EventTarget {
 			const route = await this.toRoute(src);
 			if (route) {
 				this._addRoute(route);
-				this.reload(route);
 			}
 			// this.update?.();
 		}
