@@ -2,12 +2,10 @@ import { EventHandlerRequest, _RequestMiddleware } from "h3";
 
 export * from "h3";
 
-export function getContext(event: import("h3").H3Event, key: string): any;
-export function setContext(
-	event: import("h3").H3Event,
-	key: string,
-	value: any,
-): any;
+export type HTTPEvent = import("h3").H3Event;
+
+export function getContext(event: HTTPEvent, key: string): any;
+export function setContext(event: HTTPEvent, key: string, value: any): any;
 
 export function defineMiddleware(options: {
 	onRequest?:
@@ -26,3 +24,5 @@ export function defineMiddleware(options: {
 		| import("h3")._ResponseMiddleware[]
 		| undefined;
 };
+
+export function getEvent(): HTTPEvent;

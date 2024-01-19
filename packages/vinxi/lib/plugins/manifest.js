@@ -39,6 +39,9 @@ export function manifest() {
 						"import.meta.env.DEVTOOLS": config.dev?.devtools
 							? JSON.stringify(config.dev.devtools)
 							: `false`,
+						"import.meta._asyncContext": JSON.stringify(
+							app.config.server.experimental?.asyncContext,
+						),
 					},
 				};
 			},

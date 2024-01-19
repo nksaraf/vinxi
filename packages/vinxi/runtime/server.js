@@ -96,12 +96,14 @@ import {
 	toPlainHandler,
 	toWebHandler,
 	unsealSession, // updateSession,
-	use,
-	useBase, // useSession,
+	useBase,
 	writeEarlyHints,
 } from "h3";
 import { seal, defaults as sealDefaults } from "iron-webcrypto";
 import crypto from "uncrypto";
+import { getContext as gContext } from "unctx";
+
+import { AsyncLocalStorage } from "node:async_hooks";
 
 /**
  *
@@ -435,8 +437,22 @@ export {
 	toWebHandler,
 	unsealSession,
 	// updateSession,
-	use,
 	useBase,
 	// useSession,
 	writeEarlyHints,
 };
+
+function getNitroAsyncContext() {
+	const nitroAsyncContext = gContext("nitro-app", {
+		asyncContext: globalThis.app.config.server.experimental?.asyncContext
+			? true
+			: false,
+		AsyncLocalStorage,
+	});
+
+	return nitroAsyncContext;
+}
+
+export function getEvent() {
+	return getNitroAsyncContext().use().event;
+}
