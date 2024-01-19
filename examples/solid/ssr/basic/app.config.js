@@ -3,6 +3,11 @@ import { createApp } from "vinxi";
 import solid from "vite-plugin-solid";
 
 export default createApp({
+	server: {
+		experimental: {
+			asyncContext: true,
+		},
+	},
 	routers: [
 		{
 			name: "public",
