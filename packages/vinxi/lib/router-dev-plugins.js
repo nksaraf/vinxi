@@ -45,7 +45,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 				if (router.middleware) {
 					return `
 					import middleware from "${join(router.root, router.middleware)}";
-					import handler from "${join(router.root, router.handler)}"; 
+					import handler from "${join(router.root, router.handler)}";
 					import { eventHandler } from "vinxi/server";
 					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler});`;
 				}
@@ -71,6 +71,14 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			},
 		}),
 		treeShake(),
+		config("handler:base", (router, app) => {
+			const clientRouter = router.link?.client
+				? app.getRouter(router.link?.client)
+				: null;
+			return {
+				base: clientRouter ? clientRouter.base : router.base,
+			};
+		}),
 		router.internals.routes ? fileSystemWatcher() : null,
 	],
 	build: (
