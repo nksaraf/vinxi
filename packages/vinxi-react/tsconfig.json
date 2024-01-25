@@ -6,8 +6,18 @@
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"allowJs": true,
-		"noEmit": true,
 		"jsx": "react-jsx",
-		"isolatedModules": true
-	}
+		"strict": false,
+		"checkJs": true,
+		"noEmit": false,
+		"isolatedModules": true,
+		"declarationMap": true,
+		"skipLibCheck": true,
+		"skipDefaultLibCheck": true,
+		"emitDeclarationOnly": true,
+		"types": ["vinxi/types/client"],
+		"declaration": true,
+		"outDir": "dist"
+	},
+	"include": ["*.js"]
 }
