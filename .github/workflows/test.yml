@@ -90,7 +90,7 @@ jobs:
 
       - name: 📥 Install Playwright
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter tests install:playwright
+        run: pnpm run install:playwright
 
       - uses: oven-sh/setup-bun@v1
         if: runner.os == 'ubuntu-latest' || runner.os == 'macos-latest'
