@@ -70,6 +70,8 @@ export async function createBuild(app, buildConfig) {
 		...app.config.server,
 		dev: false,
 
+		logLevel: +(process.env.NITRO_LOG_LEVEL || 1),
+
 		preset:
 			buildConfig.preset ??
 			process.env.TARGET ??
