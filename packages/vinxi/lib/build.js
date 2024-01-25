@@ -247,7 +247,8 @@ export async function createBuild(app, buildConfig) {
         }
       `;
 			},
-			...(app.config.routers.filter((router) => router.mode === "spa")
+			...app.config.routers
+				.filter((router) => router.mode === "spa")
 				.reduce((virtuals, router) => {
 					virtuals[`#vinxi/spa/${router.name}`] = () => {
 						const indexHtml = readFileSync(
@@ -262,9 +263,8 @@ export async function createBuild(app, buildConfig) {
 							})
 						`;
 					};
-					return virtuals; 
-				}, {})
-			),
+					return virtuals;
+				}, {}),
 			"#vinxi/chunks": () => chunksServerVirtualModule()(app),
 
 			...(Object.fromEntries(
@@ -419,8 +419,8 @@ async function createRouterBuild(app, router) {
 		app,
 		root: router.root,
 		plugins: [
-			routerModePlugin[buildRouter.internals.mode.name]?.(buildRouter) ?? [],
 			buildTargetPlugin[buildRouter.target]?.(buildRouter) ?? [],
+			routerModePlugin[buildRouter.internals.mode.name]?.(buildRouter) ?? [],
 			...((await buildRouter.plugins?.(buildRouter)) ?? []),
 			{
 				name: "vinxi:build:router:config",
@@ -586,6 +586,14 @@ const routerModePlugin = {
 			define: {
 				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},
+		}),
+		config("handler:base", (router, app) => {
+			const clientRouter = router.link?.client
+				? app.getRouter(router.link?.client)
+				: null;
+			return {
+				base: clientRouter ? clientRouter.base : router.base,
+			};
 		}),
 	],
 	spa: (router) => [

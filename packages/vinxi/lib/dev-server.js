@@ -1,10 +1,10 @@
 import { inspect } from "@vinxi/devtools";
+import { resolveCertificate } from "@vinxi/listhen";
 
 import { fileURLToPath } from "node:url";
 
 import { consola, withLogger } from "./logger.js";
 import { join, normalize } from "./path.js";
-import { resolveCertificate } from "@vinxi/listhen";
 
 export * from "./router-dev-plugins.js";
 
@@ -79,7 +79,7 @@ export async function createViteHandler(router, app, serveConfig) {
 			hmr: {
 				port,
 			},
-			https: serveConfig.https
+			https: serveConfig.https,
 		},
 	});
 
@@ -111,10 +111,9 @@ export async function createDevServer(
 		ws: {
 			port: wsPort,
 		},
-		https: (https 
-			? await resolveCertificate(typeof https === "object" ? https : {}) 
-			: false
-		)
+		https: https
+			? await resolveCertificate(typeof https === "object" ? https : {})
+			: false,
 	};
 
 	await app.hooks.callHook("app:dev:start", { app, serveConfig });
@@ -221,7 +220,7 @@ export async function createDevServer(
 				devApp,
 			});
 			const listener = await devApp.listen(port, {
-				https: serveConfig.https
+				https: serveConfig.https,
 			});
 			await app.hooks.callHook("app:dev:server:listener:created", {
 				app,

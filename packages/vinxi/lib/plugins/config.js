@@ -7,9 +7,11 @@
 export function config(tag, conf) {
 	return {
 		name: `vinxi:config:${tag}`,
+
 		// @ts-ignore
-		config() {
-			return { ...conf };
+		config(c) {
+			let overrides = typeof conf === "function" ? conf(c.router, c.app) : conf;
+			return { ...overrides };
 		},
 	};
 }
