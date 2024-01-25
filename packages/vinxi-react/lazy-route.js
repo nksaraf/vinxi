@@ -3,7 +3,7 @@ import { Fragment, createElement, forwardRef, lazy } from "react";
 import { cleanupStyles, preloadStyles, updateStyles } from "vinxi/css";
 
 import invariant from "./invariant.js";
-import { renderAsset } from "./render-asset";
+import { renderAsset } from "./render-asset.js";
 
 /**
  *

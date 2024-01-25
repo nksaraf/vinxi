@@ -1,11 +1,11 @@
-import React from "react";
+import React, { Fragment, createElement } from "react";
 import { lazy } from "react";
 import { updateStyles } from "vinxi/css";
 
-import { renderAsset } from "./render-asset";
+import { renderAsset } from "./render-asset.js";
 
 export { renderAsset };
-export { default as lazyRoute } from "./lazy-route";
+export { default as lazyRoute } from "./lazy-route.js";
 export const createAssets = (src, manifest) =>
 	lazy(async () => {
 		const assets = await manifest.inputs[src].assets();
@@ -19,7 +19,11 @@ export const createAssets = (src, manifest) =>
 
 		return {
 			default: function Assets() {
-				return <>{assets.map((asset) => renderAsset(asset))}</>;
+				return createElement(
+					Fragment,
+					undefined,
+					...assets.map((asset) => renderAsset(asset)),
+				);
 			},
 		};
 	});
