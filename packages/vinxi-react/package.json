@@ -4,13 +4,13 @@
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
-    "*.jsx",
+    "*.js",
     "invariant.js",
     "*.d.ts"
   ],
   "types": "./index.d.ts",
   "exports": {
-    ".": "./index.jsx"
+    ".": "./index.js"
   },
   "typesVersions": {
     "*": {
@@ -19,9 +19,14 @@
       ]
     }
   },
+  "scripts": {
+    "types": "npm run tsc",
+    "tsc": "rm -rf dist && tsc"
+  },
   "devDependencies": {
     "@types/react": "^18.2.21",
     "react": "0.0.0-experimental-035a41c4e-20230704",
+    "typescript": "^5.3.3",
     "vinxi": "0.1.4"
   }
 }

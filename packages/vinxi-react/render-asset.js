@@ -1,5 +1,10 @@
-import React from "react";
+import { createElement } from "react";
 
+/**
+ *
+ * @param {{ tag: string; attrs: Record<string, string>; children: any }} param0
+ * @returns
+ */
 export function renderAsset({
 	tag,
 	attrs: { key, ...attrs } = {

@@ -7,7 +7,7 @@ import { renderAsset } from "./render-asset.js";
 
 /**
  *
- * @param {string} id
+ * @param {{ src: string; import(): Promise<any> }} component
  * @param {any} clientManifest
  * @param {any} serverManifest
  * @returns {React.FC<any>}

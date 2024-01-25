@@ -7,9 +7,17 @@
 		"esModuleInterop": true,
 		"allowJs": true,
 		"jsx": "react-jsx",
+		"strict": false,
+		"checkJs": true,
+		"noEmit": false,
 		"isolatedModules": true,
+		"declarationMap": true,
 		"skipLibCheck": true,
 		"skipDefaultLibCheck": true,
+		"emitDeclarationOnly": true,
+		"types": ["vinxi/types/client"],
+		"declaration": true,
 		"outDir": "dist"
-	}
+	},
+	"include": ["*.js"]
 }
