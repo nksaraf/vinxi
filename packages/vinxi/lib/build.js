@@ -485,7 +485,13 @@ const spaManifest = () => {
 				return [
 					{
 						tag: "script",
-						attrs: { src: join(config.router.base, "manifest.js") },
+						attrs: {
+							src: join(
+								config.app.config.server.baseURL ?? "/",
+								config.router.base,
+								"manifest.js",
+							),
+						},
 						injectTo: "head",
 					},
 				];
@@ -591,8 +597,13 @@ const routerModePlugin = {
 			const clientRouter = router.link?.client
 				? app.getRouter(router.link?.client)
 				: null;
+
+			let routerBase = clientRouter ? clientRouter.base : router.base;
+
+			let base = join(app.config.server.baseURL ?? "/", routerBase);
+
 			return {
-				base: clientRouter ? clientRouter.base : router.base,
+				base,
 			};
 		}),
 	],
@@ -662,7 +673,7 @@ export async function getEntries(router) {
 function handerBuild() {
 	return {
 		name: "react-rsc:handler",
-		async config({ router }, env) {
+		async config({ router, app }, env) {
 			if (env.command === "build") {
 				invariant(
 					router && router.mode !== "static" && router.handler,
@@ -671,6 +682,7 @@ function handerBuild() {
 				const { builtinModules } = await import("module");
 				const { join } = await import("./path.js");
 				const input = await getEntries(router);
+				let base = join(app?.config.server.baseURL ?? "/", router.base);
 				return {
 					build: {
 						rollupOptions: {
@@ -690,7 +702,7 @@ function handerBuild() {
 						outDir: join(router.outDir, router.base),
 						emptyOutDir: false,
 					},
-					base: router.base,
+					base,
 					publicDir: false,
 				};
 			}
@@ -704,11 +716,14 @@ function handerBuild() {
 function browserBuild() {
 	return {
 		name: "build:browser",
-		async config({ router }, env) {
+		async config({ router, app }, env) {
 			if (env.command === "build") {
 				invariant(router && router.mode !== "static", "Invalid router");
 				const { join } = await import("./path.js");
 				console.log(await getEntries(router));
+				console.log({ base: router.base });
+				let base = join(app.config.server.baseURL ?? "/", router.base);
+
 				return {
 					build: {
 						rollupOptions: {
@@ -722,7 +737,7 @@ function browserBuild() {
 						target: "esnext",
 						emptyOutDir: false,
 					},
-					base: router.base,
+					base,
 					publicDir: false,
 				};
 			}
