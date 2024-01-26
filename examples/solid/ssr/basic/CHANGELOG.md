@@ -4,6 +4,18 @@
 
 ### Patch Changes
 
+- 8bfc1b6: feat: ssr/client dedupe asset urls using `link` API
+- Updated dependencies [8bfc1b6]
+- Updated dependencies [35cd983]
+- Updated dependencies [ba47f41]
+- Updated dependencies [181903c]
+- Updated dependencies [17f6891]
+  - vinxi@0.1.6
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [557b35c]
 - Updated dependencies [922a51b]
 - Updated dependencies [fae6e44]

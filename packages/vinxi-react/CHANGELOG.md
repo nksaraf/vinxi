@@ -1,5 +1,11 @@
 # @vinxi/react
 
+## 0.1.2
+
+### Patch Changes
+
+- 181903c: fix: vinxi/react jsx -> js, add types
+
 ## 0.1.1
 
 ### Patch Changes

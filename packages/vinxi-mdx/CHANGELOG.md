@@ -1,5 +1,11 @@
 # @vinxi/plugin-mdx
 
+## 3.7.1
+
+### Patch Changes
+
+- 35cd983: fix(vinxi-mdx): provide file path to rehype transform
+
 ## 3.7.0
 
 ### Minor Changes
