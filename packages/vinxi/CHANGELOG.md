@@ -1,5 +1,16 @@
 # vinxi
 
+## 0.1.6
+
+### Patch Changes
+
+- 8bfc1b6: feat: ssr/client dedupe asset urls using `link` API
+- 35cd983: fix(vinxi-mdx): provide file path to rehype transform
+- ba47f41: feat: allow setting Nitro log level during build using NITRO_LOG_LEVEL env var
+- 181903c: fix: vinxi/react jsx -> js, add types
+- 17f6891: fix: move app.d.ts app-types.d.ts and update tsc script
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.5
 
 ### Patch Changes
