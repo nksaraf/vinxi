@@ -1469,6 +1469,15 @@ var require_quick_lru = __commonJS({
   }
 });
 
+// ../../node_modules/.pnpm/is-buffer@2.0.5/node_modules/is-buffer/index.js
+var require_is_buffer = __commonJS({
+  "../../node_modules/.pnpm/is-buffer@2.0.5/node_modules/is-buffer/index.js"(exports, module2) {
+    module2.exports = function isBuffer(obj) {
+      return obj != null && obj.constructor != null && typeof obj.constructor.isBuffer === "function" && obj.constructor.isBuffer(obj);
+    };
+  }
+});
+
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
@@ -1605,10 +1614,10 @@ function remarkTransclusion({
     if (imports.length) {
       const splices = await Promise.all(
         imports.map(
-          async ({ id, index }) => {
+          async ({ id, index: index2 }) => {
             const importedPath = await resolve2(id, importer);
             if (!importedPath) {
-              return [index, 1, []];
+              return [index2, 1, []];
             }
             importMap?.addImport(importedPath, importer);
             let ast2 = astCache?.get(importedPath);
@@ -1623,24 +1632,24 @@ function remarkTransclusion({
               ast2 = compiledFile.children;
               astCache?.set(importedPath, ast2);
             }
-            return [index, 1, ast2];
+            return [index2, 1, ast2];
           }
         )
       );
       let { children } = ast;
-      for (const [index, deleteCount, inserted] of splices.reverse())
-        children = children.slice(0, index).concat(inserted, children.slice(index + deleteCount));
+      for (const [index2, deleteCount, inserted] of splices.reverse())
+        children = children.slice(0, index2).concat(inserted, children.slice(index2 + deleteCount));
       ast.children = children;
     }
   };
 }
 function findMdxImports(ast) {
   const imports = [];
-  ast.children.forEach((node, index) => {
+  ast.children.forEach((node, index2) => {
     if (node.type === "mdxjsEsm" || node.type === "import") {
       const id = importRE.exec(node.value)?.[1];
       if (id && mdxRE.test(id)) {
-        imports.push({ id, node, index });
+        imports.push({ id, node, index: index2 });
       }
     }
   });
@@ -1720,6 +1729,403 @@ function viteMdxTransclusion(globalMdxOptions, getMdxOptions) {
   return plugin;
 }
 
+// ../../node_modules/.pnpm/vfile@5.3.7/node_modules/vfile/lib/index.js
+var import_is_buffer = __toESM(require_is_buffer(), 1);
+
+// ../../node_modules/.pnpm/unist-util-stringify-position@3.0.3/node_modules/unist-util-stringify-position/lib/index.js
+function stringifyPosition(value) {
+  if (!value || typeof value !== "object") {
+    return "";
+  }
+  if ("position" in value || "type" in value) {
+    return position(value.position);
+  }
+  if ("start" in value || "end" in value) {
+    return position(value);
+  }
+  if ("line" in value || "column" in value) {
+    return point(value);
+  }
+  return "";
+}
+function point(point2) {
+  return index(point2 && point2.line) + ":" + index(point2 && point2.column);
+}
+function position(pos) {
+  return point(pos && pos.start) + "-" + point(pos && pos.end);
+}
+function index(value) {
+  return value && typeof value === "number" ? value : 1;
+}
+
+// ../../node_modules/.pnpm/vfile-message@3.1.4/node_modules/vfile-message/lib/index.js
+var VFileMessage = class extends Error {
+  /**
+   * Create a message for `reason` at `place` from `origin`.
+   *
+   * When an error is passed in as `reason`, the `stack` is copied.
+   *
+   * @param {string | Error | VFileMessage} reason
+   *   Reason for message, uses the stack and message of the error if given.
+   *
+   *   > 👉 **Note**: you should use markdown.
+   * @param {Node | NodeLike | Position | Point | null | undefined} [place]
+   *   Place in file where the message occurred.
+   * @param {string | null | undefined} [origin]
+   *   Place in code where the message originates (example:
+   *   `'my-package:my-rule'` or `'my-rule'`).
+   * @returns
+   *   Instance of `VFileMessage`.
+   */
+  // To do: next major: expose `undefined` everywhere instead of `null`.
+  constructor(reason, place, origin) {
+    const parts = [null, null];
+    let position2 = {
+      // @ts-expect-error: we always follows the structure of `position`.
+      start: { line: null, column: null },
+      // @ts-expect-error: "
+      end: { line: null, column: null }
+    };
+    super();
+    if (typeof place === "string") {
+      origin = place;
+      place = void 0;
+    }
+    if (typeof origin === "string") {
+      const index2 = origin.indexOf(":");
+      if (index2 === -1) {
+        parts[1] = origin;
+      } else {
+        parts[0] = origin.slice(0, index2);
+        parts[1] = origin.slice(index2 + 1);
+      }
+    }
+    if (place) {
+      if ("type" in place || "position" in place) {
+        if (place.position) {
+          position2 = place.position;
+        }
+      } else if ("start" in place || "end" in place) {
+        position2 = place;
+      } else if ("line" in place || "column" in place) {
+        position2.start = place;
+      }
+    }
+    this.name = stringifyPosition(place) || "1:1";
+    this.message = typeof reason === "object" ? reason.message : reason;
+    this.stack = "";
+    if (typeof reason === "object" && reason.stack) {
+      this.stack = reason.stack;
+    }
+    this.reason = this.message;
+    this.fatal;
+    this.line = position2.start.line;
+    this.column = position2.start.column;
+    this.position = position2;
+    this.source = parts[0];
+    this.ruleId = parts[1];
+    this.file;
+    this.actual;
+    this.expected;
+    this.url;
+    this.note;
+  }
+};
+VFileMessage.prototype.file = "";
+VFileMessage.prototype.name = "";
+VFileMessage.prototype.reason = "";
+VFileMessage.prototype.message = "";
+VFileMessage.prototype.stack = "";
+VFileMessage.prototype.fatal = null;
+VFileMessage.prototype.column = null;
+VFileMessage.prototype.line = null;
+VFileMessage.prototype.source = null;
+VFileMessage.prototype.ruleId = null;
+VFileMessage.prototype.position = null;
+
+// ../../node_modules/.pnpm/vfile@5.3.7/node_modules/vfile/lib/minpath.js
+var import_path2 = __toESM(require("path"), 1);
+
+// ../../node_modules/.pnpm/vfile@5.3.7/node_modules/vfile/lib/minproc.js
+var import_process = __toESM(require("process"), 1);
+
+// ../../node_modules/.pnpm/vfile@5.3.7/node_modules/vfile/lib/minurl.js
+var import_url = require("url");
+
+// ../../node_modules/.pnpm/vfile@5.3.7/node_modules/vfile/lib/minurl.shared.js
+function isUrl(fileUrlOrPath) {
+  return fileUrlOrPath !== null && typeof fileUrlOrPath === "object" && // @ts-expect-error: indexable.
+  fileUrlOrPath.href && // @ts-expect-error: indexable.
+  fileUrlOrPath.origin;
+}
+
+// ../../node_modules/.pnpm/vfile@5.3.7/node_modules/vfile/lib/index.js
+var order = ["history", "path", "basename", "stem", "extname", "dirname"];
+var VFile = class {
+  /**
+   * Create a new virtual file.
+   *
+   * `options` is treated as:
+   *
+   * *   `string` or `Buffer` — `{value: options}`
+   * *   `URL` — `{path: options}`
+   * *   `VFile` — shallow copies its data over to the new file
+   * *   `object` — all fields are shallow copied over to the new file
+   *
+   * Path related fields are set in the following order (least specific to
+   * most specific): `history`, `path`, `basename`, `stem`, `extname`,
+   * `dirname`.
+   *
+   * You cannot set `dirname` or `extname` without setting either `history`,
+   * `path`, `basename`, or `stem` too.
+   *
+   * @param {Compatible | null | undefined} [value]
+   *   File value.
+   * @returns
+   *   New instance.
+   */
+  constructor(value) {
+    let options;
+    if (!value) {
+      options = {};
+    } else if (typeof value === "string" || buffer(value)) {
+      options = { value };
+    } else if (isUrl(value)) {
+      options = { path: value };
+    } else {
+      options = value;
+    }
+    this.data = {};
+    this.messages = [];
+    this.history = [];
+    this.cwd = import_process.default.cwd();
+    this.value;
+    this.stored;
+    this.result;
+    this.map;
+    let index2 = -1;
+    while (++index2 < order.length) {
+      const prop2 = order[index2];
+      if (prop2 in options && options[prop2] !== void 0 && options[prop2] !== null) {
+        this[prop2] = prop2 === "history" ? [...options[prop2]] : options[prop2];
+      }
+    }
+    let prop;
+    for (prop in options) {
+      if (!order.includes(prop)) {
+        this[prop] = options[prop];
+      }
+    }
+  }
+  /**
+   * Get the full path (example: `'~/index.min.js'`).
+   *
+   * @returns {string}
+   */
+  get path() {
+    return this.history[this.history.length - 1];
+  }
+  /**
+   * Set the full path (example: `'~/index.min.js'`).
+   *
+   * Cannot be nullified.
+   * You can set a file URL (a `URL` object with a `file:` protocol) which will
+   * be turned into a path with `url.fileURLToPath`.
+   *
+   * @param {string | URL} path
+   */
+  set path(path) {
+    if (isUrl(path)) {
+      path = (0, import_url.fileURLToPath)(path);
+    }
+    assertNonEmpty(path, "path");
+    if (this.path !== path) {
+      this.history.push(path);
+    }
+  }
+  /**
+   * Get the parent path (example: `'~'`).
+   */
+  get dirname() {
+    return typeof this.path === "string" ? import_path2.default.dirname(this.path) : void 0;
+  }
+  /**
+   * Set the parent path (example: `'~'`).
+   *
+   * Cannot be set if there’s no `path` yet.
+   */
+  set dirname(dirname) {
+    assertPath(this.basename, "dirname");
+    this.path = import_path2.default.join(dirname || "", this.basename);
+  }
+  /**
+   * Get the basename (including extname) (example: `'index.min.js'`).
+   */
+  get basename() {
+    return typeof this.path === "string" ? import_path2.default.basename(this.path) : void 0;
+  }
+  /**
+   * Set basename (including extname) (`'index.min.js'`).
+   *
+   * Cannot contain path separators (`'/'` on unix, macOS, and browsers, `'\'`
+   * on windows).
+   * Cannot be nullified (use `file.path = file.dirname` instead).
+   */
+  set basename(basename) {
+    assertNonEmpty(basename, "basename");
+    assertPart(basename, "basename");
+    this.path = import_path2.default.join(this.dirname || "", basename);
+  }
+  /**
+   * Get the extname (including dot) (example: `'.js'`).
+   */
+  get extname() {
+    return typeof this.path === "string" ? import_path2.default.extname(this.path) : void 0;
+  }
+  /**
+   * Set the extname (including dot) (example: `'.js'`).
+   *
+   * Cannot contain path separators (`'/'` on unix, macOS, and browsers, `'\'`
+   * on windows).
+   * Cannot be set if there’s no `path` yet.
+   */
+  set extname(extname) {
+    assertPart(extname, "extname");
+    assertPath(this.dirname, "extname");
+    if (extname) {
+      if (extname.charCodeAt(0) !== 46) {
+        throw new Error("`extname` must start with `.`");
+      }
+      if (extname.includes(".", 1)) {
+        throw new Error("`extname` cannot contain multiple dots");
+      }
+    }
+    this.path = import_path2.default.join(this.dirname, this.stem + (extname || ""));
+  }
+  /**
+   * Get the stem (basename w/o extname) (example: `'index.min'`).
+   */
+  get stem() {
+    return typeof this.path === "string" ? import_path2.default.basename(this.path, this.extname) : void 0;
+  }
+  /**
+   * Set the stem (basename w/o extname) (example: `'index.min'`).
+   *
+   * Cannot contain path separators (`'/'` on unix, macOS, and browsers, `'\'`
+   * on windows).
+   * Cannot be nullified (use `file.path = file.dirname` instead).
+   */
+  set stem(stem) {
+    assertNonEmpty(stem, "stem");
+    assertPart(stem, "stem");
+    this.path = import_path2.default.join(this.dirname || "", stem + (this.extname || ""));
+  }
+  /**
+   * Serialize the file.
+   *
+   * @param {BufferEncoding | null | undefined} [encoding='utf8']
+   *   Character encoding to understand `value` as when it’s a `Buffer`
+   *   (default: `'utf8'`).
+   * @returns {string}
+   *   Serialized file.
+   */
+  toString(encoding) {
+    return (this.value || "").toString(encoding || void 0);
+  }
+  /**
+   * Create a warning message associated with the file.
+   *
+   * Its `fatal` is set to `false` and `file` is set to the current file path.
+   * Its added to `file.messages`.
+   *
+   * @param {string | Error | VFileMessage} reason
+   *   Reason for message, uses the stack and message of the error if given.
+   * @param {Node | NodeLike | Position | Point | null | undefined} [place]
+   *   Place in file where the message occurred.
+   * @param {string | null | undefined} [origin]
+   *   Place in code where the message originates (example:
+   *   `'my-package:my-rule'` or `'my-rule'`).
+   * @returns {VFileMessage}
+   *   Message.
+   */
+  message(reason, place, origin) {
+    const message = new VFileMessage(reason, place, origin);
+    if (this.path) {
+      message.name = this.path + ":" + message.name;
+      message.file = this.path;
+    }
+    message.fatal = false;
+    this.messages.push(message);
+    return message;
+  }
+  /**
+   * Create an info message associated with the file.
+   *
+   * Its `fatal` is set to `null` and `file` is set to the current file path.
+   * Its added to `file.messages`.
+   *
+   * @param {string | Error | VFileMessage} reason
+   *   Reason for message, uses the stack and message of the error if given.
+   * @param {Node | NodeLike | Position | Point | null | undefined} [place]
+   *   Place in file where the message occurred.
+   * @param {string | null | undefined} [origin]
+   *   Place in code where the message originates (example:
+   *   `'my-package:my-rule'` or `'my-rule'`).
+   * @returns {VFileMessage}
+   *   Message.
+   */
+  info(reason, place, origin) {
+    const message = this.message(reason, place, origin);
+    message.fatal = null;
+    return message;
+  }
+  /**
+   * Create a fatal error associated with the file.
+   *
+   * Its `fatal` is set to `true` and `file` is set to the current file path.
+   * Its added to `file.messages`.
+   *
+   * > 👉 **Note**: a fatal error means that a file is no longer processable.
+   *
+   * @param {string | Error | VFileMessage} reason
+   *   Reason for message, uses the stack and message of the error if given.
+   * @param {Node | NodeLike | Position | Point | null | undefined} [place]
+   *   Place in file where the message occurred.
+   * @param {string | null | undefined} [origin]
+   *   Place in code where the message originates (example:
+   *   `'my-package:my-rule'` or `'my-rule'`).
+   * @returns {never}
+   *   Message.
+   * @throws {VFileMessage}
+   *   Message.
+   */
+  fail(reason, place, origin) {
+    const message = this.message(reason, place, origin);
+    message.fatal = true;
+    throw message;
+  }
+};
+function assertPart(part, name) {
+  if (part && part.includes(import_path2.default.sep)) {
+    throw new Error(
+      "`" + name + "` cannot be a path: did not expect `" + import_path2.default.sep + "`"
+    );
+  }
+}
+function assertNonEmpty(part, name) {
+  if (!part) {
+    throw new Error("`" + name + "` cannot be empty");
+  }
+}
+function assertPath(path, name) {
+  if (!path) {
+    throw new Error("Setting `" + name + "` requires `path` to be set too");
+  }
+}
+function buffer(value) {
+  return (0, import_is_buffer.default)(value);
+}
+
 // src/index.ts
 function viteMdx(mdxOptions) {
   return createPlugin(mdxOptions || {});
@@ -1761,7 +2167,8 @@ function createPlugin(mdxOptions, namedImports) {
           globalMdxOptions,
           getMdxOptions?.(path)
         );
-        code = await transformMdx(code, { ...mdxOptions2 });
+        const input = new VFile({ value: code, path });
+        code = await transformMdx(input, { ...mdxOptions2 });
         const refreshResult = await reactRefresh?.transform.call(
           this,
           code,
@@ -1796,3 +2203,13 @@ function mergeOptions(globalOptions, localOptions) {
     )
   };
 }
+/*! Bundled license information:
+
+is-buffer/index.js:
+  (*!
+   * Determine if an object is a Buffer
+   *
+   * @author   Feross Aboukhadijeh <https://feross.org>
+   * @license  MIT
+   *)
+*/

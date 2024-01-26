@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { mergeArrays } from "./common";
 import { createTransformer } from "./transform";
 import { viteMdxTransclusion } from "./viteMdxTransclusion";
+import { VFile } from "vfile";
 export default function viteMdx(mdxOptions) {
     return createPlugin(mdxOptions || {});
 }
@@ -53,9 +54,8 @@ function createPlugin(mdxOptions, namedImports) {
                     if (!transformMdx)
                         throw new Error("vite-plugin-mdx: configResolved hook should be called before calling transform hook");
                     const mdxOptions = mergeOptions(globalMdxOptions, getMdxOptions === null || getMdxOptions === void 0 ? void 0 : getMdxOptions(path));
-                    // @ts-ignore
-                    // mdxOptions.filepath = path;
-                    code = yield transformMdx(code, Object.assign({}, mdxOptions));
+                    const input = new VFile({ value: code, path });
+                    code = yield transformMdx(input, Object.assign({}, mdxOptions));
                     // @ts-ignore
                     const refreshResult = yield (reactRefresh === null || reactRefresh === void 0 ? void 0 : reactRefresh.transform.call(this, code, path + ".js", ssr));
                     return (refreshResult || {
