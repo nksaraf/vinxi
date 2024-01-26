@@ -197,7 +197,7 @@ const command = defineCommand({
 			async run({ args }) {
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
-				const { log, c } = await import("../lib/logger.js");					
+				const { log, c } = await import("../lib/logger.js");
 				log(c.dim(c.yellow(packageJson.version)));
 				const { loadApp } = await import("../lib/load-app.js");
 				const app = await loadApp(configFile, args);
@@ -328,6 +328,57 @@ const command = defineCommand({
 							"Couldn't run an app built with the ${} preset locally. Deploy the app to a provider that supports it.",
 						);
 				}
+			},
+		},
+		serve: {
+			meta: {
+				name: "serve",
+				version: packageJson.version,
+				description: "Serve a static directory",
+			},
+			args: {
+				port: {
+					type: "number",
+					description: "Port to listen on (default: 3000)",
+				},
+				host: {
+					type: "boolean",
+					description: "Expose to host (default: false)",
+				},
+				dir: {
+					type: "string",
+					description: "Directory to serve (default: cwd)",
+				},
+				base: {
+					type: "string",
+					description: "Base path",
+				},
+			},
+			async run(context) {
+				const { createApp, fromNodeMiddleware, toNodeListener } = await import(
+					"h3"
+				);
+				const { listen } = await import("@vinxi/listhen");
+				const { isAbsolute, join } = await import("../lib/path.js");
+				const { default: serveStatic } = await import("serve-static");
+
+				const app = createApp();
+				app.use(
+					context.args.base ?? "/",
+					fromNodeMiddleware(
+						serveStatic(
+							context.args.dir
+								? isAbsolute(context.args.dir)
+									? context.args.dir
+									: join(process.cwd(), context.args.dir)
+								: process.cwd(),
+						),
+					),
+				);
+
+				await listen(toNodeListener(app), {
+					port: context.args.port ?? 3000,
+				});
 			},
 		},
 	}),
