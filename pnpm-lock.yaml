@@ -1111,6 +1111,9 @@ importers:
       unified:
         specifier: ^9.2.2
         version: 9.2.2
+      vfile:
+        specifier: ^5.0.0
+        version: 5.3.7
     devDependencies:
       '@mdx-js/mdx':
         specifier: 2.3.0
