@@ -3,18 +3,23 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 /**
  *
- * @param {{ plugins?: () => import('vinxi').Plugin[]; routes?: import("vinxi").RouterStyleFn; }} param0
+ * @param {{ plugins?: () => import('vinxi').Plugin[] | Promise<import('vinxi').Plugin[]>; routes?: import("vinxi").RouterStyleFn; }} param0
  * @returns {import('vinxi').RouterSchemaInput}
  */
-export function spaRouter({ plugins = () => [], routes = undefined } = {}) {
+export function spaRouter({
+	plugins = () => [],
+	routes = undefined,
+	...options
+} = {}) {
 	return {
-		name: "client",
 		mode: "spa",
+		name: "client",
 		handler: "./index.html",
-		routes,
 		target: "browser",
-		plugins: () => [
-			...((plugins?.() ?? []).filter(Boolean) ?? []),
+		...options,
+		routes,
+		plugins: async () => [
+			...(((await plugins?.()) ?? []).filter(Boolean) ?? []),
 			config("env-vars", {
 				envPrefix: "PUBLIC_",
 			}),

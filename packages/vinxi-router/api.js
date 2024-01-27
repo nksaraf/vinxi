@@ -61,24 +61,26 @@ export function apiRoutes(config) {
 
 /**
  *
- * @param {{ plugins?: () => import('vinxi').Plugin[]; dir?: string; style?: any; base?: string; handler?: string }} param0
+ * @param {{ plugins?: () => (import('vinxi').Plugin[] | Promise<import('vinxi').Plugin[]>); dir?: string; style?: any; base?: string; handler?: string }} param0
  * @returns {Partial<import('vinxi').RouterSchema>}
  */
 export function apiRouter({
 	dir = "./app/api/routes",
 	base = "/api",
-	handler = fileURLToPath(new URL("./handler.js", import.meta.url)),
-	plugins = () => [],
+	handler = fileURLToPath(new URL("./api-handler.js", import.meta.url)),
+	plugins = async () => [],
+	...options
 } = {}) {
 	return {
-		name: "api",
 		mode: "handler",
+		name: "api",
+		...options,
 		base,
 		routes: apiRoutes({ dir }),
 		handler,
 		target: "server",
-		plugins: () => [
-			...((plugins?.() ?? []).filter(Boolean) ?? []),
+		plugins: async () => [
+			...(((await plugins?.()) ?? []).filter(Boolean) ?? []),
 			tsconfigPaths(),
 			config("env-vars", {
 				envPrefix: "PRIVATE_",
