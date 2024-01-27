@@ -71,6 +71,7 @@ import {
 	useBase as _useBase,
 	writeEarlyHints as _writeEarlyHints,
 } from "h3";
+import { CacheOptions } from "nitropack";
 
 export type HTTPEvent = H3Event;
 export type HTTPServer = App;
@@ -233,6 +234,45 @@ export function getResponseHeaders(): Record<string, string>;
 export function getResponseStatus(event: HTTPEvent): number;
 export function getResponseStatus(): number;
 
+export function getResponseStatusText(event: HTTPEvent): string;
+export function getResponseStatusText(): string;
+
+export function getRouterParam(event: HTTPEvent, name: string): string;
+export function getRouterParam(name: string): string;
+
+export function getRouterParams(event: HTTPEvent): Record<string, string>;
+export function getRouterParams(): Record<string, string>;
+
+export function getValidatedQuery(
+	event: HTTPEvent,
+	schema: Record<string, any>,
+): Record<string, any>;
+export function getValidatedQuery(schema: Record<string, any>): Record<string, any>;
+
+export function getValidatedRouterParams(
+	event: HTTPEvent,
+	schema: Record<string, any>,
+): Record<string, any>;
+export function getValidatedRouterParams(
+	schema: Record<string, any>,
+): Record<string, any>;
+
+export function handleCacheHeaders(event: HTTPEvent, options: CacheOptions): void;
+export function handleCacheHeaders(options: CacheOptions): void;
+
+export function handleCors(event: HTTPEvent, options: H3CorsOptions): void;
+export function handleCors(options: H3CorsOptions): void;
+
+export function parseCookies(event: HTTPEvent): Record<string, string>;
+export function parseCookies(): Record<string, string>;
+
+export function proxyRequest(event: HTTPEvent, url: string): Promise<Response>;
+export function proxyRequest(url: string): Promise<Response>;
+
+export function readBody(event: HTTPEvent): Promise<string>;
+export function readBody(): Promise<string>;
+
+
 export function defineMiddleware(options: {
 	onRequest?:
 		| import("h3")._RequestMiddleware
@@ -250,3 +290,5 @@ export function defineMiddleware(options: {
 		| import("h3")._ResponseMiddleware[]
 		| undefined;
 };
+
+export function getEvent(): HTTPEvent;

@@ -7,7 +7,7 @@
     "types": "pnpm -r --filter \"./packages/*\" run types",
     "clean:test": "rimraf ../.fixtures",
     "clean": "rm -rf **/*/.{nitro,output}",
-    "test": "pnpm --filter vinxi-tests clean && pnpm --filter vinxi-tests test -- && pnpm run test:directives",
+    "test": "pnpm --filter vinxi-tests clean && pnpm run test:directives && pnpm --filter vinxi-tests test --",
     "test:directives": "pnpm --filter @vinxi/plugin-directives test --",
     "ci": "pnpm -r --stream run ci",
     "release": "pnpm run build && pnpm run types && changeset publish",

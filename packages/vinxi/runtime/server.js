@@ -1,4 +1,3 @@
-import { AsyncLocalStorage } from "async_hooks";
 import {
 	H3Error,
 	H3Event,
@@ -107,6 +106,9 @@ import {
 } from "h3";
 import { seal, defaults as sealDefaults } from "iron-webcrypto";
 import crypto from "uncrypto";
+import { getContext as gContext } from "unctx";
+
+import { AsyncLocalStorage } from "node:async_hooks";
 
 /**
  *
@@ -383,8 +385,13 @@ function getHTTPEvent() {
 	return getEvent();
 }
 
+export const HTTPEventSymbol = Symbol("$HTTPEvent");
+
 export function isEvent(obj) {
-	return true;
+	return (
+		typeof obj === "object" &&
+		(obj instanceof H3Event || obj?.[HTTPEventSymbol] instanceof H3Event)
+	);
 	// Implement logic to check if obj is an H3Event
 }
 
@@ -392,6 +399,11 @@ function createWrapperFunction(h3Function) {
 	return function (...args) {
 		let event = args[0];
 		if (!isEvent(event)) {
+			if (!globalThis.app.config.server.experimental?.asyncContext) {
+				throw new Error(
+					"AsyncLocalStorage was not enabled. Use the `server.experimental.asyncContext: true` option in your app configuration to enable it. Or, pass the instance of HTTPEvent that you have as the first argument to the function.",
+				);
+			}
 			event = getHTTPEvent();
 			if (!event) {
 				throw new Error(
@@ -399,7 +411,10 @@ function createWrapperFunction(h3Function) {
 				);
 			}
 			args.unshift(event);
+		} else {
+			args[0] = event instanceof H3Event ? event : event[HTTPEventSymbol];
 		}
+
 		return h3Function(...args);
 	};
 }
@@ -443,7 +458,6 @@ export const sendRedirect = createWrapperFunction(_sendRedirect);
 export const sendStream = createWrapperFunction(_sendStream);
 export const writeEarlyHints = createWrapperFunction(_writeEarlyHints);
 export const sendError = createWrapperFunction(_sendError);
-export const useBase = createWrapperFunction(_useBase);
 export const sendProxy = createWrapperFunction(_sendProxy);
 export const proxyRequest = createWrapperFunction(_proxyRequest);
 export const fetchWithEvent = createWrapperFunction(_fetchWithEvent);
@@ -489,3 +503,18 @@ export const getContext = createWrapperFunction(_getContext);
 export const setContext = createWrapperFunction(_setContext);
 
 export { createApp as createServer };
+
+function getNitroAsyncContext() {
+	const nitroAsyncContext = gContext("nitro-app", {
+		asyncContext: globalThis.app.config.server.experimental?.asyncContext
+			? true
+			: false,
+		AsyncLocalStorage,
+	});
+
+	return nitroAsyncContext;
+}
+
+export function getEvent() {
+	return getNitroAsyncContext().use().event;
+}

@@ -184,7 +184,7 @@ export async function createDevServer(
 		"./nitro-dev.js"
 	);
 
-	const devApp = createNitroDevServer(nitro);
+	const devApp = await createNitroDevServer(nitro);
 
 	await app.hooks.callHook("app:dev:server:created", { app, devApp });
 
@@ -197,9 +197,7 @@ export async function createDevServer(
 	// 	}
 	// }
 
-	// We do this so that we can access the app in plugins using globalThis.app just like we do in production.
-	// @ts-ignore
-	globalThis.app = app;
+
 
 	// Running plugins manually
 	const plugins = [
