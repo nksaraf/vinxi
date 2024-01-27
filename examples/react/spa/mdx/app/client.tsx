@@ -8,12 +8,13 @@ import "vinxi/client";
 import fileRoutes from "vinxi/routes";
 import { Link, Route, Router } from "wouter";
 import makeCachedMatcher from "wouter/matcher";
+import { getManifest } from "vinxi/manifest";
 
 import "./style.css";
 
 const routes = fileRoutes.map((route) => ({
 	path: route.path,
-	component: lazyRoute(route.$component, import.meta.env.MANIFEST["client"]),
+	component: lazyRoute(route.$component, getManifest("client")),
 }));
 
 const convertPathToRegexp = (path) => {

@@ -1,4 +1,5 @@
 import { eventHandler, sendStream } from "vinxi/server";
+import { getManifest } from "vinxi/manifest";
 
 export default eventHandler(async (event) => {
 	if (event.node.req.method === "POST") {
@@ -12,9 +13,7 @@ export default eventHandler(async (event) => {
 		if (serverReference) {
 			// This is the client-side case
 			const [filepath, name] = serverReference.split("#");
-			const action = (
-				await import.meta.env.MANIFEST["rsc"].chunks[filepath].import()
-			)[name];
+			const action = (await getManifest("rsc").chunks[filepath].import())[name];
 			// Validate that this is actually a function we intended to expose and
 			// not the client trying to invoke arbitrary functions. In a real app,
 			// you'd have a manifest verifying this before even importing it.

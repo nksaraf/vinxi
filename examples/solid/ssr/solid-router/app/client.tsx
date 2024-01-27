@@ -5,18 +5,19 @@ import { createAssets, lazyRoute } from "@vinxi/solid";
 import { NoHydration, Suspense, hydrate } from "solid-js/web";
 import "vinxi/client";
 import fileRoutes from "vinxi/routes";
+import { getManifest } from "vinxi/manifest";
 
 import App from "./app";
 
 const Assets = createAssets(
-	import.meta.env.MANIFEST["client"].handler,
-	import.meta.env.MANIFEST["client"],
+	getManifest("client").handler,
+	getManifest("client"),
 );
 
 function createRoute(route) {
 	return {
 		path: route.path,
-		component: lazyRoute(route.$component, import.meta.env.MANIFEST["client"]),
+		component: lazyRoute(route.$component, getManifest("client")),
 		data: route.$$data ? route.$$data.require().routeData : null,
 		children: route.children ? route.children.map(createRoute) : null,
 	};

@@ -9,46 +9,54 @@ The real tricky part is making it work the same during DEV and PROD.
 
 The manifest API is also the same between the server and client. The only difference is that the client manifest just has access to the router that's serving it.
 
-You can access the manifest for any router by using `import.meta.env.MANIFEST['<router-name>']`.  This will give you a manifest object that looks like this:
+You can access the manifest for any router by using calling `getManifest(routerName)` (exported by `vinxi/manifest`).  This will give you a manifest object that looks like this:
 
 ```ts
-type Manifest = {
-  /** Name of the router */
-  name: string;
+export type Asset = string;
 
-  /** Handler path for the router */
-  handler: string;
-
-  inputs: {
-    [key: string]: {
-      /** Assets needed by this entry point */
-      assets(): Promise<Asset[]>;
-
-      output: {
-        /** Path to built artifact for this entry point. */
-        path: string;
-      };
-    };
-  };
-
-  chunks: {
-    [key: string]: {
-      assets(): Promise<Asset[]>;
-      output: {
-        path: string;
-      };
-    };
-  };
-
-  /**
-   * Seriazable JSON representation of the manifest
-   * Useful for sending to the client and hydrating the runtime
-   * by assigning it to `window.manifest`
-   */
-  json(): object;
-
-  /** Map of assets needed by the inputs and chunks */
-  assets(): Promise<{ [key: string]: Asset[] }>;
-}
-
+export type Manifest = {
+	/** Name of the router */
+	name: string;
+	/** Handler path for the router */
+	handler: string;
+	base: string;
+	routes(): Promise<
+		{
+			/** Route path */
+			route: string;
+			/** Path to built artifact for this route */
+			path: string;
+		}[]
+	>;
+	target: "browser" | "server" | "static";
+	mode: string;
+	inputs: {
+		[key: string]: {
+			/** Assets needed by this entry point */
+			assets(): Promise<Asset[]>;
+			import<T = { default: any; [k: string]: any }>(): Promise<T>;
+			output: {
+				/** Path to built artifact for this entry point. */
+				path: string;
+			};
+		};
+	};
+	chunks: {
+		[key: string]: {
+			assets(): Promise<Asset[]>;
+			import<T = { default: any; [k: string]: any }>(): Promise<T>;
+			output: {
+				path: string;
+			};
+		};
+	};
+	/**
+	 * Seriazable JSON representation of the manifest
+	 * Useful for sending to the client and hydrating the runtime
+	 * by assigning it to `window.manifest`
+	 */
+	json(): object;
+	/** Map of assets needed by the inputs and chunks */
+	assets(): Promise<{ [key: string]: Asset[] }>;
+};
 ```

@@ -59,6 +59,10 @@
       "import": "./runtime/style.js",
       "types": "./dist/types/runtime/style.d.ts"
     },
+    "./manifest": {
+      "import": "./runtime/manifest.js",
+      "types": "./dist/types/runtime/manifest.d.ts"
+    },
     "./lib/invariant": {
       "import": "./lib/invariant.js",
       "types": "./dist/types/lib/invariant.d.ts"

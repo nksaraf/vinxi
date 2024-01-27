@@ -2,7 +2,7 @@ import { remarkCodeHike } from "@code-hike/mdx";
 import { slugifyWithCounter } from "@sindresorhus/slugify";
 import pkg from "@vinxi/plugin-mdx";
 import reactRefresh from "@vitejs/plugin-react";
-import acorn from "acorn";
+import * as acorn from "acorn";
 import remarkGfm from "remark-gfm";
 import { visit } from "unist-util-visit";
 import { createApp, resolve } from "vinxi";
@@ -64,6 +64,34 @@ function rehypeAddMDXExports(getExports) {
 				},
 			});
 		}
+
+		// 	const code = `const chCodeConfig = {
+		// 		"staticMediaQuery": "not screen, (max-width: 768px)",
+		// 		"lineNumbers": void 0,
+		// 		"showCopyButton": void 0,
+		// 		"themeName": "material-palenight"
+		// };`;
+
+		// 	tree.children.push({
+		// 		type: "mdxjsEsm",
+		// 		value: code,
+		// 		data: {
+		// 			estree: acorn.parse(code, {
+		// 				sourceType: "module",
+		// 				ecmaVersion: "latest",
+		// 			}),
+		// 		},
+		// 	});
+		// tree.children.push({
+		// 	type: "mdxjsEsm2",
+		// 	value: `const CH = { Code, annotations }`,
+		// 	data: {
+		// 		estree: acorn.parse(`const CH = { Code, annotations }`, {
+		// 			sourceType: "module",
+		// 			ecmaVersion: "latest",
+		// 		}),
+		// 	},
+		// });
 	};
 }
 
@@ -110,14 +138,16 @@ class WouterFileSystemRouter extends BaseFileSystemRouter {
 		return {
 			$component: {
 				src: src,
-				pick: src.match(/\.mdx?$/) ? [] : ["default", "$css"],
+				pick: src.match(/\.mdx?$/)
+					? ["default", "chCodeConfig"]
+					: ["default", "$css"],
 			},
-			$$sections: src.match(/\.mdx?$/)
-				? {
-						src: src,
-						pick: ["sections"],
-				  }
-				: undefined,
+			// $$sections: src.match(/\.mdx?$/)
+			// 	? {
+			// 			src: src,
+			// 			pick: ["sections"],
+			// 	  }
+			// 	: undefined,
 			path,
 			filePath: src,
 		};
@@ -181,7 +211,12 @@ export default createApp({
 							}),
 						],
 					],
-					remarkPlugins: [[remarkCodeHike, { theme: "material-palenight" }]],
+					remarkPlugins: [
+						[
+							remarkCodeHike,
+							{ theme: "material-palenight", autoImport: false },
+						],
+					],
 				}),
 				reactRefresh({}),
 			],

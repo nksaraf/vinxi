@@ -3,11 +3,12 @@ import { renderAsset } from "@vinxi/react";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import { eventHandler } from "vinxi/server";
+import { getManifest } from "vinxi/manifest";
 
 import App from "./root";
 
 export default eventHandler(async (event) => {
-	const clientManifest = import.meta.env.MANIFEST["client"];
+	const clientManifest = getManifest("client");
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 	const events = {};
 	const stream = await new Promise(async (resolve) => {

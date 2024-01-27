@@ -5,12 +5,13 @@ import { renderToPipeableStream } from "react-dom/server";
 import fileRoutes from "vinxi/routes";
 import { eventHandler } from "vinxi/server";
 import { Route, Router } from "wouter";
+import { getManifest } from "vinxi/manifest";
 
 import App from "./app";
 
 export default eventHandler(async (event) => {
-	const clientManifest = import.meta.env.MANIFEST["client"];
-	const serverManifest = import.meta.env.MANIFEST["ssr"];
+	const clientManifest = getManifest("client");
+	const serverManifest = getManifest("ssr");
 
 	console.log(fileRoutes);
 

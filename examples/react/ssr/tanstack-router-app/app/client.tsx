@@ -3,16 +3,17 @@ import { StartClient } from "@tanstack/react-start/client";
 import { createAssets } from "@vinxi/react";
 import ReactDOM from "react-dom/client";
 import "vinxi/client";
+import { getManifest } from "vinxi/manifest";
 
 import { createRouter } from "./router";
 import "./style.css";
 
 const Assets = createAssets(
-	import.meta.env.MANIFEST["client"].handler,
-	import.meta.env.MANIFEST["client"],
+	getManifest("client").handler,
+	getManifest("client"),
 );
 
-const router = createRouter(import.meta.env.MANIFEST["client"], undefined);
+const router = createRouter(getManifest("client"), undefined);
 router.update({
 	context: {
 		...router.context,
@@ -22,9 +23,8 @@ router.update({
 				{import.meta.env.DEV ? (
 					<script
 						src={
-							import.meta.env.MANIFEST["client"].inputs[
-								import.meta.env.MANIFEST["client"].handler
-							].output.path
+							getManifest("client").inputs[getManifest("client").handler].output
+								.path
 						}
 						type="module"
 					/>

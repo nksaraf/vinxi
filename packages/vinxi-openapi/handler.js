@@ -1,3 +1,4 @@
+import { getManifest } from "vinxi/manifest";
 import { eventHandler, lazyEventHandler } from "vinxi/server";
 
 export default lazyEventHandler(async () => {
@@ -9,8 +10,8 @@ export default lazyEventHandler(async () => {
 		/** @type {import('openapi-types').OpenAPIV3.Document['paths']} */
 		const paths = {};
 		for (var router of routers) {
-			const base = import.meta.env.MANIFEST[router].base;
-			const routes = await import.meta.env.MANIFEST[router].routes();
+			const base = getManifest(router).base;
+			const routes = await getManifest(router).routes();
 			for (var route of routes) {
 				const path = new URL(base + "." + route.path, "http://localhost:3000")
 					.pathname;

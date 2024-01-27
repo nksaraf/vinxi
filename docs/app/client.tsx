@@ -1,17 +1,18 @@
 /// <reference types="vinxi/types/client" />
+import { CH } from "@code-hike/mdx/components";
 import "@code-hike/mdx/styles";
 import { MDXProvider } from "@mdx-js/react";
 import { lazyRoute } from "@vinxi/react";
 import { pathToRegexp } from "path-to-regexp";
 import { Suspense, useMemo } from "react";
 import ReactDOM from "react-dom/client";
+import { Link } from "react-router-dom";
 import "vinxi/client";
 
 import { Heading } from "./components/Heading";
 import { Layout } from "./components/Layout";
-import "./style.css";
 import { Router } from "./router";
-import { Link } from "react-router-dom";
+import "./style.css";
 
 // const routes = fileRoutes.map((route) => ({
 // 	path: route.path,
@@ -43,10 +44,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 		<Suspense>
 			<MDXProvider
 				components={{
+					CH,
 					h1: (props) => <Heading level={1} {...props} />,
 					h2: (props) => <Heading level={2} {...props} />,
 					h3: (props) => <Heading level={3} {...props} />,
 					a: ({ href, ...props }) => <Link to={href} {...props} />,
+					Info: (props) => (
+						<div
+							className="mb-4 bg-blue-950 text-blue-200 text-sm bg-opacity-50 border-blue-500 border rounded-md px-4 py-1 -mx-4 w-calc(100%_+_theme(spacing.2))"
+							{...props}
+						/>
+					),
 				}}
 			>
 				{/* <Router matcher={customMatcher} base={(window as any).base}>

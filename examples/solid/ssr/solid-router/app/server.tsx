@@ -11,6 +11,7 @@ import {
 	useAssets,
 } from "solid-js/web";
 import { eventHandler } from "vinxi/server";
+import { getManifest } from "vinxi/manifest";
 
 import { join } from "node:path";
 
@@ -20,8 +21,8 @@ import { routes } from "./routes";
 export default eventHandler(async (event) => {
 	const events = {};
 
-	const clientManifest = import.meta.env.MANIFEST["client"];
-	const serverManifest = import.meta.env.MANIFEST["ssr"];
+	const clientManifest = getManifest("client");
+	const serverManifest = getManifest("ssr");
 
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 

@@ -19,6 +19,7 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "vinxi/client";
 import fileRoutes from "vinxi/routes";
+import { getManifest } from "vinxi/manifest";
 
 import { NotFoundError } from "./error";
 import "./style.css";
@@ -152,22 +153,17 @@ const routes = defineRoutes(fileRoutes);
 function createRoute(route, parent) {
 	const parentRoute = new Route({
 		path: route.path,
-		component: lazyRoute(route.$component, import.meta.env.MANIFEST["client"]),
+		component: lazyRoute(route.$component, getManifest("client")),
 		errorComponent: route.$error
 			? lazyRoute(
 					route.$error,
-					import.meta.env.MANIFEST["client"],
+					getManifest("client"),
 					undefined,
 					"ErrorBoundary",
 			  )
 			: undefined,
 		pendingComponent: route.$loading
-			? lazyRoute(
-					route.$loading,
-					import.meta.env.MANIFEST["client"],
-					undefined,
-					"Loading",
-			  )
+			? lazyRoute(route.$loading, getManifest("client"), undefined, "Loading")
 			: undefined,
 		loader: route.$$loader?.require().loader,
 		...(route.$$config?.require().config ?? {}),

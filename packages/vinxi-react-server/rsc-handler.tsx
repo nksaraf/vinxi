@@ -1,6 +1,7 @@
 import App from "#vinxi/app";
 import { renderAsset } from "@vinxi/react";
 import { Suspense } from "react";
+import { getManifest } from "vinxi/manifest";
 import { eventHandler } from "vinxi/server";
 
 export function createHandler() {
@@ -17,7 +18,7 @@ export function createHandler() {
 				// This is the client-side case
 				const [filepath, name] = serverReference.split("#");
 				const action = (
-					await import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME].chunks[
+					await getManifest(import.meta.env.ROUTER_NAME).chunks[
 						filepath
 					].import()
 				)[name];
@@ -62,11 +63,11 @@ export function createHandler() {
 			}
 		}
 
-		const reactServerManifest = import.meta.env.MANIFEST["rsc"];
+		const reactServerManifest = getManifest("rsc");
 		const serverAssets = await reactServerManifest.inputs[
 			reactServerManifest.handler
 		].assets();
-		const clientManifest = import.meta.env.MANIFEST["client"];
+		const clientManifest = getManifest("client");
 		const assets = await clientManifest.inputs[clientManifest.handler].assets();
 		const { renderToPipeableStream } = await import(
 			"@vinxi/react-server-dom/server"
