@@ -60,8 +60,8 @@
       "types": "./dist/types/runtime/style.d.ts"
     },
     "./manifest": {
-      "import": "./lib/manifest.js",
-      "types": "./dist/types/lib/manifest.d.ts"
+      "import": "./runtime/manifest.js",
+      "types": "./dist/types/runtime/manifest.d.ts"
     },
     "./lib/invariant": {
       "import": "./lib/invariant.js",
