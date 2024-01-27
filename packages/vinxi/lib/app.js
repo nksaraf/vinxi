@@ -181,6 +181,10 @@ export function createApp({
 
 	hooks.callHook("app:created", { app });
 
+	// We do this so that we can access the app in plugins using globalThis.app just like we do in production.
+	// @ts-ignore
+	globalThis.app = app;
+
 	if (process.argv.includes("--dev")) {
 		app.dev();
 	} else if (process.argv.includes("--build")) {

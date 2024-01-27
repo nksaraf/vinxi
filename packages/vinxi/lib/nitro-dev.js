@@ -93,7 +93,7 @@ import { createRouteRulesHandler } from "./route-rules.js";
  * @param {import("nitropack").Nitro} nitro
  * @returns
  */
-export function createDevServer(nitro) {
+export async function createDevServer(nitro) {
 	// Worker
 	// const workerEntry = resolve(
 	// 	nitro.options.output.dir,
@@ -221,6 +221,22 @@ export function createDevServer(nitro) {
 	// 	}
 	// 	return address;
 	// };
+
+	import.meta._asyncContext = nitro.options.experimental?.asyncContext;
+
+	if (import.meta._asyncContext) {
+		const { getContext } = await import("unctx");
+		const { AsyncLocalStorage } = await import("node:async_hooks");
+		const nitroAsyncContext = getContext("nitro-app", {
+			asyncContext: true,
+			AsyncLocalStorage,
+		});
+		const _handler = app.handler;
+		app.handler = (event) => {
+			const ctx = { event };
+			return nitroAsyncContext.callAsync(ctx, () => _handler(event));
+		};
+	}
 
 	// app.use(
 	// 	eventHandler(async (event) => {
