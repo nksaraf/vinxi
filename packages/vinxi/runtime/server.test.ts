@@ -20,6 +20,7 @@ import {
 	type H3EventContext,
 	H3Headers,
 	H3Response,
+	HTTPEventSymbol,
 	type HTTPHeaderName,
 	type HTTPMethod,
 	type InferEventInput,
@@ -259,5 +260,6 @@ describe("server", () => {
 		expect(useSession).not.toBeUndefined();
 		expect(writeEarlyHints).not.toBeUndefined();
 		expect(getWebRequest).not.toBeUndefined();
+		expect(HTTPEventSymbol).not.toBeUndefined();
 	});
 });
