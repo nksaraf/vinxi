@@ -3,7 +3,6 @@ import {
 	H3Event,
 	MIMES,
 	callNodeListener,
-	clearResponseHeaders,
 	createApp,
 	createAppEventHandler,
 	createError,
@@ -23,8 +22,6 @@ import {
 	isCorsOriginAllowed,
 	isError,
 	isEventHandler,
-	isMethod,
-	isPreflightRequest,
 	isStream,
 	isWebResponse,
 	lazyEventHandler,
@@ -46,6 +43,7 @@ import {
 	appendResponseHeader as _appendResponseHeader,
 	appendResponseHeaders as _appendResponseHeaders,
 	assertMethod as _assertMethod,
+	clearResponseHeaders as _clearResponseHeaders,
 	clearSession as _clearSession,
 	defaultContentType as _defaultContentType,
 	deleteCookie as _deleteCookie,
@@ -74,7 +72,6 @@ import {
 	getValidatedRouterParams as _getValidatedRouterParams,
 	handleCacheHeaders as _handleCacheHeaders,
 	handleCors as _handleCors,
-	isCorsOriginAllowed as _isCorsOriginAllowed,
 	isMethod as _isMethod,
 	isPreflightRequest as _isPreflightRequest,
 	parseCookies as _parseCookies,
@@ -104,7 +101,6 @@ import {
 	splitCookiesString as _splitCookiesString,
 	unsealSession as _unsealSession,
 	updateSession as _updateSession,
-	useBase as _useBase,
 	useSession as _useSession,
 	writeEarlyHints as _writeEarlyHints,
 } from "h3";
@@ -193,7 +189,6 @@ export {
 	H3Event,
 	MIMES,
 	callNodeListener,
-	clearResponseHeaders,
 	createApp,
 	createAppEventHandler,
 	createEvent,
@@ -206,6 +201,7 @@ export {
 	defineResponseMiddleware,
 	dynamicEventHandler,
 	eventHandler,
+	splitCookiesString,
 	fromNodeMiddleware,
 	fromPlainHandler,
 	fromWebHandler,
@@ -220,8 +216,6 @@ export {
 	toPlainHandler,
 	toWebHandler,
 	isCorsOriginAllowed,
-	isMethod,
-	isPreflightRequest,
 	isStream,
 	createError,
 	sanitizeStatusCode,
@@ -270,6 +264,8 @@ function createWrapperFunction(h3Function) {
 export const readRawBody = createWrapperFunction(_readRawBody);
 export const readBody = createWrapperFunction(_readBody);
 export const getQuery = createWrapperFunction(_getQuery);
+export const isMethod = createWrapperFunction(_isMethod);
+export const isPreflightRequest = createWrapperFunction(_isPreflightRequest);
 export const getValidatedQuery = createWrapperFunction(_getValidatedQuery);
 export const getRouterParams = createWrapperFunction(_getRouterParams);
 export const getRouterParam = createWrapperFunction(_getRouterParam);
@@ -348,6 +344,12 @@ export const removeResponseHeader = createWrapperFunction(
 );
 export const getContext = createWrapperFunction(_getContext);
 export const setContext = createWrapperFunction(_setContext);
+
+export const clearResponseHeaders = createWrapperFunction(
+	_clearResponseHeaders,
+);
+
+export const getWebRequest = createWrapperFunction(toWebRequest);
 
 export { createApp as createServer };
 

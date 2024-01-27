@@ -1,71 +1,28 @@
 import {
 	App,
-	EventHandlerRequest,
 	H3CorsOptions,
+	H3EventContext,
 	H3Event,
+	HTTPMethod,
+	RequestFingerprintOptions,
+	Session,
+	SessionConfig,
+	SessionData,
 	_RequestMiddleware,
+	H3Error,
+	EventHandler,
+	Encoding,
+	InferEventInput,
+	ValidateFunction,
+	CacheConditions,
+	ProxyOptions,
+	HTTPHeaderName,
+	RequestHeaders,
+	MultiPartData,
 } from "h3";
-import {
-	appendCorsHeaders as _appendCorsHeaders,
-	appendCorsPreflightHeaders as _appendCorsPreflightHeaders,
-	appendHeader as _appendHeader,
-	appendHeaders as _appendHeaders,
-	appendResponseHeader as _appendResponseHeader,
-	appendResponseHeaders as _appendResponseHeaders,
-	assertMethod as _assertMethod,
-	clearSession as _clearSession,
-	defaultContentType as _defaultContentType,
-	deleteCookie as _deleteCookie,
-	fetchWithEvent as _fetchWithEvent,
-	getCookie as _getCookie,
-	getHeader as _getHeader,
-	getHeaders as _getHeaders,
-	getProxyRequestHeaders as _getProxyRequestHeaders,
-	getQuery as _getQuery,
-	getRequestFingerprint as _getRequestFingerprint,
-	getRequestHeader as _getRequestHeader,
-	getRequestHeaders as _getRequestHeaders,
-	getRequestHost as _getRequestHost,
-	getRequestIP as _getRequestIP,
-	getRequestProtocol as _getRequestProtocol,
-	getRequestURL as _getRequestURL,
-	getRequestWebStream as _getRequestWebStream,
-	getResponseHeader as _getResponseHeader,
-	getResponseHeaders as _getResponseHeaders,
-	getResponseStatus as _getResponseStatus,
-	getResponseStatusText as _getResponseStatusText,
-	getRouterParam as _getRouterParam,
-	getRouterParams as _getRouterParams,
-	getValidatedQuery as _getValidatedQuery,
-	getValidatedRouterParams as _getValidatedRouterParams,
-	handleCacheHeaders as _handleCacheHeaders,
-	handleCors as _handleCors,
-	parseCookies as _parseCookies,
-	proxyRequest as _proxyRequest,
-	readBody as _readBody,
-	readFormData as _readFormData,
-	readMultipartFormData as _readMultipartFormData,
-	readRawBody as _readRawBody,
-	readValidatedBody as _readValidatedBody,
-	removeResponseHeader as _removeResponseHeader, // ... import other utilities as needed
-	send as _send,
-	sendError as _sendError,
-	sendNoContent as _sendNoContent,
-	sendProxy as _sendProxy,
-	sendRedirect as _sendRedirect,
-	sendStream as _sendStream,
-	sendWebResponse as _sendWebResponse,
-	setCookie as _setCookie,
-	setHeader as _setHeader,
-	setHeaders as _setHeaders,
-	setResponseHeader as _setResponseHeader,
-	setResponseHeaders as _setResponseHeaders,
-	setResponseStatus as _setResponseStatus,
-	splitCookiesString as _splitCookiesString,
-	unsealSession as _unsealSession,
-	writeEarlyHints as _writeEarlyHints,
-} from "h3";
-import { CacheOptions } from "nitropack";
+import { CookieSerializeOptions } from 'cookie-es';
+import { OutgoingMessage } from "node:http";
+import { Readable } from "node:stream";
 
 export type HTTPEvent = H3Event;
 export type HTTPServer = App;
@@ -75,7 +32,6 @@ export {
 	H3Event,
 	MIMES,
 	callNodeListener,
-	clearResponseHeaders,
 	createApp,
 	createApp as createServer,
 	createAppEventHandler,
@@ -104,11 +60,10 @@ export {
 	toPlainHandler,
 	toWebHandler,
 	isCorsOriginAllowed,
-	isMethod,
-	isPreflightRequest,
 	isStream,
 	toWebRequest,
 	createError,
+	splitCookiesString,
 	sanitizeStatusCode,
 	sanitizeStatusMessage,
 	type AddRouteShortcuts,
@@ -165,43 +120,520 @@ export {
 	type _ResponseMiddleware,
 } from "h3";
 
-export function getContext(event: HTTPEvent, key: string): any;
-export function getContext(key: string): any;
+/**
+ * Checks if the input is an HTTPEvent object.
+ * @param input - The input to check.
+ * @returns True if the input is an HTTPEvent object, false otherwise.
+ * @see HTTPEvent
+ */
+export function isHTTPEvent(input: any): input is HTTPEvent;
 
-export function setContext(event: HTTPEvent, key: string, value: any): any;
-export function setContext(key: string, value: any): any;
+type SessionDataT = Record<string, any>;
+type SessionUpdate<T extends SessionDataT = SessionDataT> =
+	| Partial<SessionData<T>>
+	| ((oldData: SessionData<T>) => Partial<SessionData<T>> | undefined);
 
-export function appendCorsHeaders(
+
+/*****************************************************
+ * Read Body Utilities
+ *****************************************************/
+
+/**
+ * Reads body of the request and returns encoded raw string (default), or `Buffer` if encoding is falsy.
+ * @param event {HTTPEvent} H3 event or req passed by h3 handler
+ * @param encoding {Encoding} encoding="utf-8" - The character encoding to use.
+ *
+ * @return {String|Buffer} Encoded raw string or raw Buffer of the body
+ */
+export function readRawBody<E extends Encoding = "utf8">(
 	event: HTTPEvent,
-	options: H3CorsOptions,
-): void;
-export function appendCorsHeaders(options: H3CorsOptions): void;
+	encoding?: E,
+): E extends false ? Promise<Buffer | undefined> : Promise<string | undefined>;
+export function readRawBody<E extends Encoding = "utf8">(
+	encoding?: E,
+): E extends false ? Promise<Buffer | undefined> : Promise<string | undefined>;
 
-export function appendCorsPreflightHeaders(
-	event: HTTPEvent,
-	options: H3CorsOptions,
-): void;
-export function appendCorsPreflightHeaders(options: H3CorsOptions): void;
+/**
+ * Reads request body and tries to safely parse using [destr](https://github.com/unjs/destr).
+ * @param event H3 event passed by h3 handler
+ * @param encoding The character encoding to use, defaults to 'utf-8'.
+ *
+ * @return {*} The `Object`, `Array`, `String`, `Number`, `Boolean`, or `null` value corresponding to the request JSON body
+ *
+ * ```ts
+ * const body = await readBody(event)
+ * ```
+ */
+export function readBody<
+	T,
+	Event extends HTTPEvent = HTTPEvent,
+	_T = InferEventInput<"body", Event, T>,
+>(
+	event: Event,
+	options?: {
+		strict?: boolean;
+	},
+): Promise<_T>;
+export function readBody<
+	T,
+	Event extends HTTPEvent = HTTPEvent,
+	_T = InferEventInput<"body", Event, T>,
+>(
+	options?: {
+		strict?: boolean;
+	},
+): Promise<_T>;
 
-export function appendHeader(
+/**
+ * Tries to read the request body via `readBody`, then uses the provided validation function and either throws a validation error or returns the result.
+ * @param event The HTTPEvent passed by the handler.
+ * @param validate The function to use for body validation. It will be called passing the read request body. If the result is not false, the parsed body will be returned.
+ * @throws If the validation function returns `false` or throws, a validation error will be thrown.
+ * @return {*} The `Object`, `Array`, `String`, `Number`, `Boolean`, or `null` value corresponding to the request JSON body.
+ * @see {readBody}
+ *
+ * ```ts
+ * // With a custom validation function
+ * const body = await readValidatedBody(event, (body) => {
+ *   return typeof body === "object" && body !== null
+ * })
+ *
+ * // With a zod schema
+ * import { z } from 'zod'
+ * const objectSchema = z.object()
+ * const body = await readValidatedBody(event, objectSchema.safeParse)
+ * ```
+ */
+export function readValidatedBody<
+	T,
+	Event extends HTTPEvent = HTTPEvent,
+	_T = InferEventInput<"body", Event, T>,
+>(event: Event, validate: ValidateFunction<_T>): Promise<_T>;
+export function readValidatedBody<
+	T,
+	Event extends HTTPEvent = HTTPEvent,
+	_T = InferEventInput<"body", Event, T>,
+	>(validate: ValidateFunction<_T>): Promise<_T>;
+
+
+/**
+ * Tries to read and parse the body of a an HTTPEvent as multipart form.
+ * @param event The HTTPEvent object to read multipart form from.
+ *
+ * @return The parsed form data. If no form could be detected because the content type is not multipart/form-data or no boundary could be found.
+ *
+ * ```ts
+ * const formData = await readMultipartFormData(event)
+ * // The result could look like:
+ * // [
+ * //   {
+ * //     "data": "other",
+ * //     "name": "baz",
+ * //   },
+ * //   {
+ * //     "data": "something",
+ * //     "name": "some-other-data",
+ * //   },
+ * // ]
+ * ```
+ */
+export function readMultipartFormData(
 	event: HTTPEvent,
-	key: string,
+): Promise<MultiPartData[] | undefined>;
+export function readMultipartFormData(): Promise<
+	MultiPartData[] | undefined
+>;
+
+/**
+ * Constructs a FormData object from an event, after converting it to a a web request.
+ * @param event The HTTPEvent object to read the form data from.
+ *
+ * ```ts
+ * const eventHandler = event => {
+ *   const formData = await readFormData(event)
+ *   const email = formData.get("email")
+ *   const password = formData.get("password")
+ *  }
+ * ```
+ */
+export function readFormData(event: HTTPEvent): Promise<FormData>;
+export function readFormData(): Promise<FormData>;
+
+
+/**
+ * Captures a stream from a request.
+ * @param event The HTTPEvent object containing the request information.
+ * @returns Undefined if the request can't transport a payload, otherwise a ReadableStream of the request body.
+ */
+export function getRequestWebStream(
+	event: HTTPEvent,
+): undefined | ReadableStream;
+export function getRequestWebStream(): undefined | ReadableStream;
+
+
+/*****************************************************
+ * Request Info Utilities
+ *****************************************************/
+
+
+export function getRequestHost(
+	event: HTTPEvent,
+	opts?: {
+		xForwardedHost?: boolean;
+	},
+): string;
+export function getRequestHost(
+	opts?: {
+		xForwardedHost?: boolean;
+	},
+): string;
+
+export function getRequestProtocol(
+	event: HTTPEvent,
+	opts?: {
+		xForwardedProto?: boolean;
+	},
+): "https" | "http";
+export function getRequestProtocol(): "https" | "http";
+
+export function getRequestURL(
+	event: HTTPEvent,
+	opts?: {
+		xForwardedHost?: boolean;
+		xForwardedProto?: boolean;
+	},
+): URL;
+export function getRequestURL(
+	opts?: {
+		xForwardedHost?: boolean;
+		xForwardedProto?: boolean;
+	},
+): URL;
+
+export function getRequestIP(
+	event: HTTPEvent,
+	opts?: {
+		/**
+		 * Use the X-Forwarded-For HTTP header set by proxies.
+		 *
+		 * Note: Make sure that this header can be trusted (your application running behind a CDN or reverse proxy) before enabling.
+		 */
+		xForwardedFor?: boolean;
+	},
+): string | undefined;
+export function getRequestIP(): string | undefined;
+
+
+/*****************************************************
+ * Request Type Utilities
+ *****************************************************/
+
+export function isPreflightRequest(event: HTTPEvent): boolean;
+export function isPreflightRequest(): boolean;
+
+
+/*****************************************************
+ * Web Request Utilities
+ *****************************************************/
+
+export function getWebRequest(event: HTTPEvent): Request;
+export function getWebRequest(): Request;
+
+/*****************************************************
+ * Cookie Utilities
+ *****************************************************/
+
+/**
+ * Parse the request to get HTTP Cookie header string and returning an object of all cookie name-value pairs.
+ * @param event {HTTPEvent} H3 event or req passed by h3 handler
+ * @returns Object of cookie name-value pairs
+ * ```ts
+ * const cookies = parseCookies(event)
+ * ```
+ */
+export function parseCookies(event: HTTPEvent): Record<string, string>;
+export function parseCookies(): Record<string, string>;
+
+/**
+ * Get a cookie value by name.
+ * @param event {HTTPEvent} H3 event or req passed by h3 handler
+ * @param name Name of the cookie to get
+ * @returns {*} Value of the cookie (String or undefined)
+ * ```ts
+ * const authorization = getCookie(request, 'Authorization')
+ * ```
+ */
+export function getCookie(event: HTTPEvent, name: string): string | undefined;
+export function getCookie(name: string): string | undefined;
+
+/**
+ * Set a cookie value by name.
+ * @param event {HTTPEvent} H3 event or res passed by h3 handler
+ * @param name Name of the cookie to set
+ * @param value Value of the cookie to set
+ * @param serializeOptions {CookieSerializeOptions} Options for serializing the cookie
+ * ```ts
+ * setCookie(res, 'Authorization', '1234567')
+ * ```
+ */
+export function setCookie(
+	event: HTTPEvent,
+	name: string,
 	value: string,
+	serializeOptions?: CookieSerializeOptions,
 ): void;
-export function appendHeader(key: string, value: string): void;
-
-export function appendHeaders(
-	event: HTTPEvent,
-	headers: Record<string, string>,
-): void;
-export function appendHeaders(headers: Record<string, string>): void;
-
-export function appendResponseHeader(
-	event: HTTPEvent,
-	key: string,
+export function setCookie(
+	name: string,
 	value: string,
+	serializeOptions?: CookieSerializeOptions,
 ): void;
-export function appendResponseHeader(key: string, value: string): void;
+
+/**
+ * Remove a cookie by name.
+ * @param event {HTTPEvent} H3 event or res passed by h3 handler
+ * @param name Name of the cookie to delete
+ * @param serializeOptions {CookieSerializeOptions} Cookie options
+ * ```ts
+ * deleteCookie(res, 'SessionId')
+ * ```
+ */
+export function deleteCookie(
+	event: HTTPEvent,
+	name: string,
+	serializeOptions?: CookieSerializeOptions,
+): void;
+export function deleteCookie(
+	name: string,
+	serializeOptions?: CookieSerializeOptions,
+): void;
+
+/** @experimental Behavior of this utility might change in the future versions */
+export function getRequestFingerprint(
+	event: HTTPEvent,
+	opts?: RequestFingerprintOptions,
+): Promise<string | null>;
+export function getRequestFingerprint(
+	opts?: RequestFingerprintOptions,
+): Promise<string | null>;
+
+
+/*****************************************************
+ * Fetch Utilities
+ *****************************************************/
+
+export function fetchWithEvent<
+	T = unknown,
+	_R = any,
+	F extends (req: RequestInfo | URL, opts?: any) => any = typeof fetch,
+>(
+	event: HTTPEvent,
+	req: RequestInfo | URL,
+	init?: RequestInit & {
+		context?: H3EventContext;
+	},
+	options?: {
+		fetch: F;
+	},
+): unknown extends T ? ReturnType<F> : T;
+export function fetchWithEvent<
+	T = unknown,
+	_R = any,
+	F extends (req: RequestInfo | URL, opts?: any) => any = typeof fetch,
+>(
+	req: RequestInfo | URL,
+	init?: RequestInit & {
+		context?: H3EventContext;
+	},
+	options?: {
+		fetch: F;
+	},
+): unknown extends T ? ReturnType<F> : T;
+
+
+/*****************************************************
+ * Router Param Utilities
+ *****************************************************/
+
+
+
+export function getRouterParams(
+	event: HTTPEvent,
+	opts?: {
+		decode?: boolean;
+	},
+): NonNullable<HTTPEvent["context"]["params"]>;
+export function getRouterParams(
+	opts?: {
+		decode?: boolean;
+	},
+): NonNullable<HTTPEvent["context"]["params"]>;
+
+export function getValidatedRouterParams<
+	T,
+	Event extends HTTPEvent = HTTPEvent,
+	_T = InferEventInput<"routerParams", Event, T>,
+>(
+	event: Event,
+	validate: ValidateFunction<_T>,
+	opts?: {
+		decode?: boolean;
+	},
+): Promise<_T>;
+export function getValidatedRouterParams<
+	T,
+	Event extends HTTPEvent = HTTPEvent,
+	_T = InferEventInput<"routerParams", Event, T>,
+>(
+	validate: ValidateFunction<_T>,
+	opts?: {
+		decode?: boolean;
+	},
+): Promise<_T>;
+
+export function getRouterParam(
+	event: HTTPEvent,
+	name: string,
+	opts?: {
+		decode?: boolean;
+	},
+): string | undefined;
+export function getRouterParam(
+	name: string,
+	opts?: {
+		decode?: boolean;
+	},
+): string | undefined;
+
+
+
+
+
+/*****************************************************
+ * Query Utilities
+ *****************************************************/
+
+export function getQuery<
+	T,
+	Event extends HTTPEvent = HTTPEvent,
+	_T = Exclude<InferEventInput<"query", Event, T>, undefined>,
+>(event: Event): _T;
+export function getQuery<
+	T,
+	Event extends HTTPEvent = HTTPEvent,
+	_T = Exclude<InferEventInput<"query", Event, T>, undefined>,
+>(): _T;
+
+export function getValidatedQuery<
+	T,
+	Event extends HTTPEvent = HTTPEvent,
+	_T = InferEventInput<"query", Event, T>,
+>(event: Event, validate: ValidateFunction<_T>): Promise<_T>;
+export function getValidatedQuery<
+	T,
+	Event extends HTTPEvent = HTTPEvent,
+	_T = InferEventInput<"query", Event, T>,
+>(validate: ValidateFunction<_T>): Promise<_T>;
+
+/*****************************************************
+ * Session Utilities
+ *****************************************************/
+
+export function clearSession(
+	event: HTTPEvent,
+	config: Partial<SessionConfig>,
+): Promise<void>;
+export function clearSession(config: Partial<SessionConfig>): Promise<void>;
+
+export function unsealSession(
+	event: HTTPEvent,
+	config: SessionConfig,
+	sealed: string,
+): Promise<Partial<Session<SessionDataT>>>;
+export function unsealSession(
+	config: SessionConfig,
+	sealed: string,
+): Promise<Partial<Session<SessionDataT>>>;
+
+export function getSession<T extends SessionDataT = SessionDataT>(
+	event: HTTPEvent,
+	config: SessionConfig,
+): Promise<Session<T>>;
+export function getSession<T extends SessionDataT = SessionDataT>(
+	config: SessionConfig,
+): Promise<Session<T>>;
+
+export function sealSession(event: HTTPEvent, config: SessionConfig): void;
+export function sealSession(config: SessionConfig): void;
+
+export function updateSession<T extends SessionDataT = SessionDataT>(
+	event: HTTPEvent,
+	config: SessionConfig,
+	update?: SessionUpdate<T>,
+): Promise<Session<T>>;
+export function updateSession<T extends SessionDataT = SessionDataT>(
+	config: SessionConfig,
+	update?: SessionUpdate<T>,
+): Promise<Session<T>>;
+
+export function useSession<T extends SessionDataT = SessionDataT>(
+	event: HTTPEvent,
+	config: SessionConfig,
+): Promise<{
+	readonly id: string | undefined;
+	readonly data: T;
+	update: (update: SessionUpdate<T>) => Promise<any>;
+	clear: () => Promise<any>;
+}>;
+export function useSession<T extends SessionDataT = SessionDataT>(
+	config: SessionConfig,
+): Promise<{
+	readonly id: string | undefined;
+	readonly data: T;
+	update: (update: SessionUpdate<T>) => Promise<any>;
+	clear: () => Promise<any>;
+}>;
+
+
+/*****************************************************
+ * Header Utilities
+ *****************************************************/
+
+export function getResponseHeaders(
+	event: HTTPEvent,
+): ReturnType<HTTPEvent["res"]["getHeaders"]>;
+export function getResponseHeaders(): ReturnType<HTTPEvent["res"]["getHeaders"]>;
+
+
+export function getResponseHeader(
+	event: HTTPEvent,
+	name: HTTPHeaderName,
+): ReturnType<HTTPEvent["res"]["getHeader"]>;
+export function getResponseHeader(
+	name: HTTPHeaderName,
+): ReturnType<HTTPEvent["res"]["getHeader"]>;
+
+export function setResponseHeaders(
+	event: HTTPEvent,
+	headers: Record<HTTPHeaderName, Parameters<OutgoingMessage["setHeader"]>[1]>,
+): void;
+export function setResponseHeaders(
+	headers: Record<HTTPHeaderName, Parameters<OutgoingMessage["setHeader"]>[1]>,
+): void;
+
+export const setHeaders: typeof setResponseHeaders;
+
+
+export function setResponseHeader(
+	event: HTTPEvent,
+	name: HTTPHeaderName,
+	value: Parameters<OutgoingMessage["setHeader"]>[1],
+): void;
+export function setResponseHeader(
+	name: HTTPHeaderName,
+	value: Parameters<OutgoingMessage["setHeader"]>[1],
+): void;
+
+export const setHeader: typeof setResponseHeader;
 
 export function appendResponseHeaders(
 	event: HTTPEvent,
@@ -209,226 +641,75 @@ export function appendResponseHeaders(
 ): void;
 export function appendResponseHeaders(headers: Record<string, string>): void;
 
-export function assertMethod(event: HTTPEvent, method: string): void;
-export function assertMethod(method: string): void;
+export const appendHeaders: typeof appendResponseHeaders;
 
-export function clearSession(event: HTTPEvent): void;
-export function clearSession(): void;
-
-export function defaultContentType(event: HTTPEvent, type: string): void;
-export function defaultContentType(type: string): void;
-
-export function deleteCookie(event: HTTPEvent, name: string): void;
-export function deleteCookie(name: string): void;
-
-export function fetchWithEvent(
+export function appendResponseHeader(
 	event: HTTPEvent,
-	input: RequestInfo,
-	init?: RequestInit,
-): Promise<Response>;
-export function fetchWithEvent(
-	input: RequestInfo,
-	init?: RequestInit,
-): Promise<Response>;
-
-export function getCookie(event: HTTPEvent, name: string): string | undefined;
-export function getCookie(name: string): string | undefined;
-
-export function getHeader(event: HTTPEvent, key: string): string | undefined;
-export function getHeader(key: string): string | undefined;
-
-export function getHeaders(event: HTTPEvent): Record<string, string>;
-export function getHeaders(): Record<string, string>;
-
-export function getProxyRequestHeaders(
-	event: HTTPEvent,
-): Record<string, string>;
-export function getProxyRequestHeaders(): Record<string, string>;
-
-export function getQuery(event: HTTPEvent): Record<string, string>;
-export function getQuery(): Record<string, string>;
-
-export function getRequestFingerprint(event: HTTPEvent): string;
-export function getRequestFingerprint(): string;
-
-export function getRequestHeader(event: HTTPEvent, key: string): string;
-export function getRequestHeader(key: string): string;
-
-export function getRequestHeaders(event: HTTPEvent): Record<string, string>;
-export function getRequestHeaders(): Record<string, string>;
-
-export function getRequestHost(event: HTTPEvent): string;
-export function getRequestHost(): string;
-
-export function getRequestIP(event: HTTPEvent): string;
-export function getRequestIP(): string;
-
-export function getRequestProtocol(event: HTTPEvent): string;
-export function getRequestProtocol(): string;
-
-export function getRequestURL(event: HTTPEvent): string;
-export function getRequestURL(): string;
-
-export function getRequestWebStream(event: HTTPEvent): ReadableStream;
-export function getRequestWebStream(): ReadableStream;
-
-export function getResponseHeader(event: HTTPEvent, key: string): string;
-export function getResponseHeader(key: string): string;
-
-export function getResponseHeaders(event: HTTPEvent): Record<string, string>;
-export function getResponseHeaders(): Record<string, string>;
-
-export function getResponseStatus(event: HTTPEvent): number;
-export function getResponseStatus(): number;
-
-export function getResponseStatusText(event: HTTPEvent): string;
-export function getResponseStatusText(): string;
-
-export function getRouterParam(event: HTTPEvent, name: string): string;
-export function getRouterParam(name: string): string;
-
-export function getRouterParams(event: HTTPEvent): Record<string, string>;
-export function getRouterParams(): Record<string, string>;
-
-export function getValidatedQuery(
-	event: HTTPEvent,
-	schema: Record<string, any>,
-): Record<string, any>;
-export function getValidatedQuery(
-	schema: Record<string, any>,
-): Record<string, any>;
-
-export function getValidatedRouterParams(
-	event: HTTPEvent,
-	schema: Record<string, any>,
-): Record<string, any>;
-export function getValidatedRouterParams(
-	schema: Record<string, any>,
-): Record<string, any>;
-
-export function handleCacheHeaders(
-	event: HTTPEvent,
-	options: CacheOptions,
-): void;
-export function handleCacheHeaders(options: CacheOptions): void;
-
-export function handleCors(event: HTTPEvent, options: H3CorsOptions): void;
-export function handleCors(options: H3CorsOptions): void;
-
-export function parseCookies(event: HTTPEvent): Record<string, string>;
-export function parseCookies(): Record<string, string>;
-
-export function proxyRequest(event: HTTPEvent, url: string): Promise<Response>;
-export function proxyRequest(url: string): Promise<Response>;
-
-export function readBody(event: HTTPEvent): Promise<string>;
-export function readBody(): Promise<string>;
-
-export function readFormData(event: HTTPEvent): Promise<FormData>;
-export function readFormData(): Promise<FormData>;
-
-export function readMultipartFormData(event: HTTPEvent): Promise<FormData>;
-export function readMultipartFormData(): Promise<FormData>;
-
-export function readRawBody(event: HTTPEvent): Promise<Uint8Array>;
-export function readRawBody(): Promise<Uint8Array>;
-
-export function readValidatedBody(
-	event: HTTPEvent,
-	schema: Record<string, any>,
-): Promise<Record<string, any>>;
-export function readValidatedBody(
-	schema: Record<string, any>,
-): Promise<Record<string, any>>;
-
-export function removeResponseHeader(event: HTTPEvent, key: string): void;
-export function removeResponseHeader(key: string): void;
-
-export function send(event: HTTPEvent, body: any): void;
-export function send(body: any): void;
-
-export function sendError(event: HTTPEvent, error: Error): void;
-export function sendError(error: Error): void;
-
-export function sendNoContent(event: HTTPEvent): void;
-export function sendNoContent(): void;
-
-export function sendProxy(event: HTTPEvent, url: string): void;
-export function sendProxy(url: string): void;
-
-export function sendRedirect(event: HTTPEvent, url: string): void;
-export function sendRedirect(url: string): void;
-
-export function sendStream(event: HTTPEvent, stream: ReadableStream): void;
-export function sendStream(stream: ReadableStream): void;
-
-export function sendWebResponse(event: HTTPEvent, response: Response): void;
-export function sendWebResponse(response: Response): void;
-
-export function setCookie(
-	event: HTTPEvent,
-	name: string,
-	value: string,
-	options?: {
-		domain?: string;
-		expires?: Date;
-		httpOnly?: boolean;
-		maxAge?: number;
-		path?: string;
-		sameSite?: "lax" | "strict";
-		secure?: boolean;
-	},
-): void;
-export function setCookie(
-	name: string,
-	value: string,
-	options?: {
-		domain?: string;
-		expires?: Date;
-		httpOnly?: boolean;
-		maxAge?: number;
-		path?: string;
-		sameSite?: "lax" | "strict";
-		secure?: boolean;
-	},
-): void;
-
-export function setHeader(event: HTTPEvent, key: string, value: string): void;
-export function setHeader(key: string, value: string): void;
-
-export function setHeaders(
-	event: HTTPEvent,
-	headers: Record<string, string>,
-): void;
-export function setHeaders(headers: Record<string, string>): void;
-
-export function setResponseHeader(
-	event: HTTPEvent,
-	key: string,
+	name: HTTPHeaderName,
 	value: string,
 ): void;
-export function setResponseHeader(key: string, value: string): void;
-
-export function setResponseHeaders(
-	event: HTTPEvent,
-	headers: Record<string, string>,
+export function appendResponseHeader(
+	name: HTTPHeaderName,
+	value: string,
 ): void;
-export function setResponseHeaders(headers: Record<string, string>): void;
 
-export function setResponseStatus(event: HTTPEvent, status: number): void;
-export function setResponseStatus(status: number): void;
+export const appendHeader: typeof appendResponseHeader;
+/**
+ * Remove all response headers, or only those specified in the headerNames array.
+ * @param event H3 event
+ * @param headerNames Array of header names to remove
+ */
+export function clearResponseHeaders(
+	event: HTTPEvent,
+	headerNames?: string[],
+): void;
+export function clearResponseHeaders(headerNames?: string[]): void;
 
-export function splitCookiesString(cookies: string): Record<string, string>;
-export function splitCookiesString(): Record<string, string>;
-
-export function unsealSession(event: HTTPEvent): void;
-export function unsealSession(): void;
+export function removeResponseHeader(
+	event: HTTPEvent,
+	name: HTTPHeaderName,
+): void;
+export function removeResponseHeader(name: HTTPHeaderName): void;
 
 export function writeEarlyHints(
 	event: HTTPEvent,
-	headers: Record<string, string>,
+	hints: string | string[] | Record<string, string | string[]>,
+	cb?: () => void,
 ): void;
-export function writeEarlyHints(headers: Record<string, string>): void;
+export function writeEarlyHints(
+	hints: string | string[] | Record<string, string | string[]>,
+	cb?: () => void,
+): void;
+
+export function getRequestHeaders(event: HTTPEvent): RequestHeaders;
+export function getRequestHeaders(): RequestHeaders;
+
+export const getHeaders: typeof getRequestHeaders;
+
+export function getRequestHeader(
+	event: HTTPEvent,
+	name: HTTPHeaderName,
+): RequestHeaders[string];
+export function getRequestHeader(name: HTTPHeaderName): RequestHeaders[string];
+
+export const getHeader: typeof getRequestHeader;
+
+/**
+ * Check request caching headers (`If-Modified-Since`) and add caching headers (Last-Modified, Cache-Control)
+ * Note: `public` cache control will be added by default
+ * @returns `true` when cache headers are matching. When `true` is returned, no reponse should be sent anymore
+ */
+export function handleCacheHeaders(
+	event: HTTPEvent,
+	opts: CacheConditions,
+): boolean;
+export function handleCacheHeaders(opts: CacheConditions): boolean;
+
+
+
+/*****************************************************
+ * Middleware Utilities
+ *****************************************************/
 
 export function defineMiddleware(options: {
 	onRequest?:
@@ -448,4 +729,152 @@ export function defineMiddleware(options: {
 		| undefined;
 };
 
+/*****************************************************
+ * Async Local Storage Utilities
+ *****************************************************/
+
 export function getEvent(): HTTPEvent;
+
+/*****************************************************
+ * Context Utilities
+ *****************************************************/
+
+export function getContext(event: HTTPEvent, key: string): any;
+export function getContext(key: string): any;
+
+export function setContext(event: HTTPEvent, key: string, value: any): any;
+export function setContext(key: string, value: any): any;
+
+/*****************************************************
+ * Proxy Utilities
+ *****************************************************/
+
+export function proxyRequest(
+	event: HTTPEvent,
+	target: string,
+	opts?: ProxyOptions,
+): Promise<any>;
+export function proxyRequest(
+	target: string,
+	opts?: ProxyOptions,
+): Promise<any>;
+
+export function sendProxy(
+	event: HTTPEvent,
+	target: string,
+	opts?: ProxyOptions,
+): Promise<any>;
+export function sendProxy(target: string, opts?: ProxyOptions): Promise<any>;
+
+export function getProxyRequestHeaders(event: HTTPEvent): any;
+export function getProxyRequestHeaders(): any;
+
+/*****************************************************
+ * CORS Utilities
+ *****************************************************/
+
+export function appendCorsPreflightHeaders(
+	event: HTTPEvent,
+	options: H3CorsOptions,
+): void;
+export function appendCorsPreflightHeaders(options: H3CorsOptions): void;
+
+export function appendCorsHeaders(
+	event: HTTPEvent,
+	options: H3CorsOptions,
+): void;
+export function appendCorsHeaders(options: H3CorsOptions): void;
+
+export function handleCors(event: HTTPEvent, options: H3CorsOptions): void;
+export function handleCors(options: H3CorsOptions): void;
+
+/*****************************************************
+ * Send Response Utilities
+ *****************************************************/
+
+
+export function send(event: HTTPEvent, data?: any, type?: string): Promise<void>;
+export function send(data?: any, type?: string): Promise<void>;
+/**
+ * Respond with an empty payload.<br>
+ * Note that calling this function will close the connection and no other data can be sent to the client afterwards.
+ *
+ * @param event H3 event
+ * @param code status code to be send. By default, it is `204 No Content`.
+ */
+export function sendNoContent(event: HTTPEvent, code?: number): void;
+export function sendNoContent(code?: number): void;
+export function setResponseStatus(
+	event: HTTPEvent,
+	code?: number,
+	text?: string,
+): void;
+export function setResponseStatus(code?: number, text?: string): void;
+
+export function getResponseStatus(event: HTTPEvent): number;
+export function getResponseStatus(): number;
+
+export function getResponseStatusText(event: HTTPEvent): string;
+export function getResponseStatusText(): string;
+export function defaultContentType(event: HTTPEvent, type?: string): void;
+export function defaultContentType(type?: string): void;
+export function sendRedirect(
+	event: HTTPEvent,
+	location: string,
+	code?: number,
+): Promise<void>;
+export function sendRedirect(location: string, code?: number): Promise<void>;
+
+export function sendStream(
+	event: HTTPEvent,
+	stream: Readable | ReadableStream,
+): Promise<void>;
+export function sendStream(stream: Readable | ReadableStream): Promise<void>;
+
+export function sendWebResponse(
+	event: HTTPEvent,
+	response: Response,
+): void | Promise<void>;
+export function sendWebResponse(response: Response): void | Promise<void>;
+
+/**
+ * Receives an error and returns the corresponding response.
+ * H3 internally uses this function to handle unhandled errors.
+ * Note that calling this function will close the connection and no other data will be sent to the client afterwards.
+ *
+ * @param event {HTTPEvent} - H3 event or req passed by h3 handler.
+ * @param error {Error | H3Error} - The raised error.
+ * @param debug {boolean} - Whether the application is in debug mode.
+ * In the debug mode, the stack trace of errors will be returned in the response.
+ */
+export function sendError(
+	event: HTTPEvent,
+	error: Error | H3Error,
+	debug?: boolean,
+): void;
+export function sendError(error: Error | H3Error, debug?: boolean): void;
+
+/*****************************************************
+ * Method Utilities
+ *****************************************************/
+
+
+export function isMethod(
+	event: HTTPEvent,
+	expected: HTTPMethod | HTTPMethod[],
+	allowHead?: boolean,
+): boolean;
+export function isMethod(
+	expected: HTTPMethod | HTTPMethod[],
+	allowHead?: boolean,
+): boolean;
+
+export function assertMethod(
+	event: HTTPEvent,
+	expected: HTTPMethod | HTTPMethod[],
+	allowHead?: boolean,
+): void;
+export function assertMethod(
+	expected: HTTPMethod | HTTPMethod[],
+	allowHead?: boolean,
+): void;
