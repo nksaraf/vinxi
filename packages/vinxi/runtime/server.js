@@ -69,6 +69,7 @@ import {
 	getResponseStatusText as _getResponseStatusText,
 	getRouterParam as _getRouterParam,
 	getRouterParams as _getRouterParams,
+	getSession as _getSession,
 	getValidatedQuery as _getValidatedQuery,
 	getValidatedRouterParams as _getValidatedRouterParams,
 	handleCacheHeaders as _handleCacheHeaders,
@@ -86,6 +87,7 @@ import {
 	removeResponseHeader as _removeResponseHeader, // ... import other utilities as needed
 	sanitizeStatusCode as _sanitizeStatusCode,
 	sanitizeStatusMessage as _sanitizeStatusMessage,
+	sealSession as _sealSession,
 	send as _send,
 	sendError as _sendError,
 	sendNoContent as _sendNoContent,
@@ -101,15 +103,11 @@ import {
 	setResponseStatus as _setResponseStatus,
 	splitCookiesString as _splitCookiesString,
 	unsealSession as _unsealSession,
+	updateSession as _updateSession,
 	useBase as _useBase,
+	useSession as _useSession,
 	writeEarlyHints as _writeEarlyHints,
-  sealSession as _sealSession,
-  useSession as _useSession,
-  getSession as _getSession,
-  updateSession as _updateSession
 } from "h3";
-import { seal, defaults as sealDefaults } from "iron-webcrypto";
-import crypto from "uncrypto";
 import { getContext as gContext } from "unctx";
 
 import { AsyncLocalStorage } from "node:async_hooks";
