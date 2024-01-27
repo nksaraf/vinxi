@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- a1053ac: feat: `getManifest(routerName)` API to access Manifest API for a router, (instead of import.meta.env.MANIFEST)
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [181903c]
   - @vinxi/react@0.1.2
 
