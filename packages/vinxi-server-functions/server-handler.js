@@ -1,6 +1,7 @@
 /// <reference types="vinxi/types/server" />
 import invariant from "vinxi/lib/invariant";
-import { eventHandler, readBody, toWebRequest } from "vinxi/server";
+import { getManifest } from "vinxi/manifest";
+import { eventHandler, readBody } from "vinxi/server";
 
 export async function handleServerAction(event) {
 	invariant(event.method === "POST", "Invalid method");
@@ -11,9 +12,7 @@ export async function handleServerAction(event) {
 		// This is the client-side case
 		const [filepath, name] = serverReference.split("#");
 		const action = (
-			await import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME].chunks[
-				filepath
-			].import()
+			await getManifest(import.meta.env.ROUTER_NAME).chunks[filepath].import()
 		)[name];
 		const json = await readBody(event);
 		const result = action.apply(null, json);

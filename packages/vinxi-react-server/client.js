@@ -7,8 +7,6 @@ export { fetchServerAction } from "./fetch-server-action";
 
 globalThis.__vite__ = createModuleLoader({
 	loadModule: async (id) => {
-		return import.meta.env.MANIFEST[import.meta.env.ROUTER_NAME].chunks[
-			id
-		].import();
+		return getManifest(import.meta.env.ROUTER_NAME).chunks[id].import();
 	},
 });
