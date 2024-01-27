@@ -46,13 +46,22 @@ export default createApp({
 `,
 				"app/App.tsx": js`
 import { useEffect, useState } from "react";
-
 async function greetServer(name: string) {
 	"use server";
-	const { getEvent, getRequestProtocol } = await import("vinxi/server");
+	const { getEvent, getRequestProtocol, HTTPEventSymbol } = await import("vinxi/server");
+	let event = getEvent();
+	let wrappedEvent = {
+		[HTTPEventSymbol]: event
+	}
+	let wrappedH3Event = {
+		[Symbol("h3Event")]: event
+	}
 	return {
 		method: getEvent().method,
-		protocol: getRequestProtocol(),
+		protocol1: getRequestProtocol(),
+		protocol2: getRequestProtocol(event),
+		protocol3: getRequestProtocol(wrappedEvent),
+		protocol4: getRequestProtocol(wrappedH3Event),
 	};
 }
 
@@ -91,10 +100,15 @@ export function App() {
 		let body = await page.$("body");
 		await body.waitForSelector("[data-test-id=data]");
 
+		let result = {
+			method: "POST",
+			protocol1: "http",
+			protocol2: "http",
+			protocol3: "http",
+			protocol4: "http",
+		};
 		expect(await app.getHtml("[data-test-id=data]")).toBe(
-			prettyHtml(
-				`<div data-test-id="data">{"method":"POST","protocol":"http"}</div>`,
-			),
+			prettyHtml(`<div data-test-id="data">${JSON.stringify(result)}</div>`),
 		);
 	});
 });
@@ -140,10 +154,20 @@ import { useEffect, useState } from "react";
 
 async function greetServer(name: string) {
 	"use server";
-	const { getEvent, getRequestProtocol } = await import("vinxi/server");
+	const { getEvent, getRequestProtocol, HTTPEventSymbol } = await import("vinxi/server");
+	let event = getEvent();
+	let wrappedEvent = {
+		[HTTPEventSymbol]: event
+	}
+	let wrappedH3Event = {
+		[Symbol("h3Event")]: event
+	}
 	return {
 		method: getEvent().method,
-		protocol: getRequestProtocol(),
+		protocol1: getRequestProtocol(),
+		protocol2: getRequestProtocol(event),
+		protocol3: getRequestProtocol(wrappedEvent),
+		protocol4: getRequestProtocol(wrappedH3Event),
 	};
 }
 
@@ -182,10 +206,15 @@ export function App() {
 		let body = await page.$("body");
 		await body.waitForSelector("[data-test-id=data]");
 
+		let result = {
+			method: "POST",
+			protocol1: "http",
+			protocol2: "http",
+			protocol3: "http",
+			protocol4: "http",
+		};
 		expect(await app.getHtml("[data-test-id=data]")).toBe(
-			prettyHtml(
-				`<div data-test-id="data">{"method":"POST","protocol":"http"}</div>`,
-			),
+			prettyHtml(`<div data-test-id="data">${JSON.stringify(result)}</div>`),
 		);
 	});
 });

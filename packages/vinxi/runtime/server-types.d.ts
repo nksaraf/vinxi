@@ -885,3 +885,6 @@ export function assertMethod(
 	expected: HTTPMethod | HTTPMethod[],
 	allowHead?: boolean,
 ): void;
+
+
+export const HTTPEventSymbol: Symbol;

@@ -227,11 +227,14 @@ function getHTTPEvent() {
 }
 
 export const HTTPEventSymbol = Symbol("$HTTPEvent");
+const h3EventSymbol = Symbol("h3Event");
 
 export function isEvent(obj) {
 	return (
 		typeof obj === "object" &&
-		(obj instanceof H3Event || obj?.[HTTPEventSymbol] instanceof H3Event)
+		(obj instanceof H3Event ||
+			obj?.[HTTPEventSymbol] instanceof H3Event ||
+			obj?.[h3EventSymbol] instanceof H3Event)
 	);
 	// Implement logic to check if obj is an H3Event
 }
@@ -253,7 +256,10 @@ function createWrapperFunction(h3Function) {
 			}
 			args.unshift(event);
 		} else {
-			args[0] = event instanceof H3Event ? event : event[HTTPEventSymbol];
+			args[0] =
+				event instanceof H3Event
+					? event
+					: event[HTTPEventSymbol] ?? event[h3EventSymbol];
 		}
 
 		return h3Function(...args);
