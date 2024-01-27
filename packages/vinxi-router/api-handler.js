@@ -1,6 +1,6 @@
 import { pathToRegexp } from "path-to-regexp";
 import fileRoutes from "vinxi/routes";
-import { H3Event, eventHandler, toWebRequest } from "vinxi/server";
+import { eventHandler, toWebRequest } from "vinxi/server";
 
 const routes = [
 	...fileRoutes.map((route) => ({
@@ -44,8 +44,4 @@ function createRouter(routes) {
 	};
 }
 
-const router = createRouter(routes);
-
-export default eventHandler(async (event) => {
-	return router.handle(event);
-});
+export default eventHandler(createRouter(routes).handle);
