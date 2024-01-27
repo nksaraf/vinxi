@@ -1,5 +1,16 @@
 # @vinxi/router
 
+## 0.1.7
+
+### Patch Changes
+
+- 23067ba: feat: add ways to override options in vinxi/routers
+- Updated dependencies [c51406c]
+- Updated dependencies [8ec296f]
+- Updated dependencies [b4b4540]
+- Updated dependencies [d0e516b]
+  - vinxi@0.1.7
+
 ## 0.1.6
 
 ### Patch Changes
