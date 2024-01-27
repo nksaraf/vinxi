@@ -107,6 +107,7 @@ export {
 	isMethod,
 	isPreflightRequest,
 	isStream,
+	toWebRequest,
 	createError,
 	sanitizeStatusCode,
 	sanitizeStatusMessage,
