@@ -18,7 +18,7 @@ Inspired by the [Bun.App](https://bun.sh/blog/bun-bundler#sneak-peek-bun-app) AP
 
 | Framework | Category | Example               | StackBlitz Link                                                                                                                                            |
 |-----------|----------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| React     | RSC      | SPA                     | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/rsc)       |
+| React     | RSC      | SPA                     | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/rsc/spa)       |
 |           | SPA      | Basic                 | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/spa/basic) |
 |           |          | MDX                   | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/spa/mdx)   |
 |           |          | TanStack Router (Pages)      | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/nksaraf/vinxi/tree/main/examples/react/spa/tanstack-router) |
