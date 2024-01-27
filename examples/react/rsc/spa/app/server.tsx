@@ -6,6 +6,7 @@ import { createModuleLoader } from "@vinxi/react-server-dom/runtime";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import { H3Event, eventHandler, fetchWithEvent } from "vinxi/server";
+import { getManifest } from "vinxi/manifest";
 
 import { Readable, Writable } from "node:stream";
 
@@ -44,7 +45,7 @@ export default eventHandler(async (event) => {
 
 	$handle(new H3Event(event.node.req, writableStream));
 
-	const clientManifest = import.meta.env.MANIFEST["client"];
+	const clientManifest = getManifest("client");
 
 	const events = {};
 
@@ -69,7 +70,7 @@ export default eventHandler(async (event) => {
 		// 	},
 	});
 
-	// const clientManifest = import.meta.env.MANIFEST["client"];
+	// const clientManifest = getManifest("client");
 	// const assets = await clientManifest.inputs[clientManifest.handler].assets();
 	// const events = {};
 	// const stream = renderToPipeableStream(

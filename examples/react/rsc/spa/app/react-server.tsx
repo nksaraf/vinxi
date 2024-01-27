@@ -2,12 +2,13 @@ import { renderAsset } from "@vinxi/react";
 import { renderToPipeableStream } from "@vinxi/react-server-dom/server";
 import { Suspense } from "react";
 import { eventHandler, setHeaders } from "vinxi/server";
+import { getManifest } from "vinxi/manifest";
 
 import App from "./app";
 
 export default eventHandler(async (event) => {
-	const reactServerManifest = import.meta.env.MANIFEST["rsc"];
-	const clientManifest = import.meta.env.MANIFEST["client"];
+	const reactServerManifest = getManifest("rsc");
+	const clientManifest = getManifest("client");
 
 	if (event.node.req.method === "POST") {
 		const {

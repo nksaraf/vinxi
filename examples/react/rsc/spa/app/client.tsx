@@ -3,6 +3,7 @@ import { createModuleLoader } from "@vinxi/react-server-dom/runtime";
 import React, { Suspense, startTransition } from "react";
 import { Root, createRoot, hydrateRoot } from "react-dom/client";
 import "vinxi/client";
+import { getManifest } from "vinxi/manifest";
 
 import { sayHello } from "./actions";
 import { fetchServerAction } from "./fetchServerAction";
@@ -22,7 +23,7 @@ document.addEventListener("click", async (e) => {
 
 globalThis.__vite__ = createModuleLoader({
 	loadModule: async (id) => {
-		return import.meta.env.MANIFEST["client"].chunks[id].import();
+		return getManifest("client").chunks[id].import();
 	},
 });
 

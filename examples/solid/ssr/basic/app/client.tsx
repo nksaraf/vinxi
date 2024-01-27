@@ -3,6 +3,7 @@ import { MetaProvider } from "@solidjs/meta";
 import { createAssets } from "@vinxi/solid";
 import { NoHydration, Suspense, hydrate } from "solid-js/web";
 import "vinxi/client";
+import { getManifest } from "vinxi/manifest";
 
 import { increment } from "./actions";
 import App from "./app";
@@ -10,8 +11,8 @@ import App from "./app";
 console.log(await increment());
 
 const Assets = createAssets(
-	import.meta.env.MANIFEST["client"].handler,
-	import.meta.env.MANIFEST["client"],
+	getManifest("client").handler,
+	getManifest("client"),
 );
 
 hydrate(

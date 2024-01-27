@@ -3,6 +3,7 @@
 import { renderAsset } from "@vinxi/react";
 import { Suspense } from "react";
 import { renderToReadableStream } from "react-dom/server.edge";
+import { getManifest } from "vinxi/manifest";
 
 import { miniflareEventHandler } from "../dev-server";
 import App from "./app";
@@ -15,7 +16,7 @@ declare global {
 
 export default miniflareEventHandler(async (event) => {
 	const { env } = event.context.cloudflare;
-	const clientManifest = import.meta.env.MANIFEST["client"];
+	const clientManifest = getManifest("client");
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 	console.log(
 		await env.KV.put(

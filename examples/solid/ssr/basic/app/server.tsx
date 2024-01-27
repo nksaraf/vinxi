@@ -10,12 +10,14 @@ import {
 	ssr,
 	useAssets,
 } from "solid-js/web";
+import { getManifest } from "vinxi/manifest";
 import { eventHandler } from "vinxi/server";
+import { getManifest } from "vinxi/manifest";
 
 import App from "./app";
 
 export default eventHandler(async (event) => {
-	const clientManifest = import.meta.env.MANIFEST["client"];
+	const clientManifest = getManifest("client");
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 	const tags = [];
 	function Meta() {

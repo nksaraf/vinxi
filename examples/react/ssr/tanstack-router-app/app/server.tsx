@@ -4,6 +4,7 @@ import { renderAsset } from "@vinxi/react";
 import isbot from "isbot";
 import ReactDOMServer, { PipeableStream } from "react-dom/server.edge";
 import { eventHandler, sendStream } from "vinxi/server";
+import { getManifest } from "vinxi/manifest";
 
 import { Readable, Transform } from "node:stream";
 
@@ -83,8 +84,8 @@ function createHeadInsertionTransformStream(
 }
 
 export default eventHandler(async (event) => {
-	const clientManifest = import.meta.env.MANIFEST["client"];
-	const serverManifest = import.meta.env.MANIFEST["ssr"];
+	const clientManifest = getManifest("client");
+	const serverManifest = getManifest("ssr");
 	const router = createRouter(clientManifest, serverManifest);
 
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
