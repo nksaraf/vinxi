@@ -1,3 +1,10 @@
+/**
+ * @license MIT
+ * Copyright (c) Pooya Parsa <pooya@pi0.io>. 
+ * 
+ * All the types in this file are copied from h3 package. We add a variant without the `event` parameter that uses AsyncLocalStorage.
+ */
+
 import {
 	App,
 	H3CorsOptions,
