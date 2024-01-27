@@ -40,9 +40,6 @@ import {
 	getValidatedRouterParams as _getValidatedRouterParams,
 	handleCacheHeaders as _handleCacheHeaders,
 	handleCors as _handleCors,
-	isCorsOriginAllowed as _isCorsOriginAllowed,
-	isMethod as _isMethod,
-	isPreflightRequest as _isPreflightRequest,
 	parseCookies as _parseCookies,
 	proxyRequest as _proxyRequest,
 	readBody as _readBody,
@@ -51,8 +48,6 @@ import {
 	readRawBody as _readRawBody,
 	readValidatedBody as _readValidatedBody,
 	removeResponseHeader as _removeResponseHeader, // ... import other utilities as needed
-	sanitizeStatusCode as _sanitizeStatusCode,
-	sanitizeStatusMessage as _sanitizeStatusMessage,
 	send as _send,
 	sendError as _sendError,
 	sendNoContent as _sendNoContent,
@@ -68,7 +63,6 @@ import {
 	setResponseStatus as _setResponseStatus,
 	splitCookiesString as _splitCookiesString,
 	unsealSession as _unsealSession,
-	useBase as _useBase,
 	writeEarlyHints as _writeEarlyHints,
 } from "h3";
 import { CacheOptions } from "nitropack";
@@ -116,6 +110,58 @@ export {
 	createError,
 	sanitizeStatusCode,
 	sanitizeStatusMessage,
+	type AddRouteShortcuts,
+	type App,
+	type AppOptions,
+	type AppUse,
+	type CacheConditions,
+	type CreateRouterOptions,
+	type Duplex,
+	type DynamicEventHandler,
+	type Encoding,
+	type EventHandler,
+	type EventHandlerObject,
+	type EventHandlerRequest,
+	type EventHandlerResponse,
+	type H3CorsOptions,
+	type H3EventContext,
+	H3Headers,
+	H3Response,
+	type HTTPHeaderName,
+	type HTTPMethod,
+	type InferEventInput,
+	type InputLayer,
+	type InputStack,
+	type Layer,
+	type LazyEventHandler,
+	type Matcher,
+	type MultiPartData,
+	type NodeEventContext,
+	type NodeListener,
+	type NodeMiddleware,
+	type NodePromisifiedHandler,
+	type PlainHandler,
+	type PlainRequest,
+	type PlainResponse,
+	type ProxyOptions,
+	type RequestFingerprintOptions,
+	type RequestHeaders,
+	type RouteNode,
+	type Router,
+	type RouterMethod,
+	type RouterUse,
+	type ServeStaticOptions,
+	type Session,
+	type SessionConfig,
+	type SessionData,
+	type Stack,
+	type StaticAssetMeta,
+	type ValidateFunction,
+	type ValidateResult,
+	type WebEventContext,
+	type WebHandler,
+	type _RequestMiddleware,
+	type _ResponseMiddleware,
 } from "h3";
 
 export function getContext(event: HTTPEvent, key: string): any;
@@ -247,7 +293,9 @@ export function getValidatedQuery(
 	event: HTTPEvent,
 	schema: Record<string, any>,
 ): Record<string, any>;
-export function getValidatedQuery(schema: Record<string, any>): Record<string, any>;
+export function getValidatedQuery(
+	schema: Record<string, any>,
+): Record<string, any>;
 
 export function getValidatedRouterParams(
 	event: HTTPEvent,
@@ -257,7 +305,10 @@ export function getValidatedRouterParams(
 	schema: Record<string, any>,
 ): Record<string, any>;
 
-export function handleCacheHeaders(event: HTTPEvent, options: CacheOptions): void;
+export function handleCacheHeaders(
+	event: HTTPEvent,
+	options: CacheOptions,
+): void;
 export function handleCacheHeaders(options: CacheOptions): void;
 
 export function handleCors(event: HTTPEvent, options: H3CorsOptions): void;
@@ -272,6 +323,111 @@ export function proxyRequest(url: string): Promise<Response>;
 export function readBody(event: HTTPEvent): Promise<string>;
 export function readBody(): Promise<string>;
 
+export function readFormData(event: HTTPEvent): Promise<FormData>;
+export function readFormData(): Promise<FormData>;
+
+export function readMultipartFormData(event: HTTPEvent): Promise<FormData>;
+export function readMultipartFormData(): Promise<FormData>;
+
+export function readRawBody(event: HTTPEvent): Promise<Uint8Array>;
+export function readRawBody(): Promise<Uint8Array>;
+
+export function readValidatedBody(
+	event: HTTPEvent,
+	schema: Record<string, any>,
+): Promise<Record<string, any>>;
+export function readValidatedBody(
+	schema: Record<string, any>,
+): Promise<Record<string, any>>;
+
+export function removeResponseHeader(event: HTTPEvent, key: string): void;
+export function removeResponseHeader(key: string): void;
+
+export function send(event: HTTPEvent, body: any): void;
+export function send(body: any): void;
+
+export function sendError(event: HTTPEvent, error: Error): void;
+export function sendError(error: Error): void;
+
+export function sendNoContent(event: HTTPEvent): void;
+export function sendNoContent(): void;
+
+export function sendProxy(event: HTTPEvent, url: string): void;
+export function sendProxy(url: string): void;
+
+export function sendRedirect(event: HTTPEvent, url: string): void;
+export function sendRedirect(url: string): void;
+
+export function sendStream(event: HTTPEvent, stream: ReadableStream): void;
+export function sendStream(stream: ReadableStream): void;
+
+export function sendWebResponse(event: HTTPEvent, response: Response): void;
+export function sendWebResponse(response: Response): void;
+
+export function setCookie(
+	event: HTTPEvent,
+	name: string,
+	value: string,
+	options?: {
+		domain?: string;
+		expires?: Date;
+		httpOnly?: boolean;
+		maxAge?: number;
+		path?: string;
+		sameSite?: "lax" | "strict";
+		secure?: boolean;
+	},
+): void;
+export function setCookie(
+	name: string,
+	value: string,
+	options?: {
+		domain?: string;
+		expires?: Date;
+		httpOnly?: boolean;
+		maxAge?: number;
+		path?: string;
+		sameSite?: "lax" | "strict";
+		secure?: boolean;
+	},
+): void;
+
+export function setHeader(event: HTTPEvent, key: string, value: string): void;
+export function setHeader(key: string, value: string): void;
+
+export function setHeaders(
+	event: HTTPEvent,
+	headers: Record<string, string>,
+): void;
+export function setHeaders(headers: Record<string, string>): void;
+
+export function setResponseHeader(
+	event: HTTPEvent,
+	key: string,
+	value: string,
+): void;
+export function setResponseHeader(key: string, value: string): void;
+
+export function setResponseHeaders(
+	event: HTTPEvent,
+	headers: Record<string, string>,
+): void;
+export function setResponseHeaders(headers: Record<string, string>): void;
+
+export function setResponseStatus(event: HTTPEvent, status: number): void;
+export function setResponseStatus(status: number): void;
+
+export function splitCookiesString(cookies: string): Record<string, string>;
+export function splitCookiesString(): Record<string, string>;
+
+export function unsealSession(event: HTTPEvent): void;
+export function unsealSession(): void;
+
+export function writeEarlyHints(
+	event: HTTPEvent,
+	headers: Record<string, string>,
+): void;
+export function writeEarlyHints(headers: Record<string, string>): void;
 
 export function defineMiddleware(options: {
 	onRequest?:
