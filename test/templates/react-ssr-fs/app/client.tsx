@@ -8,6 +8,7 @@ import "vinxi/client";
 import fileRoutes from "vinxi/routes";
 import { Route, Router } from "wouter";
 import makeCachedMatcher from "wouter/matcher";
+import { getManifest } from "vinxi/manifest";
 
 import App from "./app";
 
@@ -15,8 +16,8 @@ const routes = fileRoutes.map((route) => ({
 	path: route.path,
 	component: lazyRoute(
 		route.$component,
-		import.meta.env.MANIFEST["client"],
-		import.meta.env.MANIFEST["ssr"],
+		getManifest("client"),
+		getManifest("ssr"),
 	),
 }));
 
@@ -31,8 +32,8 @@ const convertPathToRegexp = (path) => {
 const customMatcher = makeCachedMatcher(convertPathToRegexp);
 
 const Assets = createAssets(
-	import.meta.env.MANIFEST["client"].handler,
-	import.meta.env.MANIFEST["client"],
+	getManifest("client").handler,
+	getManifest("client"),
 );
 window.$root =
 	window.$root ||

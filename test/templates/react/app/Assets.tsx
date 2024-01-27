@@ -1,12 +1,13 @@
 import React from "react";
 import { lazy } from "react";
 import { updateStyles } from "vinxi/css";
+import { getManifest } from "vinxi/manifest";
 
 import { renderAsset } from "./render-asset";
 
 export const createAssets = (src) =>
 	lazy(async () => {
-		const clientManifest = import.meta.env.MANIFEST["client"];
+		const clientManifest = getManifest("client");
 		const assets = await clientManifest.inputs[src].assets();
 		const styles = assets.filter((asset) => asset.tag === "style");
 
