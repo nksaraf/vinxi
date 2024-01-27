@@ -4,6 +4,17 @@
 
 ### Patch Changes
 
+- b4b4540: feat: wrap h3 functions so that they can be run without an event under async context
+- Updated dependencies [c51406c]
+- Updated dependencies [8ec296f]
+- Updated dependencies [b4b4540]
+- Updated dependencies [d0e516b]
+  - vinxi@0.1.7
+
+## null
+
+### Patch Changes
+
 - 8bfc1b6: feat: ssr/client dedupe asset urls using `link` API
 - Updated dependencies [8bfc1b6]
 - Updated dependencies [35cd983]

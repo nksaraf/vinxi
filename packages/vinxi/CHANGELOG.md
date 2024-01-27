@@ -1,5 +1,15 @@
 # vinxi
 
+## 0.1.7
+
+### Patch Changes
+
+- c51406c: fix: app.server.baseURL support for SPA builds
+- 8ec296f: feat: add vinxi serve command (static file server), options --dir, --host, --port, --base
+- b4b4540: feat: wrap h3 functions so that they can be run without an event under async context
+- d0e516b: chore: update h3 to 1.10.1 and remove session fix
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.6
 
 ### Patch Changes
