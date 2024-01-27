@@ -85,7 +85,7 @@ export default createApp({
 
 ---
 
-- The name of the router can be used to reference the router in other routers. For example, to access the manifest of a different router, use `import.meta.env.MANIFEST['<name>']`.
+- The name of the router can be used to reference the router in other routers. For example, to access the manifest of a different router, use `getManifest('<name>')`.
 
     The manifest contains information about the router like the `inputs`, `routes`, `handler`, `mode`, etc. which can be used to drive the logic of other routers. For example an OpenAPI spec router that generates the spec with routes from other routers.
 
@@ -120,9 +120,8 @@ export default createApp({
 ```ts entry-server.ts focus=3,4,5
 
 export default eventHandler(() => {
-  const manifest = import.meta.env.MANIFEST;
-  const server = manifest["react-ssr"];
-  const client = manifest["react-client"];
+  const server = getManifest("react-ssr");
+  const client = getManifest("react-client");
 })
 
 ```
@@ -161,19 +160,17 @@ export default createApp({
 ```ts entry-server.ts focus=3:6
 
 export default eventHandler(() => {
-  const manifest = import.meta.env.MANIFEST;
   const routerName = import.meta.env.ROUTER_NAME;
-  const server = manifest[routerName];
-  const client = manifest["react-client"];
+  const server = getManifest(routerName);
+  const client = getManifest("react-client");
 })
 
 ```
 
 ```ts entry-client.ts focus=2,3,4
 
-const manifest = import.meta.env.MANIFEST;
 const routerName = import.meta.env.ROUTER_NAME;
-const client = manifest[routerName];
+const client = getManifest(routerName);
 
 ```
 
@@ -321,8 +318,7 @@ export default createApp({
 ---
 
 ```ts app/entry-server.ts
-const manifest = import.meta.env.MANIFEST
-const client = manifest["react-client"]
+const client = getManifest("react-client")
 const clientHandler = client.inputs[client.handler]
 const scriptSrc = clientHandler.output.path
 const scriptTag = `

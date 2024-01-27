@@ -1,11 +1,13 @@
 /// <reference types="vinxi/types/client" />
-import "vinxi/client";
-import { Outlet, RouterProvider } from "react-router-dom";
-import routes from "vinxi/routes";
-import { createBrowserRouter } from "react-router-dom";
 import { lazyRoute } from "@vinxi/react";
-import { Layout } from "./components/Layout";
 import { Suspense } from "react";
+import { Outlet, RouterProvider } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
+import "vinxi/client";
+import { getManifest } from "vinxi/manifest";
+import routes from "vinxi/routes";
+
+import { Layout } from "./components/Layout";
 
 function createRouter() {
 	const createNestedRoutes = (fileRoutes) => {
@@ -49,10 +51,7 @@ function createRouter() {
 					? route.path.slice(1)
 					: route.path,
 			index: route.path === "/",
-			Component: lazyRoute(
-				route.$component,
-				import.meta.env.MANIFEST["client"],
-			),
+			Component: lazyRoute(route.$component, getManifest("client")),
 			...(route.$$meta ? { meta: route.$$meta } : {}),
 			children: route.children?.map(createRoute),
 			...(route.$$loader
