@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.1.9
+
+### Patch Changes
+
+- a1053ac: feat: `getManifest(routerName)` API to access Manifest API for a router, (instead of import.meta.env.MANIFEST)
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.8
 
 ### Patch Changes

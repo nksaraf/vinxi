@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/server-functions",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
@@ -20,11 +20,11 @@
     }
   },
   "devDependencies": {
-    "vinxi": "^0.1.5",
+    "vinxi": "^0.1.9",
     "vitest": "^0.28.5"
   },
   "peerDependencies": {
-    "vinxi": "^0.1.5"
+    "vinxi": "^0.1.9"
   },
   "dependencies": {
     "@vinxi/plugin-directives": "0.1.3",
