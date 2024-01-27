@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.1.8
+
+### Patch Changes
+
+- 6dc46ae: fix: server helpers not accepting h3Event symbol
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.7
 
 ### Patch Changes
