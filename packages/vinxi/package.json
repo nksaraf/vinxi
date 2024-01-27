@@ -133,6 +133,9 @@
       ],
       "lib/path": [
         "./dist/types/lib/path.d.ts"
+      ],
+      "manifest": [
+        "./dist/types/runtime/manifest.d.ts"
       ]
     }
   },
