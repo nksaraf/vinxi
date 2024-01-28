@@ -8,7 +8,7 @@ import {
 	selectHtml,
 } from "./helpers/playwright-fixture.js";
 
-testDevAndProd("rsc", ({ createFixture }) => {
+test.describe("rsc", () => {
 	let fixture: Fixture;
 	let appFixture: AppFixture;
 
