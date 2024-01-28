@@ -1,7 +1,7 @@
-import { defineMiddleware, toWebRequest } from "vinxi/server";
+import { defineMiddleware, toWebRequest } from "vinxi/http";
 
 export default defineMiddleware({
-  onRequest: event => {
-    toWebRequest(event);
-  }
+	onRequest: (event) => {
+		toWebRequest(event);
+	},
 });

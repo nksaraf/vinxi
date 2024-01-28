@@ -1,4 +1,4 @@
-import { eventHandler, sendStream } from "vinxi/server";
+import { eventHandler, sendStream } from "vinxi/http";
 import { getManifest } from "vinxi/manifest";
 
 export default eventHandler(async (event) => {

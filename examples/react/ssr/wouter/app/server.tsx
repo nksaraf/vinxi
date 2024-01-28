@@ -2,10 +2,10 @@
 import { lazyRoute, renderAsset } from "@vinxi/react";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
-import fileRoutes from "vinxi/routes";
-import { eventHandler } from "vinxi/server";
-import { Route, Router } from "wouter";
+import { eventHandler } from "vinxi/http";
 import { getManifest } from "vinxi/manifest";
+import fileRoutes from "vinxi/routes";
+import { Route, Router } from "wouter";
 
 import App from "./app";
 

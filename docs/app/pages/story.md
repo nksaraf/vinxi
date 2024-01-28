@@ -389,7 +389,7 @@ We need to create the `api/send-email.ts` file. Let's do that.
 
 ```ts [api/send-email.ts]
 import nodemailer from "nodemailer"
-import { eventHandler } from "vinxi/server"
+import { eventHandler } from "vinxi/http"
 
 export default eventHandler(async (event) => {
   await nodemailer.sendMail({
@@ -447,7 +447,7 @@ document.getElementById("my-button").addEventListener("click", () => {
 
 ```ts api/send-email.ts {5,8}
 import nodemailer from "nodemailer"
-import { eventHandler, readBody } from "vinxi/server"
+import { eventHandler, readBody } from "vinxi/http"
 
 export default eventHandler(async (event) => {
   // mark

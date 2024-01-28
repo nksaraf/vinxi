@@ -1,5 +1,5 @@
 import { fileURLToPath } from "url";
-import { eventHandler } from "vinxi/server";
+import { eventHandler } from "vinxi/http";
 
 const path = fileURLToPath(new URL("./app/client.tsx", import.meta.url));
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { getEvent } from "vinxi/server";
+import { getEvent } from "vinxi/http";
 
 let store = { count: 0 };
 export async function increment() {

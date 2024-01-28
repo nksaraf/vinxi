@@ -3,7 +3,7 @@ import { createMemoryHistory } from "@tanstack/router";
 import { renderAsset } from "@vinxi/react";
 import isbot from "isbot";
 import ReactDOMServer, { PipeableStream } from "react-dom/server.edge";
-import { eventHandler, sendStream } from "vinxi/server";
+import { eventHandler, sendStream } from "vinxi/http";
 import { getManifest } from "vinxi/manifest";
 
 import { Readable, Transform } from "node:stream";

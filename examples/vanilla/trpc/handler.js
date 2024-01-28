@@ -1,6 +1,6 @@
 import appRouter from "#vinxi/trpc/router";
 import { createHTTPHandler } from "@trpc/server/adapters/standalone";
-import { fromNodeMiddleware } from "vinxi/server";
+import { fromNodeMiddleware } from "vinxi/http";
 
 const handler = createHTTPHandler({
 	router: appRouter,

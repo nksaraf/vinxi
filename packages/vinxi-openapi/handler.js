@@ -1,5 +1,5 @@
+import { eventHandler, lazyEventHandler } from "vinxi/http";
 import { getManifest } from "vinxi/manifest";
-import { eventHandler, lazyEventHandler } from "vinxi/server";
 
 export default lazyEventHandler(async () => {
 	const { doc } = await import("@vinxi/doc");

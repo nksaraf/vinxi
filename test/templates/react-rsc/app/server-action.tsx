@@ -1,4 +1,4 @@
-import { eventHandler, readRawBody, setHeader } from "vinxi/server";
+import { eventHandler, readRawBody, setHeader } from "vinxi/http";
 import { getManifest } from "vinxi/manifest";
 
 export default eventHandler(async (event) => {

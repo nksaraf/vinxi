@@ -1,5 +1,5 @@
 import { createBirpc } from "birpc";
-import { eventHandler, lazyEventHandler } from "vinxi/server";
+import { eventHandler, lazyEventHandler } from "vinxi/http";
 import { WebSocketServer } from "ws";
 
 import { fileURLToPath } from "node:url";

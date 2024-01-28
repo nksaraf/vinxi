@@ -220,7 +220,7 @@ const routerModes = {
 			},
 			handler: async (router, app, serveConfig) => {
 				const { eventHandler, fromNodeMiddleware } = await import(
-					"../runtime/server.js"
+					"../runtime/http.js"
 				);
 				if (router.mode === "handler" && router.worker && isMainThread) {
 					if (!router.internals.appWorker) {
@@ -327,7 +327,7 @@ const routerModes = {
 					createApp,
 					fromNodeMiddleware,
 					getRequestURL,
-				} = await import("../runtime/server.js");
+				} = await import("../runtime/http.js");
 				const { joinURL } = await import("ufo");
 				const viteDevServer = await createViteHandler(router, app, serveConfig);
 
@@ -408,7 +408,7 @@ const routerModes = {
 							const transformedHtml = await viteDevServer.transformIndexHtml(
 								"/index.html",
 								text,
-								getRequestURL(event).href
+								getRequestURL(event).href,
 							);
 
 							return transformedHtml;

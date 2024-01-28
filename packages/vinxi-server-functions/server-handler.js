@@ -1,7 +1,7 @@
 /// <reference types="vinxi/types/server" />
+import { eventHandler, readBody } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
 import { getManifest } from "vinxi/manifest";
-import { eventHandler, readBody } from "vinxi/server";
 
 export async function handleServerAction(event) {
 	invariant(event.method === "POST", "Invalid method");

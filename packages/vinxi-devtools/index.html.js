@@ -1,4 +1,4 @@
-import { eventHandler } from "vinxi/server";
+import { eventHandler } from "vinxi/http";
 
 export default eventHandler(
 	() => `<!DOCTYPE html>

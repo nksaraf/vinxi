@@ -51,6 +51,10 @@
       "import": "./runtime/server.js",
       "types": "./runtime/server-types.d.ts"
     },
+    "./http": {
+      "import": "./runtime/http.js",
+      "types": "./runtime/http-types.d.ts"
+    },
     "./party": {
       "import": "./runtime/party.js",
       "types": "./dist/types/runtime/party.d.ts"
@@ -100,6 +104,9 @@
       ],
       "server": [
         "./runtime/server-types.d.ts"
+      ],
+      "http": [
+        "./runtime/http-types.d.ts"
       ],
       "party": [
         "./dist/types/runtime/party.d.ts"
