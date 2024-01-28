@@ -1,9 +1,10 @@
 import { expect, test } from "@playwright/test";
+
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { createFixture } from "./helpers/create-fixture.js";
+import { createDevFixture, testDevAndProd } from "./helpers/create-fixture.js";
 import { PlaywrightFixture, prettyHtml } from "./helpers/playwright-fixture.js";
 
-test.describe("multi-spa-prod", () => {
+testDevAndProd("multi-spa", ({ createFixture }) => {
 	let fixture: Fixture;
 	let appFixture: AppFixture;
 
@@ -38,17 +39,23 @@ test.describe("multi-spa-prod", () => {
 			expect(await app.getHtml(`[data-test-id=count${testId}]`)).toBe(
 				prettyHtml(`<span data-test-id="count${testId}">0</span>`),
 			);
-	
+
 			await app.clickElement(`[data-test-id=button${testId}]`);
-	
+
 			expect(await app.getHtml(`[data-test-id=count${testId}]`)).toBe(
 				prettyHtml(`<span data-test-id="count${testId}">1</span>`),
 			);
-	
-			expect(await app.getHtml(`[data-test-id=asset-image${testId}]`)).toContain('data-loaded="true"');
-			expect(await app.getHtml(`[data-test-id=public-image${testId}]`)).toContain('data-loaded="true"');
-	
-			const res = await fixture.requestDocument(`${base + (base.endsWith("/") ? "" : "/")}not-defined`);
+
+			expect(
+				await app.getHtml(`[data-test-id=asset-image${testId}]`),
+			).toContain('data-loaded="true"');
+			expect(
+				await app.getHtml(`[data-test-id=public-image${testId}]`),
+			).toContain('data-loaded="true"');
+
+			const res = await fixture.requestDocument(
+				`${base + (base.endsWith("/") ? "" : "/")}not-defined`,
+			);
 			expect(res.status).toBe(200);
 		});
 	}

@@ -1,14 +1,15 @@
 import { expect, test } from "@playwright/test";
+
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { createDevFixture } from "./helpers/create-fixture.js";
+import { testDevAndProd } from "./helpers/create-fixture.js";
 import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
 
-test.describe("toWebRequest", () => {
+testDevAndProd("toWebRequest", ({ createFixture }) => {
 	let fixture: Fixture;
 	let appFixture: AppFixture;
 
 	test.beforeAll(async () => {
-		fixture = await createDevFixture({
+		fixture = await createFixture({
 			files: {},
 			template: "react-to-web-request",
 		});
@@ -34,10 +35,9 @@ test.describe("toWebRequest", () => {
 
 		const el = await page.$("[data-test-id=button]");
 		await el.click();
-		
+
 		const responses = app.collectResponses();
-		await (new Promise(resolve => setTimeout(resolve, 200)));
+		await new Promise((resolve) => setTimeout(resolve, 200));
 		test.expect(responses.length).toBe(1);
 	});
 });
-
