@@ -185,17 +185,27 @@ function NavigationGroup({ group, className }) {
 
 export const navigation = [
 	{
-		title: "Guides",
+		title: "Getting Started",
 		links: [
 			{ title: "Introduction", href: "/" },
 			{ title: "Quickstart", href: "/quickstart" },
-			{ title: "Story", href: "/story" },
-			{ title: "`vinxi` CLI", href: "/cli" },
+		],
+	},
+	{
+		title: "Guides",
+		links: [
 			{ title: "What is a router?", href: "/what-is-a-router" },
-			{ title: "Manifest API", href: "/manifest" },
-			{ title: "File System Routing", href: "/file-system-routing" },
-			{ title: "Server Runtime", href: "/server-runtime" },
 			{ title: "Deployment", href: "/deployment" },
+			{ title: "File System Routing", href: "/file-system-routing" },
+			{ title: "Story", href: "/story" },
+		],
+	},
+	{
+		title: "Reference",
+		links: [
+			{ title: "`vinxi` CLI", href: "/cli" },
+			{ title: "Server API", href: "/server-runtime" },
+			{ title: "Manifest API", href: "/manifest" },
 		],
 	},
 	// {
