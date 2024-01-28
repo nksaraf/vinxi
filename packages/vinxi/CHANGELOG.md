@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.1.10
+
+### Patch Changes
+
+- 1e753a1: fix: event checking logic in vinxi/server checks for HTTPEventSymbol or **is_event**:true
+  - @vinxi/devtools@0.1.1
+
 ## 0.1.9
 
 ### Patch Changes
