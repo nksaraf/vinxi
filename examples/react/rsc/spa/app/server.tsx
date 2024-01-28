@@ -5,7 +5,7 @@ import * as ReactServerDOM from "@vinxi/react-server-dom/client";
 import { createModuleLoader } from "@vinxi/react-server-dom/runtime";
 import React, { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
-import { H3Event, eventHandler, fetchWithEvent } from "vinxi/server";
+import { H3Event, eventHandler, fetchWithEvent } from "vinxi/http";
 import { getManifest } from "vinxi/manifest";
 
 import { Readable, Writable } from "node:stream";

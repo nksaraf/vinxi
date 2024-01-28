@@ -1,7 +1,7 @@
-import { eventHandler } from "vinxi/server";
+import { eventHandler } from "vinxi/http";
 
 export default eventHandler((event) => {
-  return new Response(`
+	return new Response(`
     <html lang="en">
     <head>
       <meta charset="UTF-8" />

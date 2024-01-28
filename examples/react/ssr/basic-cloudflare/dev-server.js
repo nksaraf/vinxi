@@ -9,8 +9,8 @@ import http from "http";
 import net from "net";
 import { createCall, createFetch } from "unenv/runtime/fetch/index";
 import { URL } from "url";
-import { eventHandler, lazyEventHandler, toNodeListener } from "vinxi/server";
-import { createApp } from "vinxi/server";
+import { eventHandler, lazyEventHandler, toNodeListener } from "vinxi/http";
+import { createApp } from "vinxi/http";
 
 async function writeResponse(response, res) {
 	var e_1, _a;

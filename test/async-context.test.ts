@@ -45,7 +45,7 @@ import { useEffect, useState } from "react";
 
 async function greetServer(name: string) {
 	"use server";
-	const { getEvent, getRequestProtocol, HTTPEventSymbol, getRequestHeader } = await import("vinxi/server");
+	const { getEvent, getRequestProtocol, HTTPEventSymbol, getRequestHeader } = await import("vinxi/http");
 	let event = getEvent();
 	let wrappedEvent = {
 		[HTTPEventSymbol]: event

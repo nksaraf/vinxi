@@ -10,7 +10,7 @@ import {
 	ssr,
 	useAssets,
 } from "solid-js/web";
-import { eventHandler } from "vinxi/server";
+import { eventHandler } from "vinxi/http";
 import { getManifest } from "vinxi/manifest";
 
 import { join } from "node:path";

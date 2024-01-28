@@ -1,4 +1,4 @@
-import { eventHandler, toWebRequest } from "vinxi/server";
+import { eventHandler, toWebRequest } from "vinxi/http";
 
 export default eventHandler((event) => {
 	return new Response(

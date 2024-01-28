@@ -1,7 +1,7 @@
 import { renderAsset } from "@vinxi/react";
 import { renderToPipeableStream } from "@vinxi/react-server-dom/server";
 import { Suspense } from "react";
-import { eventHandler, readRawBody, setHeader } from "vinxi/server";
+import { eventHandler, readRawBody, setHeader } from "vinxi/http";
 import { getManifest } from "vinxi/manifest";
 
 import App from "./app";
