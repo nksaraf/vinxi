@@ -6,16 +6,19 @@
   "files": [
     "*.js",
     "invariant.js",
-    "*.d.ts"
+    "dist"
   ],
-  "types": "./index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./index.js"
+    ".": {
+      "import": "./index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
   "typesVersions": {
     "*": {
       ".": [
-        "./index.d.ts"
+        "./dist/index.d.ts"
       ]
     }
   },
