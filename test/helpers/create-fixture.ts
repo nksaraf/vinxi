@@ -9,6 +9,20 @@ import stripIndent from "strip-indent";
 import { fileURLToPath } from "url";
 import waitOn from "wait-on";
 
+export function testDevAndProd(name, fn) {
+	test.describe(`${name}-dev`, async () => {
+		await fn({
+			createFixture: createDevFixture,
+		});
+	});
+
+	test.describe(`${name}-prod`, async () => {
+		await fn({
+			createFixture: createFixture,
+		});
+	});
+}
+
 const TMP_DIR = path.join(
 	path.dirname(path.dirname(fileURLToPath(import.meta.url))),
 	".fixtures",

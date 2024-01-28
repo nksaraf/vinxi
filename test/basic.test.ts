@@ -1,14 +1,14 @@
 import { expect, test } from "@playwright/test";
 
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { createFixture, js } from "./helpers/create-fixture.js";
+import { testDevAndProd } from "./helpers/create-fixture.js";
 import {
 	PlaywrightFixture,
 	prettyHtml,
 	selectHtml,
 } from "./helpers/playwright-fixture.js";
 
-test.describe("basic build", () => {
+testDevAndProd("basic", ({ createFixture }) => {
 	let fixture: Fixture;
 	let appFixture: AppFixture;
 

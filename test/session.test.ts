@@ -1,15 +1,15 @@
-import { expect, test, type Response } from "@playwright/test";
+import { type Response, expect, test } from "@playwright/test";
 
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { createDevFixture, createFixture, js } from "./helpers/create-fixture.js";
+import { testDevAndProd } from "./helpers/create-fixture.js";
 import { PlaywrightFixture } from "./helpers/playwright-fixture.js";
 
-test.describe("session", () => {
+testDevAndProd("session", ({ createFixture }) => {
 	let fixture: Fixture;
 	let appFixture: AppFixture;
 
 	test.beforeAll(async () => {
-		fixture = await createDevFixture({
+		fixture = await createFixture({
 			files: {},
 			template: "react",
 		});
@@ -33,8 +33,8 @@ test.describe("session", () => {
 		let app = new PlaywrightFixture(appFixture, page);
 		await app.goto("/api/init-session", true);
 
-    const response = await app.goto("/api/read-session");
-    const userIds = await response.json() as number[];
-    expect(userIds.filter(Boolean).length).toBe(userIds.length);
+		const response = await app.goto("/api/read-session");
+		const userIds = (await response.json()) as number[];
+		expect(userIds.filter(Boolean).length).toBe(userIds.length);
 	});
 });

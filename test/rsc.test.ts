@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import type { AppFixture, Fixture } from "./helpers/create-fixture.js";
-import { createFixture, js } from "./helpers/create-fixture.js";
+import { createFixture, js, testDevAndProd } from "./helpers/create-fixture.js";
 import {
 	PlaywrightFixture,
 	prettyHtml,
