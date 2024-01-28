@@ -6,7 +6,7 @@
   "files": [
     "*.js",
     "invariant.js",
-    "*.d.ts"
+    "dist"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
