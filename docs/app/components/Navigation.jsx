@@ -197,6 +197,8 @@ export const navigation = [
 			{ title: "What is a router?", href: "/what-is-a-router" },
 			{ title: "Deployment", href: "/deployment" },
 			{ title: "File System Routing", href: "/file-system-routing" },
+			{ title: "Route Rules", href: "/route-rules" },
+			{ title: "Aliases", href: "/alias" },
 			{ title: "Story", href: "/story" },
 		],
 	},
