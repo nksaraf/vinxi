@@ -12,6 +12,7 @@
   "scripts": {
     "types": "rm -rf dist && tsc && cp *.d.ts dist/"
   },
+  "types": "./dist/doc.d.ts",
   "dependencies": {
     "@types/node": "^20.10.5",
     "@vinxi/deno-doc": "0.1.0",
