@@ -20,7 +20,7 @@ export function Layout({ children, sections = [] }) {
 				>
 					<div className="hidden lg:flex">
 						<Link href="/" aria-label="Home">
-							<Logo className="h-6" />
+							<Logo className="h-6 dark:filter-none filter invert" />
 						</Link>
 					</div>
 					<Header />
