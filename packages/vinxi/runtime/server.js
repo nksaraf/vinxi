@@ -234,7 +234,7 @@ export function isEvent(obj) {
 		typeof obj === "object" &&
 		(obj instanceof H3Event ||
 			obj?.[HTTPEventSymbol] instanceof H3Event ||
-			obj?.[h3EventSymbol] instanceof H3Event)
+			obj?.__is_event__ === true)
 	);
 	// Implement logic to check if obj is an H3Event
 }
@@ -257,9 +257,9 @@ function createWrapperFunction(h3Function) {
 			args.unshift(event);
 		} else {
 			args[0] =
-				event instanceof H3Event
+				event instanceof H3Event || event.__is_event__
 					? event
-					: event[HTTPEventSymbol] ?? event[h3EventSymbol];
+					: event[HTTPEventSymbol];
 		}
 
 		return h3Function(...args);
