@@ -5,7 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 /**
  *
- * @param {string} src
+ * @param {string | URL} src
  * @returns {Promise<import('./types.d.ts').DocNode[]>}
  */
 export async function doc(src) {
