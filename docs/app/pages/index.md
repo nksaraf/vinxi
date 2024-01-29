@@ -72,7 +72,7 @@ export default createApp({
 		},
 		{
 			name: "client",
-			type: "build",
+			type: "client",
 			handler: "./app/client.tsx",
 			plugins: () => [reactRefresh()],
 			base: "/_build",
@@ -101,7 +101,7 @@ export default createApp({
 		},
 		{
 			name: "client",
-			type: "build",
+			type: "client",
 			handler: "./app/client.tsx",
 			plugins: () => [solid({ ssr: true })],
 			base: "/_build",

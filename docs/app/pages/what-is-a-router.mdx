@@ -22,7 +22,7 @@ export default createApp({
     },
     {
       name: "react-client",
-      type: "build",
+      type: "client",
       handler: "./app/entry-client.tsx",
       target: "browser",
       plugins: () => [react()],
@@ -199,7 +199,7 @@ export default createApp({
     },
     {
       name: "react-client",
-      type: "build"
+      type: "client"
     },
     {
       name: "react-ssr",
@@ -212,7 +212,7 @@ export default createApp({
 
 ---
 
-> Vinxi supports a few router modes out of the box: `"static"`, `"handler"`, `"build"`, `"spa"`. New modes can be added by you too. Lets see how each mode is different?
+> Vinxi supports a few router modes out of the box: `"static"`, `"handler"`, `"client"`, `"spa"`. New modes can be added by you too. Lets see how each mode is different?
 
 ---
 
@@ -258,7 +258,7 @@ export default createApp({
 ```
 ---
 
-## type: `"build"`
+## type: `"client"`
 
 - A build router serves the compiled handler and subroutes as static assets.
 - A common use case is to build the client-side of a SSR app.
@@ -278,7 +278,7 @@ export default createApp({
     },
     {
       name: "react-client",
-      type: "build",
+      type: "client",
       handler: "./app/entry-client.tsx",
       target: "browser",
       plugins: () => [react()],
@@ -306,7 +306,7 @@ export default createApp({
     },
     {
       name: "react-client",
-      type: "build",
+      type: "client",
       handler: "./app/entry-client.tsx",
       target: "browser",
       plugins: () => [react()],
@@ -432,7 +432,7 @@ const app = createApp({
     },
     {
       name: "react-client",
-      type: "build",
+      type: "client",
       base: "/_client"
     }
   ]

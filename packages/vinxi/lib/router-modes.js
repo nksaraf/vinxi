@@ -19,11 +19,11 @@ export const staticRouterSchema = z.object({
 	dir: z.string(),
 	root: z.optional(z.string()),
 });
-export const buildRouterSchema = z.object({
+export const clientRouterSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
 	root: z.optional(z.string()),
-	type: z.literal("build").default("build"),
+	type: z.literal("client").default("client"),
 	handler: z.string(),
 	/** @type {z.ZodOptionalType<z.ZodType<RouterStyleFn, z.ZodTypeDef, RouterStyleFn>>} */
 	routes: z.optional(z.custom((value) => value !== null)),
@@ -38,7 +38,6 @@ export const handlerRouterSchema = z.object({
 	root: z.optional(z.string()),
 
 	type: z.literal("handler").default("handler"),
-
 	build: z.optional(z.boolean()),
 	worker: z.optional(z.boolean()),
 	handler: z.string(),
@@ -77,19 +76,19 @@ const customRouterSchema = z.object({
 });
 export const routerSchema = {
 	static: staticRouterSchema,
-	build: buildRouterSchema,
+	client: clientRouterSchema,
 	spa: spaRouterSchema,
 	handler: handlerRouterSchema,
 	custom: customRouterSchema,
 };
-/** @typedef {z.infer<typeof buildRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} BuildRouterSchema */
+/** @typedef {z.infer<typeof clientRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} ClientRouterSchema */
 /** @typedef {z.infer<typeof customRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} CustomRouterSchema */
 /** @typedef {z.infer<typeof staticRouterSchema> & { outDir: string; base: string; order: number; internals: Internals }} StaticRouterSchema */
 /** @typedef {z.infer<typeof handlerRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} HandlerRouterSchema */
 /** @typedef {z.infer<typeof handlerRouterSchema>} HandlerRouterInput */
 /** @typedef {z.infer<typeof spaRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} SPARouterSchema */
-/** @typedef {(HandlerRouterSchema | BuildRouterSchema | SPARouterSchema | StaticRouterSchema | CustomRouterSchema )} RouterSchema  */
-/** @typedef {(z.infer<typeof buildRouterSchema> | z.infer<typeof staticRouterSchema> | z.infer<typeof spaRouterSchema> |  z.infer<typeof handlerRouterSchema> | z.infer<typeof customRouterSchema>)} RouterSchemaInput  */
+/** @typedef {(HandlerRouterSchema | ClientRouterSchema | SPARouterSchema | StaticRouterSchema | CustomRouterSchema )} RouterSchema  */
+/** @typedef {(z.infer<typeof clientRouterSchema> | z.infer<typeof staticRouterSchema> | z.infer<typeof spaRouterSchema> |  z.infer<typeof handlerRouterSchema> | z.infer<typeof customRouterSchema>)} RouterSchemaInput  */
 
 /**
  * @template X
@@ -131,14 +130,14 @@ const routerModes = {
 			};
 		},
 	}),
-	build: createRouterMode(buildRouterSchema, {
-		name: "build",
+	client: createRouterMode(clientRouterSchema, {
+		name: "client",
 		dev: {
 			plugins: async (router) => {
 				const { ROUTER_MODE_DEV_PLUGINS } = await import(
 					"./router-dev-plugins.js"
 				);
-				return await ROUTER_MODE_DEV_PLUGINS.build(router);
+				return await ROUTER_MODE_DEV_PLUGINS.client(router);
 			},
 			handler: async (router, app, serveConfig) => {
 				const { createViteHandler } = await import("./dev-server.js");
@@ -170,10 +169,10 @@ const routerModes = {
 			},
 		},
 		resolveConfig(router, appConfig, order) {
-			invariant(router.type === "build", "Invalid router mode");
+			invariant(router.type === "client", "Invalid router mode");
 			const appRoot = appConfig.root ?? process.cwd();
 			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
-			/** @type {BuildRouterSchema} */
+			/** @type {ClientRouterSchema} */
 			const buildRouter = {
 				...router,
 				root,
