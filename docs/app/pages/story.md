@@ -25,7 +25,7 @@ export default createApp({
   routers: [
     {
       name: "public",
-      mode: "static",
+      type: "static",
       dir: "./public",
       base: "/",
     },
@@ -291,13 +291,13 @@ export default createApp({
   routers: [
     {
       name: "public",
-      mode: "static",
+      type: "static",
       dir: "./public",
       base: "/",
     },
     {
       name: "app",
-      mode: "spa",
+      type: "spa",
       file: "./index.html",
       base: "/",
     },
@@ -357,19 +357,19 @@ export default createApp({
   routers: [
     {
       name: "public",
-      mode: "static",
+      type: "static",
       dir: "./public",
       base: "/",
     },
     {
       name: "app",
-      mode: "spa",
+      type: "spa",
       handler: "./index.html",
       base: "/",
     },
     {
       name: "send-email",
-      mode: "handler",
+      type: "http",
       handler: "./api/send-email.ts",
       base: "/api/send-email",
       build: {

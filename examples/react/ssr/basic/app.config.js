@@ -5,13 +5,13 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 			base: "/",
 		},
 		{
 			name: "client",
-			mode: "build",
+			type: "client",
 			handler: "./app/client.tsx",
 			target: "browser",
 			plugins: () => [reactRefresh()],
@@ -19,7 +19,7 @@ export default createApp({
 		},
 		{
 			name: "ssr",
-			mode: "handler",
+			type: "http",
 			middleware: "./app/middleware.tsx",
 			handler: "./app/server.tsx",
 			target: "server",

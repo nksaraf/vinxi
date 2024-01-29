@@ -5,7 +5,7 @@
 export function publicDir({ ...options } = {}) {
 	return {
 		name: "public",
-		mode: "static",
+		type: "static",
 		dir: "./public",
 		...options,
 	};

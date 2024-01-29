@@ -11,7 +11,7 @@ export default createApp({
 	routers: [
 		{
 			name: "test",
-			mode: "spa",
+			type: "spa",
 			handler: "./test.html",
 			target: "browser",
 			plugins: () => [

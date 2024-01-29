@@ -4,7 +4,7 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "spa",
+			type: "spa",
 			dir: "./",
 			handler: "./index.html",
 		},

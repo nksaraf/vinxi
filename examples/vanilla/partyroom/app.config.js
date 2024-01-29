@@ -11,12 +11,12 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 		},
 		{
 			name: "client",
-			mode: "spa",
+			type: "spa",
 			handler: "./index.html",
 			target: "browser",
 			plugins: () => [references.clientRouterPlugin()],
@@ -24,7 +24,7 @@ export default createApp({
 		{
 			name: "party",
 			base: "/party",
-			mode: "handler",
+			type: "http",
 			handler: "./app/party.ts",
 			target: "server",
 		},

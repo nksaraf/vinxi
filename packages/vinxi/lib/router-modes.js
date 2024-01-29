@@ -8,22 +8,22 @@ import { resolve } from "./resolve.js";
 
 export { z };
 /**
- * @typedef {{ routes?: CompiledRouter; devServer?: import('vite').ViteDevServer; appWorker?: import('./app-worker-client.js').AppWorkerClient; mode: import("./router-mode.js").RouterMode }} Internals
+ * @typedef {{ routes?: CompiledRouter; devServer?: import('vite').ViteDevServer; appWorker?: import('./app-worker-client.js').AppWorkerClient; type: import("./router-mode.js").RouterMode }} Internals
  * @typedef {{ getRoutes(): Promise<any[]>; } & EventTarget} CompiledRouter
  * @typedef {(router: RouterSchemaInput, app: import("./app.js").AppOptions) => CompiledRouter} RouterStyleFn
  * */
 export const staticRouterSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
-	mode: z.literal("static"),
+	type: z.literal("static").default("static"),
 	dir: z.string(),
 	root: z.optional(z.string()),
 });
-export const buildRouterSchema = z.object({
+export const clientRouterSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
 	root: z.optional(z.string()),
-	mode: z.literal("build"),
+	type: z.literal("client").default("client"),
 	handler: z.string(),
 	/** @type {z.ZodOptionalType<z.ZodType<RouterStyleFn, z.ZodTypeDef, RouterStyleFn>>} */
 	routes: z.optional(z.custom((value) => value !== null)),
@@ -32,13 +32,12 @@ export const buildRouterSchema = z.object({
 	target: z.enum(["browser"]).default("browser").optional(),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
 });
-export const handlerRouterSchema = z.object({
+export const httpRouterSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
 	root: z.optional(z.string()),
 
-	mode: z.literal("handler"),
-
+	type: z.literal("http").default("http"),
 	build: z.optional(z.boolean()),
 	worker: z.optional(z.boolean()),
 	handler: z.string(),
@@ -53,7 +52,7 @@ export const spaRouterSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
 	root: z.optional(z.string()),
-	mode: z.literal("spa"),
+	type: z.literal("spa").default("spa"),
 	/** @type {z.ZodOptionalType<z.ZodType<RouterStyleFn, z.ZodTypeDef, RouterStyleFn>>} */
 	routes: z.optional(z.custom((value) => value !== null)),
 	handler: z.string(),
@@ -65,7 +64,7 @@ const customRouterSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
 	root: z.optional(z.string()),
-	mode: z.object({
+	type: z.object({
 		resolveConfig: z.function().args(z.any(), z.any()).returns(z.any()),
 	}),
 	/** @type {z.ZodOptionalType<z.ZodType<RouterStyleFn, z.ZodTypeDef, RouterStyleFn>>} */
@@ -77,19 +76,19 @@ const customRouterSchema = z.object({
 });
 export const routerSchema = {
 	static: staticRouterSchema,
-	build: buildRouterSchema,
+	client: clientRouterSchema,
 	spa: spaRouterSchema,
-	handler: handlerRouterSchema,
+	http: httpRouterSchema,
 	custom: customRouterSchema,
 };
-/** @typedef {z.infer<typeof buildRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} BuildRouterSchema */
+/** @typedef {z.infer<typeof clientRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} ClientRouterSchema */
 /** @typedef {z.infer<typeof customRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} CustomRouterSchema */
 /** @typedef {z.infer<typeof staticRouterSchema> & { outDir: string; base: string; order: number; internals: Internals }} StaticRouterSchema */
-/** @typedef {z.infer<typeof handlerRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} HandlerRouterSchema */
-/** @typedef {z.infer<typeof handlerRouterSchema>} HandlerRouterInput */
+/** @typedef {z.infer<typeof httpRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} HTTPRouterSchema */
+/** @typedef {z.infer<typeof httpRouterSchema>} HandlerRouterInput */
 /** @typedef {z.infer<typeof spaRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} SPARouterSchema */
-/** @typedef {(HandlerRouterSchema | BuildRouterSchema | SPARouterSchema | StaticRouterSchema | CustomRouterSchema )} RouterSchema  */
-/** @typedef {(z.infer<typeof buildRouterSchema> | z.infer<typeof staticRouterSchema> | z.infer<typeof spaRouterSchema> |  z.infer<typeof handlerRouterSchema> | z.infer<typeof customRouterSchema>)} RouterSchemaInput  */
+/** @typedef {(HTTPRouterSchema | ClientRouterSchema | SPARouterSchema | StaticRouterSchema | CustomRouterSchema )} RouterSchema  */
+/** @typedef {(z.infer<typeof clientRouterSchema> | z.infer<typeof staticRouterSchema> | z.infer<typeof spaRouterSchema> |  z.infer<typeof httpRouterSchema> | z.infer<typeof customRouterSchema>)} RouterSchemaInput  */
 
 /**
  * @template X
@@ -116,7 +115,7 @@ const routerModes = {
 			plugins: () => {},
 		},
 		resolveConfig(router, appConfig, order) {
-			invariant(router.mode === "static", "Invalid router mode");
+			invariant(router.type === "static", "Invalid router mode");
 			const appRoot = appConfig.root ?? process.cwd();
 			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
 			return {
@@ -125,20 +124,20 @@ const routerModes = {
 				root,
 				order: order ?? 0,
 				internals: {
-					mode: routerModes.static,
+					type: routerModes.static,
 				},
 				outDir: join(appRoot, ".vinxi", "build", router.name),
 			};
 		},
 	}),
-	build: createRouterMode(buildRouterSchema, {
-		name: "build",
+	client: createRouterMode(clientRouterSchema, {
+		name: "client",
 		dev: {
 			plugins: async (router) => {
 				const { ROUTER_MODE_DEV_PLUGINS } = await import(
 					"./router-dev-plugins.js"
 				);
-				return await ROUTER_MODE_DEV_PLUGINS.build(router);
+				return await ROUTER_MODE_DEV_PLUGINS.client(router);
 			},
 			handler: async (router, app, serveConfig) => {
 				const { createViteHandler } = await import("./dev-server.js");
@@ -170,10 +169,10 @@ const routerModes = {
 			},
 		},
 		resolveConfig(router, appConfig, order) {
-			invariant(router.mode === "build", "Invalid router mode");
+			invariant(router.type === "client", "Invalid router mode");
 			const appRoot = appConfig.root ?? process.cwd();
 			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
-			/** @type {BuildRouterSchema} */
+			/** @type {ClientRouterSchema} */
 			const buildRouter = {
 				...router,
 				root,
@@ -189,7 +188,7 @@ const routerModes = {
 			};
 
 			buildRouter.internals = {
-				mode: routerModes.build,
+				type: routerModes.build,
 				routes: router.routes
 					? router.routes(buildRouter, appConfig)
 					: undefined,
@@ -199,8 +198,8 @@ const routerModes = {
 			return buildRouter;
 		},
 	}),
-	handler: createRouterMode(handlerRouterSchema, {
-		name: "handler",
+	http: createRouterMode(httpRouterSchema, {
+		name: "http",
 		dev: {
 			publicAssets: (router) => {
 				/**
@@ -216,13 +215,13 @@ const routerModes = {
 				const { ROUTER_MODE_DEV_PLUGINS } = await import(
 					"./router-dev-plugins.js"
 				);
-				return await ROUTER_MODE_DEV_PLUGINS.handler(router);
+				return await ROUTER_MODE_DEV_PLUGINS.http(router);
 			},
 			handler: async (router, app, serveConfig) => {
 				const { eventHandler, fromNodeMiddleware } = await import(
 					"../runtime/http.js"
 				);
-				if (router.mode === "handler" && router.worker && isMainThread) {
+				if (router.type === "http" && router.worker && isMainThread) {
 					if (!router.internals.appWorker) {
 						const { AppWorkerClient } = await import("./app-worker-client.js");
 						router.internals.appWorker = new AppWorkerClient(
@@ -280,10 +279,10 @@ const routerModes = {
 			},
 		},
 		resolveConfig(router, appConfig, order) {
-			invariant(router.mode === "handler", "Invalid router mode");
+			invariant(router.type === "http", "Invalid router mode");
 			const appRoot = appConfig.root ?? process.cwd();
 			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
-			/** @type {HandlerRouterSchema} */
+			/** @type {HTTPRouterSchema} */
 			const handlerRouter = {
 				...router,
 				root,
@@ -300,7 +299,7 @@ const routerModes = {
 			};
 
 			handlerRouter.internals = {
-				mode: routerModes.handler,
+				type: routerModes.handler,
 				routes: router.routes
 					? router.routes(handlerRouter, appConfig)
 					: undefined,
@@ -418,7 +417,7 @@ const routerModes = {
 			},
 		},
 		resolveConfig(router, appConfig, order) {
-			invariant(router.mode === "spa", "Invalid router mode");
+			invariant(router.type === "spa", "Invalid router mode");
 			const appRoot = appConfig.root ?? process.cwd();
 			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
 			/** @type {SPARouterSchema} */
@@ -437,7 +436,7 @@ const routerModes = {
 			};
 
 			spaRouter.internals = {
-				mode: routerModes.spa,
+				type: routerModes.spa,
 				routes: router.routes ? router.routes(spaRouter, appConfig) : undefined,
 				devServer: undefined,
 			};
@@ -454,12 +453,14 @@ const routerModes = {
  * @returns {RouterSchema}
  */
 export function resolveRouterConfig(router, appConfig, order) {
+	// @ts-ignore backwards compat with router.mode for a few versions (TODO)
+	router.type = router.type ?? router.mode;
 	const routerMode =
-		typeof router.mode === "string" ? routerModes[router.mode] : router.mode;
+		typeof router.type === "string" ? routerModes[router.type] : router.type;
 
-	invariant(routerMode, `Invalid router mode: ${router.mode}`);
+	invariant(routerMode, `Invalid router type: ${router.type}`);
 
 	const config = routerMode.resolveConfig(router, appConfig, order);
-	config.internals.mode = routerMode;
+	config.internals.type = routerMode;
 	return config;
 }

@@ -7,7 +7,7 @@ function trpcRouter({ plugins = () => [] } = {}) {
 	return {
 		name: "server",
 		base: "/trpc",
-		mode: "handler",
+		type: "http",
 		handler: fileURLToPath(new URL("./handler.js", import.meta.url)),
 		target: "server",
 		plugins: () => [
@@ -23,13 +23,13 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 		},
 		trpcRouter(),
 		{
 			name: "client",
-			mode: "spa",
+			type: "spa",
 			handler: "./index.html",
 			target: "browser",
 		},

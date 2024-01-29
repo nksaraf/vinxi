@@ -64,12 +64,12 @@ export function createApp({
 	// }
 
 	function parseRouter(router) {
-		if (typeof router.mode === "string") {
+		if (typeof router.type === "string") {
 			invariant(
-				router.mode in routerSchema,
-				`Invalid router mode ${router.mode}`,
+				router.type in routerSchema,
+				`Invalid router mode ${router.type}`,
 			);
-			const result = routerSchema[router.mode].safeParse(router);
+			const result = routerSchema[router.type].safeParse(router);
 			if (result.success !== true) {
 				const issues = result.error.issues.map((issue) => {
 					return issue.path.map((p) => p).join(".") + " " + issue.message;

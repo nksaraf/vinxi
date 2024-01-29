@@ -63,13 +63,13 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 			base: "/",
 		},
 		{
 			name: "client",
-			mode: "build",
+			type: "client",
 			handler: "./app/client.tsx",
 			routes: solidStartFileRouter({
 				dir: "./app/pages",
@@ -84,7 +84,7 @@ export default createApp({
 		},
 		{
 			name: "ssr",
-			mode: "handler",
+			type: "http",
 			handler: "./app/server.tsx",
 			routes: solidStartFileRouter({
 				dir: "./app/pages",

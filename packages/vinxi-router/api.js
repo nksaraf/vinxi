@@ -72,7 +72,7 @@ export function apiRouter({
 	...options
 } = {}) {
 	return {
-		mode: "handler",
+		type: "http",
 		name: "api",
 		...options,
 		base,

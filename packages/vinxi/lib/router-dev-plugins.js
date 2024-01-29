@@ -30,8 +30,8 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		treeShake(),
 		router.internals.routes ? fileSystemWatcher() : null,
 	],
-	handler: (
-		/** @type {import("./router-modes.js").HandlerRouterSchema} */ router,
+	http: (
+		/** @type {import("./router-modes.js").HTTPRouterSchema} */ router,
 	) => [
 		virtual({
 			[handlerModule(router)]: ({ config }) => {
@@ -81,8 +81,8 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		}),
 		router.internals.routes ? fileSystemWatcher() : null,
 	],
-	build: (
-		/** @type {import("./router-modes.js").BuildRouterSchema} */ router,
+	client: (
+		/** @type {import("./router-modes.js").ClientRouterSchema} */ router,
 	) => [
 		css(),
 		virtual(
@@ -95,7 +95,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 					)}"; export default mod['default']`;
 				},
 			},
-			"handler",
+			"http",
 		),
 		routes(),
 		devEntries(),

@@ -20,7 +20,7 @@ export const serverFunctions = {
 	) =>
 		createHandlerRouter({
 			name: "server-fns",
-			mode: "handler",
+			type: "http",
 			base: "/_server",
 			handler: fileURLToPath(new URL("./server-handler.js", import.meta.url)),
 			target: "server",

@@ -10,19 +10,19 @@ export default createApp({
   routers: [
     {
       name: "public",
-      mode: "static",
+      type: "static",
       dir: "./public",
     },
     {
       name: "api",
-      mode: "handler",
+      type: "http",
       handler: "./app/entry-api.tsx",
       target: "server",
       base: "/api",
     },
     {
       name: "react-client",
-      mode: "build",
+      type: "client",
       handler: "./app/entry-client.tsx",
       target: "browser",
       plugins: () => [react()],
@@ -30,7 +30,7 @@ export default createApp({
     },
     {
       name: "react-ssr",
-      mode: "handler",
+      type: "http",
       handler: "./app/entry-server.tsx",
       plugins: () => [react()],
       target: "server",
@@ -191,19 +191,19 @@ export default createApp({
   routers: [
     {
       name: "public",
-      mode: "static",
+      type: "static",
     },
     {
       name: "api",
-      mode: "handler"
+      type: "http"
     },
     {
       name: "react-client",
-      mode: "build"
+      type: "client"
     },
     {
       name: "react-ssr",
-      mode: "handler"
+      type: "http"
     }
   ]
 })
@@ -212,11 +212,11 @@ export default createApp({
 
 ---
 
-> Vinxi supports a few router modes out of the box: `"static"`, `"handler"`, `"build"`, `"spa"`. New modes can be added by you too. Lets see how each mode is different?
+> Vinxi supports a few router modes out of the box: `"static"`, `"http"`, `"client"`, `"spa"`. New modes can be added by you too. Lets see how each mode is different?
 
 ---
 
-## `mode: "static"`
+## `type: "static"`
 
 - A simple router that serves files statically from a given folder.
 - Its useful for serving static assets like images, fonts, etc.
@@ -229,7 +229,7 @@ export default createApp({
   routers: [
     {
       name: "public",
-      mode: "static",
+      type: "static",
       dir: "./public",
     }
   ]
@@ -250,7 +250,7 @@ export default createApp({
   routers: [
     {
       name: "public",
-      mode: "static",
+      type: "static",
       dir: "./public",
     }
   ]
@@ -258,7 +258,7 @@ export default createApp({
 ```
 ---
 
-## mode: `"build"`
+## type: `"client"`
 
 - A build router serves the compiled handler and subroutes as static assets.
 - A common use case is to build the client-side of a SSR app.
@@ -273,12 +273,12 @@ export default createApp({
   routers: [
     {
       name: "public",
-      mode: "static",
+      type: "static",
       dir: "./public",
     },
     {
       name: "react-client",
-      mode: "build",
+      type: "client",
       handler: "./app/entry-client.tsx",
       target: "browser",
       plugins: () => [react()],
@@ -301,12 +301,12 @@ export default createApp({
   routers: [
     {
       name: "public",
-      mode: "static",
+      type: "static",
       dir: "./public",
     },
     {
       name: "react-client",
-      mode: "build",
+      type: "client",
       handler: "./app/entry-client.tsx",
       target: "browser",
       plugins: () => [react()],
@@ -339,7 +339,7 @@ const scriptTag = `
 
 ---
 
-## `mode: "handler"`
+## `type: "http"`
 
 - A router typically targetting the server.
 - The router responds to requests matching the `base` path with the event handler exported from the `handler` file.
@@ -351,7 +351,7 @@ export default createApp({
   routers: [
     name: "ssr",
     base: "/",
-    mode: "handler",
+    type: "http",
     handler: "./ssr-handler.ts",
     target: "server"
   ]
@@ -371,7 +371,7 @@ export default createApp({
 - The mode is available as `import.meta.env.ROUTER_MODE`.
 
 
-## mode: `"spa"`
+## type: `"spa"`
 
 
 ---
@@ -422,17 +422,17 @@ const app = createApp({
     },
     {
       name: "api",
-      mode: "handler"
+      type: "http"
       base: "/api",
     }
     {
       name: "react-ssr",
-      mode: "handler"
+      type: "http"
       base: "/"
     },
     {
       name: "react-client",
-      mode: "build",
+      type: "client",
       base: "/_client"
     }
   ]

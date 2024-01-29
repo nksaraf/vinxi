@@ -15,7 +15,7 @@ export default eventHandler(async (event) => {
 	globalThis.__vite__ = createModuleLoader(viteServer);
 
 	const readable = new Readable({
-		objectMode: true,
+		objecttype: true,
 	});
 	readable._read = () => {};
 	readable.headers = {};
