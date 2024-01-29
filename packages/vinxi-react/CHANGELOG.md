@@ -1,5 +1,15 @@
 # @vinxi/react
 
+## 0.2.0
+
+### Minor Changes
+
+- d2fcee6: feat: vinxi/http package for all the http server related utilities (vinxi/server reexports)
+
+### Patch Changes
+
+- 276ba5d: fix: add types to @vinxi/react pacakge.json
+
 ## 0.1.2
 
 ### Patch Changes

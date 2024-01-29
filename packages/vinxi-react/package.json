@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/react",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
@@ -30,6 +30,6 @@
     "@types/react": "^18.2.21",
     "react": "0.0.0-experimental-035a41c4e-20230704",
     "typescript": "^5.3.3",
-    "vinxi": "0.1.10"
+    "vinxi": "0.2.0"
   }
 }
