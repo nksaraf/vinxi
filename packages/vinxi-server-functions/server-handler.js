@@ -1,12 +1,12 @@
 /// <reference types="vinxi/types/server" />
-import { eventHandler, readBody } from "vinxi/http";
+import { eventHandler, readBody, getHeader } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
 import { getManifest } from "vinxi/manifest";
 
 export async function handleServerAction(event) {
 	invariant(event.method === "POST", "Invalid method");
 
-	const serverReference = event.node.req.headers["server-action"];
+	const serverReference = getHeader(event, "server-action");
 	if (serverReference) {
 		invariant(typeof serverReference === "string", "Invalid server action");
 		// This is the client-side case
@@ -19,8 +19,8 @@ export async function handleServerAction(event) {
 		try {
 			// Wait for any mutations
 			const response = await result;
-			event.node.res.setHeader("Content-Type", "application/json");
-			event.node.res.setHeader("Router", "server-fns");
+			setHeader(event, "Content-Type", "application/json");
+			setHeader(event, "Router", "server-fns");
 
 			return JSON.stringify(response ?? null);
 		} catch (x) {
