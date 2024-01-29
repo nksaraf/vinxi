@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/plugin-directives",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [

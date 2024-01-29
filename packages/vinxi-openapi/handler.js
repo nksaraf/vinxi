@@ -29,7 +29,7 @@ export default lazyEventHandler(async () => {
 				openapi: "3.0.0",
 				info: {
 					title: "Vinxi",
-					version: "1.0.0",
+					version: "0.2.0",
 					description: "Vinxi",
 				},
 			};
