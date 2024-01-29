@@ -17,7 +17,7 @@
     "@picocss/pico": "^1.5.10",
     "@sindresorhus/slugify": "^2.2.1",
     "@vinxi/plugin-mdx": "3.7.1",
-    "@vinxi/react": "0.1.2",
+    "@vinxi/react": "0.2.0",
     "@vitejs/plugin-react": "^4.0.4",
     "@webcontainer/api": "^1.1.7",
     "acorn": "^8.10.0",

@@ -31,7 +31,7 @@ import { CookieSerializeOptions } from 'cookie-es';
 import { OutgoingMessage } from "node:http";
 import { Readable } from "node:stream";
 
-export type HTTPEvent = H3Event;
+export type HTTPEvent = H3Event | { [HTTPEventSymbol]: H3Event };
 export type HTTPServer = App;
 
 export {
@@ -887,4 +887,4 @@ export function assertMethod(
 ): void;
 
 
-export const HTTPEventSymbol: Symbol;
+export const HTTPEventSymbol: unique symbol;
