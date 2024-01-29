@@ -1,5 +1,19 @@
 # @vinxi/router
 
+## 1.0.0
+
+### Minor Changes
+
+- d2fcee6: feat: vinxi/http package for all the http server related utilities (vinxi/server reexports)
+
+### Patch Changes
+
+- Updated dependencies [d2fcee6]
+- Updated dependencies [0c92d33]
+- Updated dependencies [2670f50]
+- Updated dependencies [4a14764]
+  - vinxi@0.2.0
+
 ## 0.1.10
 
 ### Patch Changes

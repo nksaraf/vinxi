@@ -4,6 +4,19 @@
 
 ### Patch Changes
 
+- 0c92d33: breaking: `mode` option on routers has been renamed to `type`
+- 2670f50: breaking: change "build" router type to "client"
+- 4a14764: breaking: update "handler" router types to "http"
+- Updated dependencies [d2fcee6]
+- Updated dependencies [0c92d33]
+- Updated dependencies [2670f50]
+- Updated dependencies [4a14764]
+  - vinxi@0.2.0
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [1e753a1]
   - vinxi@0.1.10
 

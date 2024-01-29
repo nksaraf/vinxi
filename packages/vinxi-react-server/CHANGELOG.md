@@ -1,5 +1,19 @@
 # @vinxi/react-server
 
+## 0.2.0
+
+### Minor Changes
+
+- d2fcee6: feat: vinxi/http package for all the http server related utilities (vinxi/server reexports)
+
+### Patch Changes
+
+- Updated dependencies [d2fcee6]
+- Updated dependencies [276ba5d]
+  - @vinxi/react@0.2.0
+  - @vinxi/server-functions@1.0.0
+  - @vinxi/server-components@1.0.0
+
 ## 0.1.5
 
 ### Patch Changes

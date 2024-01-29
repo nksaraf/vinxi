@@ -1,5 +1,13 @@
 # @vinxi/doc
 
+## 0.1.1
+
+### Patch Changes
+
+- 2670f50: breaking: change "build" router type to "client"
+- 4a14764: breaking: update "handler" router types to "http"
+- 766b765: fix: @vinxi/doc types
+
 ## 0.1.0
 
 ### Minor Changes

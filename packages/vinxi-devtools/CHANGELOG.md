@@ -1,5 +1,17 @@
 # @vinxi/openapi
 
+## 0.2.0
+
+### Minor Changes
+
+- d2fcee6: feat: vinxi/http package for all the http server related utilities (vinxi/server reexports)
+
+### Patch Changes
+
+- 0c92d33: breaking: `mode` option on routers has been renamed to `type`
+- 2670f50: breaking: change "build" router type to "client"
+- 4a14764: breaking: update "handler" router types to "http"
+
 ## 0.1.1
 
 ### Patch Changes

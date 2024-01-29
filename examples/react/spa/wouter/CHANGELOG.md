@@ -4,6 +4,17 @@
 
 ### Patch Changes
 
+- 0c92d33: breaking: `mode` option on routers has been renamed to `type`
+- 2670f50: breaking: change "build" router type to "client"
+- 4a14764: breaking: update "handler" router types to "http"
+- Updated dependencies [d2fcee6]
+- Updated dependencies [276ba5d]
+  - @vinxi/react@0.2.0
+
+## null
+
+### Patch Changes
+
 - a1053ac: feat: `getManifest(routerName)` API to access Manifest API for a router, (instead of import.meta.env.MANIFEST)
 
 ## null

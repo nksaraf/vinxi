@@ -1,5 +1,20 @@
 # @vinxi/openapi
 
+## 0.2.0
+
+### Minor Changes
+
+- d2fcee6: feat: vinxi/http package for all the http server related utilities (vinxi/server reexports)
+
+### Patch Changes
+
+- 2670f50: breaking: change "build" router type to "client"
+- 4a14764: breaking: update "handler" router types to "http"
+- Updated dependencies [2670f50]
+- Updated dependencies [4a14764]
+- Updated dependencies [766b765]
+  - @vinxi/doc@0.1.1
+
 ## 0.1.1
 
 ### Patch Changes
