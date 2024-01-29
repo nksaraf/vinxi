@@ -2,6 +2,13 @@
 
 ## null
 
+### Patch Changes
+
+- Updated dependencies [b25063b]
+  - vinxi@0.2.1
+
+## null
+
 ### Minor Changes
 
 - d2fcee6: feat: vinxi/http package for all the http server related utilities (vinxi/server reexports)
