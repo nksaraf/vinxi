@@ -1,5 +1,5 @@
-import { createApp } from "vinxi";
 import react from "@vitejs/plugin-react";
+import { createApp } from "vinxi";
 import solid from "vite-plugin-solid";
 
 const app = createApp({
@@ -11,41 +11,41 @@ const app = createApp({
 		},
 		{
 			name: "public-react",
-			mode: "static",
+			type: "static",
 			dir: "./react/public",
-			base: "/react"
+			base: "/react",
 		},
 		{
 			name: "public-solid",
-			mode: "static",
+			type: "static",
 			dir: "./solid/public",
-			base: "/solid"
+			base: "/solid",
 		},
 		{
 			name: "root",
-			mode: "spa",
+			type: "spa",
 			handler: "./src/index.ts",
 			target: "browser",
-			plugins: () => [react()]
+			plugins: () => [react()],
 		},
 		{
 			name: "react",
-			mode: "spa",
+			type: "spa",
 			root: "./react",
 			handler: "./index.html",
 			base: "/react",
 			target: "browser",
-			plugins: () => [react()]
+			plugins: () => [react()],
 		},
 		{
 			name: "solid",
-			mode: "spa",
+			type: "spa",
 			root: "./solid",
 			handler: "./src/index.ts",
 			base: "/solid",
 			target: "browser",
-			plugins: () => [solid()]
-		}
+			plugins: () => [solid()],
+		},
 	],
 });
 

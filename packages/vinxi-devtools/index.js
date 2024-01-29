@@ -6,7 +6,7 @@ export { default as inspect } from "vite-plugin-inspect";
 export const devtoolsRpc = () => {
 	return {
 		name: "devtools-rpc",
-		mode: "handler",
+		type: "handler",
 		handler: fileURLToPath(new URL("./devtools-rpc.js", import.meta.url)),
 		target: "server",
 		build: false,
@@ -18,7 +18,7 @@ export const devtoolsRpc = () => {
 export const devtoolsClient = () => {
 	return {
 		name: "devtools-client",
-		mode: "static",
+		type: "static",
 		dir: fileURLToPath(new URL("./out/client", import.meta.url)),
 		base: "/__devtools/client",
 	};

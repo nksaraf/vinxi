@@ -7,13 +7,13 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 		},
 		{
 			name: "rsc",
 			worker: true,
-			mode: "handler",
+			type: "handler",
 			base: "/_rsc",
 			handler: "./app/react-server.tsx",
 			target: "server",
@@ -21,7 +21,7 @@ export default createApp({
 		},
 		{
 			name: "client",
-			mode: "spa",
+			type: "spa",
 			handler: "./index.ts",
 			target: "browser",
 			plugins: () => [
@@ -36,7 +36,7 @@ export default createApp({
 		{
 			name: "server",
 			worker: true,
-			mode: "handler",
+			type: "handler",
 			base: "/_server",
 			handler: "./app/server-action.tsx",
 			target: "server",

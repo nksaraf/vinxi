@@ -11,13 +11,13 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 			base: "/",
 		},
 		{
 			name: "ssr",
-			mode: "handler",
+			type: "handler",
 			base: "/",
 			handler: "./app/server.tsx",
 			target: "server",
@@ -28,7 +28,7 @@ export default createApp({
 		},
 		{
 			name: "client",
-			mode: "build",
+			type: "build",
 			handler: "./app/client.tsx",
 			target: "browser",
 			plugins: () => [serverFunctions.client(), solid({ ssr: true })],

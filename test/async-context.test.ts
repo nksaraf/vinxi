@@ -25,13 +25,13 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 			base: "/",
 		},
 		{
 			name: "client",
-			mode: "spa",
+			type: "spa",
 			handler: "./index.html",
 			target: "browser",
 			plugins: () => [serverFunctions.client(), reactRefresh()],

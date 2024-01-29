@@ -52,7 +52,7 @@ export async function createViteHandler(router, app, serveConfig) {
 	const port = await getRandomPort();
 	const plugins = [
 		...(serveConfig.devtools ? [inspect()] : []),
-		...(((await router.internals.mode.dev.plugins?.(router, app)) ?? []).filter(
+		...(((await router.internals.type.dev.plugins?.(router, app)) ?? []).filter(
 			Boolean,
 		) || []),
 		...(((await router.plugins?.(router)) ?? []).filter(Boolean) || []),
@@ -133,7 +133,7 @@ export async function createDevServer(
 		publicAssets: [
 			...app.config.routers
 				.map((router) => {
-					return router.internals.mode.dev.publicAssets?.(router, app);
+					return router.internals.type.dev.publicAssets?.(router, app);
 				})
 				.filter(
 					/**
@@ -153,7 +153,7 @@ export async function createDevServer(
 					app.config.routers
 						.sort((a, b) => b.base.length - a.base.length)
 						.map((router) =>
-							router.internals.mode.dev.handler?.(router, app, serveConfig),
+							router.internals.type.dev.handler?.(router, app, serveConfig),
 						),
 				)
 			)
@@ -196,8 +196,6 @@ export async function createDevServer(
 	// 		}
 	// 	}
 	// }
-
-
 
 	// Running plugins manually
 	const plugins = [

@@ -67,19 +67,19 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 		},
 		{
 			name: "client",
-			mode: "build",
+			type: "build",
 			handler: "./app/client.tsx",
 			plugins: () => [reactRefresh()],
 			base: "/_build",
 		},
 		{
 			name: "ssr",
-			mode: "handler",
+			type: "handler",
 			handler: "./app/server.tsx",
 		},
 	],
@@ -96,19 +96,19 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 		},
 		{
 			name: "client",
-			mode: "build",
+			type: "build",
 			handler: "./app/client.tsx",
 			plugins: () => [solid({ ssr: true })],
 			base: "/_build",
 		},
 		{
 			name: "ssr",
-			mode: "handler",
+			type: "handler",
 			handler: "./app/server.tsx",
 			plugins: () => [solid({ ssr: true })],
 		},

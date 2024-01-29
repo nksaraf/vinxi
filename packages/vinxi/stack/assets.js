@@ -3,7 +3,7 @@ import { createStack } from "./index.js";
 export default createStack((app) => {
 	app.addRouter({
 		name: "public",
-		mode: "static",
+		type: "static",
 		dir: "./public",
 	});
 });

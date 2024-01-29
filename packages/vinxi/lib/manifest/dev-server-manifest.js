@@ -18,7 +18,7 @@ export function createDevManifest(app) {
 
 				let base = join(app.config.server.baseURL ?? "", router.base);
 
-				if (router.mode === "static") {
+				if (router.type === "static") {
 					return {
 						json() {
 							return {};
@@ -31,7 +31,7 @@ export function createDevManifest(app) {
 						},
 						base,
 						target: "static",
-						mode: router.mode,
+						type: router.type,
 						handler: undefined,
 						chunks: {},
 						inputs: {},
@@ -68,7 +68,7 @@ export function createDevManifest(app) {
 					handler: router.handler,
 					base,
 					target: router.target,
-					mode: router.mode,
+					type: router.type,
 					chunks: new Proxy(
 						{},
 						{
@@ -78,7 +78,7 @@ export function createDevManifest(app) {
 									? chunk
 									: join(app.config.root, chunk);
 								invariant(
-									router.mode != "static",
+									router.type != "static",
 									"No manifest for static router",
 								);
 
@@ -129,7 +129,7 @@ export function createDevManifest(app) {
 
 								let relativePath = relative(app.config.root, input);
 								invariant(
-									router.mode != "static",
+									router.type != "static",
 									"No manifest for static router",
 								);
 
@@ -217,7 +217,7 @@ export function createDevManifest(app) {
 															await viteAssets(
 																[
 																	absolutePath.endsWith(".ts") &&
-																	router.mode === "spa"
+																	router.type === "spa"
 																		? undefined
 																		: absolutePath,
 																],

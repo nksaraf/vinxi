@@ -58,13 +58,13 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 			base: "/",
 		},
 		{
 			name: "client",
-			mode: "build",
+			type: "build",
 			routes: tanstackFileRouter({ dir: "./app/pages" }),
 			handler: "./app/client.tsx",
 			target: "browser",
@@ -73,7 +73,7 @@ export default createApp({
 		},
 		{
 			name: "ssr",
-			mode: "handler",
+			type: "handler",
 			handler: "./app/server.tsx",
 			routes: tanstackFileRouter({ dir: "./app/pages" }),
 			target: "server",
