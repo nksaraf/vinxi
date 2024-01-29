@@ -69,7 +69,7 @@ export default createApp({
 		},
 		{
 			name: "client",
-			type: "build",
+			type: "client",
 			handler: "./app/client.tsx",
 			routes: solidStartFileRouter({
 				dir: "./app/pages",

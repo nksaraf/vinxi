@@ -81,8 +81,8 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		}),
 		router.internals.routes ? fileSystemWatcher() : null,
 	],
-	build: (
-		/** @type {import("./router-modes.js").BuildRouterSchema} */ router,
+	client: (
+		/** @type {import("./router-modes.js").ClientRouterSchema} */ router,
 	) => [
 		css(),
 		virtual(

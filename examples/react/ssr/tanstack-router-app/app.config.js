@@ -82,7 +82,7 @@ export default createApp({
 		},
 		{
 			name: "client",
-			type: "build",
+			type: "client",
 			handler: "./app/client.tsx",
 			routes: tanstackFileRouter({ dir: "./app/routes" }),
 			target: "browser",

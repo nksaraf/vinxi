@@ -28,7 +28,7 @@ export default createApp({
 		},
 		{
 			name: "client",
-			type: "build",
+			type: "client",
 			handler: "./app/client.tsx",
 			target: "browser",
 			plugins: () => [serverFunctions.client(), solid({ ssr: true })],

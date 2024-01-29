@@ -166,7 +166,7 @@ export async function createBuild(app, buildConfig) {
 							baseURL: join(router.base, "assets"),
 							fallthrough: true,
 						};
-					} else if (router.type === "spa" || router.type === "build") {
+					} else if (router.type === "spa" || router.type === "client") {
 						return {
 							dir: join(router.outDir, router.base),
 							baseURL: router.base,
@@ -517,13 +517,13 @@ const spaManifest = () => {
 
 const routerModePlugin = {
 	static: () => [],
-	build: (router) => [
+	client: (router) => [
 		virtual(
 			{
 				[handlerModule(router)]: ({ config }) => {
 					invariant(
-						config.router.type === "build",
-						"#vinxi/handler is only supported in build mode",
+						config.router.type === "client",
+						"#vinxi/handler is only supported in client mode",
 					);
 					return `import * as mod from "${join(
 						config.router.root,

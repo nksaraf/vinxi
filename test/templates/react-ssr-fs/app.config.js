@@ -64,7 +64,7 @@ export default createApp({
 		},
 		{
 			name: "client",
-			type: "build",
+			type: "client",
 			routes: tanstackFileRouter({ dir: "./app/pages" }),
 			handler: "./app/client.tsx",
 			target: "browser",
