@@ -24,7 +24,7 @@ export default createApp({
 		{
 			name: "party",
 			base: "/party",
-			type: "handler",
+			type: "http",
 			handler: "./app/party.ts",
 			target: "server",
 		},

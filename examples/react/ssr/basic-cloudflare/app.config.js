@@ -43,7 +43,7 @@ export default createApp({
 		},
 		{
 			name: "ssr",
-			type: "handler",
+			type: "http",
 			handler: "./app/server.tsx",
 			target: "server",
 			plugins: () => [

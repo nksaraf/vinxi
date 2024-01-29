@@ -31,7 +31,7 @@ export default createApp({
 		},
 		{
 			name: "server",
-			type: "handler",
+			type: "http",
 			base: "/_server",
 			handler: "./app/entry-server.tsx",
 			target: "server",

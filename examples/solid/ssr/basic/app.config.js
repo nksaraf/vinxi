@@ -17,7 +17,7 @@ export default createApp({
 		},
 		{
 			name: "ssr",
-			type: "handler",
+			type: "http",
 			base: "/",
 			handler: "./app/server.tsx",
 			target: "server",

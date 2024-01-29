@@ -30,8 +30,8 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		treeShake(),
 		router.internals.routes ? fileSystemWatcher() : null,
 	],
-	handler: (
-		/** @type {import("./router-modes.js").HandlerRouterSchema} */ router,
+	http: (
+		/** @type {import("./router-modes.js").HTTPRouterSchema} */ router,
 	) => [
 		virtual({
 			[handlerModule(router)]: ({ config }) => {
@@ -95,7 +95,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 					)}"; export default mod['default']`;
 				},
 			},
-			"handler",
+			"http",
 		),
 		routes(),
 		devEntries(),

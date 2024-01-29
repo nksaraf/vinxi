@@ -73,7 +73,7 @@ export default createApp({
 		},
 		{
 			name: "ssr",
-			type: "handler",
+			type: "http",
 			handler: "./app/server.tsx",
 			routes: tanstackFileRouter({ dir: "./app/pages" }),
 			target: "server",

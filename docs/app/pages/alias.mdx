@@ -70,7 +70,7 @@ export default createApp({
     {
       base: "/",
       name: "server",
-      type: "handler",
+      type: "http",
       plugins: () => [tsconfigPaths()]
     }
   ]
@@ -97,7 +97,7 @@ export default createApp({
     },
     {
       name: "ssr",
-      type: "handler",
+      type: "http",
       base: "/",
       handler: "./app/server.tsx",
       target: "server",

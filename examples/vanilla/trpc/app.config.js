@@ -7,7 +7,7 @@ function trpcRouter({ plugins = () => [] } = {}) {
 	return {
 		name: "server",
 		base: "/trpc",
-		type: "handler",
+		type: "http",
 		handler: fileURLToPath(new URL("./handler.js", import.meta.url)),
 		target: "server",
 		plugins: () => [

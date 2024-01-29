@@ -13,7 +13,7 @@ export default createApp({
 		{
 			name: "rsc",
 			worker: true,
-			type: "handler",
+			type: "http",
 			base: "/_rsc",
 			handler: "./app/react-server.tsx",
 			target: "server",
@@ -36,7 +36,7 @@ export default createApp({
 		{
 			name: "server",
 			worker: true,
-			type: "handler",
+			type: "http",
 			base: "/_server",
 			handler: "./app/server-action.tsx",
 			target: "server",

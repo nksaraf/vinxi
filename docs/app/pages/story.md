@@ -369,7 +369,7 @@ export default createApp({
     },
     {
       name: "send-email",
-      type: "handler",
+      type: "http",
       handler: "./api/send-email.ts",
       base: "/api/send-email",
       build: {

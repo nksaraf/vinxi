@@ -84,7 +84,7 @@ export default createApp({
 		},
 		{
 			name: "ssr",
-			type: "handler",
+			type: "http",
 			handler: "./app/server.tsx",
 			routes: solidStartFileRouter({
 				dir: "./app/pages",

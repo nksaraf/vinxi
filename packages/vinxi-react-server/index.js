@@ -27,7 +27,7 @@ export function defineConfig() {
 			{
 				name: "rsc",
 				worker: true,
-				type: "handler",
+				type: "http",
 				base: "/_rsc",
 				handler: fileURLToPath(new URL("./react-server.js", import.meta.url)),
 				target: "server",
@@ -76,7 +76,7 @@ export function defineConfig() {
 			{
 				name: "server-fns",
 				worker: true,
-				type: "handler",
+				type: "http",
 				base: "/_server",
 				handler: fileURLToPath(new URL("./server-action.js", import.meta.url)),
 				plugins: () => [

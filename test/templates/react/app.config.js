@@ -51,7 +51,7 @@ export default createApp({
 		},
 		{
 			name: "api",
-			type: "handler",
+			type: "http",
 			handler: "./app/api.ts",
 			routes: (router, app) =>
 				new APIFileSystemRouter(
@@ -75,7 +75,7 @@ export default createApp({
 		},
 		{
 			name: "ssr",
-			type: "handler",
+			type: "http",
 			handler: "./app/entry-server.tsx",
 			target: "server",
 		},

@@ -15,7 +15,7 @@ export default createApp({
     },
     {
       name: "api",
-      type: "handler",
+      type: "http",
       handler: "./app/entry-api.tsx",
       target: "server",
       base: "/api",
@@ -30,7 +30,7 @@ export default createApp({
     },
     {
       name: "react-ssr",
-      type: "handler",
+      type: "http",
       handler: "./app/entry-server.tsx",
       plugins: () => [react()],
       target: "server",
@@ -195,7 +195,7 @@ export default createApp({
     },
     {
       name: "api",
-      type: "handler"
+      type: "http"
     },
     {
       name: "react-client",
@@ -203,7 +203,7 @@ export default createApp({
     },
     {
       name: "react-ssr",
-      type: "handler"
+      type: "http"
     }
   ]
 })
@@ -212,7 +212,7 @@ export default createApp({
 
 ---
 
-> Vinxi supports a few router modes out of the box: `"static"`, `"handler"`, `"client"`, `"spa"`. New modes can be added by you too. Lets see how each mode is different?
+> Vinxi supports a few router modes out of the box: `"static"`, `"http"`, `"client"`, `"spa"`. New modes can be added by you too. Lets see how each mode is different?
 
 ---
 
@@ -339,7 +339,7 @@ const scriptTag = `
 
 ---
 
-## `type: "handler"`
+## `type: "http"`
 
 - A router typically targetting the server.
 - The router responds to requests matching the `base` path with the event handler exported from the `handler` file.
@@ -351,7 +351,7 @@ export default createApp({
   routers: [
     name: "ssr",
     base: "/",
-    type: "handler",
+    type: "http",
     handler: "./ssr-handler.ts",
     target: "server"
   ]
@@ -422,12 +422,12 @@ const app = createApp({
     },
     {
       name: "api",
-      type: "handler"
+      type: "http"
       base: "/api",
     }
     {
       name: "react-ssr",
-      type: "handler"
+      type: "http"
       base: "/"
     },
     {

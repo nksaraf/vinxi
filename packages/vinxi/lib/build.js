@@ -112,7 +112,7 @@ export async function createBuild(app, buildConfig) {
 			...[...app.config.routers]
 				.sort((a, b) => b.base.length - a.base.length)
 				.map((router) => {
-					if (router.type === "handler") {
+					if (router.type === "http") {
 						invariant(router.handler, "Missing router.handler");
 						const bundlerManifest = JSON.parse(
 							readFileSync(viteManifestPath(router), "utf-8"),
@@ -160,7 +160,7 @@ export async function createBuild(app, buildConfig) {
 							baseURL: router.base,
 							fallthrough: true,
 						};
-					} else if (router.type === "handler") {
+					} else if (router.type === "http") {
 						return {
 							dir: join(router.outDir, router.base, "assets"),
 							baseURL: join(router.base, "assets"),
@@ -531,7 +531,7 @@ const routerModePlugin = {
 					)}"; export default mod['default']`;
 				},
 			},
-			"handler",
+			"http",
 		),
 		config("appType", {
 			appType: "custom",
@@ -552,12 +552,12 @@ const routerModePlugin = {
 			},
 		}),
 	],
-	handler: (router) => [
+	http: (router) => [
 		virtual(
 			{
 				[handlerModule(router)]: ({ config }) => {
 					invariant(
-						config.router.type === "handler",
+						config.router.type === "http",
 						"#vinxi/handler is only supported in handler mode",
 					);
 
@@ -574,7 +574,7 @@ const routerModePlugin = {
 					)}"; export default handler;`;
 				},
 			},
-			"handler",
+			"http",
 		),
 		config("appType", {
 			appType: "custom",
@@ -616,7 +616,7 @@ const routerModePlugin = {
 							return `export default {}`;
 						},
 					},
-					"handler",
+					"http",
 			  ),
 		spaManifest(),
 		config("appType", {

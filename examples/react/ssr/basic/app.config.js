@@ -19,7 +19,7 @@ export default createApp({
 		},
 		{
 			name: "ssr",
-			type: "handler",
+			type: "http",
 			middleware: "./app/middleware.tsx",
 			handler: "./app/server.tsx",
 			target: "server",
