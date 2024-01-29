@@ -18,28 +18,30 @@ async function fileExists(path) {
 async function loadFile({ ...options }) {
 	if (options.name) {
 		for (const ext of ["js", "mjs", "ts"]) {
-			if (ext === "ts" && !isBun()) 
-				continue;
+			if (ext === "ts" && !isBun()) continue;
 
 			const filepath = join(process.cwd(), `${options.name}.config.${ext}`);
-			
+
 			if (await fileExists(filepath)) {
-				return import(pathToFileURL(filepath).href + `?time=${Date.now()}`)
-					.then((m) => ({
-						config: m.default,
-					}));
+				return import(
+					pathToFileURL(filepath).href + `?time=${Date.now()}`
+				).then((m) => ({
+					config: m.default,
+				}));
 			}
 		}
-	}
-	else if (options.configFile) {
-		const ext = options.configFile.slice(options.configFile.lastIndexOf(".") + 1);
+	} else if (options.configFile) {
+		const ext = options.configFile.slice(
+			options.configFile.lastIndexOf(".") + 1,
+		);
 		if (["js", "mjs", "ts"].includes(ext) && (ext !== "ts" || isBun())) {
 			const filepath = join(process.cwd(), options.configFile);
 			if (await fileExists(filepath)) {
-				return import(pathToFileURL(filepath).href + `?time=${Date.now()}`)
-					.then((m) => ({
-						config: m.default,
-					}));
+				return import(
+					pathToFileURL(filepath).href + `?time=${Date.now()}`
+				).then((m) => ({
+					config: m.default,
+				}));
 			}
 		}
 	}
@@ -92,12 +94,12 @@ export async function loadApp(configFile = undefined, args = {}) {
 					routers: [
 						{
 							name: "public",
-							mode: "static",
+							type: "static",
 							dir: "./public",
 						},
 						{
 							name: "client",
-							mode: "spa",
+							type: "spa",
 							handler: "./index.html",
 							target: "browser",
 							plugins: () => config.plugins ?? [],

@@ -12,7 +12,7 @@ export function spaRouter({
 	...options
 } = {}) {
 	return {
-		mode: "spa",
+		type: "spa",
 		name: "client",
 		handler: "./index.html",
 		target: "browser",

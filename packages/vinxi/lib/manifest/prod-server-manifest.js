@@ -38,7 +38,7 @@ export function createProdManifest(app) {
 				const bundlerManifest = app.config.buildManifest[routerName];
 
 				invariant(
-					router.mode !== "static",
+					router.type !== "static",
 					"manifest not available for static router",
 				);
 				return {

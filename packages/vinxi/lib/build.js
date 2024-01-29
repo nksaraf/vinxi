@@ -59,7 +59,7 @@ export async function createBuild(app, buildConfig) {
 	}
 
 	for (const router of app.config.routers) {
-		if (router.mode !== "static" && router.build !== false) {
+		if (router.type !== "static" && router.build !== false) {
 			await withLogger({ router, requestId: "build" }, async () => {
 				await createRouterBuild(app, router);
 			});
@@ -112,7 +112,7 @@ export async function createBuild(app, buildConfig) {
 			...[...app.config.routers]
 				.sort((a, b) => b.base.length - a.base.length)
 				.map((router) => {
-					if (router.mode === "handler") {
+					if (router.type === "handler") {
 						invariant(router.handler, "Missing router.handler");
 						const bundlerManifest = JSON.parse(
 							readFileSync(viteManifestPath(router), "utf-8"),
@@ -137,7 +137,7 @@ export async function createBuild(app, buildConfig) {
 								middleware: true,
 							},
 						];
-					} else if (router.mode === "spa") {
+					} else if (router.type === "spa") {
 						return [
 							{
 								route: router.base.length === 1 ? "/" : `${router.base}`,
@@ -153,20 +153,20 @@ export async function createBuild(app, buildConfig) {
 		publicAssets: [
 			...app.config.routers
 				.map((router) => {
-					if (router.mode === "static") {
+					if (router.type === "static") {
 						return {
 							// @ts-expect-error
 							dir: router.dir,
 							baseURL: router.base,
 							fallthrough: true,
 						};
-					} else if (router.mode === "handler") {
+					} else if (router.type === "handler") {
 						return {
 							dir: join(router.outDir, router.base, "assets"),
 							baseURL: join(router.base, "assets"),
 							fallthrough: true,
 						};
-					} else if (router.mode === "spa" || router.mode === "build") {
+					} else if (router.type === "spa" || router.type === "build") {
 						return {
 							dir: join(router.outDir, router.base),
 							baseURL: router.base,
@@ -185,7 +185,7 @@ export async function createBuild(app, buildConfig) {
 				const config = {
 					...app.config,
 					routers: app.config.routers.map((router) => {
-						if (router.mode === "spa" && !router.handler.endsWith(".html")) {
+						if (router.type === "spa" && !router.handler.endsWith(".html")) {
 							return {
 								...router,
 								handler: "index.html",
@@ -208,7 +208,7 @@ export async function createBuild(app, buildConfig) {
 						// @ts-ignore
 						app.config.routers
 							.map((router) => {
-								if (router.mode !== "static") {
+								if (router.type !== "static") {
 									const bundlerManifest = JSON.parse(
 										readFileSync(viteManifestPath(router), "utf-8"),
 									);
@@ -224,7 +224,7 @@ export async function createBuild(app, buildConfig) {
 						// @ts-ignore
 						app.config.routers
 							.map((router) => {
-								if (router.mode !== "static" && router.internals.routes) {
+								if (router.type !== "static" && router.internals.routes) {
 									return [router.name, router.internals.routes?.getRoutes?.()];
 								}
 							})
@@ -248,7 +248,7 @@ export async function createBuild(app, buildConfig) {
       `;
 			},
 			...app.config.routers
-				.filter((router) => router.mode === "spa")
+				.filter((router) => router.type === "spa")
 				.reduce((virtuals, router) => {
 					virtuals[`#vinxi/spa/${router.name}`] = () => {
 						const indexHtml = readFileSync(
@@ -345,7 +345,7 @@ async function createRouterBuild(app, router) {
 	);
 	await app.hooks.callHook("app:build:router:start", { app, router });
 	let buildRouter = router;
-	if (router.mode === "spa" && !router.handler.endsWith(".html")) {
+	if (router.type === "spa" && !router.handler.endsWith(".html")) {
 		await app.hooks.callHook("app:build:router:html:generate:start", {
 			app,
 			router,
@@ -412,7 +412,7 @@ async function createRouterBuild(app, router) {
 		};
 	}
 
-	log(`building router ${router.name} in ${router.mode} mode`);
+	log(`building router ${router.name} in ${router.type} mode`);
 
 	const viteBuildConfig = {
 		router: buildRouter,
@@ -420,7 +420,7 @@ async function createRouterBuild(app, router) {
 		root: router.root,
 		plugins: [
 			buildTargetPlugin[buildRouter.target]?.(buildRouter) ?? [],
-			routerModePlugin[buildRouter.internals.mode.name]?.(buildRouter) ?? [],
+			routerModePlugin[buildRouter.internals.type.name]?.(buildRouter) ?? [],
 			...((await buildRouter.plugins?.(buildRouter)) ?? []),
 			{
 				name: "vinxi:build:router:config",
@@ -455,7 +455,7 @@ async function createRouterBuild(app, router) {
 		app,
 	});
 
-	if (router.mode === "spa" && !router.handler.endsWith(".html")) {
+	if (router.type === "spa" && !router.handler.endsWith(".html")) {
 		await rm(join(router.root, "index.html"));
 	}
 
@@ -522,7 +522,7 @@ const routerModePlugin = {
 			{
 				[handlerModule(router)]: ({ config }) => {
 					invariant(
-						config.router.mode === "build",
+						config.router.type === "build",
 						"#vinxi/handler is only supported in build mode",
 					);
 					return `import * as mod from "${join(
@@ -557,7 +557,7 @@ const routerModePlugin = {
 			{
 				[handlerModule(router)]: ({ config }) => {
 					invariant(
-						config.router.mode === "handler",
+						config.router.type === "handler",
 						"#vinxi/handler is only supported in handler mode",
 					);
 
@@ -676,7 +676,7 @@ function handerBuild() {
 		async config({ router, app }, env) {
 			if (env.command === "build") {
 				invariant(
-					router && router.mode !== "static" && router.handler,
+					router && router.type !== "static" && router.handler,
 					"Invalid router",
 				);
 				const { builtinModules } = await import("module");
@@ -718,7 +718,7 @@ function browserBuild() {
 		name: "build:browser",
 		async config({ router, app }, env) {
 			if (env.command === "build") {
-				invariant(router && router.mode !== "static", "Invalid router");
+				invariant(router && router.type !== "static", "Invalid router");
 				const { join } = await import("./path.js");
 				console.log(await getEntries(router));
 				console.log({ base: router.base });

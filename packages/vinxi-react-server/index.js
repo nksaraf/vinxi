@@ -21,13 +21,13 @@ export function defineConfig() {
 		routers: [
 			{
 				name: "public",
-				mode: "static",
+				type: "static",
 				dir: "./public",
 			},
 			{
 				name: "rsc",
 				worker: true,
-				mode: "handler",
+				type: "handler",
 				base: "/_rsc",
 				handler: fileURLToPath(new URL("./react-server.js", import.meta.url)),
 				target: "server",
@@ -42,7 +42,7 @@ export function defineConfig() {
 
 			{
 				name: "client",
-				mode: "spa",
+				type: "spa",
 				handler: fileURLToPath(new URL("./html.ts", import.meta.url)),
 				plugins: () => [
 					config("other", {
@@ -76,7 +76,7 @@ export function defineConfig() {
 			{
 				name: "server-fns",
 				worker: true,
-				mode: "handler",
+				type: "handler",
 				base: "/_server",
 				handler: fileURLToPath(new URL("./server-action.js", import.meta.url)),
 				plugins: () => [

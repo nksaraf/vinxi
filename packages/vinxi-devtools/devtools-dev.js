@@ -10,7 +10,7 @@ import unocssConfig from "./uno.config.js";
 export const devtoolsClientDev = () => {
 	return {
 		name: "devtools-client",
-		mode: "spa",
+		type: "spa",
 		handler: fileURLToPath(new URL("./index.html.js", import.meta.url)),
 		target: "browser",
 		base: "/__devtools/client",

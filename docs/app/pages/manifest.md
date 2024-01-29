@@ -29,7 +29,7 @@ export type Manifest = {
 		}[]
 	>;
 	target: "browser" | "server" | "static";
-	mode: string;
+	type: string;
 	inputs: {
 		[key: string]: {
 			/** Assets needed by this entry point */

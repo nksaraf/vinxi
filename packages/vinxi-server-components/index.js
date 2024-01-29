@@ -10,7 +10,7 @@ export const serverComponents = {
 	serverActions: serverActions,
 	serverRouter: (overrides) => ({
 		name: "server",
-		mode: "handler",
+		type: "handler",
 		base: "/_server",
 		handler: fileURLToPath(new URL("./server-handler.js", import.meta.url)),
 		target: "server",

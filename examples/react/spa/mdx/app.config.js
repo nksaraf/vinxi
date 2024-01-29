@@ -57,12 +57,12 @@ export default createApp({
 	routers: [
 		{
 			name: "public",
-			mode: "static",
+			type: "static",
 			dir: "./public",
 		},
 		{
 			name: "client",
-			mode: "spa",
+			type: "spa",
 			handler: "./index.html",
 			routes: wouterFileRouter({ dir: "./app/pages" }),
 			target: "browser",

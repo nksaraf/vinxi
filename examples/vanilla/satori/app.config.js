@@ -3,10 +3,9 @@ import { createApp } from "vinxi";
 export default createApp({
 	routers: [
 		{
-			name: "public",
-			type: "spa",
-			dir: "./",
-			handler: "./index.html",
+			name: "server",
+			type: "handler",
+			handler: "./index.tsx",
 		},
 	],
 });

@@ -70,7 +70,7 @@ export default createApp({
     {
       base: "/",
       name: "server",
-      mode: "handler",
+      type: "handler",
       plugins: () => [tsconfigPaths()]
     }
   ]
@@ -78,7 +78,7 @@ export default createApp({
 
 ```
 
-Now, your aliases will work everywhere in your app. Remember to add the `vite-tsconfig-paths` plugin to all the routers that might need to resolve such imports. By rule of hand, that would be all the routers that are not `mode: "static"`.
+Now, your aliases will work everywhere in your app. Remember to add the `vite-tsconfig-paths` plugin to all the routers that might need to resolve such imports. By rule of hand, that would be all the routers that are not `type: "static"`.
 
 So, if you have a typical SSR app with server functions, you need to add the plugin to all three routers.
 
@@ -91,13 +91,13 @@ export default createApp({
   routers: [
     {
       name: "public",
-      mode: "static",
+      type: "static",
       dir: "./public",
       base: "/",
     },
     {
       name: "ssr",
-      mode: "handler",
+      type: "handler",
       base: "/",
       handler: "./app/server.tsx",
       target: "server",
@@ -108,7 +108,7 @@ export default createApp({
     },
     {
       name: "client",
-      mode: "build",
+      type: "build",
       handler: "./app/client.tsx",
       target: "browser",
       plugins: () => [tsconfigPaths(), serverFunctions.client(), solid({ ssr: true })],
