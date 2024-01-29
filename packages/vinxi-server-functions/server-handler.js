@@ -1,5 +1,5 @@
 /// <reference types="vinxi/types/server" />
-import { eventHandler, readBody, getHeader } from "vinxi/http";
+import { eventHandler, getHeader, readBody, setHeader } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
 import { getManifest } from "vinxi/manifest";
 
