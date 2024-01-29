@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.2.1
+
+### Patch Changes
+
+- b25063b: fix: httpevent types
+  - @vinxi/devtools@0.2.0
+
 ## 0.2.0
 
 ### Minor Changes

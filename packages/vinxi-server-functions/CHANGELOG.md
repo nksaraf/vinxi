@@ -1,5 +1,13 @@
 # @vinxi/plugin-references
 
+## 0.2.1
+
+### Patch Changes
+
+- 249b42f: nit: use vinxi/http methods in handler
+- Updated dependencies [b25063b]
+  - vinxi@0.2.1
+
 ## 1.0.0
 
 ### Minor Changes
