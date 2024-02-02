@@ -731,6 +731,12 @@ importers:
         specifier: 0.2.1
         version: link:../../../packages/vinxi
 
+  examples/vanilla/server:
+    dependencies:
+      vinxi:
+        specifier: 0.2.1
+        version: link:../../../packages/vinxi
+
   examples/vanilla/spa:
     dependencies:
       '@picocss/pico':
