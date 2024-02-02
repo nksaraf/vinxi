@@ -1,0 +1,14 @@
+{
+  "name": "example-vanilla-server",
+  "type": "module",
+  "private": true,
+  "version": null,
+  "scripts": {
+    "dev": "vinxi dev -s server",
+    "build": "vinxi build -s server",
+    "start": "vinxi start -s server"
+  },
+  "dependencies": {
+    "vinxi": "0.2.1"
+  }
+}
