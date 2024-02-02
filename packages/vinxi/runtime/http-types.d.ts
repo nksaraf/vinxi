@@ -34,6 +34,8 @@ import { Readable } from "node:stream";
 export type HTTPEvent = H3Event | { [HTTPEventSymbol]: H3Event };
 export type HTTPServer = App;
 
+export { CookieSerializeOptions } from 'cookie-es';
+
 export {
 	H3Error,
 	H3Event,
