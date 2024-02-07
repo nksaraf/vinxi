@@ -134,6 +134,7 @@ export function buildServerComponents({
 								// we want to control the chunk names so that we can load them
 								// individually when server actions are called
 								chunkFileNames: "[name].js",
+								entryFileNames: "[name].js",
 							},
 						},
 					},
