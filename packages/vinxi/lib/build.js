@@ -650,7 +650,7 @@ function toRouteId(route) {
  */
 export async function getEntries(router) {
 	return [
-		router.handler.endsWith(".html") ? router.handler : handlerModule(router),
+		handlerModule(router),
 		...(
 			(await router.internals.routes?.getRoutes())?.map((r) =>
 				Object.entries(r)
