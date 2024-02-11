@@ -353,8 +353,9 @@ const command = defineCommand({
 				},
 			},
 			async run(context) {
-				const { listen, createServer, fromNodeMiddleware, toNodeListener } =
+				const { createServer, fromNodeMiddleware, toNodeListener } =
 					await import("../runtime/server.js");
+				const { listen } = await import("../runtime/listen.js");
 				const { isAbsolute, join } = await import("../lib/path.js");
 				const { default: serveStatic } = await import("serve-static");
 

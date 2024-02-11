@@ -51,6 +51,10 @@
       "import": "./runtime/sh.js",
       "types": "./dist/types/runtime/sh.d.ts"
     },
+    "./listen": {
+      "import": "./runtime/listen.js",
+      "types": "./dist/types/runtime/listen.d.ts"
+    },
     "./server": {
       "import": "./runtime/server.js",
       "types": "./runtime/server-types.d.ts"

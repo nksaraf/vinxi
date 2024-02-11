@@ -30,7 +30,6 @@ import {
 import { CookieSerializeOptions } from 'cookie-es';
 import { OutgoingMessage } from "node:http";
 import { Readable } from "node:stream";
-export { listen } from '@vinxi/listhen'
 export type HTTPServer = App;
 
 export { CookieSerializeOptions } from 'cookie-es';
