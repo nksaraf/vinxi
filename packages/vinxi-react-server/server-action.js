@@ -1,5 +1,3 @@
-// import { renderAsset } from "@vinxi/react";
-// import { renderToPipeableStream } from "@vinxi/react-server-dom/server";
 // import React, { Suspense } from "react";
 import { eventHandler, sendStream } from "vinxi/http";
 

@@ -583,9 +583,6 @@ const routerModePlugin = {
 					external: ["h3", "@vinxi/listhen"],
 				},
 			},
-			optimizeDeps: {
-				disabled: true,
-			},
 			define: {
 				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},

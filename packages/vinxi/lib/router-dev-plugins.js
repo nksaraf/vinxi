@@ -63,9 +63,6 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			ssr: {
 				noExternal: ["vinxi"],
 			},
-			optimizeDeps: {
-				disabled: true,
-			},
 			define: {
 				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},

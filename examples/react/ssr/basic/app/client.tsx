@@ -1,6 +1,6 @@
 /// <reference types="vinxi/types/client" />
 import { createAssets } from "@vinxi/react";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { Root, hydrateRoot } from "react-dom/client";
 import "vinxi/client";
 import { getManifest } from "vinxi/manifest";

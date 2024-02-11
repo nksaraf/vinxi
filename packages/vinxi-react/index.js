@@ -1,4 +1,4 @@
-import React, { Fragment, createElement } from "react";
+import { Fragment, createElement } from "react";
 import { lazy } from "react";
 import { updateStyles } from "vinxi/css";
 
