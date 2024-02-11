@@ -30,8 +30,7 @@ import {
 import { CookieSerializeOptions } from 'cookie-es';
 import { OutgoingMessage } from "node:http";
 import { Readable } from "node:stream";
-
-export type HTTPEvent = H3Event | { [HTTPEventSymbol]: H3Event };
+export { listen } from '@vinxi/listhen'
 export type HTTPServer = App;
 
 export { CookieSerializeOptions } from 'cookie-es';

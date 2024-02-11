@@ -263,11 +263,9 @@ const command = defineCommand({
 								pathToFileURL(process.cwd() + "/.output/server/index.mjs").href
 							);
 						} else {
-							const { $ } = await import("execa");
+							const { $ } = await import("../runtime/sh.js");
 
-							const p = await $`bun run .output/server/index.mjs`.pipeStdout(
-								process.stdout,
-							);
+							await $`bun run .output/server/index.mjs`;
 						}
 						break;
 					default:
@@ -319,7 +317,7 @@ const command = defineCommand({
 						break;
 
 					case "bun":
-						const { $ } = await import("execa");
+						const { $ } = await import("../runtime/sh.js");
 
 						await $`bun run .output/server/index.mjs`;
 						break;
@@ -355,15 +353,13 @@ const command = defineCommand({
 				},
 			},
 			async run(context) {
-				const { createApp, fromNodeMiddleware, toNodeListener } = await import(
-					"h3"
-				);
-				const { listen } = await import("@vinxi/listhen");
+				const { listen, createServer, fromNodeMiddleware, toNodeListener } =
+					await import("../runtime/server.js");
 				const { isAbsolute, join } = await import("../lib/path.js");
 				const { default: serveStatic } = await import("serve-static");
 
-				const app = createApp();
-				app.use(
+				const server = createServer();
+				server.use(
 					context.args.base ?? "/",
 					fromNodeMiddleware(
 						serveStatic(
@@ -376,9 +372,72 @@ const command = defineCommand({
 					),
 				);
 
-				await listen(toNodeListener(app), {
-					port: context.args.port ?? 3000,
-				});
+				await listen(toNodeListener(server));
+			},
+		},
+		run: {
+			meta: {
+				name: "run",
+				version: packageJson.version,
+				description: "Run a script in the Vinxi app",
+			},
+
+			args: {
+				script: {
+					type: "positional",
+					description: "Script to run",
+					required: true,
+				},
+				port: {
+					type: "number",
+					description: "Port to listen on (default: 3000)",
+				},
+			},
+			async run(context) {
+				const { log, c } = await import("../lib/logger.js");
+				const { join } = await import("../lib/path.js");
+				const { fetchModule, createServer } = await import("vite");
+				const { ViteRuntime, ESModulesRunner } = await import("vite/runtime");
+
+				const server = await createServer();
+				const runtime = new ViteRuntime(
+					{
+						root: process.cwd(),
+						fetchModule: (url, importer) => {
+							return fetchModule(server, url, importer);
+						},
+					},
+					new ESModulesRunner(),
+				);
+
+				const returnValue = await runtime.executeEntrypoint(
+					join(process.cwd(), context.args.script),
+				);
+
+				let mod = returnValue?.default;
+
+				if (mod?.__is_handler__) {
+					const { createServer, toNodeListener, listen } = await import(
+						"../runtime/http.js"
+					);
+					const app = createServer().use(mod);
+					await listen(toNodeListener(app));
+				} else if (mod && mod.use && mod.handler && mod.stack) {
+					const { toNodeListener, listen } = await import("../runtime/http.js");
+					await listen(toNodeListener(mod));
+				} else if (mod && typeof mod === "function") {
+					await mod();
+				}
+				// else if () {
+				// if (typeof mod === "function") {
+				// 	await returnValue()
+				// 	process.exit(0)
+				// } else
+				// }
+
+				server.close();
+
+				// process.exit(0)
 			},
 		},
 	}),

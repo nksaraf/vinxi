@@ -1,4 +1,4 @@
-import { EventHandler } from "h3";
+import type { EventHandler } from "h3";
 
 import { App } from "./app.js";
 import { DevConfig } from "./dev-server.js";

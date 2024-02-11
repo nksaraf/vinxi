@@ -1,7 +1,13 @@
 import defu from "defu";
-import { eventHandler, proxyRequest, sendRedirect, setHeaders } from "h3";
 import { createRouter as createRadixRouter, toRouteMatcher } from "radix3";
 import { getQuery, joinURL, withQuery, withoutBase } from "ufo";
+
+import {
+	eventHandler,
+	proxyRequest,
+	sendRedirect,
+	setHeaders,
+} from "../runtime/server.js";
 
 export function createRouteRulesHandler(ctx) {
 	const _routeRulesMatcher = toRouteMatcher(

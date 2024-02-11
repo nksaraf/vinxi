@@ -1,12 +1,12 @@
 import boxen from "boxen";
 import { mkdir, rm, writeFile } from "fs/promises";
-import { H3Event, createApp } from "h3";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
 
 import { writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
+import { H3Event, createApp } from "../runtime/server.js";
 import { chunksServerVirtualModule } from "./chunks.js";
 import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
