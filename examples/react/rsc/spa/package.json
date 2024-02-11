@@ -20,7 +20,7 @@
     "react": "0.0.0-experimental-035a41c4e-20230704",
     "react-dom": "0.0.0-experimental-035a41c4e-20230704",
     "tailwindcss": "^3.3.3",
-    "unstorage": "^1.9.0",
+    "unstorage": "^1.10.1",
     "vinxi": "0.2.1"
   },
   "devDependencies": {
