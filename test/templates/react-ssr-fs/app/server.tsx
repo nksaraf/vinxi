@@ -1,6 +1,6 @@
 /// <reference types="vinxi/types/server" />
 import { lazyRoute, renderAsset } from "@vinxi/react";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import { eventHandler, setHeader } from "vinxi/http";
 import { getManifest } from "vinxi/manifest";

@@ -1,6 +1,6 @@
 /// <reference types="vinxi/types/server" />
 import { renderAsset } from "@vinxi/react";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import { eventHandler } from "vinxi/http";
 import { getManifest } from "vinxi/manifest";

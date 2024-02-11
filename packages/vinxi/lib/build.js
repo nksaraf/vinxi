@@ -1,12 +1,12 @@
 import boxen from "boxen";
 import { mkdir, rm, writeFile } from "fs/promises";
-import { H3Event, createApp } from "h3";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
 
 import { writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
+import { H3Event, createApp } from "../runtime/server.js";
 import { chunksServerVirtualModule } from "./chunks.js";
 import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
@@ -96,9 +96,6 @@ export async function createBuild(app, buildConfig) {
 			// pathe: require.resolve("pathe"),
 			// unstorage: require.resolve("unstorage"),
 		},
-		// externals: {
-		// 	inline: ["node-fetch-native/polyfill"],
-		// },
 		// minify: process.env.MINIFY !== "false" ?? true,
 		plugins: [
 			"#vinxi/prod-app",
@@ -540,7 +537,7 @@ const routerModePlugin = {
 			},
 			build: {
 				rollupOptions: {
-					external: ["h3"],
+					external: ["h3", "@vinxi/listhen"],
 				},
 			},
 			optimizeDeps: {
@@ -583,11 +580,8 @@ const routerModePlugin = {
 			},
 			build: {
 				rollupOptions: {
-					external: ["h3"],
+					external: ["h3", "@vinxi/listhen"],
 				},
-			},
-			optimizeDeps: {
-				disabled: true,
 			},
 			define: {
 				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
@@ -626,7 +620,7 @@ const routerModePlugin = {
 			},
 			build: {
 				rollupOptions: {
-					external: ["h3"],
+					external: ["h3", "@vinxi/listhen"],
 				},
 			},
 			optimizeDeps: {
@@ -656,7 +650,7 @@ function toRouteId(route) {
  */
 export async function getEntries(router) {
 	return [
-		router.handler.endsWith(".html") ? router.handler : handlerModule(router),
+		handlerModule(router),
 		...(
 			(await router.internals.routes?.getRoutes())?.map((r) =>
 				Object.entries(r)

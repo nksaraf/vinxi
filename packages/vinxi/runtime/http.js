@@ -1,40 +1,4 @@
-import {
-	H3Error,
-	H3Event,
-	MIMES,
-	callNodeListener,
-	createApp,
-	createAppEventHandler,
-	createError,
-	createEvent,
-	createRouter,
-	defineEventHandler,
-	defineLazyEventHandler,
-	defineNodeListener,
-	defineNodeMiddleware,
-	defineRequestMiddleware,
-	defineResponseMiddleware,
-	dynamicEventHandler,
-	eventHandler,
-	fromNodeMiddleware,
-	fromPlainHandler,
-	fromWebHandler,
-	isCorsOriginAllowed,
-	isError,
-	isEventHandler,
-	isStream,
-	isWebResponse,
-	lazyEventHandler,
-	promisifyNodeListener,
-	sanitizeStatusCode,
-	sanitizeStatusMessage,
-	serveStatic,
-	splitCookiesString,
-	toEventHandler,
-	toNodeListener,
-	toPlainHandler,
-	toWebHandler,
-} from "h3";
+import { H3Event } from "h3";
 import {
 	appendCorsHeaders as _appendCorsHeaders,
 	appendCorsPreflightHeaders as _appendCorsPreflightHeaders,
@@ -82,8 +46,6 @@ import {
 	readRawBody as _readRawBody,
 	readValidatedBody as _readValidatedBody,
 	removeResponseHeader as _removeResponseHeader, // ... import other utilities as needed
-	sanitizeStatusCode as _sanitizeStatusCode,
-	sanitizeStatusMessage as _sanitizeStatusMessage,
 	sealSession as _sealSession,
 	send as _send,
 	sendError as _sendError,
@@ -98,7 +60,6 @@ import {
 	setResponseHeader as _setResponseHeader,
 	setResponseHeaders as _setResponseHeaders,
 	setResponseStatus as _setResponseStatus,
-	splitCookiesString as _splitCookiesString,
 	unsealSession as _unsealSession,
 	updateSession as _updateSession,
 	useSession as _useSession,
@@ -220,7 +181,7 @@ export {
 	createError,
 	sanitizeStatusCode,
 	sanitizeStatusMessage,
-};
+} from "h3";
 
 function getHTTPEvent() {
 	return getEvent();
@@ -357,7 +318,7 @@ export const clearResponseHeaders = createWrapperFunction(
 
 export const getWebRequest = createWrapperFunction(toWebRequest);
 
-export { createApp as createServer };
+export { createApp as createServer } from "h3";
 
 function getNitroAsyncContext() {
 	const nitroAsyncContext = gContext("nitro-app", {

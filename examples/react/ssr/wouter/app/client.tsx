@@ -2,13 +2,13 @@
 import { lazyRoute } from "@vinxi/react";
 import { createAssets } from "@vinxi/react";
 import { pathToRegexp } from "path-to-regexp";
-import React, { Suspense } from "react";
-import { Root, hydrateRoot } from "react-dom/client";
+import { Suspense } from "react";
+import { hydrateRoot } from "react-dom/client";
 import "vinxi/client";
+import { getManifest } from "vinxi/manifest";
 import fileRoutes from "vinxi/routes";
 import { Route, Router } from "wouter";
 import makeCachedMatcher from "wouter/matcher";
-import { getManifest } from "vinxi/manifest";
 
 import App from "./app";
 

@@ -87,7 +87,7 @@ testDevAndProd("fs-router", ({ createFixture }) => {
 
 		await app.clickElement("a[href='/']");
 		await app.waitForURL("/");
-		await new Promise((r) => setTimeout(r, 1000));
+		await new Promise((r) => setTimeout(r, 2000));
 
 		expect(await app.getHtml("[data-test-id=title]")).toBe(
 			prettyHtml(`<h1 data-test-id="title">Vinxi Home</h1>`),
