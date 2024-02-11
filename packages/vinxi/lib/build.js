@@ -96,9 +96,6 @@ export async function createBuild(app, buildConfig) {
 			// pathe: require.resolve("pathe"),
 			// unstorage: require.resolve("unstorage"),
 		},
-		// externals: {
-		// 	inline: ["node-fetch-native/polyfill"],
-		// },
 		// minify: process.env.MINIFY !== "false" ?? true,
 		plugins: [
 			"#vinxi/prod-app",
@@ -540,7 +537,7 @@ const routerModePlugin = {
 			},
 			build: {
 				rollupOptions: {
-					external: ["h3"],
+					external: ["h3", "@vinxi/listhen"],
 				},
 			},
 			optimizeDeps: {
@@ -583,7 +580,7 @@ const routerModePlugin = {
 			},
 			build: {
 				rollupOptions: {
-					external: ["h3"],
+					external: ["h3", "@vinxi/listhen"],
 				},
 			},
 			optimizeDeps: {
@@ -626,7 +623,7 @@ const routerModePlugin = {
 			},
 			build: {
 				rollupOptions: {
-					external: ["h3"],
+					external: ["h3", "@vinxi/listhen"],
 				},
 			},
 			optimizeDeps: {
