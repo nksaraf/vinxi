@@ -162,10 +162,14 @@ export class BaseFileSystemRouter extends EventTarget {
 	async addRoute(src) {
 		src = normalize(src);
 		if (this.isRoute(src)) {
-			const route = await this.toRoute(src);
-			if (route) {
-				this._addRoute(route);
-				this.reload(route);
+			try {
+				const route = await this.toRoute(src);
+				if (route) {
+					this._addRoute(route);
+					this.reload(route);
+				}
+			} catch (e) {
+				console.error(e);
 			}
 		}
 	}
@@ -192,10 +196,14 @@ export class BaseFileSystemRouter extends EventTarget {
 	async updateRoute(src) {
 		src = normalize(src);
 		if (this.isRoute(src)) {
-			const route = await this.toRoute(src);
-			if (route) {
-				this._addRoute(route);
-				this.reload(route);
+			try {
+				const route = await this.toRoute(src);
+				if (route) {
+					this._addRoute(route);
+					this.reload(route);
+				}
+			} catch (e) {
+				console.error(e);
 			}
 			// this.update?.();
 		}
