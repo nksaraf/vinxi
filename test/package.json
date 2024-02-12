@@ -21,7 +21,7 @@
     "cross-spawn": "^7.0.3",
     "fs-extra": "^11.1.1",
     "get-port": "^6.1.2",
-    "picocolors": "^1.0.0",
+    "picocolors": "^0.3.0",
     "prettier": "^2.8.8",
     "strip-indent": "^4.0.0",
     "undici": "^5.23.0",
