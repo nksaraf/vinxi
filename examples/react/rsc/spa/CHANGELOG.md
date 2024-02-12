@@ -4,6 +4,19 @@
 
 ### Patch Changes
 
+- Updated dependencies [b039359]
+- Updated dependencies [ca63e63]
+- Updated dependencies [a109c52]
+- Updated dependencies [5e904e3]
+- Updated dependencies [fd2d5e4]
+  - @vinxi/server-components@1.0.0
+  - @vinxi/server-functions@1.0.0
+  - vinxi@0.3.0
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [b25063b]
 - Updated dependencies [249b42f]
   - vinxi@0.2.1
