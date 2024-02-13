@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.3.3
+
+### Patch Changes
+
+- 27c77c4: fix: vinxi run expose vinxi/http, vinxi/listen, vinxi/storage, and vinxi/sh
+  - @vinxi/devtools@0.2.0
+
 ## 0.3.2
 
 ### Patch Changes
