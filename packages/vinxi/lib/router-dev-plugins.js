@@ -20,7 +20,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			ssr: {
 				noExternal: ["vinxi"],
 			},
-			cacheDir: `.vinxi/cache/${router.name}`,
+			cacheDir: `node_modules/.vinxi/cache/${router.name}`,
 			optimizeDeps: {
 				exclude: ["vinxi"],
 			},
@@ -64,7 +64,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			ssr: {
 				noExternal: ["vinxi"],
 			},
-			cacheDir: `.vinxi/cache/${router.name}`,
+			cacheDir: `node_modules/.vinxi/cache/${router.name}`,
 			define: {
 				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},
@@ -101,7 +101,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		manifest(),
 		config("appType", {
 			appType: "custom",
-			cacheDir: `.vinxi/cache/${router.name}`,
+			cacheDir: `node_modules/.vinxi/cache/${router.name}`,
 			ssr: {
 				noExternal: ["vinxi"],
 			},
