@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.3.1
+
+### Patch Changes
+
+- 3a3573f: fix: cache dir should be in node_modules for vite to work properly, f…
+  - @vinxi/devtools@0.2.0
+
 ## 0.3.0
 
 ### Minor Changes
