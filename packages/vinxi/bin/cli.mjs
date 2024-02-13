@@ -400,7 +400,21 @@ const command = defineCommand({
 				const { fetchModule, createServer } = await import("vite");
 				const { ViteRuntime, ESModulesRunner } = await import("vite/runtime");
 
-				const server = await createServer();
+				const server = await createServer({
+					resolve: {
+						alias: {
+							"vinxi/sh": fileURLToPath(
+								new URL("../runtime/sh.js", import.meta.url).href,
+							),
+							"vinxi/http": fileURLToPath(
+								new URL("../runtime/http.js", import.meta.url).href,
+							),
+							vinxi: fileURLToPath(
+								new URL("../lib/index.js", import.meta.url).href,
+							),
+						},
+					},
+				});
 				const runtime = new ViteRuntime(
 					{
 						root: process.cwd(),
