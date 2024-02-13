@@ -409,6 +409,9 @@ const command = defineCommand({
 							"vinxi/http": fileURLToPath(
 								new URL("../runtime/http.js", import.meta.url).href,
 							),
+							"vinxi/listen": fileURLToPath(
+								new URL("../runtime/listen.js", import.meta.url).href,
+							),
 							vinxi: fileURLToPath(
 								new URL("../lib/index.js", import.meta.url).href,
 							),
