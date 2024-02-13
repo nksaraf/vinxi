@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.3.2
+
+### Patch Changes
+
+- 472702a: fix: add vinxi aliases to run command so it can run without vinxi in package json
+  - @vinxi/devtools@0.2.0
+
 ## 0.3.1
 
 ### Patch Changes
