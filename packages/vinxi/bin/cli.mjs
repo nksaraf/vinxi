@@ -412,6 +412,12 @@ const command = defineCommand({
 							"vinxi/listen": fileURLToPath(
 								new URL("../runtime/listen.js", import.meta.url).href,
 							),
+							"vinxi/storage": fileURLToPath(
+								new URL("../runtime/storage.js", import.meta.url).href,
+							),
+							"vinxi/server": fileURLToPath(
+								new URL("../runtime/server.js", import.meta.url).href,
+							),
 							vinxi: fileURLToPath(
 								new URL("../lib/index.js", import.meta.url).href,
 							),
@@ -435,13 +441,15 @@ const command = defineCommand({
 				let mod = returnValue?.default;
 
 				if (mod?.__is_handler__) {
-					const { createServer, toNodeListener, listen } = await import(
+					const { createServer, toNodeListener } = await import(
 						"../runtime/http.js"
 					);
+					const { listen } = await import("../runtime/listen.js");
 					const app = createServer().use(mod);
 					await listen(toNodeListener(app));
 				} else if (mod && mod.use && mod.handler && mod.stack) {
-					const { toNodeListener, listen } = await import("../runtime/http.js");
+					const { toNodeListener } = await import("../runtime/http.js");
+					const { listen } = await import("../runtime/listen.js");
 					await listen(toNodeListener(mod));
 				} else if (mod && typeof mod === "function") {
 					await mod();

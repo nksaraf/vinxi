@@ -55,6 +55,10 @@
       "import": "./runtime/listen.js",
       "types": "./dist/types/runtime/listen.d.ts"
     },
+    "./storage": {
+      "import": "./runtime/storage.js",
+      "types": "./dist/types/runtime/storage.d.ts"
+    },
     "./server": {
       "import": "./runtime/server.js",
       "types": "./runtime/server-types.d.ts"
@@ -118,6 +122,12 @@
       ],
       "party": [
         "./dist/types/runtime/party.d.ts"
+      ],
+      "listen": [
+        "./dist/types/runtime/listen.d.ts"
+      ],
+      "storage": [
+        "./dist/types/runtime/storage.d.ts"
       ],
       "css": [
         "./dist/types/runtime/style.d.ts"
