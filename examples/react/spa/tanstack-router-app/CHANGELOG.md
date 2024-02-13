@@ -4,6 +4,13 @@
 
 ### Patch Changes
 
+- Updated dependencies [3a3573f]
+  - vinxi@0.3.1
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [b039359]
 - Updated dependencies [ca63e63]
 - Updated dependencies [a109c52]
