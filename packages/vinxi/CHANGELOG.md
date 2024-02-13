@@ -1,5 +1,19 @@
 # vinxi
 
+## 0.3.0
+
+### Minor Changes
+
+- 5e904e3: vite 5 and fixes
+
+### Patch Changes
+
+- b039359: fix: Update chunk and entry file names in server components to always use .js extension
+- ca63e63: fix: catch errors in fs-router fixes #100
+- a109c52: feat: Reexporting type CookieSerializeOptions from 'cookie-es', used by cookie helpers
+- fd2d5e4: fix: separate vite cache dirs for different routers
+  - @vinxi/devtools@0.2.0
+
 ## 0.2.1
 
 ### Patch Changes
