@@ -15,5 +15,8 @@
     "vinxi": "workspace:^",
     "vitepress": "1.0.0-rc.42",
     "vue": "^3.4.19"
+  },
+  "devDependencies": {
+    "zod": "^3.22.2"
   }
 }

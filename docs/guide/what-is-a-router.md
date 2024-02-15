@@ -53,7 +53,7 @@ export default createApp({
 
   This works both in client and server targets. The restriction is that the client can only access it's own manifest, whereas the server can access all manifests.
 
-  To learn more about the manifest, check out the [Manifest API](/docs/manifest).
+  To learn more about the manifest, check out the [Manifest API](/api/manifest).
 
 ::: code-group
 

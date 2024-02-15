@@ -20,7 +20,7 @@ bun install vinxi
 
 :::
 
-`Vinxi` is a full stack JavaScript SDK to build apps and frameworks of all kinds with your own opinions. Our only opinion is that we like JavaScript/TypeScript and we want to see it eat the world. It is powered by some of the most foundational tools in the JavaScript ecosystem: [Vite](), [Nitro]() and [Rollup]() (and many other tools contributed by the community).
+`Vinxi` is a full stack JavaScript SDK to build apps and frameworks of all kinds with your own opinions. Our only opinion is that we like JavaScript/TypeScript and we want to see it eat the world. It is powered by some of the most foundational tools in the JavaScript ecosystem: [Vite](https://vitejs.dev), [Nitro](https://nitro.unjs.io) and [Rollup](https://rollupjs.org) (and many other tools contributed by the community).
 
 Being a SDK, `vinxi` is a collection of primitives that you can bend to your will to compose your own full stack applications and frameworks. You might be coming here from a specific context and use case. So depending on your use case, you can choose where to start your journey:
 

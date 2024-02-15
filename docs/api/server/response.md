@@ -1,668 +1,11 @@
-# Server API
-
-Vinxi takes care of your server runtime needs. It's built entirely on top of `unjs/h3` and thus gets to export a really powerful and clean consistent server runtime. Along with the help of `unjs/nitro` and `unjs/env`, we are able to abstract over all the different runtimes/platforms. Vinxi provides a set of helpers that covers all the usual use cases of the app to interact with the server platform. Of course, we also exposes the bare platform native objects for you to manipulate as necessary.
-
-Vinxi (via H3) has a concept of composable utilities that accept `event` (from `eventHandler((event) => {})`) as their first argument. This has several performance benefits over injecting them to `event` or `app` instances in global middleware commonly used in Node.js frameworks, such as Express. This concept means only required code is evaluated and bundled, and the rest of the utilities can be tree-shaken when not used.
-
-If you enable `asyncContext` in your `app.config.js`, you can also call these utilities from anywhere without passing the event to it explicitly. It will use `AsyncLocalStorage` to get the current event from the context.
-
-## Request Info
-
----
-
-### `getRequestHost`
-
-Get the request host
-
-```ts twoslash file=app/server.ts
-import { eventHandler, getRequestHost } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const host = getRequestHost(event) // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts
-export function getRequestHost(
-  event: HTTPEvent,
-  opts?: {
-    xForwardedHost?: boolean
-  },
-): string
-```
-
-:::
-
----
-
-### `getRequestProtocol`
-
-Get the request protocol, whether its `http` or `https`.
-
-```ts twoslash file=app/server.ts
-import { eventHandler, getRequestProtocol } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const protocol = getRequestProtocol(event) // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts
-export function getRequestProtocol(
-  event: HTTPEvent,
-  opts?: {
-    xForwardedProto?: boolean
-  },
-): "https" | "http"
-```
-
-:::
-
----
-
-### `getRequestURL`
-
-Get the request [URL](url)
-
-```ts twoslash file=app/server.ts
-// @noErrors
-import { eventHandler, getRequestURL } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const url = getRequestURL(event)
-
-  url.protocol // "http"
-  url.hostname // "localhost"
-  url.port // "3000"
-  url.host // "localhost:3000"
-  url.username // ""
-  url.password // ""
-  url.origin // "http://localhost:3000"
-  url.pathname // "/products"
-  url.search // "?category=shoes"
-  url.searchParams // URLSearchParams { category: "shoes" };
-  url.hash // "#section";
-  url.href // "http://localhost:3000/products?category=shoes#section";
-})
-```
-
-::: details Signature
-
-```ts
-export function getRequestURL(
-  event: HTTPEvent,
-  opts?: {
-    xForwardedHost?: boolean
-    xForwardedProto?: boolean
-  },
-): URL
-```
-
-:::
-
-### `getRequestIP`
-
-Get the request IP, if visible.
-
-```ts twoslash file=app/server.ts
-import { eventHandler, getRequestIP } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const ip = getRequestIP(event) // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts
-export function getRequestIP(
-  event: HTTPEvent,
-  opts?: {
-    xForwardedFor?: boolean
-  },
-): string | undefined
-```
-
-:::
-
-### `isPreflightRequest`
-
-Check if the request is a CORS preflight request
-
-```ts twoslash file=app/server.ts
-import { eventHandler, isPreflightRequest } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const isPreflight = isPreflightRequest(event) // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts
-export function isPreflightRequest(event: HTTPEvent): boolean
-```
-
-:::
-
-### `getWebRequest`
-
-Get a Web Fetch API compliant [`Request`]() instance from the [`HTTPEvent`](httpevent)
-
-```ts twoslash
-import { eventHandler, getWebRequest } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const request = getWebRequest(event) // [!code highlight]
-
-  request.url
-  request.method
-  request.headers
-  request.json()
-  request.formData()
-  request.text()
-  request.arrayBuffer()
-  request.blob()
-})
-```
-
-::: details Signature
-
-```ts
-export function getWebRequest(event: HTTPEvent): Request
-```
-
-:::
-
-## Request Body
-
----
-
-### `readBody`
-
-Reads request body and tries to safely parse as JSON using [destr](https://github.com/unjs/destr).
-
-```ts twoslash file=app/server.ts
-import { eventHandler, readBody } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const body = await readBody(event) // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts
-function readBody<
-  T,
-  Event extends H3Event<EventHandlerRequest> = H3Event<EventHandlerRequest>,
-  _T = InferEventInput<"body", Event, T>,
->(event: Event, options?: { strict?: boolean }): Promise<_T>
-```
-
-:::
-
----
-
-### `readFormData`
-
-Constructs a `FormData` object from an event, after converting it to a a web request.
-
-```ts twoslash file=app/server.ts
-import { eventHandler, readFormData } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const formData = await readFormData(event) // [!code highlight]
-  const email = formData.get("email")
-  const password = formData.get("password")
-})
-```
-
-::: details Signature
-
-```ts twoslash file=vinxi/http
-// @lib: es2015
-// @filename: index.d.ts
-import { HTTPEvent, readFormData } from "vinxi/http"
-import { FormData } from "vinxi/types/web"
-
-// ---cut---
-export function readFormData(event: HTTPEvent): Promise<FormData>
-```
-
-:::
-
----
-
-### `readMultipartFormData`
-
-Tries to read and parse the body of an HTTPEvent as a multipart form.
-
-```ts twoslash file=app/server.ts
-import { eventHandler, readMultipartFormData } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const data = await readMultipartFormData(event) // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts twoslash file=vinxi/http
-import { HTTPEvent } from "vinxi/http"
-import { FormData } from "vinxi/types/web"
-
-// @lib: es2015
-// @filename: index.d.ts
-
-type MultiPartData = {
-  data: Buffer
-  name?: string
-  filename?: string
-  type?: string
-}
-
-// ---cut---
-export function readMultipartFormData(
-  event: HTTPEvent,
-): Promise<MultiPartData[] | undefined>
-```
-
-:::
-
----
-
-### `readValidatedBody`
-
-Tries to read the request body via `readBody`, then uses the provided validation function and either throws a validation error or returns the result.
-
-#### Using `zod`
-
-```ts twoslash file=app/server.ts
-import { eventHandler, readValidatedBody } from "vinxi/http"
-import { z } from "zod"
-
-const objectSchema = z.object({
-  email: z.string(),
-  password: z.string(),
-})
-//
-export default eventHandler(async (event) => {
-  const body = await readValidatedBody(event, objectSchema.safeParse)
-})
-```
-
-#### Using custom validation function
-
-```ts twoslash file=app/server.ts
-import { eventHandler, readValidatedBody } from "vinxi/http"
-
-//
-export default eventHandler(async (event) => {
-  // With a custom validation function
-  const body = await readValidatedBody(event, (body) => {
-    return typeof body === "object" && body !== null
-  })
-})
-```
-
-::: details Signature
-
-```ts
-export function readValidatedBody<
-  T,
-  Event extends HTTPEvent = HTTPEvent,
-  _T = InferEventInput<"body", Event, T>,
->(event: Event, validate: ValidateFunction<_T>): Promise<_T>
-```
-
-:::
-
----
-
-### `readRawBody`
-
-Reads body of the request and returns encoded raw string (default), or Buffer if encoding is falsy.
-
-```ts [app/server.ts]
-import { eventHandler, readRawBody } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const body = await readRawBody(event, "utf-8") // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts
-function readRawBody<E extends Encoding = "utf8">(
-  event: HTTPEvent,
-  encoding?: E,
-): E extends false ? Promise<Buffer | undefined> : Promise<string | undefined>
-```
-
-:::
-
----
-
-### `getRequestWebStream`
-
-Captures a [ReadableStream](readablestream) from a request.
-
-```ts twoslash
-import { eventHandler, getRequestWebStream } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const stream = getRequestWebStream(event) // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts twoslash
-// @lib: es2015
-// @filename: index.d.ts
-import { HTTPEvent } from "vinxi/http"
-import { ReadableStream } from "vinxi/types/web"
-
-// ---cut---
-export function getRequestWebStream(
-  event: HTTPEvent,
-): ReadableStream | undefined
-```
-
-:::
-
----
-
-### `getQuery`
-
-Get the query
-
-```ts twoslash file=app/server.ts
-import { eventHandler, getQuery } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const query = getQuery(event) // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts
-export function getQuery<
-  T,
-  Event extends HTTPEvent = HTTPEvent,
-  _T = Exclude<InferEventInput<"query", Event, T>, undefined>,
->(event: Event): _T
-```
-
-:::
-
----
-
-### `getValidatedQuery`
-
-Get the validated query
-
-```ts twoslash file=app/server.ts
-import { eventHandler, getValidatedQuery } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const query = await getValidatedQuery(event, (query) => {
-    return typeof query === "object" && query !== null
-  }) // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts
-export function getValidatedQuery<
-  T,
-  Event extends HTTPEvent = HTTPEvent,
-  _T = InferEventInput<"query", Event, T>,
->(event: Event, validate: ValidateFunction<_T>): Promise<_T>
-```
-
-:::
-
----
-
-## Cookies
-
----
-
-### `parseCookies`
-
-Parse the request to get HTTP Cookie header string and returning an object of all cookie name-value pairs.
-
-```ts twoslash file=app/server.ts
-import { eventHandler, parseCookies } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const cookies = parseCookies(event) // [!code highlight]
-
-  cookies["authorization"] // "*******"
-})
-```
-
-::: details Signature
-
-```ts
-export function parseCookies(event: HTTPEvent): Record<string, string>
-```
-
-:::
-
----
-
-### `getCookie`
-
-Get a cookie value by name.
-
-```ts twoslash file=app/server.ts
-import { eventHandler, getCookie } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  const authorization = getCookie(event, "Authorization") //
-  if (authorization) {
-    // ...
-  }
-})
-```
-
-::: details Signature
-
-```ts
-export function getCookie(event: HTTPEvent, name: string): string | undefined
-```
-
-:::
-
----
-
-### `setCookie`
-
-Set a cookie value by name.
-
-```ts twoslash file=app/server.ts
-import { eventHandler, setCookie } from "vinxi/http"
-
-export default eventHandler(async (event) => {
-  setCookie(event, "Authorization", "1234567") // [!code highlight]
-})
-```
-
-::: details Signature
-
-```ts
-export function setCookie(
-  event: HTTPEvent,
-  name: string,
-  value: string,
-  serializeOptions?: CookieSerializeOptions,
-): void
-```
-
-:::
-
----
-
-### `deleteCookie`
-
-Delete a cookie by name
-
-::: details Signature
-
-```ts
-export function deleteCookie(
-  event: HTTPEvent,
-  name: string,
-  serializeOptions?: CookieSerializeOptions,
-): void
-```
-
-:::
-
-## Fetch
-
-### fetchWithEvent
-
-::: details Signature
-
-```ts
-export function fetchWithEvent<
-  T = unknown,
-  _R = any,
-  F extends (req: RequestInfo | URL, opts?: any) => any = typeof fetch,
->(
-  event: HTTPEvent,
-  req: RequestInfo | URL,
-  init?: RequestInit & {
-    context?: H3EventContext
-  },
-  options?: {
-    fetch: F
-  },
-): unknown extends T ? ReturnType<F> : T
-```
-
-:::
-
-## Router Param
-
-### `getRouterParams(event, opts)`: Get the router params
-
-```ts
-export function getRouterParams(
-  event: HTTPEvent,
-  opts?: {
-    decode?: boolean
-  },
-): NonNullable<HTTPEvent["context"]["params"]>
-```
-
-### `getValidatedRouterParams(event, validate, opts)`: Get the validated router params
-
-```ts
-export function getValidatedRouterParams<
-  T,
-  Event extends HTTPEvent = HTTPEvent,
-  _T = InferEventInput<"routerParams", Event, T>,
->(
-  event: Event,
-  validate: ValidateFunction<_T>,
-  opts?: {
-    decode?: boolean
-  },
-): Promise<_T>
-```
-
-### `getRouterParam(event, name, opts)`: Get a router param by name
-
-```ts
-export function getRouterParam(
-  event: HTTPEvent,
-  name: string,
-  opts?: {
-    decode?: boolean
-  },
-): string | undefined
-```
-
-## Session
-
-### `clearSession(event, config)`: Clear the session
-
-```ts
-export function clearSession(
-  event: HTTPEvent,
-  config: Partial<SessionConfig>,
-): Promise<void>
-```
-
-### `unsealSession(event, config, sealed)`: Unseal the session
-
-```ts
-export function unsealSession(
-  event: HTTPEvent,
-  config: SessionConfig,
-  sealed: string,
-): Promise<Partial<Session<SessionDataT>>>
-```
-
-### `getSession(event, config)`: Get the session
-
-```ts
-export function getSession<T extends SessionDataT = SessionDataT>(
-  event: HTTPEvent,
-  config: SessionConfig,
-): Promise<Session<T>>
-```
-
-### `sealSession(event, config)`: Seal the session
-
-```ts
-export function sealSession(event: HTTPEvent, config: SessionConfig): void
-```
-
-### `updateSession(event, config, update)`: Update the session
-
-```ts
-export function updateSession<T extends SessionDataT = SessionDataT>(
-  event: HTTPEvent,
-  config: SessionConfig,
-  update?: SessionUpdate<T>,
-): Promise<Session<T>>
-```
-
-### `useSession(event, config)`: Use the session
-
-```ts
-export function useSession<T extends SessionDataT = SessionDataT>(
-  event: HTTPEvent,
-  config: SessionConfig,
-): Promise<{
-  readonly id: string | undefined
-  readonly data: T
-  update: (update: SessionUpdate<T>) => Promise<any>
-  clear: () => Promise<any>
-}>
-```
-
-## Header
+## Response Headers
 
 ### `getResponseHeaders(event)`: Get the response headers
 
 ```ts
 export function getResponseHeaders(
   event: HTTPEvent,
-): ReturnType<HTTPEvent["res"]["getHeaders"]>
+): ReturnType<HTTPEvent["res"]["getHeaders"]>;
 ```
 
 ### `getResponseHeader(event, name)`: Get a response header by name
@@ -671,7 +14,7 @@ export function getResponseHeaders(
 export function getResponseHeader(
   event: HTTPEvent,
   name: HTTPHeaderName,
-): ReturnType<HTTPEvent["res"]["getHeader"]>
+): ReturnType<HTTPEvent["res"]["getHeader"]>;
 ```
 
 ### `setResponseHeaders(event, headers)`: Set the response headers
@@ -680,7 +23,7 @@ export function getResponseHeader(
 export function setResponseHeaders(
   event: HTTPEvent,
   headers: Record<HTTPHeaderName, Parameters<OutgoingMessage["setHeader"]>[1]>,
-): void
+): void;
 ```
 
 ### `setResponseHeader(event, name, value)`: Set a response header by name
@@ -690,7 +33,7 @@ export function setResponseHeader(
   event: HTTPEvent,
   name: HTTPHeaderName,
   value: Parameters<OutgoingMessage["setHeader"]>[1],
-): void
+): void;
 ```
 
 ### `appendResponseHeaders(event, headers)`: Append the response headers
@@ -699,7 +42,7 @@ export function setResponseHeader(
 export function appendResponseHeaders(
   event: HTTPEvent,
   headers: Record<string, string>,
-): void
+): void;
 ```
 
 ### `appendResponseHeader(event, name, value)`: Append a response header by name
@@ -709,7 +52,7 @@ export function appendResponseHeader(
   event: HTTPEvent,
   name: HTTPHeaderName,
   value: string,
-): void
+): void;
 ```
 
 ### `clearResponseHeaders(event, headerNames)`: Clear the response headers
@@ -718,7 +61,7 @@ export function appendResponseHeader(
 export function clearResponseHeaders(
   event: HTTPEvent,
   headerNames?: string[],
-): void
+): void;
 ```
 
 ### `removeResponseHeader(event, name)`: Remove a response header by name
@@ -727,7 +70,7 @@ export function clearResponseHeaders(
 export function removeResponseHeader(
   event: HTTPEvent,
   name: HTTPHeaderName,
-): void
+): void;
 ```
 
 ### `writeEarlyHints(event, hints, cb)`: Write early hints
@@ -737,13 +80,13 @@ export function writeEarlyHints(
   event: HTTPEvent,
   hints: string | string[] | Record<string, string | string[]>,
   cb?: () => void,
-): void
+): void;
 ```
 
 ### `getRequestHeaders(event)`: Get the request headers
 
 ```ts
-export function getRequestHeaders(event: HTTPEvent): RequestHeaders
+export function getRequestHeaders(event: HTTPEvent): RequestHeaders;
 ```
 
 ### `getRequestHeader(event, name)`: Get a request header by name
@@ -752,7 +95,7 @@ export function getRequestHeaders(event: HTTPEvent): RequestHeaders
 export function getRequestHeader(
   event: HTTPEvent,
   name: HTTPHeaderName,
-): RequestHeaders[string]
+): RequestHeaders[string];
 ```
 
 ## Middleware
@@ -763,20 +106,20 @@ export function getRequestHeader(
 export function defineMiddleware(options: {
   onRequest?:
     | import("h3")._RequestMiddleware
-    | import("h3")._RequestMiddleware[]
+    | import("h3")._RequestMiddleware[];
   onBeforeResponse?:
     | import("h3")._ResponseMiddleware
-    | import("h3")._ResponseMiddleware[]
+    | import("h3")._ResponseMiddleware[];
 }): {
   onRequest?:
     | import("h3")._RequestMiddleware
     | import("h3")._RequestMiddleware[]
-    | undefined
+    | undefined;
   onBeforeResponse?:
     | import("h3")._ResponseMiddleware
     | import("h3")._ResponseMiddleware[]
-    | undefined
-}
+    | undefined;
+};
 ```
 
 ## Error
@@ -784,7 +127,7 @@ export function defineMiddleware(options: {
 ### `sendError(event, error, debug)`: Send an error
 
 ```ts
-export function sendError(event: HTTPEvent, error: any, debug?: any): void
+export function sendError(event: HTTPEvent, error: any, debug?: any): void;
 ```
 
 ### `createError({ statusCode, statusMessage, data })`: Create an error
@@ -795,10 +138,10 @@ export function createError({
   statusMessage,
   data,
 }: {
-  statusCode?: number
-  statusMessage?: string
-  data?: any
-}): Error
+  statusCode?: number;
+  statusMessage?: string;
+  data?: any;
+}): Error;
 ```
 
 ## Route
@@ -806,7 +149,7 @@ export function createError({
 ### `useBase(base, handler)`: Use a base
 
 ```ts
-export function useBase(base: string, handler: RequestHandler): RequestHandler
+export function useBase(base: string, handler: RequestHandler): RequestHandler;
 ```
 
 ## Proxy
@@ -817,10 +160,10 @@ export function useBase(base: string, handler: RequestHandler): RequestHandler
 export function sendProxy(
   event: HTTPEvent,
   options: {
-    target: string | URL
-    [key: string]: any
+    target: string | URL;
+    [key: string]: any;
   },
-): Promise<void>
+): Promise<void>;
 ```
 
 ### `proxyRequest(event, options)`: Proxy a request
@@ -829,10 +172,10 @@ export function sendProxy(
 export function proxyRequest(
   event: HTTPEvent,
   options: {
-    target: string | URL
-    [key: string]: any
+    target: string | URL;
+    [key: string]: any;
   },
-): Promise<void>
+): Promise<void>;
 ```
 
 ## Request

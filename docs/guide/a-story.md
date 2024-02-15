@@ -170,7 +170,7 @@ Wait the color on the website didn't change. Well that's annoying. Okay, let's r
 
 I don't know about you, but I want some confetti when I click the button. Let's add a library to do that.
 
-I looked around and found this library called [canvas-confetti]().
+I looked around and found this library called [canvas-confetti](https://www.npmjs.com/package/canvas-confetti).
 
 Let's install it.
 

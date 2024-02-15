@@ -39,6 +39,10 @@ importers:
       vue:
         specifier: ^3.4.19
         version: 3.4.19(typescript@5.3.3)
+    devDependencies:
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.4
 
   examples/react/rsc/fw:
     dependencies:
@@ -12981,7 +12985,6 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
