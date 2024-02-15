@@ -1,45 +1,19 @@
 {
-  "name": "vinxi-docs",
-  "type": "module",
-  "private": true,
-  "version": null,
+  "name": "docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start"
+    "dev": "vitepress dev .",
+    "build": "vitepress build ."
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "@algolia/autocomplete-core": "^1.11.0",
-    "@code-hike/mdx": "^0.9.0",
-    "@headlessui/react": "^1.7.17",
-    "@mdx-js/react": "^2.3.0",
-    "@mdx-js/rollup": "^2.3.0",
-    "@picocss/pico": "^1.5.10",
-    "@sindresorhus/slugify": "^2.2.1",
-    "@vinxi/plugin-mdx": "workspace:^",
-    "@vinxi/react": "workspace:^",
-    "@vitejs/plugin-react": "^4.0.4",
-    "@webcontainer/api": "^1.1.7",
-    "acorn": "^8.10.0",
-    "autoprefixer": "^10.4.15",
-    "clsx": "^2.0.0",
-    "framer-motion": "^10.16.4",
-    "path-to-regexp": "^6.2.1",
-    "react": "0.0.0-experimental-035a41c4e-20230704",
-    "react-dom": "0.0.0-experimental-035a41c4e-20230704",
-    "react-router-dom": "^6.17.0",
-    "remark-gfm": "^4.0.0",
-    "tailwindcss": "^3.3.3",
-    "unist-util-visit": "^5.0.0",
+    "@shikijs/vitepress-twoslash": "^1.1.2",
     "vinxi": "workspace:^",
-    "vite-plugin-inspect": "^0.7.38",
-    "vite-tsconfig-paths": "^4.2.0",
-    "wouter": "^2.11.0",
-    "zustand": "^4.4.1"
-  },
-  "devDependencies": {
-    "@tailwindcss/typography": "^0.5.10",
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7"
+    "vitepress": "1.0.0-rc.42",
+    "vue": "^3.4.19"
   }
 }
