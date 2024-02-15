@@ -1,5 +1,6 @@
 // import React, { Suspense } from "react";
 import { eventHandler, sendStream } from "vinxi/http";
+import { getManifest } from "vinxi/manifest";
 
 // import App from "./app";
 
@@ -16,7 +17,7 @@ export default eventHandler(async (event) => {
 			// This is the client-side case
 			const [filepath, name] = serverReference.split("#");
 			const action = (
-				await import.meta.env.MANIFEST["server-fns"].chunks[filepath].import()
+				await getManifest("server-fns").chunks[filepath].import()
 			)[name];
 			// Validate that this is actually a function we intended to expose and
 			// not the client trying to invoke arbitrary functions. In a real app,

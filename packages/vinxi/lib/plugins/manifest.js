@@ -27,6 +27,7 @@ export function manifest() {
 					define: {
 						"import.meta.env.MANIFEST": `globalThis.MANIFEST`,
 						"import.meta.env.ROUTER_NAME": JSON.stringify(router.name),
+						"import.meta.env.ROUTER_TYPE": JSON.stringify(router.type),
 						"import.meta.env.ROUTER_HANDLER": JSON.stringify(router.handler),
 						"import.meta.env.CWD": JSON.stringify(router.root),
 						"import.meta.env.SERVER_BASE_URL": JSON.stringify(

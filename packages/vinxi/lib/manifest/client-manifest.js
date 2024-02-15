@@ -12,10 +12,13 @@ const manifest = new Proxy(
 				"Bundler name should be a string",
 			);
 			return {
+				name: routerName,
+				type: import.meta.env.ROUTER_TYPE,
 				handler: import.meta.env.DEV
 					? join(import.meta.env.CWD, import.meta.env.ROUTER_HANDLER)
 					: // @ts-ignore
 					  virtualId(handlerModule({ name: routerName })),
+				baseURL: import.meta.env.BASE_URL,
 				chunks: new Proxy(
 					{},
 					{

@@ -248,8 +248,6 @@ const command = defineCommand({
 					process.env.NITRO_TARGET ??
 					(process.versions.bun !== undefined ? "bun" : "node-server");
 
-				console.log(process.env.SERVER_PRESET);
-
 				switch (process.env.SERVER_PRESET) {
 					case "node-server":
 						await import(
@@ -399,7 +397,6 @@ const command = defineCommand({
 				const { join } = await import("../lib/path.js");
 				const { fetchModule, createServer } = await import("vite");
 				const { ViteRuntime, ESModulesRunner } = await import("vite/runtime");
-
 				const server = await createServer({
 					resolve: {
 						alias: {
