@@ -5,7 +5,7 @@ layout: home
 hero:
   name: Vinxi
   text: The Full Stack Javascript SDK
-  tagline: My great project tagline
+  tagline: Build your javascript applications and frameworks with ease
   actions:
     - theme: brand
       text: Get Started
