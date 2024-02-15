@@ -150,6 +150,7 @@ The type is available in your code as:
 import { isDev, isProd, isSSR, routerType } from "vinxi/manifest";
 
 routerType;
+isSSR;
 ```
 
 :::
