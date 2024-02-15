@@ -23,27 +23,26 @@ export default defineConfig({
 				link: "/guide",
 				items: [
 					{ text: "Why Vinxi", link: "/guide/why-vinxi" },
-					{ text: "Getting Started", link: "/guide/getting-started" },
+					{ text: "Get Started", link: "/guide/getting-started" },
+					{
+						text: "Create your first app",
+						link: "/guide/create-your-first-app",
+					},
+					{
+						text: "Upgrade existing Vite app",
+						link: "/guide/add-to-existing-vite-app",
+					},
 					{
 						text: "Build Your Own Framework",
 						link: "/guide/build-your-own-framework",
 					},
 					{
-						text: "Core Concepts",
-						items: [
-							{ text: "What is an App", link: "/guide/what-is-an-app" },
-							{ text: "What is a Router", link: "/guide/what-is-a-router" },
-						],
-					},
-					{
-						text: "Extending Vinxi",
+						text: "Configuring Vinxi",
 						items: [
 							{ text: "Vite Plugins", link: "/guide/vite-plugins" },
 							{ text: "Path Aliases", link: "/guide/aliases" },
 						],
 					},
-					{ text: "A Story", link: "/guide/a-story" },
-					{ text: "Philosophy", link: "/guide/philosophy" },
 				],
 			},
 			{
@@ -51,6 +50,16 @@ export default defineConfig({
 				link: "/api",
 				items: [
 					{ text: "App API", link: "/api/app" },
+					{
+						text: "Router API",
+						link: "/api/router",
+						items: [
+							{ text: `"static"`, link: "/api/router/static" },
+							{ text: `"spa"`, link: "/api/router/spa" },
+							{ text: `"http"`, link: "/api/router/http" },
+							{ text: `"client"`, link: "/api/router/client" },
+						],
+					},
 					{ text: "vinxi CLI", link: "/api/cli" },
 					{
 						text: "Server API",
@@ -63,6 +72,13 @@ export default defineConfig({
 						],
 					},
 					{ text: "Manifest API", link: "/api/manifest" },
+				],
+			},
+			{
+				text: "Resources",
+				items: [
+					{ text: "A Story", link: "/guide/a-story" },
+					{ text: "Philosophy", link: "/guide/philosophy" },
 				],
 			},
 		],

@@ -31,5 +31,5 @@ Being a SDK, `vinxi` is a collection of primitives that you can bend to your wil
 But if you don't want to commit to any of those and just want to look around, you can start by reading:
 
 - [Why we built Vinxi](./why-vinxi.md)
-- The core concepts of Vinxi: [App](./what-is-an-app.md) and [Router](./what-is-a-router.md)
+- The core concepts of Vinxi: [App](/api/app) and [Router](/api/router)
 - [Our philosophy behind our decisions](./philosophy.md)
