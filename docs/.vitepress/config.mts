@@ -54,7 +54,7 @@ export default defineConfig({
 					{ text: "vinxi CLI", link: "/api/cli" },
 					{
 						text: "Server API",
-						link: "/api/server/runtime",
+						// link: "/api/server/runtime",
 						items: [
 							{ text: "Request", link: "/api/server/request" },
 							{ text: "Response", link: "/api/server/response" },
@@ -78,7 +78,6 @@ export default defineConfig({
 		codeTransformers: [
 			transformerTwoslash({
 				explicitTrigger: true,
-				
 			}),
 		],
 	},

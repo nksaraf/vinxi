@@ -1,4 +1,10 @@
+# Response
+
+---
+
 ## Response Headers
+
+---
 
 ### `getResponseHeaders(event)`: Get the response headers
 

@@ -137,7 +137,12 @@
 	--docsearch-primary-color: var(--vp-c-brand-1) !important;
 }
 
+html.dark {
+	.logo {
+		filter: invert(1);
+	}
+}
+
 .logo {
-	/* apply an invert filter */
-	filter: invert(1);
+	filter: invert(0);
 }

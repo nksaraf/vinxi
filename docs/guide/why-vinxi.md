@@ -1,0 +1,3 @@
+# Why Vinxi?
+
+(Coming soon)
