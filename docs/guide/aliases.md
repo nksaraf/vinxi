@@ -8,6 +8,7 @@ It's usually annoying to type long import paths relative to a deep file structur
 import Button from "../../../../components/atoms/Button/Button";
 ```
 
+Hello
 :::
 
 While IDEs like VSCode can auto-complete the path for you, it is still annoying to correct, and read. To solve this, we can use typescript to added aliases for the most common paths. You can now write:
