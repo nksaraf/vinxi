@@ -2,4 +2,4 @@
 "vinxi": patch
 ---
 
-Show vite version when running vinxi dev
+Show vite and nitro versions in vinxi cli
