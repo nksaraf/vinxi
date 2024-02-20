@@ -67,6 +67,9 @@ const command = defineCommand({
 				let vite = await import("vite/package.json", { assert: { type: "json" }});
 				log(c.dim(c.yellow(`Vite: ${vite.default.version}`)));
 				
+				let nitro = await import("nitropack/package.json", { assert: { type: "json" }});
+				log(c.dim(c.yellow(`Nitro: ${nitro.default.version}`)));
+				
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
 				const app = await loadApp(configFile, args);
