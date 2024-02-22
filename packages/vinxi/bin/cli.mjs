@@ -62,7 +62,12 @@ const command = defineCommand({
 				const chokidar = await import("chokidar");
 				const { loadApp } = await import("../lib/load-app.js");
 				const { log, c } = await import("../lib/logger.js");
-				log(c.dim(c.yellow(packageJson.version)));
+				log(c.dim(c.yellow(`Vinxi: ${packageJson.version}`)));
+				
+				let vite = await import("vite/package.json", { assert: { type: "json" }});
+				log(c.dim(c.yellow(`Vite: ${vite.default.version}`)));
+
+				
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
 				const app = await loadApp(configFile, args);
@@ -200,7 +205,14 @@ const command = defineCommand({
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
 				const { log, c } = await import("../lib/logger.js");
-				log(c.dim(c.yellow(packageJson.version)));
+				log(c.dim(c.yellow(`Vinxi: ${packageJson.version}`)));
+
+				let vite = await import("vite/package.json", { assert: { type: "json" }});
+				log(c.dim(c.yellow(`Vite: ${vite.default.version}`)));
+
+				let nitro = await import("nitropack/package.json", { assert: { type: "json" }});
+				log(c.dim(c.yellow(`Nitro: ${nitro.default.version}`)));
+
 				const { loadApp } = await import("../lib/load-app.js");
 				const app = await loadApp(configFile, args);
 				process.env.NODE_ENV = "production";
