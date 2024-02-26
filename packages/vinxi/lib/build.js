@@ -304,6 +304,10 @@ export async function createBuild(app, buildConfig) {
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
 
 	await app.hooks.callHook("app:build:nitro:prerender:start", { app, nitro });
+	nitro.hooks.hook("prerender:init", (nitro) => {
+		nitro.options.appConfigFiles = [];
+		nitro.logger = consola.withTag(app.config.name);
+	});
 	await prerender(nitro);
 	await app.hooks.callHook("app:build:nitro:prerender:end", { app, nitro });
 
