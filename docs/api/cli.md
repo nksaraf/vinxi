@@ -98,3 +98,7 @@ const handler = eventHandler(async (event) => {
 
 await listen(toNodeListener(handler), { port: 3000 });
 ```
+
+## `vinxi version`
+
+Show the version of vinxi, vite, nitro and h3.
