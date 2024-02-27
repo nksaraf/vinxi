@@ -2,6 +2,7 @@ import * as z from "zod";
 
 import { isMainThread } from "node:worker_threads";
 
+import { defineWebSocket } from "../runtime/http.js";
 import invariant from "./invariant.js";
 import { handlerModule, join } from "./path.js";
 import { resolve } from "./resolve.js";
@@ -256,15 +257,33 @@ const routerModes = {
 				const viteServer = await createViteHandler(router, app, serveConfig);
 				const viteMiddleware = fromNodeMiddleware(viteServer.middlewares);
 
-				const handler = eventHandler(async (event) => {
-					await viteMiddleware(event);
-					if (event.handled) {
-						return;
-					}
-					const { default: handler } = await viteServer.ssrLoadModule(
-						handlerModule(router),
-					);
-					return handler(event);
+				function createHook(hook) {
+					return async function callWebSocketHook(...args) {
+						const { default: handler } = await viteServer.ssrLoadModule(
+							handlerModule(router),
+						);
+						return handler.__websocket__?.[hook]?.(...args);
+					};
+				}
+
+				const handler = eventHandler({
+					handler: async (event) => {
+						await viteMiddleware(event);
+						if (event.handled) {
+							return;
+						}
+						const { default: handler } = await viteServer.ssrLoadModule(
+							handlerModule(router),
+						);
+						return handler(event);
+					},
+					websocket: defineWebSocket({
+						open: createHook("open"),
+						close: createHook("close"),
+						message: createHook("message"),
+						error: createHook("error"),
+						upgrade: createHook("upgrade"),
+					}),
 				});
 				return [
 					{

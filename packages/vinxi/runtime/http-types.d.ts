@@ -60,6 +60,7 @@ export {
 	isEventHandler,
 	isWebResponse,
 	lazyEventHandler,
+	defineWebSocket,
 	promisifyNodeListener,
 	serveStatic,
 	toEventHandler,
