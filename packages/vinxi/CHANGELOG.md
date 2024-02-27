@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.3.4
+
+### Patch Changes
+
+- af337ca: feat: `vinxi version`, shows vite, nitro, h3 versions in vinxi cli
+- bd2dc5d: fix: add prerender initialization hook to accept app config as vite config
+  - @vinxi/devtools@0.2.0
+
 ## 0.3.3
 
 ### Patch Changes
