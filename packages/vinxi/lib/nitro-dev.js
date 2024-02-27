@@ -186,7 +186,6 @@ export async function createDevServer(nitro) {
 
 	// Dev-only handlers
 	for (const handler of nitro.options.devHandlers) {
-		console.log(handler);
 		app.use(
 			joinURL(nitro.options.runtimeConfig.app.baseURL, handler.route ?? "/"),
 			handler.handler,
