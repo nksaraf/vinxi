@@ -2,4 +2,4 @@
 "vinxi": patch
 ---
 
-Show vite and nitro versions in vinxi cli
+feat: `vinxi version`, shows vite, nitro, h3 versions in vinxi cli
