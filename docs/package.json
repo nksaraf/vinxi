@@ -1,22 +1,11 @@
 {
-  "name": "docs",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "vitepress dev .",
-    "build": "vitepress build ."
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@shikijs/vitepress-twoslash": "^1.1.2",
-    "vinxi": "workspace:^",
-    "vitepress": "1.0.0-rc.42",
-    "vue": "^3.4.19"
+    "build": "undocs build",
+    "dev": "undocs dev"
   },
   "devDependencies": {
-    "zod": "^3.22.2"
+    "undocs": "^0.2.16"
   }
 }
