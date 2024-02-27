@@ -1,5 +1,6 @@
 import { listen } from "@vinxi/listhen";
 import { watch } from "chokidar";
+import wsAdapter from "crossws/adapters/node";
 import {
 	H3Event,
 	createApp,
@@ -181,9 +182,16 @@ export async function createDevServer(nitro) {
 		);
 	}
 
+	const wsApp = createApp();
+
 	// Dev-only handlers
 	for (const handler of nitro.options.devHandlers) {
+		console.log(handler);
 		app.use(
+			joinURL(nitro.options.runtimeConfig.app.baseURL, handler.route ?? "/"),
+			handler.handler,
+		);
+		wsApp.use(
 			joinURL(nitro.options.runtimeConfig.app.baseURL, handler.route ?? "/"),
 			handler.handler,
 		);
@@ -252,6 +260,14 @@ export async function createDevServer(nitro) {
 	// 	}),
 	// );
 
+	const adapter = wsAdapter({
+		...wsApp.websocket,
+		adapterHooks: {
+			"node:message": (event) => {
+				event.ctx.node.req.url = event.ctx.node.req.originalUrl;
+			},
+		},
+	});
 	// Listen
 	/** @type {import("@vinxi/listhen").Listener[]}  */
 	let listeners = [];
@@ -268,6 +284,14 @@ export async function createDevServer(nitro) {
 			...opts,
 		});
 		listeners.push(listener);
+		import.meta._websocket = nitro.options.experimental?.websocket;
+		if (import.meta._websocket) {
+			console.log("enabling websockets");
+			listener.server.on("upgrade", (req, sock, head) => {
+				console.log("upgrading");
+				adapter.handleUpgrade(req, sock, head);
+			});
+		}
 		return listener;
 	};
 

@@ -2,6 +2,11 @@ import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 
 export default createApp({
+	server: {
+		experimental: {
+			websocket: true,
+		},
+	},
 	routers: [
 		{
 			name: "public",
@@ -16,6 +21,14 @@ export default createApp({
 			target: "browser",
 			plugins: () => [reactRefresh()],
 			base: "/_build",
+		},
+		{
+			name: "websocket",
+			type: "http",
+			handler: "./app/ws.ts",
+			target: "server",
+			base: "/_ws",
+			plugins: () => [reactRefresh()],
 		},
 		{
 			name: "ssr",

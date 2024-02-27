@@ -567,7 +567,7 @@ const routerModePlugin = {
 					import middleware from "${join(config.router.root, config.router.middleware)}";
 					import handler from "${join(config.router.root, config.router.handler)}";
 					import { eventHandler } from "vinxi/http";
-					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler});`;
+					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler });`;
 					}
 					return `import handler from "${join(
 						config.router.root,

@@ -161,6 +161,7 @@ export {
 	defineRequestMiddleware,
 	defineResponseMiddleware,
 	dynamicEventHandler,
+	defineWebSocket,
 	eventHandler,
 	splitCookiesString,
 	fromNodeMiddleware,
