@@ -62,11 +62,7 @@ const command = defineCommand({
 				const chokidar = await import("chokidar");
 				const { loadApp } = await import("../lib/load-app.js");
 				const { log, c } = await import("../lib/logger.js");
-				log(c.dim(c.yellow(`Vinxi: ${packageJson.version}`)));
-				
-				let vite = await import("vite/package.json", { assert: { type: "json" }});
-				log(c.dim(c.yellow(`Vite: ${vite.default.version}`)));
-
+				log(c.dim(c.yellow(`v${packageJson.version}`)));
 				
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
@@ -205,10 +201,7 @@ const command = defineCommand({
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
 				const { log, c } = await import("../lib/logger.js");
-				log(c.dim(c.yellow(`Vinxi: ${packageJson.version}`)));
-
-				let vite = await import("vite/package.json", { assert: { type: "json" }});
-				log(c.dim(c.yellow(`Vite: ${vite.default.version}`)));
+				log(c.dim(c.yellow(`v${packageJson.version}`)));
 
 				let nitro = await import("nitropack/package.json", { assert: { type: "json" }});
 				log(c.dim(c.yellow(`Nitro: ${nitro.default.version}`)));
@@ -477,6 +470,28 @@ const command = defineCommand({
 				// process.exit(0)
 			},
 		},
+		version: {
+			meta: {
+				name: "version",
+				version: packageJson.version,
+				description: "Print the version of Vinxi",
+			},
+			async run() {
+				console.log(packageJson.version);
+				const { log, c } = await import("../lib/logger.js");
+				log(c.dim(c.yellow(`v${packageJson.version}`)));
+				
+				let vite = await import("vite/package.json", { assert: { type: "json" }});
+				log(c.dim(c.yellow(`vite v${vite.default.version}`)));
+
+				let nitro = await import("nitropack/package.json", { assert: { type: "json" }});
+				log(c.dim(c.yellow(`nitro v${nitro.default.version}`)));
+
+				let h3 = await import("h3/package.json", { assert: { type: "json" }});
+				log(c.dim(c.yellow(`h3 v${h3.default.version}`)));
+
+			},
+		}
 	}),
 });
 
