@@ -763,9 +763,6 @@ importers:
       boxen:
         specifier: ^7.1.1
         version: 7.1.1
-      c12:
-        specifier: ^1.4.2
-        version: 1.5.1
       chokidar:
         specifier: ^3.5.3
         version: 3.5.3
@@ -775,9 +772,6 @@ importers:
       consola:
         specifier: ^3.2.3
         version: 3.2.3
-      cookie-es:
-        specifier: ^1.0.0
-        version: 1.0.0
       crossws:
         specifier: ^0.2.4
         version: 0.2.4
@@ -787,9 +781,6 @@ importers:
       defu:
         specifier: ^6.1.2
         version: 6.1.3
-      dts-buddy:
-        specifier: ^0.2.4
-        version: 0.2.5
       es-module-lexer:
         specifier: ^1.3.0
         version: 1.3.1
@@ -799,9 +790,6 @@ importers:
       fast-glob:
         specifier: ^3.3.1
         version: 3.3.1
-      get-port:
-        specifier: ^6.1.2
-        version: 6.1.2
       get-port-please:
         specifier: ^3.1.1
         version: 3.1.1
@@ -817,9 +805,6 @@ importers:
       micromatch:
         specifier: ^4.0.5
         version: 4.0.5
-      mri:
-        specifier: ^1.2.0
-        version: 1.2.0
       nitropack:
         specifier: npm:nitropack-nightly@latest
         version: /nitropack-nightly@2.9.0-28483224.79d641c
@@ -832,18 +817,12 @@ importers:
       pathe:
         specifier: ^1.1.1
         version: 1.1.1
-      perfect-debounce:
-        specifier: ^1.0.0
-        version: 1.0.0
       radix3:
         specifier: ^1.1.0
         version: 1.1.0
       resolve:
         specifier: ^1.22.6
         version: 1.22.8
-      rollup-plugin-visualizer:
-        specifier: ^5.9.2
-        version: 5.9.2
       serve-placeholder:
         specifier: ^2.0.1
         version: 2.0.1
@@ -853,18 +832,12 @@ importers:
       ufo:
         specifier: ^1.3.0
         version: 1.3.1
-      uncrypto:
-        specifier: ^0.1.3
-        version: 0.1.3
       unctx:
         specifier: ^2.3.1
         version: 2.3.1
       unenv:
         specifier: ^1.9.0
         version: 1.9.0
-      unimport:
-        specifier: ^3.2.0
-        version: 3.6.1
       unstorage:
         specifier: ^1.10.1
         version: 1.10.1
@@ -884,6 +857,9 @@ importers:
       '@types/resolve':
         specifier: ^1.20.6
         version: 1.20.6
+      cookie-es:
+        specifier: ^1.0.0
+        version: 1.0.0
       prettier:
         specifier: ^2.8.8
         version: 2.8.8
@@ -6642,15 +6618,6 @@ packages:
       - supports-color
     dev: false
 
-  /agent-base@7.1.0:
-    resolution: {integrity: sha512-o/zjMZRhJxny7OyEF+Op8X+efiELC7k7yOjMzgfzVqOzXqkBkWI79YoTdOtsuWd5BWhAGAuOY/Xa6xpiaWXiNg==}
-    engines: {node: '>= 14'}
-    dependencies:
-      debug: 4.3.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /algoliasearch@4.22.1:
     resolution: {integrity: sha512-jwydKFQJKIx9kIZ8Jm44SdpigFwRGPESaxZBaHSV0XWN2yBJAOT4mT7ppvlrpA4UGzz92pqFnVKr/kaZXrcreg==}
     dependencies:
@@ -7064,24 +7031,6 @@ packages:
     engines: {node: '>= 0.8'}
     dev: false
 
-  /c12@1.5.1:
-    resolution: {integrity: sha512-BWZRJgDEveT8uI+cliCwvYSSSSvb4xKoiiu5S0jaDbKBopQLQF7E+bq9xKk1pTcG+mUa3yXuFO7bD9d8Lr9Xxg==}
-    dependencies:
-      chokidar: 3.5.3
-      defu: 6.1.3
-      dotenv: 16.3.1
-      giget: 1.1.3
-      jiti: 1.21.0
-      mlly: 1.4.2
-      ohash: 1.1.3
-      pathe: 1.1.1
-      perfect-debounce: 1.0.0
-      pkg-types: 1.0.3
-      rc9: 2.1.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /c12@1.9.0:
     resolution: {integrity: sha512-7KTCZXdIbOA2hLRQ+1KzJ15Qp9Wn58one74dkihMVp2H6EzKTa3OYBy0BSfS1CCcmxYyqeX8L02m40zjQ+dstg==}
     dependencies:
@@ -7379,6 +7328,7 @@ packages:
 
   /colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
+    dev: true
 
   /combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
@@ -7457,7 +7407,6 @@ packages:
 
   /cookie-es@1.0.0:
     resolution: {integrity: sha512-mWYvfOLrfEc996hlKcdABeIiPHUPC6DM2QYZdGGOvhOTbA3tjm2eBwqlJpoFdjC89NI4Qt6h0Pu06Mp+1Pj5OQ==}
-    dev: false
 
   /cookie@0.4.2:
     resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}
@@ -7854,30 +7803,9 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /dotenv@16.3.1:
-    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
-    engines: {node: '>=12'}
-    dev: false
-
   /dotenv@16.4.5:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
-    dev: false
-
-  /dts-buddy@0.2.5:
-    resolution: {integrity: sha512-66HTWHyXS3JwgpRwcu88rsDyZfPUb0oPYmiNg5f4BgCAFTVorJXpygf339QyXOXX1PuqHpvB+qo7O+8Ni1vXUQ==}
-    hasBin: true
-    dependencies:
-      '@jridgewell/source-map': 0.3.5
-      '@jridgewell/sourcemap-codec': 1.4.15
-      globrex: 0.1.2
-      kleur: 4.1.5
-      locate-character: 3.0.0
-      magic-string: 0.30.5
-      sade: 1.8.1
-      tiny-glob: 0.2.9
-      ts-api-utils: 1.0.3(typescript@5.0.4)
-      typescript: 5.0.4
     dev: false
 
   /duplexer@0.1.2:
@@ -8556,21 +8484,6 @@ packages:
       get-intrinsic: 1.2.2
     dev: false
 
-  /giget@1.1.3:
-    resolution: {integrity: sha512-zHuCeqtfgqgDwvXlR84UNgnJDuUHQcNI5OqWqFxxuk2BshuKbYhJWdxBsEo4PvKqoGh23lUAIvBNpChMLv7/9Q==}
-    hasBin: true
-    dependencies:
-      colorette: 2.0.20
-      defu: 6.1.3
-      https-proxy-agent: 7.0.2
-      mri: 1.2.0
-      node-fetch-native: 1.4.1
-      pathe: 1.1.1
-      tar: 6.2.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /giget@1.2.1:
     resolution: {integrity: sha512-4VG22mopWtIeHwogGSy1FViXVo0YT+m6BrqZfz0JJFwbSsePsCdOzdLIIli5BtMp7Xe8f/o2OmBpQX2NBOC24g==}
     hasBin: true
@@ -8649,10 +8562,6 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       define-properties: 1.2.1
-    dev: false
-
-  /globalyzer@0.1.0:
-    resolution: {integrity: sha512-40oNTM9UfG6aBmuKxk/giHn5nQ8RVz/SS4Ir6zgzOv9/qC3kKZ9v4etGTcJbEl/NyVQH7FGU7d+X1egr57Md2Q==}
     dev: false
 
   /globby@11.1.0:
@@ -8900,16 +8809,6 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /https-proxy-agent@7.0.2:
-    resolution: {integrity: sha512-NmLNjm6ucYwtcUmL7JQC1ZQ57LmHP4lT15FQ8D61nak1rO6DH+fz5qNK2Ap5UN4ZapYICE3/0KodcLYSPsPbaA==}
-    engines: {node: '>= 14'}
-    dependencies:
-      agent-base: 7.1.0
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
@@ -9546,10 +9445,6 @@ packages:
     dependencies:
       mlly: 1.4.2
       pkg-types: 1.0.3
-    dev: false
-
-  /locate-character@3.0.0:
-    resolution: {integrity: sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==}
     dev: false
 
   /locate-path@5.0.0:
@@ -11626,22 +11521,6 @@ packages:
       yargs: 17.7.2
     dev: false
 
-  /rollup-plugin-visualizer@5.9.2:
-    resolution: {integrity: sha512-waHktD5mlWrYFrhOLbti4YgQCn1uR24nYsNuXxg7LkPH8KdTXVWR9DNY1WU0QqokyMixVXJS4J04HNrVTMP01A==}
-    engines: {node: '>=14'}
-    hasBin: true
-    peerDependencies:
-      rollup: 2.x || 3.x
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      open: 8.4.2
-      picomatch: 2.3.1
-      source-map: 0.7.4
-      yargs: 17.7.2
-    dev: false
-
   /rollup@3.29.4:
     resolution: {integrity: sha512-oWzmBZwvYrU0iJHtDmhsm662rC15FRXmcjCk1xD771dFDx5jJ02ufAQQTn0etB2emNk4J9EZg/yWKpsn9BWGRw==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
@@ -11755,10 +11634,6 @@ packages:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
-
-  /scule@1.1.1:
-    resolution: {integrity: sha512-sHtm/SsIK9BUBI3EFT/Gnp9VoKfY6QLvlkvAE6YK7454IF8FSgJEAnJpVdSC7K5/pjI5NfxhzBLW2JAfYA/shQ==}
     dev: false
 
   /scule@1.3.0:
@@ -12345,13 +12220,6 @@ packages:
     dependencies:
       any-promise: 1.3.0
 
-  /tiny-glob@0.2.9:
-    resolution: {integrity: sha512-g/55ssRPUjShh+xkfx9UPDXqhckHEsHr4Vd9zX55oSdGZc/MD0m3sferOkwWtp98bv+kcVfEHtRJgBVJzelrzg==}
-    dependencies:
-      globalyzer: 0.1.0
-      globrex: 0.1.2
-    dev: false
-
   /tiny-invariant@1.3.1:
     resolution: {integrity: sha512-AD5ih2NlSssTCwsMznbvwMZpJ1cbhkGd2uueNxzv2jDlEeZdU04JQfRnggJQ8DrcVBGjAsCKwFBbDlVNtEMlzw==}
     dev: false
@@ -12420,15 +12288,6 @@ packages:
 
   /trough@2.1.0:
     resolution: {integrity: sha512-AqTiAOLcj85xS7vQ8QkAV41hPDIJ71XJB4RCUrzo/1GM2CQwhkJGaf9Hgr7BOugMRpgGUrqRg/DrBDl4H40+8g==}
-
-  /ts-api-utils@1.0.3(typescript@5.0.4):
-    resolution: {integrity: sha512-wNMeqtMz5NtwpT/UZGY5alT+VoKdSsOOP/kqHFcUW1P/VRhH2wJ48+DN2WwUliNbQ976ETwDL0Ifd2VVvgonvg==}
-    engines: {node: '>=16.13.0'}
-    peerDependencies:
-      typescript: '>=4.2.0'
-    dependencies:
-      typescript: 5.0.4
-    dev: false
 
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
@@ -12559,12 +12418,6 @@ packages:
       is-typed-array: 1.1.12
     dev: false
 
-  /typescript@5.0.4:
-    resolution: {integrity: sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==}
-    engines: {node: '>=12.20'}
-    hasBin: true
-    dev: false
-
   /typescript@5.1.6:
     resolution: {integrity: sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==}
     engines: {node: '>=14.17'}
@@ -12682,24 +12535,6 @@ packages:
       is-plain-obj: 2.1.0
       trough: 1.0.5
       vfile: 4.2.1
-    dev: false
-
-  /unimport@3.6.1:
-    resolution: {integrity: sha512-zKzbp8AQ+l8QK3XrONtUBdgBbMI8TkGh8hBYF77ZkVqMLLIAHwGSwJRFolPQMBx/5pezeRKvmu2gzlqnxRZeqQ==}
-    dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@4.12.0)
-      escape-string-regexp: 5.0.0
-      fast-glob: 3.3.2
-      local-pkg: 0.5.0
-      magic-string: 0.30.5
-      mlly: 1.4.2
-      pathe: 1.1.1
-      pkg-types: 1.0.3
-      scule: 1.1.1
-      strip-literal: 1.3.0
-      unplugin: 1.5.1
-    transitivePeerDependencies:
-      - rollup
     dev: false
 
   /unimport@3.7.1(rollup@4.12.0):
