@@ -1,12 +1,4 @@
-import {
-	eventHandler,
-	isWebSocketEvent,
-	isWebSocketUpgradeRequest,
-	lazyEventHandler,
-	toWebRequest,
-	toWebSocketEvent,
-	upgradeWebSocket,
-} from "./server";
+import { eventHandler } from "./server";
 
 class InternalParty {
 	connections = new Map();
@@ -94,33 +86,42 @@ function createConnection(webSocket) {
 	return webSocket;
 }
 
+globalThis.parties ??= {};
+
+async function getParty(partyServer, id) {
+	if (!globalThis.parties[id]) {
+		globalThis.parties[id] = new InternalParty(id);
+		await partyServer.onStart?.(globalThis.parties[id]);
+	}
+
+	return globalThis.parties[id];
+}
+
 /**
  * @param {import('../types/party.d.ts').PartyHandler} partyServer
  */
 export function partyHandler(partyServer) {
-	return lazyEventHandler(async () => {
-		const party = new InternalParty("main");
-		await partyServer.onStart?.(party);
-		return eventHandler((e) => {
-			if (isWebSocketEvent(e)) {
-				const wsEvent = toWebSocketEvent(e);
-				const conn = createConnection(wsEvent.connection);
-				if (wsEvent.type === "connection") {
-					party.onConnect(conn);
-					partyServer.onConnect?.(party, conn);
-				} else if (wsEvent.type === "message") {
-					partyServer.onMessage?.(party, wsEvent.message, conn);
-				} else if (wsEvent.type === "error") {
-					partyServer.onError?.(party, conn, wsEvent.error);
-				} else if (wsEvent.type === "close") {
-					party.onClose(conn);
-					partyServer.onClose?.(party, conn);
-				}
-			} else if (isWebSocketUpgradeRequest(e)) {
-				return upgradeWebSocket(e);
-			} else {
-				return partyServer.onRequest?.(party, toWebRequest(e));
-			}
-		});
+	return eventHandler({
+		handler: (e) => {},
+		websocket: {
+			async open(peer) {
+				const party = await getParty(partyServer, peer.url);
+				await party.onConnect(peer);
+				return await partyServer.onConnect?.(party, peer);
+			},
+			async close(peer, details) {
+				const party = await getParty(partyServer, peer.url);
+				await party.onClose(peer);
+				return await partyServer.onClose?.(party, peer);
+			},
+			async message(peer, message) {
+				const party = await getParty(partyServer, peer.url);
+				return await partyServer.onMessage?.(party, message, peer);
+			},
+			async error(peer, error) {
+				const party = await getParty(partyServer, peer.url);
+				return await partyServer.onError?.(party, peer, error);
+			},
+		},
 	});
 }

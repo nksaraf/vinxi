@@ -262,9 +262,21 @@ export async function createDevServer(nitro) {
 
 	const adapter = wsAdapter({
 		...wsApp.websocket,
-		adapterHooks: {
-			"node:message": (event) => {
+		hooks: {
+			open: (event) => {
 				event.ctx.node.req.url = event.ctx.node.req.originalUrl;
+			},
+			message: (event) => {
+				event.ctx.node.req.url = event.ctx.node.req.originalUrl;
+			},
+			close: (event) => {
+				event.ctx.node.req.url = event.ctx.node.req.originalUrl;
+			},
+			error: (event) => {
+				event.ctx.node.req.url = event.ctx.node.req.originalUrl;
+			},
+			upgrade: (event) => {
+				// event.ctx.node.req.url = event.ctx.node.req.originalUrl;
 			},
 		},
 	});
@@ -288,7 +300,7 @@ export async function createDevServer(nitro) {
 		if (import.meta._websocket) {
 			console.log("enabling websockets");
 			listener.server.on("upgrade", (req, sock, head) => {
-				console.log("upgrading");
+				req.url = req.originalUrl;
 				adapter.handleUpgrade(req, sock, head);
 			});
 		}

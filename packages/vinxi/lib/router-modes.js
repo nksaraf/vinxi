@@ -262,7 +262,7 @@ const routerModes = {
 						const { default: handler } = await viteServer.ssrLoadModule(
 							handlerModule(router),
 						);
-						return handler.__websocket__?.[hook]?.(...args);
+						return await handler.__websocket__?.[hook]?.(...args);
 					};
 				}
 
