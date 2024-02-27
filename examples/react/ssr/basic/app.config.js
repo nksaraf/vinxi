@@ -28,7 +28,13 @@ export default createApp({
 			handler: "./app/ws.ts",
 			target: "server",
 			base: "/_ws",
-			plugins: () => [reactRefresh()],
+		},
+		{
+			name: "party",
+			type: "http",
+			handler: "./app/party.ts",
+			target: "server",
+			base: "/party",
 		},
 		{
 			name: "ssr",
