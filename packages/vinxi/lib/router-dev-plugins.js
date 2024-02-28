@@ -48,7 +48,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 					import middleware from "${join(router.root, router.middleware)}";
 					import handler from "${join(router.root, router.handler)}";
 					import { eventHandler } from "vinxi/http";
-					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler});`;
+					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler, websocket: handler.__websocket__});`;
 				}
 				return `import handler from "${join(
 					router.root,

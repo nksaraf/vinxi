@@ -57,12 +57,20 @@ const command = defineCommand({
 					description: "Stacks",
 					alias: "s",
 				},
+				version: {
+					type: "boolean",
+					description: "Print the versions of Vinxi core dependencies",
+				}
 			},
 			async run({ args }) {
 				const chokidar = await import("chokidar");
 				const { loadApp } = await import("../lib/load-app.js");
 				const { log, c } = await import("../lib/logger.js");
 				log(c.dim(c.yellow(`v${packageJson.version}`)));
+
+				if (args.version) {
+					await printVersions()
+				}
 				
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
@@ -196,6 +204,10 @@ const command = defineCommand({
 					type: "string",
 					description: "Server preset (default: node-server)",
 				},
+				version: {
+					type: "boolean",
+					description: "Print the versions of Vinxi core dependencies",
+				}
 			},
 			async run({ args }) {
 				const configFile = args.config;
@@ -203,9 +215,9 @@ const command = defineCommand({
 				const { log, c } = await import("../lib/logger.js");
 				log(c.dim(c.yellow(`v${packageJson.version}`)));
 
-				let nitro = await import("nitropack/package.json", { assert: { type: "json" }});
-				log(c.dim(c.yellow(`Nitro: ${nitro.default.version}`)));
-
+				if (args.version) {
+					await printVersions()
+				}
 				const { loadApp } = await import("../lib/load-app.js");
 				const app = await loadApp(configFile, args);
 				process.env.NODE_ENV = "production";
@@ -481,18 +493,24 @@ const command = defineCommand({
 				const { log, c } = await import("../lib/logger.js");
 				log(c.dim(c.yellow(`v${packageJson.version}`)));
 				
-				let vite = await import("vite/package.json", { assert: { type: "json" }});
-				log(c.dim(c.yellow(`vite v${vite.default.version}`)));
-
-				let nitro = await import("nitropack/package.json", { assert: { type: "json" }});
-				log(c.dim(c.yellow(`nitro v${nitro.default.version}`)));
-
-				let h3 = await import("h3/package.json", { assert: { type: "json" }});
-				log(c.dim(c.yellow(`h3 v${h3.default.version}`)));
+				await printVersions();
 
 			},
 		}
 	}),
 });
+
+async function printVersions() {
+	const { log, c } = await import("../lib/logger.js");
+	
+	let vite = await import("vite/package.json", { assert: { type: "json" }});
+	log(c.dim(c.yellow(`vite v${vite.default.version}`)));
+
+	let nitro = await import("nitropack/package.json", { assert: { type: "json" }});
+	log(c.dim(c.yellow(`nitro v${nitro.default.version}`)));
+
+	let h3 = await import("h3/package.json", { assert: { type: "json" }});
+	log(c.dim(c.yellow(`h3 v${h3.default.version}`)));
+}
 
 runMain(command);

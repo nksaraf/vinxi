@@ -567,7 +567,7 @@ const routerModePlugin = {
 					import middleware from "${join(config.router.root, config.router.middleware)}";
 					import handler from "${join(config.router.root, config.router.handler)}";
 					import { eventHandler } from "vinxi/http";
-					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler });`;
+					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler, websocket: handler.__websocket__ });`;
 					}
 					return `import handler from "${join(
 						config.router.root,
@@ -718,8 +718,6 @@ function browserBuild() {
 			if (env.command === "build") {
 				invariant(router && router.type !== "static", "Invalid router");
 				const { join } = await import("./path.js");
-				console.log(await getEntries(router));
-				console.log({ base: router.base });
 				let base = join(app.config.server.baseURL ?? "/", router.base);
 
 				return {
