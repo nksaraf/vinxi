@@ -17,4 +17,5 @@ if (typeof window !== "undefined" && import.meta.hot) {
 	});
 }
 
+//
 globalThis.MANIFEST = manifest;
