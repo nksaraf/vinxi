@@ -806,8 +806,8 @@ importers:
         specifier: ^4.0.5
         version: 4.0.5
       nitropack:
-        specifier: npm:nitropack-nightly@latest
-        version: /nitropack-nightly@2.9.0-28483224.79d641c
+        specifier: ^2.9.0
+        version: 2.9.0
       node-fetch-native:
         specifier: ^1.4.0
         version: 1.4.1
@@ -5106,7 +5106,7 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@types/estree': 1.0.4
+      '@types/estree': 1.0.5
       estree-walker: 2.0.2
       picomatch: 2.3.1
       rollup: 4.12.0
@@ -7442,6 +7442,11 @@ packages:
     resolution: {integrity: sha512-izfGgKyzzIyLaeb1EtZ3KbglkS6AKp9cv7LxmiyoOu+fXfol1tQDC0Cof0enVZGNtudTHW+3lfuW9ZkLQss4Wg==}
     dev: false
 
+  /croner@8.0.1:
+    resolution: {integrity: sha512-Hq1+lXVgjJjcS/U+uk6+yVmtxami0r0b+xVtlGyABgdz110l/kOnHWvlSI7nVzrTl8GCdZHwZS4pbBFT7hSL/g==}
+    engines: {node: '>=18.0'}
+    dev: false
+
   /cross-env@7.0.3:
     resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
     engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
@@ -8620,23 +8625,6 @@ packages:
       duplexer: 0.1.2
     dev: false
 
-  /h3-nightly@1.11.2-1708890252.107ec8e:
-    resolution: {integrity: sha512-ywdwfCae6mumj7abRQ1PmZtunLqABFHOB8PccB8+iCDja/0IsrZFauAyGEznLVJxaMfAhjRau8tZ0VNZpge0WA==}
-    dependencies:
-      cookie-es: 1.0.0
-      crossws: 0.2.4
-      defu: 6.1.4
-      destr: 2.0.3
-      iron-webcrypto: 1.0.0
-      ohash: 1.1.3
-      radix3: 1.1.0
-      ufo: 1.4.0
-      uncrypto: 0.1.3
-      unenv: 1.9.0
-    transitivePeerDependencies:
-      - uWebSockets.js
-    dev: false
-
   /h3@1.10.1:
     resolution: {integrity: sha512-UBAUp47hmm4BB5/njB4LrEa9gpuvZj4/Qf/ynSMzO6Ku2RXaouxEfiG2E2IFnv6fxbhAkzjasDxmo6DFdEeXRg==}
     dependencies:
@@ -9090,7 +9078,7 @@ packages:
   /is-reference@1.2.1:
     resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
     dependencies:
-      '@types/estree': 1.0.4
+      '@types/estree': 1.0.5
     dev: false
 
   /is-reference@3.0.2:
@@ -9443,7 +9431,7 @@ packages:
     resolution: {integrity: sha512-ok6z3qlYyCDS4ZEU27HaU6x/xZa9Whf8jD4ptH5UZTQYZVYeb9bnZ3ojVhiJNLiXK1Hfc0GNbLXcmZ5plLDDBg==}
     engines: {node: '>=14'}
     dependencies:
-      mlly: 1.4.2
+      mlly: 1.6.1
       pkg-types: 1.0.3
     dev: false
 
@@ -10504,8 +10492,8 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
-  /nitropack-nightly@2.9.0-28483224.79d641c:
-    resolution: {integrity: sha512-X+l3cwROLTa52cSoY4QDSPHsBhdPT9shfUHUrXx8rIaEfwl63sZ9OHT2sSJANFA0ZhVUJ8SiwuFyuvzzdMzZUQ==}
+  /nitropack@2.9.0:
+    resolution: {integrity: sha512-IjLFAFDuCzJ9KeNGf/wHlUYycd8r/zxKyvcRZMJfHD4eFyNwT+5Hmdc/RfMcTwXKkjp8gZskpAZv90B2aijj5w==}
     engines: {node: ^16.11.0 || >=17.0.0}
     hasBin: true
     peerDependencies:
@@ -10533,6 +10521,7 @@ packages:
       citty: 0.1.6
       consola: 3.2.3
       cookie-es: 1.0.0
+      croner: 8.0.1
       crossws: 0.2.4
       db0: 0.1.2
       defu: 6.1.4
@@ -10544,7 +10533,7 @@ packages:
       fs-extra: 11.2.0
       globby: 14.0.1
       gzip-size: 7.0.0
-      h3: /h3-nightly@1.11.2-1708890252.107ec8e
+      h3: 1.11.1
       hookable: 5.5.3
       httpxy: 0.1.5
       is-primitive: 3.0.1
@@ -11199,8 +11188,8 @@ packages:
   /rc9@2.1.1:
     resolution: {integrity: sha512-lNeOl38Ws0eNxpO3+wD1I9rkHGQyj1NU1jlzv4go2CtEnEQEUfqnIvZG7W+bC/aXdJ27n5x/yUjb6RoT9tko+Q==}
     dependencies:
-      defu: 6.1.3
-      destr: 2.0.2
+      defu: 6.1.4
+      destr: 2.0.3
       flat: 5.0.2
     dev: false
 
@@ -12552,7 +12541,7 @@ packages:
       pkg-types: 1.0.3
       scule: 1.3.0
       strip-literal: 1.3.0
-      unplugin: 1.5.1
+      unplugin: 1.7.1
     transitivePeerDependencies:
       - rollup
     dev: false
