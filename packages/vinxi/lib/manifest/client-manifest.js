@@ -26,7 +26,7 @@ const manifest = new Proxy(
 							invariant(typeof chunk === "string", "Chunk expected");
 							let outputPath = import.meta.env.DEV
 								? join(import.meta.env.BASE_URL, "@fs", chunk)
-								: join(import.meta.env.BASE_URL, chunk + ".js");
+								: join(import.meta.env.BASE_URL, chunk + ".mjs");
 							return {
 								import() {
 									return import(/* @vite-ignore */ outputPath);

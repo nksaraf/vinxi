@@ -14,7 +14,7 @@ import { SERVER_REFERENCES_MANIFEST } from "./constants.js";
  */
 export function server({
 	resolve = {
-		conditions: ["react-server"],
+		conditions: ["react-server", "node", "import", process.env.NODE_ENV],
 	},
 	runtime = "@vinxi/react-server-dom/runtime",
 	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom"],
@@ -84,7 +84,7 @@ export function server({
  */
 export function buildServerComponents({
 	resolve = {
-		conditions: ["react-server"],
+		conditions: ["react-server", "node", "import", process.env.NODE_ENV],
 	},
 	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom"],
 	manifest = SERVER_REFERENCES_MANIFEST,
@@ -133,25 +133,15 @@ export function buildServerComponents({
 								},
 								// we want to control the chunk names so that we can load them
 								// individually when server actions are called
-								chunkFileNames: "[name].js",
-								entryFileNames: "[name].js",
+								chunkFileNames: "[name].mjs",
+								entryFileNames: "[name].mjs",
 							},
 						},
 					},
 					ssr: {
 						resolve: {
-							externalConditions: [
-								...(resolve.conditions ?? []),
-								"node",
-								"import",
-								process.env.NODE_ENV,
-							],
-							conditions: [
-								...(resolve.conditions ?? []),
-								"node",
-								"import",
-								process.env.NODE_ENV,
-							],
+							externalConditions: resolve.conditions,
+							conditions: resolve.conditions,
 						},
 						noExternal: true,
 					},
@@ -160,18 +150,8 @@ export function buildServerComponents({
 				return {
 					ssr: {
 						resolve: {
-							externalConditions: [
-								...(resolve.conditions ?? []),
-								"node",
-								"import",
-								process.env.NODE_ENV,
-							],
-							conditions: [
-								...(resolve.conditions ?? []),
-								"node",
-								"import",
-								process.env.NODE_ENV,
-							],
+							externalConditions: resolve.conditions,
+							conditions: resolve.conditions,
 						},
 						noExternal: true,
 						external: transpileDeps,

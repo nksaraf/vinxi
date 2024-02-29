@@ -26,7 +26,7 @@ const bundleConfigFile = async (configFile, out) => {
 		outfile: out,
 		platform: "node",
 		format: "esm",
-		resolveExtensions: [".js", ".mjs", ".ts", ".jsx", ".tsx"],
+		resolveExtensions: [".js", ".mjs", ".ts", ".jsx", ".tsx", ".mts"],
 		plugins: [
 			{
 				name: "externalize-deps",
@@ -56,22 +56,25 @@ const bundleConfigFile = async (configFile, out) => {
 			},
 		],
 		loader: {
-			".js": "jsx",
-			".ts": "tsx",
+			".js": "js",
+			".ts": "ts",
 			".jsx": "jsx",
 			".tsx": "tsx",
-			".mjs": "jsx",
+			".mjs": "js",
+			".mts": "ts",
 		},
 	});
 };
 
 async function loadFile({ ...options }) {
 	if (options.name) {
-		for (const ext of ["js", "mjs", "ts", "tsx", "jsx"]) {
+		for (const ext of ["js", "mjs", "ts", "tsx", "jsx", "mts"]) {
 			const filepath = join(process.cwd(), `${options.name}.config.${ext}`);
 
 			if (await fileExists(filepath)) {
-				let out = `${options.name}.config.timestamp_${Date.now()}.js`;
+				let out = `${options.name}.config.timestamp_${Date.now()}.${
+					["ts", "js", "tsx", "jsx"].includes(ext) ? "js" : "mjs"
+				}`;
 				await bundleConfigFile(`${options.name}.config.${ext}`, out);
 				const importedApp = import(pathToFileURL(out).href).then((m) => ({
 					config: m.default,
@@ -92,10 +95,12 @@ async function loadFile({ ...options }) {
 			options.configFile.lastIndexOf("."),
 		);
 
-		if (["js", "mjs", "ts", "tsx", "jsx"].includes(ext)) {
+		if (["js", "mjs", "ts", "tsx", "jsx", "mts"].includes(ext)) {
 			const filepath = join(process.cwd(), `${configFileName}.${ext}`);
 			if (await fileExists(filepath)) {
-				let out = `${configFileName}.timestamp_${Date.now()}.js`;
+				let out = `${configFileName}.timestamp_${Date.now()}.${
+					["ts", "js", "tsx", "jsx"].includes(ext) ? "js" : "mjs"
+				}`;
 				await bundleConfigFile(options.configFile, out);
 				const importedApp = import(pathToFileURL(out).href).then((m) => ({
 					config: m.default,

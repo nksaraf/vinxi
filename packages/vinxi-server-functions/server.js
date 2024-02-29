@@ -62,8 +62,8 @@ export const serverBuild = ({ client, manifest }) => {
 				build: {
 					rollupOptions: {
 						output: {
-							chunkFileNames: "[name].js",
-							entryFileNames: "[name].js",
+							chunkFileNames: "[name].mjs",
+							entryFileNames: "[name].mjs",
 						},
 						treeshake: true,
 					},

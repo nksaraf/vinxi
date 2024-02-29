@@ -4,6 +4,7 @@ import {
 	shimExportsPlugin,
 } from "@vinxi/plugin-directives";
 import { chunkify } from "vinxi/lib/chunks";
+import { config } from "vinxi/plugins/config";
 
 import { SERVER_REFERENCES_MANIFEST } from "./constants.js";
 
@@ -14,7 +15,7 @@ import { SERVER_REFERENCES_MANIFEST } from "./constants.js";
  */
 export function serverActions({
 	resolve = {
-		conditions: ["react-server"],
+		conditions: ["react-server", "node", "import", process.env.NODE_ENV],
 	},
 	runtime = "@vinxi/react-server-dom/runtime",
 	transpileDeps = ["react", "react-dom", "@vinxi/react-server-dom"],
@@ -24,6 +25,15 @@ export function serverActions({
 	const serverModules = new Set();
 	const clientModules = new Set();
 	return [
+		config("server-actions-resolve", {
+			ssr: {
+				resolve: {
+					externalConditions: resolve.conditions,
+					conditions: resolve.conditions,
+				},
+				noExternal: true,
+			},
+		}),
 		directives({
 			hash: chunkify,
 			runtime,
