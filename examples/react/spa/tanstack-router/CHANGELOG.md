@@ -4,6 +4,15 @@
 
 ### Patch Changes
 
+- Updated dependencies [54214a7]
+  - @vinxi/react@0.2.1
+  - vinxi@0.3.7
+  - @vinxi/openapi@0.2.0
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [55fde20]
 - Updated dependencies [25093a5]
   - vinxi@0.3.6

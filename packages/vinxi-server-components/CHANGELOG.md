@@ -1,5 +1,13 @@
 # @vinxi/plugin-references
 
+## 0.3.1
+
+### Patch Changes
+
+- 54214a7: fix: mjs chunks and rsc example fix
+- Updated dependencies [54214a7]
+  - vinxi@0.3.7
+
 ## 1.0.0
 
 ### Patch Changes

@@ -4,6 +4,17 @@
 
 ### Patch Changes
 
+- 54214a7: fix: mjs chunks and rsc example fix
+- Updated dependencies [54214a7]
+  - @vinxi/react@0.2.1
+  - @vinxi/server-components@0.3.1
+  - @vinxi/server-functions@0.3.1
+  - vinxi@0.3.7
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [55fde20]
 - Updated dependencies [25093a5]
   - vinxi@0.3.6
