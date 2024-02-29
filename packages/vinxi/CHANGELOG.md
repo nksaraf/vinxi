@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.3.6
+
+### Patch Changes
+
+- 55fde20: fix: cssMinify enabled by default for both ssr and cliet
+- 25093a5: fix: fix .ts config file extensions in load-app.js
+  - @vinxi/devtools@0.2.0
+
 ## 0.3.4
 
 ### Patch Changes
