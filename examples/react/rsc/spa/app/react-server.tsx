@@ -64,9 +64,12 @@ export default eventHandler(async (event) => {
 		}
 	}
 
-	const serverAssets = await reactServerManifest.inputs[
-		reactServerManifest.handler
-	].assets();
+	const serverAssets = (
+		await reactServerManifest.inputs[reactServerManifest.handler].assets()
+	).filter(
+		(m) =>
+			(m.tag === "link" && m.attrs.rel === "stylesheet") || m.tag === "style",
+	);
 
 	const assets = await clientManifest.inputs[clientManifest.handler].assets();
 

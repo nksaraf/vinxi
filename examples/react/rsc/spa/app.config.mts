@@ -45,15 +45,12 @@ const app = createApp({
 					resolve: {
 						conditions: ["react-server"],
 					},
+					runtime: `@vinxi/react-server-dom/runtime`,
 				}),
 				serverComponents.serverActions(),
 			],
 		},
 	],
-});
-
-app.hooks.hook("app:build:router:vite:config:resolved", ({ vite }) => {
-	console.log(vite.build.rollupOptions.input);
 });
 
 export default app;

@@ -10,7 +10,12 @@ import findAssetsInViteManifest from "./vite-manifest.js";
 
 function createHtmlTagsForAssets(router, app, assets) {
 	return assets
-		.filter((asset) => asset.endsWith(".css") || asset.endsWith(".js"))
+		.filter(
+			(asset) =>
+				asset.endsWith(".css") ||
+				asset.endsWith(".js") ||
+				asset.endsWith(".mjs"),
+		)
 		.map((asset) => ({
 			tag: "link",
 			attrs: {
@@ -77,12 +82,12 @@ export function createProdManifest(app) {
 								const chunkPath = join(
 									router.outDir,
 									router.base,
-									chunk + ".js",
+									chunk + ".mjs",
 								);
 								return {
 									import() {
-										if (globalThis.$$chunks[chunk + ".js"]) {
-											return globalThis.$$chunks[chunk + ".js"];
+										if (globalThis.$$chunks[chunk + ".mjs"]) {
+											return globalThis.$$chunks[chunk + ".mjs"];
 										}
 										return import(
 											/* @vite-ignore */ pathToFileURL(chunkPath).href

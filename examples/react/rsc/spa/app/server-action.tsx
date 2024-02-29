@@ -13,7 +13,11 @@ export default eventHandler(async (event) => {
 		if (serverReference) {
 			// This is the client-side case
 			const [filepath, name] = serverReference.split("#");
-			const action = (await getManifest("rsc").chunks[filepath].import())[name];
+			const action = (await getManifest("server").chunks[filepath].import())[
+				name
+			];
+
+			console.log(action.$$typeof);
 			// Validate that this is actually a function we intended to expose and
 			// not the client trying to invoke arbitrary functions. In a real app,
 			// you'd have a manifest verifying this before even importing it.

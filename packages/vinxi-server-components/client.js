@@ -79,7 +79,7 @@ export function buildClientComponents({
 							output: {
 								minifyInternalExports: false,
 								entryFileNames: (chunk) => {
-									return chunk.name + ".js";
+									return chunk.name + ".mjs";
 								},
 							},
 						},

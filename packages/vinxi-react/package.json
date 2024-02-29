@@ -12,7 +12,10 @@
   "exports": {
     ".": {
       "import": "./index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "react-server": {
+        "import": "./react-server.js"
+      }
     }
   },
   "typesVersions": {
