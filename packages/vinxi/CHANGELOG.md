@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.3.7
+
+### Patch Changes
+
+- 54214a7: fix: mjs chunks and rsc example fix
+  - @vinxi/devtools@0.2.0
+
 ## 0.3.6
 
 ### Patch Changes

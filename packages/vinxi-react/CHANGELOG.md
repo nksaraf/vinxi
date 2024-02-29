@@ -1,5 +1,11 @@
 # @vinxi/react
 
+## 0.2.1
+
+### Patch Changes
+
+- 54214a7: fix: mjs chunks and rsc example fix
+
 ## 0.2.0
 
 ### Minor Changes
