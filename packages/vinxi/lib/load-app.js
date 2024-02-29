@@ -71,7 +71,7 @@ async function loadFile({ ...options }) {
 			const filepath = join(process.cwd(), `${options.name}.config.${ext}`);
 
 			if (await fileExists(filepath)) {
-				let out = `${options.name}.config.timestamp_${Date.now()}.${ext}`;
+				let out = `${options.name}.config.timestamp_${Date.now()}.js`;
 				await bundleConfigFile(`${options.name}.config.${ext}`, out);
 				const importedApp = import(pathToFileURL(out).href).then((m) => ({
 					config: m.default,
@@ -95,7 +95,7 @@ async function loadFile({ ...options }) {
 		if (["js", "mjs", "ts", "tsx", "jsx"].includes(ext)) {
 			const filepath = join(process.cwd(), `${configFileName}.${ext}`);
 			if (await fileExists(filepath)) {
-				let out = `${configFileName}.timestamp_${Date.now()}.${ext}`;
+				let out = `${configFileName}.timestamp_${Date.now()}.js`;
 				await bundleConfigFile(options.configFile, out);
 				const importedApp = import(pathToFileURL(out).href).then((m) => ({
 					config: m.default,
