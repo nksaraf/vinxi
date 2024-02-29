@@ -1,7 +1,7 @@
 {
 	"trailingComma": "all",
 	"useTabs": true,
-	"plugins": ["@trivago/prettier-plugin-sort-imports", "importAttributes"],
+	"plugins": ["@trivago/prettier-plugin-sort-imports"],
 	"importOrder": [
 		"^(fully-react/(.*)$)|^(fully-react$)",
 		"<THIRD_PARTY_MODULES>",
