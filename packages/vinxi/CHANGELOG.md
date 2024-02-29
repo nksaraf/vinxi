@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.3.8
+
+### Patch Changes
+
+- 7a597bf: feat: update config function signature
+  - @vinxi/devtools@0.2.0
+
 ## 0.3.7
 
 ### Patch Changes
