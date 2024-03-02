@@ -5,7 +5,6 @@ import { updateStyles } from "vinxi/css";
 import { renderAsset } from "./render-asset.js";
 
 export { renderAsset };
-// export { default as lazyRoute } from "./lazy-route.js";
 export const createAssets = (src, manifest) =>
 	lazy(async () => {
 		const assets = await manifest.inputs[src].assets();
