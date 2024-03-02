@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.3.9
+
+### Patch Changes
+
+- ca7b28b: fix: dont log error if error loading module during collect-styles phase raw-imports result in warnings in dev-mode #226
+- 38a6d0d: fix: vinxi/react ready for RSC
+  - @vinxi/devtools@0.2.0
+
 ## 0.3.8
 
 ### Patch Changes

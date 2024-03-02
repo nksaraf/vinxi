@@ -1,5 +1,11 @@
 # @vinxi/react
 
+## 0.2.2
+
+### Patch Changes
+
+- 38a6d0d: fix: vinxi/react ready for RSC
+
 ## 0.2.1
 
 ### Patch Changes

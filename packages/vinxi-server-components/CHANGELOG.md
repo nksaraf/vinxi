@@ -1,5 +1,14 @@
 # @vinxi/plugin-references
 
+## 0.3.2
+
+### Patch Changes
+
+- 38a6d0d: fix: vinxi/react ready for RSC
+- Updated dependencies [ca7b28b]
+- Updated dependencies [38a6d0d]
+  - vinxi@0.3.9
+
 ## 0.3.1
 
 ### Patch Changes
