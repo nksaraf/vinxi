@@ -49,6 +49,8 @@ async function getViteModuleNode(vite, file, ssr) {
 		node = await vite.moduleGraph.getModuleById(nodePath);
 	}
 
+	let prev = vite.config.logger.error;
+	vite.config.logger.error = () => {};
 	try {
 		if (!node.transformResult && !ssr) {
 			await vite.transformRequest(nodePath);
@@ -63,9 +65,10 @@ async function getViteModuleNode(vite, file, ssr) {
 			node = await vite.moduleGraph.getModuleById(nodePath);
 		}
 
+		vite.config.logger.error = prev;
 		return node;
 	} catch (e) {
-		console.error(e);
+		vite.config.logger.error = prev;
 		return null;
 	}
 }
