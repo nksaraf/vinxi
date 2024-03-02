@@ -128,6 +128,8 @@ export {
 	type _ResponseMiddleware,
 } from "h3";
 
+export type HTTPEvent = H3Event;
+
 /**
  * Checks if the input is an HTTPEvent object.
  * @param input - The input to check.
@@ -886,6 +888,8 @@ export function assertMethod(
 	expected: HTTPMethod | HTTPMethod[],
 	allowHead?: boolean,
 ): void;
+
+export function handleHTTPEvent(event: HTTPEvent): Promise<void>;
 
 
 export const HTTPEventSymbol: unique symbol;

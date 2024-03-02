@@ -65,6 +65,9 @@ export function createDevManifest(app) {
 					assets() {
 						return {};
 					},
+					dev: {
+						server: viteServer,
+					},
 					handler: router.handler,
 					base,
 					target: router.target,

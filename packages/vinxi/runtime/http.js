@@ -1,4 +1,3 @@
-import { H3Event } from "h3";
 import {
 	appendCorsHeaders as _appendCorsHeaders,
 	appendCorsPreflightHeaders as _appendCorsPreflightHeaders,
@@ -45,7 +44,7 @@ import {
 	readMultipartFormData as _readMultipartFormData,
 	readRawBody as _readRawBody,
 	readValidatedBody as _readValidatedBody,
-	removeResponseHeader as _removeResponseHeader, // ... import other utilities as needed
+	removeResponseHeader as _removeResponseHeader,
 	sealSession as _sealSession,
 	send as _send,
 	sendError as _sendError,
@@ -65,6 +64,7 @@ import {
 	useSession as _useSession,
 	writeEarlyHints as _writeEarlyHints,
 } from "h3";
+import { H3Event } from "h3";
 import { getContext as gContext } from "unctx";
 
 import { AsyncLocalStorage } from "node:async_hooks";
@@ -334,4 +334,8 @@ function getNitroAsyncContext() {
 
 export function getEvent() {
 	return getNitroAsyncContext().use().event;
+}
+
+export async function handleHTTPEvent(event) {
+	return await globalThis.$handle(event);
 }

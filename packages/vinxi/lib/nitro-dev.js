@@ -18,7 +18,6 @@ import {
 	createFetch,
 	createFetch as createLocalFetch,
 } from "unenv/runtime/fetch/index";
-import { WebSocketServer } from "ws";
 
 import { createServerResponse } from "./http-stream.js";
 import { resolve } from "./path.js";
@@ -161,11 +160,6 @@ export async function createDevServer(nitro) {
 			app.use(url, fromNodeMiddleware(servePlaceholder()));
 		}
 	}
-
-	/**
-	 * @type {Record<string, WebSocketServer>}
-	 */
-	const ws = {};
 
 	// User defined dev proxy
 	for (const route of Object.keys(nitro.options.devProxy).sort().reverse()) {
