@@ -95,9 +95,13 @@ const command = defineCommand({
 					watcher.on("all", async (ctx, path) => {
 						log(c.dim(c.green("change detected in " + path)));
 						log(c.dim(c.green("reloading app")));
-						const newApp = await loadApp(configFile, args);
-						if (!newApp) return;
-						restartDevServer(newApp);
+						try {
+							const newApp = await loadApp(configFile, args);
+							if (!newApp) return;
+							restartDevServer(newApp);
+						} catch (e) {
+							console.error(e)
+						}
 					});
 				}
 				async function createKeypressWatcher() {
@@ -155,12 +159,16 @@ const command = defineCommand({
 					fsWatcher.on("all", async (path) => {
 						log(c.dim(c.green("change detected in " + path)));
 						log(c.dim(c.green("reloading app")));
-						const newApp = await loadApp(configFile, args);
-						if (!newApp) return;
+							try {
+								const newApp = await loadApp(configFile, args);
+								if (!newApp) return;
 
-						fsWatcher.close();
-						createWatcher();
-						restartDevServer(newApp);
+								fsWatcher.close();
+								createWatcher();
+								restartDevServer(newApp);
+							} catch (e) {
+								console.error(e)
+						}
 					});
 					return;
 				}

@@ -1,5 +1,7 @@
 # Create your first app
 
+Vinxi helps you build the full spectrum of applications with javascript, be it a static site, SPA, just an API or a fully featured SSR'ed and hydrated application.
+
 ### React SSR
 
 ```ts

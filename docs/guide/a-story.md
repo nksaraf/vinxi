@@ -1,14 +1,54 @@
-# Build your server
+# A story
 
 ## The beginning
 
-Create a `app.config.js` file in the root of your project and add the following:
+In a new directory, create a `package.json` for your project,
 
-```ts [app.config.js]
+```json [package.json]
+{
+  "name": "my-app",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "dependencies": {
+    "vinxi": "0.3.8"
+  }
+}
+```
+
+And run `npm install` to install the dependencies.
+
+```bash [npm]
+npm install
+```
+
+Create a `app.config.ts` file in the root of your project and add the following:
+
+::: code-group
+
+```ts [app.config.ts]
 import { createApp } from "vinxi";
 
 export default createApp();
 ```
+
+:::
+
+You are ready to start your app in development mode now,
+
+```bash [npm]
+npm run dev
+```
+
+::: warning
+
+You will see an error in the browser if you go to `http://localhost:3000/` right now. Your app doesn't have anything to show right now. Don't worry, we will get there.
+
+:::
 
 ## A static file server
 
@@ -72,11 +112,13 @@ We need to add the script to the `index.html` file for the browser to actually f
 </html>
 ```
 
-info
+::: info
 
 Note how we can use `/app.js` to refer to the `/public/app.js` file from the `index.html` file. This is because we have set the `base` to `/` in the router config. This means that all the files in the `public` directory are served at the routes corresponding to their paths excluding the `public` part, `/public/app.js` is served at `/app.js`.
 
 If we had set the `base` to `/static`, then the `/public/app.js` file would be served at `/static/app.js`. But so would the `public/index.html`, and that would be a problem. We will deal with that problem later. But its usually a good idea to set the `base` to `/` for the `static` mode. so that people's expectations are met regarding the routes of the files in the `public` directory.
+
+:::
 
 You can now open the browser console and see the message.
 
@@ -91,7 +133,7 @@ But still, there's nothing you can do on the app. Let's add a button.
   </head>
   <body>
     <h1>Hello World</h1>
-    <button id="my-buttton">Click Me</button>
+    <button id="my-button">Click Me</button>
     <script src="/app.js"></script>
   </body>
 </html>
@@ -120,7 +162,7 @@ document.getElementById("my-button").addEventListener("click", () => {
   </head>
   <body>
     <h1>Hello World</h1>
-    <button id="my-buttton">Click Me</button>
+    <button id="my-button">Click Me</button>
     <script src="/app.js"></script>
   </body>
 </html>
@@ -138,7 +180,7 @@ Okay, this is getting fun. Lets add some styles.
   </head>
   <body>
     <h1>Hello World</h1>
-    <button id="my-buttton">Click Me</button>
+    <button id="my-button">Click Me</button>
     <script src="/app.js"></script>
   </body>
 </html>
@@ -161,7 +203,7 @@ Ahh, I don't like that background color. Needs more pop. Let's change it to a ni
 
 ```css [public/app.css]
 body {
-  background-color: #0000ff;
+  background-color: #000022;
   color: #fff;
 }
 ```
@@ -208,7 +250,7 @@ Let's refresh the page again (I know, I know, it's annoying). Click the button. 
   </head>
   <body>
     <h1>Hello World</h1>
-    <button id="my-buttton">Click Me</button>
+    <button id="my-button">Click Me</button>
     <script type="module" src="/app.js"></script>
   </body>
 </html>
@@ -229,7 +271,7 @@ Before we go down this path, I discovered some other problems faced here:
 - If I want to write typescript, I need to add a transpile step for the browser to understand it.
 - If I want to use React, Vue, etc. I need to add a transpile step for the browser to understand it.
 
-This is just the tip of the iceberg for thr problems faced with working with bare HTML, CSS and JS. We want to write the code this way. But the browser only understands a certain way of doing things. We need to bridge the gap between the two. This is where Vite comes in. It's a tool that bridges the gap between the way we want to write code and the way the browser understands code. It does this by providing a development server runtime that transforms our code to a format the browser understands. It also provides a builder that transforms our code to a production ready format with a lot of optimizations. It also provides a plugin API that allows us to customize the development server and builder.
+This is just the tip of the iceberg for thr problems faced with working with bare HTML, CSS and JS. We want to write the code this way. But the browser only understands a certain way of doing things. We need to bridge the gap between the two. This is where Vite comes in. It's a tool that bridges the gap between the way we want to write code and the way the browser understands code. It does this by providing a development server runtime that transforms our code to a format the browser understands. It also provides a builder that transforms our code to a production ready format with a lot of optimizations. And lasty, it provides a plugin API that allows us to customize the development server and builder.
 
 `vinxi` comes with a built-in Vite development server and builder. Let's use it.
 
@@ -256,9 +298,23 @@ export default createApp({
 });
 ```
 
-We will move the files from the `public` directory to the root of the project. Let's run the dev server again.
+We will move the files from the `public` directory to the root of the project. Refresh again now.
 
-All our problems have now been solved. Change something in the CSS. or the JavaScript file. The browser will automatically reload. Install a node-module and use it in your code. The browser will know what to do. Change to typescript, install React, Vue, etc. The browser will know what to do. Because vite tells it.
+Some of our problems have now been solved. Change something in the JavaScript file. The browser will automatically reload. Install a `npm` package and use it in your code. The browser will know what to do. Change to typescript, install React, Vue, etc. The browser will know what to do. Because vite tells it.
+
+For the CSS to be processed by vite, we need to import it in the javascript file. Let's do that.
+
+```ts [app.js]
+import confetti from "canvas-confetti";
+
+import "./app.css";
+
+document.getElementById("my-button").addEventListener("click", () => {
+  confetti();
+});
+```
+
+Now, changes in the CSS file will be instantly reflected in the browser without a refresh.
 
 Okay now that we all this power, lets thing bigger. What if we sent an email when the button is clicked. We can use the `nodemailer` package to do that. Let's install it.
 
