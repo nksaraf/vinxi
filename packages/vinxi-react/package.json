@@ -11,11 +11,9 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "react-server":  "./react-server.js",
       "import": "./index.js",
-      "types": "./dist/index.d.ts",
-      "react-server": {
-        "import": "./react-server.js"
-      }
+      "types": "./dist/index.d.ts"
     }
   },
   "typesVersions": {

@@ -25,15 +25,19 @@ export function serverActions({
 	const serverModules = new Set();
 	const clientModules = new Set();
 	return [
-		config("server-actions-resolve", {
+		config("server-actions-resolve", (router, app, env) => ({
 			ssr: {
 				resolve: {
 					externalConditions: resolve.conditions,
 					conditions: resolve.conditions,
 				},
 				noExternal: true,
+				external:
+					env.command === "build"
+						? []
+						: ["react", "react-dom", "@vinxi/react-server-dom"],
 			},
-		}),
+		})),
 		directives({
 			hash: chunkify,
 			runtime,

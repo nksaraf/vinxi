@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "react";
 import { Fragment, createElement, forwardRef, lazy } from "react";
+import { useLayoutEffect } from "react";
 import { cleanupStyles, preloadStyles, updateStyles } from "vinxi/css";
 
 import invariant from "./invariant.js";
