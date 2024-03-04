@@ -1,5 +1,5 @@
 {
-  "name": "react-rsc-spa",
+  "name": "react-rsc-ssr",
   "type": "module",
   "private": true,
   "version": null,

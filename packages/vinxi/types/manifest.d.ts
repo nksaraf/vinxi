@@ -44,4 +44,9 @@ export type Manifest = {
 	json(): object;
 	/** Map of assets needed by the inputs and chunks */
 	assets(): Promise<{ [key: string]: Asset[] }>;
+
+	// @internal DO NOT USE, WILL LIKELY BE REMOVED
+	dev: {
+		server: import("vite").ViteDevServer;
+	};
 };

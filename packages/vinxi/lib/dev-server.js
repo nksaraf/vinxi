@@ -1,4 +1,3 @@
-import { inspect } from "@vinxi/devtools";
 import { resolveCertificate } from "@vinxi/listhen";
 
 import { fileURLToPath } from "node:url";
@@ -51,7 +50,7 @@ export async function createViteHandler(router, app, serveConfig) {
 	const { getRandomPort } = await import("get-port-please");
 	const port = await getRandomPort();
 	const plugins = [
-		...(serveConfig.devtools ? [inspect()] : []),
+		// ...(serveConfig.devtools ? [inspect()] : []),
 		...(((await router.internals.type.dev.plugins?.(router, app)) ?? []).filter(
 			Boolean,
 		) || []),
@@ -118,11 +117,11 @@ export async function createDevServer(
 
 	await app.hooks.callHook("app:dev:start", { app, serveConfig });
 
-	if (devtools) {
-		const { devtoolsClient, devtoolsRpc } = await import("@vinxi/devtools");
-		app.addRouter(devtoolsClient());
-		app.addRouter(devtoolsRpc());
-	}
+	// if (devtools) {
+	// 	const { devtoolsClient, devtoolsRpc } = await import("@vinxi/devtools");
+	// 	app.addRouter(devtoolsClient());
+	// 	app.addRouter(devtoolsRpc());
+	// }
 	const { createNitro, writeTypes } = await import("nitropack");
 
 	const nitro = await createNitro({
