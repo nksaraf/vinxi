@@ -267,7 +267,7 @@ export function shimExportsPlugin({
 						onModuleFound?.(id);
 						this.traverse(path);
 					}
-					return false;
+					return this.traverse(path);
 				},
 				visitFunctionExpression(path) {
 					const name = path.node.id?.name.toString();
@@ -300,7 +300,7 @@ export function shimExportsPlugin({
 						onModuleFound?.(id);
 						this.traverse(path);
 					}
-					return false;
+					return this.traverse(path);
 				},
 			});
 
