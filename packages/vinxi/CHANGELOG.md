@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.3.10
+
+### Patch Changes
+
+- 4caab63: fix: rsc ssr example, remove vinxi devtools for now
+
 ## 0.3.9
 
 ### Patch Changes
