@@ -1,5 +1,13 @@
 # @vinxi/plugin-references
 
+## 0.3.1
+
+### Patch Changes
+
+- 8247943: fix: nested fns in plugin directives, fix solidjs/solid-start#1360 #238,
+- Updated dependencies [4caab63]
+  - vinxi@0.3.10
+
 ## 1.0.0
 
 ### Patch Changes
