@@ -1,38 +1,37 @@
 /// <reference types="vinxi/types/client" />
-import { StartClient } from "@tanstack/react-start/client";
-import { createAssets } from "@vinxi/react";
-import ReactDOM from "react-dom/client";
-import "vinxi/client";
-import { getManifest } from "vinxi/manifest";
+import { Root, hydrateRoot } from 'react-dom/client'
+import 'vinxi/client'
 
-import { createRouter } from "./router";
-import "./style.css";
+import { createRouter } from './router'
+import { StartClient } from '@tanstack/react-router-server/client'
 
-const Assets = createAssets(
-	getManifest("client").handler,
-	getManifest("client"),
-);
+render()
 
-const router = createRouter(getManifest("client"), undefined);
-router.update({
-	context: {
-		...router.context,
-		assets: (
-			<>
-				<Assets />
-				{import.meta.env.DEV ? (
-					<script
-						src={
-							getManifest("client").inputs[getManifest("client").handler].output
-								.path
-						}
-						type="module"
-					/>
-				) : null}
-			</>
-		),
-	},
-});
-router.hydrate();
+function render(mod?: any) {
+	const router = createRouter()
 
-ReactDOM.hydrateRoot(document, <StartClient router={router} />);
+	const app = <StartClient router={router} />
+
+	if (!mod) {
+		// Initial
+		router.hydrate()
+		window.$root = hydrateRoot(document, app)
+	} else {
+		// Hot
+		window.$root?.render(app)
+	}
+}
+
+if (import.meta.hot) {
+	import.meta.hot.accept((mod) => {
+		if (mod) {
+			render(mod)
+		}
+	})
+}
+
+declare global {
+	interface Window {
+		$root?: Root
+	}
+}

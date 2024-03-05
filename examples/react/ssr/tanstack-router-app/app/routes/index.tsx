@@ -1,7 +1,18 @@
-import { Link, useRouter } from "@tanstack/router";
-import React from "react";
+import { Link, createFileRoute, createServerFn } from "@tanstack/react-router";
+import React, { useEffect, useState, useTransition } from "react";
 
 import "./hello.css";
+
+const fn = createServerFn("GET", async (wait: number) => {
+	"use server";
+	await new Promise((r) => setTimeout(r, wait));
+	return {
+		test: new Date().toLocaleString(),
+	};
+});
+export const Route = createFileRoute("/")({
+	component: Hello,
+});
 
 function Counter() {
 	const [count, setCount] = React.useState(0);
@@ -13,7 +24,7 @@ function Counter() {
 	);
 }
 
-export default function Hello({ assets }) {
+export default function Hello() {
 	return (
 		<>
 			<div>Hellsas\\dasd4</div>
@@ -51,11 +62,14 @@ function Test({ wait }: { wait: number }) {
 }
 
 function TestInner({ wait }: { wait: number }) {
-	const router = useRouter();
+	const [test, setTest] = useState("");
+	const [isLoading, startTransition] = useTransition();
 
-	const instance = router.context.loaderClient.loaders.test.useLoader({
-		variables: wait,
-	});
+	useEffect(() => {
+		startTransition(() => {
+			fn(wait).then(({ test }) => setTest(test));
+		});
+	}, []);
 
-	return <div>Test: {instance.state.data.test}</div>;
+	return isLoading ? null : <div>Test: {test}</div>;
 }

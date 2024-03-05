@@ -1,168 +1,143 @@
-import { StartServer } from "@tanstack/react-start/server";
-import { createMemoryHistory } from "@tanstack/router";
-import { renderAsset } from "@vinxi/react";
-import isbot from "isbot";
-import ReactDOMServer, { PipeableStream } from "react-dom/server.edge";
-import { eventHandler, sendStream } from "vinxi/http";
-import { getManifest } from "vinxi/manifest";
+/// <reference types="vinxi/types/server" />
+import type { PipeableStream } from 'react-dom/server'
+import { renderToPipeableStream } from 'react-dom/server'
+import { eventHandler, toWebRequest } from 'vinxi/server'
+import { getManifest } from 'vinxi/manifest'
+import { StartServer, transformStreamWithRouter } from '@tanstack/react-router-server/server'
 
-import { Readable, Transform } from "node:stream";
-
-import { createRouter } from "./router";
-
-function encodeText(input: string) {
-	return new TextEncoder().encode(input);
-}
-
-function decodeText(input: Uint8Array | undefined, textDecoder: TextDecoder) {
-	return textDecoder.decode(input, { stream: true });
-}
-
-export function transformReadableStreamWithRouter(router) {
-	return createHeadInsertionTransformStream(async () => {
-		const injectorPromises = router.injectedHtml.map((d) =>
-			typeof d === "function" ? d() : d,
-		);
-		const injectors = await Promise.all(injectorPromises);
-		router.injectedHtml = [];
-		return injectors.join("");
-	});
-}
-
-const queueTask =
-	process.env.TARGET === "vercel-edge" ? globalThis.setTimeout : setImmediate;
-console.log(process.env.TARGET);
-
-function createHeadInsertionTransformStream(
-	insert: () => Promise<string>,
-): TransformStream<Uint8Array, Uint8Array> {
-	let inserted = false;
-	let freezing = false;
-	const textDecoder = new TextDecoder();
-
-	return new TransformStream({
-		async transform(chunk, controller) {
-			// While react is flushing chunks, we don't apply insertions
-			if (freezing) {
-				controller.enqueue(chunk);
-				return;
-			}
-
-			const insertion = await insert();
-			if (inserted) {
-				controller.enqueue(encodeText(insertion));
-				controller.enqueue(chunk);
-				freezing = true;
-			} else {
-				const content = decodeText(chunk, textDecoder);
-				const index = content.indexOf("</head>");
-				if (index !== -1) {
-					const insertedHeadContent =
-						content.slice(0, index) + insertion + content.slice(index);
-					controller.enqueue(encodeText(insertedHeadContent));
-					freezing = true;
-					inserted = true;
-				}
-			}
-
-			if (!inserted) {
-				controller.enqueue(chunk);
-			} else {
-				queueTask(() => {
-					freezing = false;
-				});
-			}
-		},
-		async flush(controller) {
-			// Check before closing if there's anything remaining to insert.
-			const insertion = await insert();
-			if (insertion) {
-				controller.enqueue(encodeText(insertion));
-			}
-		},
-	});
-}
+import { createRouter } from './router'
+import { createMemoryHistory } from '@tanstack/react-router'
 
 export default eventHandler(async (event) => {
-	const clientManifest = getManifest("client");
-	const serverManifest = getManifest("ssr");
-	const router = createRouter(clientManifest, serverManifest);
+	const req = toWebRequest(event)
+	const url = new URL(req.url)
+	const href = url.href.replace(url.origin, '')
 
-	const assets = await clientManifest.inputs[clientManifest.handler].assets();
+	// Get assets for the server/client
+	const clientManifest = getManifest('client')
+	let assets = (
+		await clientManifest.inputs[clientManifest.handler].assets()
+	).filter((d: any) => {
+		return !d.children?.includes('nuxt-devtools')
+	}) as any
 
-	const memoryHistory = createMemoryHistory({
-		initialEntries: [event.path],
-	});
-
-	// Update the history and context
-	router.update({
-		history: memoryHistory,
-		context: {
-			...router.context,
-			assets: (
-				<>
-					{assets.map((asset) => renderAsset(asset))}
-					{import.meta.env.DEV ? (
-						<script
-							type="module"
-							src={clientManifest.inputs[clientManifest.handler].output.path}
-						/>
-					) : null}
-				</>
-			),
-			// head: opts.head,
-		},
-	});
-
-	// Wait for the router to load critical data
-	// (streamed data will continue to load in the background)
-	await router.load();
-
-	// Track errors
-	let didError = false;
-
-	// Render the app to a readable stream
-	let stream!: ReadableStream;
-
-	// await new Promise<void>(async (resolve) => {
-	// 	console.log("rendering");
-	stream = await ReactDOMServer.renderToReadableStream(
-		<StartServer router={router} />,
+	assets.push(
 		{
-			bootstrapModules: import.meta.env.PROD
-				? [clientManifest.inputs[clientManifest.handler].output.path]
-				: undefined,
-			bootstrapScriptContent: `window.manifest = ${JSON.stringify(
-				await clientManifest.json(),
-			)}; window.base = ${JSON.stringify("/")};`,
-			// [callbackName]: () => {
-			// 	console.log("doneeee");
-			// 	resolve();
-			// 	event.node.res.statusCode = didError ? 500 : 200;
-			// 	event.node.res.setHeader("Content-Type", "text/html");
-			// },
-			onError: (err) => {
-				didError = true;
-				console.log(err);
-			},
+			tag: 'script',
+			attrs: {},
+			children: getHydrationOverlayScriptContext(),
 		},
-	);
-	// });
+		{
+			tag: 'script',
+			children: `window.__vite_plugin_react_preamble_installed__ = true`,
+		},
+		{
+			tag: 'script',
+			attrs: {
+				src: clientManifest.inputs[clientManifest.handler].output.path,
+				type: 'module',
+				async: true,
+			},
+		}
+	)
+	// Create a router
+	const router = createRouter()
 
-	if (isbot(event.node.req.headers["user-agent"])) {
-		// @ts-ignore
-		await stream.allReady;
-	}
+	// Create a history for the router
+	const history = createMemoryHistory({
+		initialEntries: [href],
+	})
 
-	// // Add our Router transform to the stream
-	const transforms = [transformReadableStreamWithRouter(router)];
+	// Update the router with the history and context
+	router.update({
+		history,
+		context: {
+			assets,
+		},
+	})
 
-	for (const transform of transforms) {
-		stream = stream.pipeThrough(transform);
-	}
+	await router.load()
 
-	event.node.res.statusCode = didError ? 500 : 200;
-	event.node.res.setHeader("Content-Type", "text/html");
+	const stream = await new Promise<PipeableStream>(async (resolve) => {
+		const stream = renderToPipeableStream(<StartServer router={router} />, {
+			onShellReady() {
+				resolve(stream)
+			},
+		})
+	})
 
-	return stream;
-});
+	// Add our Router transform to the stream
+	const transforms = [
+		transformStreamWithRouter(router),
+	]
+
+	// Pipe the stream through our transforms
+	const transformedStream = transforms.reduce(
+		(stream, transform) => stream.pipe(transform as any),
+		stream
+	)
+
+	const headers = router.state.matches.reduce((acc, match) => {
+		if (match.headers) {
+			Object.assign(acc, match.headers)
+		}
+		return acc
+	}, {})
+
+	return new Response(transformedStream as any, {
+		status: router.state.statusCode,
+		statusText:
+			router.state.statusCode === 200 ? 'OK' : 'Internal Server Error',
+		headers: {
+			'Content-Type': 'text/html',
+			...headers,
+		},
+	})
+})
+
+function getHydrationOverlayScriptContext() {
+	return `
+window.BUILDER_HYDRATION_OVERLAY = {}
+
+const selector = 'html'
+
+const handleError = () => {
+  window.BUILDER_HYDRATION_OVERLAY.ERROR = true
+  let appRootEl = document.querySelector(selector)
+
+  if (appRootEl && !window.BUILDER_HYDRATION_OVERLAY.CSR_HTML) {
+    window.BUILDER_HYDRATION_OVERLAY.CSR_HTML = appRootEl.innerHTML
+  }
+}
+
+const proxyConsole = (method) => {
+  const original = console[method]
+
+  console[method] = function () {
+    const msg = arguments[0]?.message?.toLowerCase()
+    if (msg && (msg.includes('hydration') || msg.includes('hydrating'))) {
+      handleError()
+    }
+    original.apply(console, arguments)
+  }
+}
+
+const methods = ['log', 'error', 'warn']
+methods.forEach(proxyConsole)
+
+window.addEventListener('error', (event) => {
+  const msg = event.message.toLowerCase()
+  const isHydrationMsg = msg.includes('hydration') || msg.includes('hydrating')
+
+  if (isHydrationMsg) {
+    handleError()
+  }
+})
+
+let BUILDER_HYDRATION_OVERLAY_ELEMENT = document.querySelector(selector)
+if (BUILDER_HYDRATION_OVERLAY_ELEMENT) {
+window.BUILDER_HYDRATION_OVERLAY.SSR_HTML =
+BUILDER_HYDRATION_OVERLAY_ELEMENT.innerHTML
+}
+`
+}
