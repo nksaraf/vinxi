@@ -7,7 +7,8 @@ const routes = [
 		...route,
 		handler: async (event, params) => {
 			const mod = await route.$handler.import();
-			return await mod.default(event, params);
+			event.context['params'] = params
+			return await mod.default(event);
 		},
 	})),
 ];
@@ -35,7 +36,9 @@ function createRouter(routes) {
 					for (let i = 0; i < route.keys.length; i++) {
 						params[route.keys[i].name] = match[i + 1];
 					}
-					return await route.handler(event, params);
+					// add params to context object
+					event.context['params'] = params
+					return await route.handler(event);
 				}
 			}
 
