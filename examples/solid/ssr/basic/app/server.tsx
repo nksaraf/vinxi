@@ -12,7 +12,6 @@ import {
 } from "solid-js/web";
 import { getManifest } from "vinxi/manifest";
 import { eventHandler } from "vinxi/http";
-import { getManifest } from "vinxi/manifest";
 
 import App from "./app";
 
