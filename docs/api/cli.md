@@ -46,6 +46,10 @@ SERVER_PRESET=vercel-edge vinxi start
 
 Starts a static file server to preview the build. Options --dir, --host, --port, --base
 
+I.e. if you have a static site (preset: `static`) with a baseURL corresponding to your repo name on github (i.e. `my-repo`), then you can preview your build like this:
+
+`vinxi serve --dir .output/public --base /my-repo`
+
 ## `vinxi run` (experimental)
 
 Run any typescript/javascript file within a vinxi runtime. We take care of make things like Typescript, ESM Imports, CJS Imports, etc and give you HMR powered by Vite.
