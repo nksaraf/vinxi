@@ -41,6 +41,7 @@ export default defineConfig({
 						items: [
 							{ text: "Vite Plugins", link: "/guide/vite-plugins" },
 							{ text: "Path Aliases", link: "/guide/aliases" },
+							{ text: "Route Rules", link: "/guide/route-rules" },
 						],
 					},
 				],
