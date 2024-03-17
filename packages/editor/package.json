@@ -1,5 +1,5 @@
 {
-  "name": "@vinxi/editor",
+  "name": "@react-three/editor",
   "author": {
     "name": "Nikhil Saraf",
     "email": "nsaraf98@gmail.com",
@@ -7,8 +7,8 @@
   },
   "description": "",
   "version": "0.0.1",
-  "main": "dist/vinxi-editor.cjs.js",
-  "module": "dist/vinxi-editor.esm.js",
+  "main": "dist/react-three-editor.cjs.js",
+  "module": "dist/react-three-editor.esm.js",
   "preconstruct": {
     "entrypoints": [
       "index.ts",
