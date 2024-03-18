@@ -1,8 +1,8 @@
 "use strict";
 
-import { isBuiltin } from "node:module";
-
 import { join, resolve } from "../path.js";
+
+import { isBuiltin } from "node:module";
 
 const skip = [
 	"react/jsx-dev-runtime",
@@ -47,6 +47,10 @@ async function getViteModuleNode(vite, file, ssr) {
 	if (!node) {
 		await vite.moduleGraph.ensureEntryFromUrl(nodePath, ssr);
 		node = await vite.moduleGraph.getModuleById(nodePath);
+	}
+
+	if (nodePath.includes('node_modules')) {
+		return;
 	}
 
 	let prev = vite.config.logger.error;
