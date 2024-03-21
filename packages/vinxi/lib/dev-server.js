@@ -47,6 +47,7 @@ export async function createViteDevServer(config) {
  * @returns {Promise<import("vite").ViteDevServer>}
  */
 export async function createViteHandler(router, app, serveConfig) {
+	const vite = await import("vite");
 	const { getRandomPort } = await import("get-port-please");
 	const port = await getRandomPort();
 	const plugins = [
@@ -72,7 +73,10 @@ export async function createViteHandler(router, app, serveConfig) {
 		app,
 		server: {
 			fs: {
-				allow: [normalize(fileURLToPath(new URL("../", import.meta.url))), "."],
+				allow: [
+					normalize(fileURLToPath(new URL("../", import.meta.url))),
+					vite.searchForWorkspaceRoot(process.cwd()),
+				],
 			},
 			middlewareMode: true,
 			hmr: {
