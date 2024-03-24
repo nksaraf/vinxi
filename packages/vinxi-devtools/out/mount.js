@@ -1,4 +1,4 @@
-// /home/runner/work/vinxi/vinxi/packages/vinxi-devtools/node_modules/solid-js/dist/solid.js
+// /Users/admin/repos/vinxi/packages/vinxi-devtools/node_modules/solid-js/dist/solid.js
 var setHydrateContext = function(context) {
   sharedConfig.context = context;
 };
@@ -636,7 +636,7 @@ var SuspenseContext;
 var FALLBACK = Symbol("fallback");
 var SuspenseListContext = createContext();
 
-// /home/runner/work/vinxi/vinxi/packages/vinxi-devtools/node_modules/solid-js/web/dist/web.js
+// /Users/admin/repos/vinxi/packages/vinxi-devtools/node_modules/solid-js/web/dist/web.js
 var reconcileArrays = function(parentNode, a, b) {
   let bLength = b.length, aEnd = a.length, bEnd = bLength, aStart = 0, bStart = 0, after = a[aEnd - 1].nextSibling, map = null;
   while (aStart < aEnd || bStart < bEnd) {
