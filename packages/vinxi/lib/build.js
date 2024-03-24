@@ -1,4 +1,4 @@
-import { mkdir, rm, writeFile } from "fs/promises";
+import { mkdir, rm } from "fs/promises";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
 
@@ -524,7 +524,8 @@ const routerModePlugin = {
 		config("appType", {
 			appType: "custom",
 			ssr: {
-				noExternal: ["vinxi"],
+				noExternal: ["vinxi", /@vinxi\//],
+				external: ["@vinxi/listhen"],
 			},
 			build: {
 				rollupOptions: {
@@ -567,7 +568,8 @@ const routerModePlugin = {
 		config("appType", {
 			appType: "custom",
 			ssr: {
-				noExternal: ["vinxi"],
+				noExternal: ["vinxi", /@vinxi\//],
+				external: ["@vinxi/listhen"],
 			},
 			build: {
 				rollupOptions: {
@@ -607,7 +609,8 @@ const routerModePlugin = {
 		config("appType", {
 			appType: "custom",
 			ssr: {
-				noExternal: ["vinxi"],
+				noExternal: ["vinxi", /@vinxi\//],
+				external: ["@vinxi/listhen"],
 			},
 			build: {
 				rollupOptions: {
