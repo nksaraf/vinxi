@@ -52,11 +52,6 @@ const command = defineCommand({
 					type: "boolean",
 					description: "Expose to host (default: false)",
 				},
-				stack: {
-					type: "string",
-					description: "Stacks",
-					alias: "s",
-				},
 				version: {
 					type: "boolean",
 					description: "Print the versions of Vinxi core dependencies",
@@ -204,10 +199,6 @@ const command = defineCommand({
 					type: "string",
 					description: "Path to config file (default: app.config.js)",
 				},
-				stack: {
-					type: "string",
-					description: "Stacks",
-				},
 				preset: {
 					type: "string",
 					description: "Server preset (default: node-server)",
@@ -228,6 +219,9 @@ const command = defineCommand({
 				}
 				const { loadApp } = await import("../lib/load-app.js");
 				const app = await loadApp(configFile, args);
+				if (!app) {
+					throw new Error("Couldn't load app");
+				}
 				process.env.NODE_ENV = "production";
 				const { createBuild } = await import("../lib/build.js");
 				await createBuild(app, { preset: args.preset });
@@ -243,10 +237,6 @@ const command = defineCommand({
 				config: {
 					type: "string",
 					description: "Path to config file (default: app.config.js)",
-				},
-				stack: {
-					type: "string",
-					description: "Stacks",
 				},
 				preset: {
 					type: "string",

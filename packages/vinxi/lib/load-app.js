@@ -1,25 +1,27 @@
-/// <reference types="bun-types" />
 import { existsSync } from "fs";
 import { rm } from "fs/promises";
 import { isBuiltin } from "module";
 import { fileURLToPath, pathToFileURL } from "url";
 
 import { createApp } from "./app.js";
-import { log } from "./logger.js";
-import { isAbsolute, join } from "./path.js";
+import { c, log } from "./logger.js";
+import { basename, isAbsolute, join } from "./path.js";
 
 function isBun() {
 	return !!process.versions.bun;
 }
 
-async function fileExists(path) {
+async function fileExists(/** @type {string} */ path) {
+	// @ts-ignore
 	return isBun() ? Bun.file(path).exists() : existsSync(path);
 }
 
-const bundleConfigFile = async (configFile, out) => {
+const bundleConfigFile = async (
+	/** @type {string} */ configFile,
+	/** @type {string} */ out,
+) => {
 	const esbuild = await import("esbuild");
 
-	// const out = `app.config.timestamp_${Date.now()}.js`;
 	await esbuild.build({
 		entryPoints: [configFile],
 		bundle: true,
@@ -66,7 +68,9 @@ const bundleConfigFile = async (configFile, out) => {
 	});
 };
 
-async function loadFile({ ...options }) {
+async function loadFile(
+	/** @type {{ name?: string; configFile?: string }} */ options,
+) {
 	if (options.name) {
 		for (const ext of ["js", "mjs", "ts", "tsx", "jsx", "mts"]) {
 			const filepath = join(process.cwd(), `${options.name}.config.${ext}`);
@@ -76,8 +80,9 @@ async function loadFile({ ...options }) {
 					["ts", "js", "tsx", "jsx"].includes(ext) ? "js" : "mjs"
 				}`;
 				await bundleConfigFile(`${options.name}.config.${ext}`, out);
-				const importedApp = import(pathToFileURL(out).href).then((m) => ({
-					config: m.default,
+				const importedApp = await import(pathToFileURL(out).href).then((m) => ({
+					export: m.default,
+					path: filepath,
 				}));
 
 				await rm(out);
@@ -85,7 +90,7 @@ async function loadFile({ ...options }) {
 			}
 		}
 
-		throw new Error(`Config file not found: ${options.name}`);
+		return { export: null, path: null };
 	} else if (options.configFile) {
 		const ext = options.configFile.slice(
 			options.configFile.lastIndexOf(".") + 1,
@@ -102,28 +107,33 @@ async function loadFile({ ...options }) {
 					["ts", "js", "tsx", "jsx"].includes(ext) ? "js" : "mjs"
 				}`;
 				await bundleConfigFile(options.configFile, out);
-				const importedApp = import(pathToFileURL(out).href).then((m) => ({
-					config: m.default,
+				const importedApp = await import(pathToFileURL(out).href).then((m) => ({
+					export: m.default,
+					path: filepath,
 				}));
 				await rm(out);
 				return importedApp;
 			}
 		}
 
-		throw new Error(`Config file not found: ${options.configFile}`);
+		return { export: null, path: null };
 	}
+
+	return {
+		export: null,
+		path: null,
+	};
 }
 
 /**
  *
  * @param {string | undefined} configFile
- * @returns {Promise<import("./app.js").App>}
+ * @returns {Promise<import("./app.js").App | undefined>}
  */
 export async function loadApp(configFile = undefined, args = {}) {
-	const stacks = typeof args.s === "string" ? [args.s] : args.s ?? [];
 	/** @type {{ config: import("./app.js").App }}*/
 	try {
-		let { config: app } = await loadFile(
+		let appConfig = await loadFile(
 			configFile
 				? {
 						configFile,
@@ -133,70 +143,66 @@ export async function loadApp(configFile = undefined, args = {}) {
 				  },
 		);
 
-		if (!app.config) {
-			const { config } = await loadFile({
+		if (appConfig.path) {
+			if (!appConfig.export) {
+				log(
+					c.dim(
+						c.green(
+							`no vinxi app config found exported from ${basename(
+								appConfig.path,
+							)}`,
+						),
+					),
+				);
+				return undefined;
+			}
+			return appConfig.export;
+		} else {
+			const viteConfig = await loadFile({
 				name: "vite",
 			});
 
-			if (config.config) {
-				log("Found vite.config.js with app config");
-				return config;
-			} else {
-				log("No app config found. Assuming SPA app.");
+			// vinxi app config's have a "config" field
+			if (viteConfig.path) {
+				if (viteConfig.export.config) {
+					log(
+						c.dim(
+							c.green(`found vinxi app config in ${basename(viteConfig.path)}`),
+						),
+					);
+					return viteConfig.export;
+				} else {
+					log(c.dim(c.green("no vinxi app config found")));
+					log(
+						c.dim(c.green(`found vite config in ${basename(viteConfig.path)}`)),
+					);
 
-				if (stacks.length) {
-					log("Applying stacks:", ...stacks);
-					return applyStacks(createApp({}), stacks);
+					const app = createApp({
+						routers: [
+							{
+								name: "public",
+								type: "static",
+								dir: "./public",
+							},
+							{
+								name: "client",
+								type: "spa",
+								handler: "./index.html",
+								target: "browser",
+								plugins: () => viteConfig.export.plugins ?? [],
+							},
+						],
+					});
+
+					return app;
 				}
-
-				const app = createApp({
-					routers: [
-						{
-							name: "public",
-							type: "static",
-							dir: "./public",
-						},
-						{
-							name: "client",
-							type: "spa",
-							handler: "./index.html",
-							target: "browser",
-							plugins: () => config.plugins ?? [],
-						},
-					],
-				});
-
-				return applyStacks(app, stacks);
 			}
-		}
 
-		return applyStacks(app, stacks);
+			return undefined;
+		}
 	} catch (e) {
 		console.error(e);
 
 		return undefined;
 	}
-}
-
-async function applyStacks(app, s) {
-	const { default: resolve } = await import("resolve");
-	const stacks = await Promise.all(
-		s.map(async (stack) => {
-			if (stack.includes("/") || stack.includes("@")) {
-				var res = app.resolveSync(stack);
-				const mod = await import(res);
-				return mod.default;
-			}
-			const mod = await import(
-				fileURLToPath(new URL(`../stack/${stack}.js`, import.meta.url))
-			);
-			return mod.default;
-		}),
-	);
-
-	for (const stack of stacks) {
-		await app.stack(stack);
-	}
-
-	return app;
 }
