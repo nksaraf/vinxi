@@ -1,5 +1,15 @@
 # vinxi
 
+## 0.3.11
+
+### Patch Changes
+
+- 104613d: fix: remove boxen dependency (cjs), fixes cloudflare_pages deployment
+- 3a3d23f: fix: transpile deps that begin with @vinxi/\*
+- e6f9faf: fix: allow serving resource files from monorepo in dev server
+- 1c67f7f: feat: don't crawl for styles in node_modules
+- f849ff3: fix: loadApp refactor, better types, remove stacks for now
+
 ## 0.3.10
 
 ### Patch Changes
