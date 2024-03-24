@@ -18,7 +18,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		config("appType", {
 			appType: "spa",
 			ssr: {
-				noExternal: ["vinxi"],
+				noExternal: ["vinxi", /@vinxi\//],
 			},
 			cacheDir: `node_modules/.vinxi/cache/${router.name}`,
 			optimizeDeps: {
@@ -62,7 +62,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		config("appType", {
 			appType: "custom",
 			ssr: {
-				noExternal: ["vinxi"],
+				noExternal: ["vinxi", /@vinxi\//],
 			},
 			cacheDir: `node_modules/.vinxi/cache/${router.name}`,
 			define: {
@@ -103,7 +103,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			appType: "custom",
 			cacheDir: `node_modules/.vinxi/cache/${router.name}`,
 			ssr: {
-				noExternal: ["vinxi"],
+				noExternal: ["vinxi", /@vinxi\//],
 			},
 			optimizeDeps: {
 				exclude: ["vinxi"],
