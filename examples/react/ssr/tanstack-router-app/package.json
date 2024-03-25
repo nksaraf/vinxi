@@ -10,22 +10,25 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@tanstack/react-loaders": "0.0.1-beta.109",
-    "@tanstack/react-start": "0.0.1-beta.111",
-    "@tanstack/router": "0.0.1-beta.111",
-    "@tanstack/router-devtools": "0.0.1-beta.111",
+    "@tanstack/react-router": "^1.19.1",
+    "@tanstack/react-router-server": "^1.19.1",
     "@vinxi/react": "0.2.2",
-    "@vitejs/plugin-react": "^4.0.4",
+    "@vinxi/server-functions": "0.3.1",
     "autoprefixer": "^10.4.15",
     "axios": "^1.5.0",
+    "import-meta-resolve": "^4.0.0",
     "isbot": "^3.6.13",
-    "react": "0.0.0-experimental-035a41c4e-20230704",
-    "react-dom": "0.0.0-experimental-035a41c4e-20230704",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "tailwindcss": "^3.3.3",
     "vinxi": "0.3.11"
   },
   "devDependencies": {
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7"
+    "@tanstack/router-cli": "^1.19.0",
+    "@tanstack/router-devtools": "^1.19.1",
+    "@tanstack/router-vite-plugin": "^1.19.0",
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1"
   }
 }

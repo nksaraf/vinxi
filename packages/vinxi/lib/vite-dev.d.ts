@@ -8,6 +8,7 @@ declare module "vite" {
 	interface UserConfig {
 		router?: Router;
 		app?: App;
+
 		dev?: DevConfig;
 	}
 
