@@ -21,24 +21,24 @@
     "dist"
   ],
   "peerDependencies": {
-    "@mdx-js/mdx": "<3"
+    "@mdx-js/mdx": "2 | 3"
   },
   "dependencies": {
     "@alloc/quick-lru": "^5.2.0",
-    "esbuild": "0.18.7",
-    "resolve": "^1.22.4",
-    "unified": "^9.2.2",
-    "vfile": "^5.0.0"
+    "esbuild": "0.20.2",
+    "resolve": "^1.22.8",
+    "unified": "^11.0.4",
+    "vfile": "^6.0.1"
   },
   "devDependencies": {
-    "@mdx-js/mdx": "2.3.0",
+    "@mdx-js/mdx": "3.0.1",
     "@types/es-module-lexer": "^0.3.0",
-    "@types/mdast": "^3.0.12",
-    "@types/node": "^14.18.56",
-    "@types/resolve": "^1.20.2",
-    "@types/unist": "^2.0.7",
-    "typescript": "^5.2.2",
-    "vite": "4.5.0"
+    "@types/mdast": "^4.0.3",
+    "@types/node": "^20.11.30",
+    "@types/resolve": "^1.20.6",
+    "@types/unist": "^3.0.2",
+    "typescript": "^5.4.3",
+    "vite": "5.2.6"
   },
   "description": "Vite plugin for MDX",
   "license": "MIT",

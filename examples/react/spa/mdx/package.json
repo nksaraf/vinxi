@@ -9,8 +9,8 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@mdx-js/react": "^2.3.0",
-    "@mdx-js/rollup": "^2.3.0",
+    "@mdx-js/react": "^3.0.1",
+    "@mdx-js/rollup": "^3.0.1",
     "@picocss/pico": "^1.5.10",
     "@vinxi/plugin-mdx": "3.7.1",
     "@vinxi/react": "0.2.2",
