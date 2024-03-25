@@ -1,5 +1,17 @@
 # @vinxi/router
 
+## 0.3.11
+
+### Patch Changes
+
+- d79b90f: feat: add params to h3 event object for api router
+- Updated dependencies [104613d]
+- Updated dependencies [3a3d23f]
+- Updated dependencies [e6f9faf]
+- Updated dependencies [1c67f7f]
+- Updated dependencies [f849ff3]
+  - vinxi@0.3.11
+
 ## 0.3.10
 
 ### Patch Changes
