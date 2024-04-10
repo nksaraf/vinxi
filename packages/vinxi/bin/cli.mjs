@@ -285,7 +285,7 @@ const command = defineCommand({
 						break;
 					default:
 						log(
-							"Couldn't run an app built with the ${} preset locally. Deploy the app to a provider that supports it.",
+							`Couldn't run an app built with the ${process.env.SERVER_PRESET} preset locally. Deploy the app to a provider that supports it.`,
 						);
 				}
 			},
@@ -338,7 +338,7 @@ const command = defineCommand({
 						break;
 					default:
 						log(
-							"Couldn't run an app built with the ${} preset locally. Deploy the app to a provider that supports it.",
+							`Couldn't run an app built with the ${process.env.SERVER_PRESET} preset locally. Deploy the app to a provider that supports it.`,
 						);
 				}
 			},
