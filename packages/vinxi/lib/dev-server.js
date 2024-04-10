@@ -7,7 +7,7 @@ import { join, normalize } from "./path.js";
 
 export * from "./router-dev-plugins.js";
 
-/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: import('@vinxi/listhen').HTTPSOptions } | boolean} DevConfigInput */
+/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: import('@vinxi/listhen').HTTPSOptions | boolean; }} DevConfigInput */
 /** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https: import('@vinxi/listhen').Certificate | false; }} DevConfig */
 
 /**
@@ -82,7 +82,7 @@ export async function createViteHandler(router, app, serveConfig) {
 			hmr: {
 				port,
 			},
-			https: serveConfig.https,
+			https: serveConfig.https || undefined,
 		},
 	});
 
