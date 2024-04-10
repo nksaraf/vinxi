@@ -7,8 +7,8 @@ import { join, normalize } from "./path.js";
 
 export * from "./router-dev-plugins.js";
 
-/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: import('@vinxi/listhen').HTTPSOptions } | boolean} DevConfigInput */
-/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https: import('@vinxi/listhen').Certificate | false; }} DevConfig */
+/** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: import('@vinxi/listhen').HTTPSOptions | boolean; }} DevConfigInput */
+/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https?: import('@vinxi/listhen').Certificate; }} DevConfig */
 
 /**
  *
@@ -116,7 +116,7 @@ export async function createDevServer(
 		},
 		https: https
 			? await resolveCertificate(typeof https === "object" ? https : {})
-			: false,
+			: undefined,
 	};
 
 	await app.hooks.callHook("app:dev:start", { app, serveConfig });

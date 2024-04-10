@@ -12,7 +12,7 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 	routers?: import("./router-modes.js").RouterSchemaInput[];
 	name?:
 	string;
-	server?: Omit<import('nitropack').NitroConfig, 'handlers' | 'devHandlers' | 'publicAssets' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual'>;
+	server?: Omit<import('nitropack').NitroConfig, 'handlers' | 'devHandlers' | 'publicAssets' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual'> & { https?: import('@vinxi/listhen').HTTPSOptions | boolean };
 	root?: string
 }} AppOptions */
 
@@ -20,7 +20,7 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 	config: {
 		name: string;
 		devtools: boolean;
-		server: Omit<import('nitropack').NitroConfig, 'handlers' | 'devHandlers' | 'publicAssets' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual'>;
+		server: Omit<import('nitropack').NitroConfig, 'handlers' | 'devHandlers' | 'publicAssets' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual'> & { https?: import('@vinxi/listhen').HTTPSOptions | boolean };
 		routers: import("./router-mode.js").Router[];
 		root: string;
 	};
