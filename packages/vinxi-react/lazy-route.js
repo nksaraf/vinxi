@@ -38,12 +38,14 @@ export default function lazyRoute(
 			}
 
 			const Comp = forwardRef((props, ref) => {
-				useLayoutEffect(() => {
+				if (typeof window !== "undefined") { 
+					useLayoutEffect(() => {
 					return () => {
 						// remove style tags added by vite when a CSS file is imported
 						cleanupStyles(styles);
 					};
 				}, []);
+				}
 				return createElement(
 					Fragment,
 					null,
