@@ -13,5 +13,5 @@ export function handlerModule(
 		? isAbsolute(router.handler)
 			? router.handler
 			: join(router.root, router.handler)
-		: `#vinxi/handler/${router.name}`;
+		: `$vinxi/handler/${router.name}`;
 }

@@ -1,4 +1,4 @@
-import App from "#vinxi/app";
+import App from "$vinxi/app";
 import { renderAsset } from "@vinxi/react";
 import { Suspense } from "react";
 import { eventHandler } from "vinxi/http";

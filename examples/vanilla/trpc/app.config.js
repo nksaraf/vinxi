@@ -12,7 +12,7 @@ function trpcRouter({ plugins = () => [] } = {}) {
 		target: "server",
 		plugins: () => [
 			input(
-				"#vinxi/trpc/router",
+				"$vinxi/trpc/router",
 				fileURLToPath(new URL("./app/server.ts", import.meta.url)),
 			),
 		],

@@ -40,7 +40,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 				const router = config.router;
 				invariant(
 					router.handler,
-					"#vinxi/handler is only supported in handler mode",
+					"$vinxi/handler is only supported in handler mode",
 				);
 
 				if (router.middleware) {

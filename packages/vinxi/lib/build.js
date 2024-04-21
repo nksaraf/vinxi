@@ -93,10 +93,10 @@ export async function createBuild(app, buildConfig) {
 		},
 		// minify: process.env.MINIFY !== "false" ?? true,
 		plugins: [
-			"#vinxi/prod-app",
+			"$vinxi/prod-app",
 			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
 			fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
-			"#vinxi/chunks",
+			"$vinxi/chunks",
 			...(app.config.server.plugins ?? []),
 		],
 		buildDir: ".vinxi",
@@ -133,7 +133,7 @@ export async function createBuild(app, buildConfig) {
 						return [
 							{
 								route: router.base.length === 1 ? "/" : `${router.base}`,
-								handler: `#vinxi/spa/${router.name}`,
+								handler: `$vinxi/spa/${router.name}`,
 								middleware: true,
 							},
 						];
@@ -173,7 +173,7 @@ export async function createBuild(app, buildConfig) {
 		appConfigFiles: [],
 		imports: false,
 		virtual: {
-			"#vinxi/prod-app": () => {
+			"$vinxi/prod-app": () => {
 				const config = {
 					...app.config,
 					routers: app.config.routers.map((router) => {
@@ -242,7 +242,7 @@ export async function createBuild(app, buildConfig) {
 			...app.config.routers
 				.filter((router) => router.type === "spa")
 				.reduce((virtuals, router) => {
-					virtuals[`#vinxi/spa/${router.name}`] = () => {
+					virtuals[`$vinxi/spa/${router.name}`] = () => {
 						const indexHtml = readFileSync(
 							join(router.outDir, router.base, "index.html"),
 							"utf-8",
@@ -257,7 +257,7 @@ export async function createBuild(app, buildConfig) {
 					};
 					return virtuals;
 				}, {}),
-			"#vinxi/chunks": () => chunksServerVirtualModule()(app),
+			"$vinxi/chunks": () => chunksServerVirtualModule()(app),
 
 			...(Object.fromEntries(
 				Object.entries(app.config.server?.virtual ?? {}).map(([k, v]) => [
@@ -511,7 +511,7 @@ const routerModePlugin = {
 				[handlerModule(router)]: ({ config }) => {
 					invariant(
 						config.router.type === "client",
-						"#vinxi/handler is only supported in client mode",
+						"$vinxi/handler is only supported in client mode",
 					);
 					return `import * as mod from "${join(
 						config.router.root,
@@ -547,7 +547,7 @@ const routerModePlugin = {
 				[handlerModule(router)]: ({ config }) => {
 					invariant(
 						config.router.type === "http",
-						"#vinxi/handler is only supported in handler mode",
+						"$vinxi/handler is only supported in handler mode",
 					);
 
 					if (config.router.middleware) {
