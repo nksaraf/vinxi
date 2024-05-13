@@ -54,7 +54,7 @@ export function createDevManifest(app) {
 							type: "text/css",
 							key,
 							"data-vite-dev-id": key,
-							"data-vite-css-count": "0",
+							"data-vite-ref": "0",
 						},
 						children: value,
 					}));
