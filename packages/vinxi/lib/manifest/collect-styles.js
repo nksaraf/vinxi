@@ -78,9 +78,8 @@ async function getViteModuleNode(vite, file, ssr) {
 }
 
 async function findDeps(vite, node, deps, ssr) {
-	// since `ssrTransformResult.deps` contains URLs instead of `ModuleNode`s, this process is asynchronous.
-	// instead of using `await`, we resolve all branches in parallel.
-	const branches = [];
+	// To avoid FOUC it needs to be done in parallel but with preserving correct style order
+	// const branches = [];
 
 	async function add(node) {
 		if (!deps.has(node)) {
@@ -102,21 +101,29 @@ async function findDeps(vite, node, deps, ssr) {
 	}
 	if (ssr && node.ssrTransformResult) {
 		if (node.ssrTransformResult.deps) {
-			node.ssrTransformResult.deps.forEach((url) =>
+			for (const url of node.ssrTransformResult.deps) {
+				await add_by_url(url, ssr);
+			}
+		
+			// Parallel version with incorrect style order
+			/* node.ssrTransformResult.deps.forEach((url) =>
 				branches.push(add_by_url(url, ssr)),
-			);
+			); */
 		}
 
 		// if (node.ssrTransformResult.dynamicDeps) {
 		//   node.ssrTransformResult.dynamicDeps.forEach(url => branches.push(add_by_url(url)));
 		// }
 	} else if (!ssr) {
-		node.importedModules.forEach((node) =>
-			branches.push(add_by_url(node.url, ssr)),
-		);
-	}
+		for (const { url } of node.importedModules) {
+			await add_by_url(url, ssr);
+		}
 
-	await Promise.all(branches);
+		// Parallel version with incorrect style order
+		/* node.importedModules.forEach((node) =>
+			branches.push(add_by_url(node.url, ssr)),
+		); */
+	}
 }
 
 /**
