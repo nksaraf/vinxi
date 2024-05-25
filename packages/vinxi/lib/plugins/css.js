@@ -27,9 +27,6 @@ export function css() {
 						contents: code,
 					},
 				});
-				return file.endsWith(".module.css")
-					? undefined
-					: [];
 			}
 		},
 		transform(code, id) {
