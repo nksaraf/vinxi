@@ -104,6 +104,9 @@
     },
     "./types/server": {
       "types": "./types/server.d.ts"
+    },
+    "./lib/vite-dev": {
+      "types": "./dist/types/lib/vite-dev.d.ts"
     }
   },
   "typesVersions": {
@@ -161,6 +164,9 @@
       ],
       "manifest": [
         "./dist/types/runtime/manifest.d.ts"
+      ],
+      "lib/vite-dev": [
+        "./dist/types/lib/vite-dev.d.ts"
       ]
     }
   },
