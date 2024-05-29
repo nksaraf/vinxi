@@ -1,16 +1,6 @@
-import { useLoader } from "@tanstack/react-loaders";
-import { ErrorComponent, Link, Outlet } from "@tanstack/router";
-
-export const loader = async ({ context }) => {
-	const postsLoader = context.loaderClient.loaders.posts;
-
-	await postsLoader.load();
-
-	return () =>
-		useLoader({
-			loader: postsLoader,
-		});
-};
+import { ErrorComponent, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { fetchPosts } from "../../db";
 
 export function ErrorBoundary({ error }) {
 	return <ErrorComponent error={error} />;
@@ -20,13 +10,20 @@ export function Loading() {
 	return <div>Loading</div>;
 }
 
-export default function Page({ useLoader }) {
-	const postsLoader = useLoader()();
+export const Route = createFileRoute('/posts/_layout')({
+	component: Layout,
+	errorComponent: ErrorComponent,
+	loader: () => fetchPosts(),
+	pendingComponent: Loading
+})
+
+export default function Layout() {
+	const postsLoader = Route.useLoaderData();
 	return (
 		<div className="p-2 flex gap-2">
 			<ul className="list-disc pl-4">
 				{[
-					...postsLoader.state.data,
+					...postsLoader,
 					{ id: "i-do-not-exist", title: "Non-existent Post" },
 				]?.map((post) => {
 					return (
