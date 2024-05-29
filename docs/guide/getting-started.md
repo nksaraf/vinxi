@@ -26,7 +26,7 @@ Being a SDK, `vinxi` is a collection of primitives that you can bend to your wil
 
 - [Create a new app with Vinxi](./create-your-first-app.md)
 - [Add to an existing Vite app](./add-to-existing-vite-app.md)
-- [Create you own framework with Vinxi](./build-your-own-framework.md)
+- [Create your own framework with Vinxi](./build-your-own-framework.md)
 
 But if you don't want to commit to any of those and just want to look around, you can start by reading:
 
