@@ -3,9 +3,10 @@ import { eventHandler, getHeader, readBody, setHeader } from "vinxi/http";
 import invariant from "vinxi/lib/invariant";
 import { getManifest } from "vinxi/manifest";
 
-export async function handleServerAction(event) {
-	invariant(event.method === "POST", "Invalid method");
+const allowedMethods = ["POST", "GET"];
 
+export async function handleServerAction(event) {
+	invariant(allowedMethods.includes(event.method), "Invalid method");
 	const serverReference = getHeader(event, "server-action");
 	if (serverReference) {
 		invariant(typeof serverReference === "string", "Invalid server action");
@@ -14,7 +15,10 @@ export async function handleServerAction(event) {
 		const action = (
 			await getManifest(import.meta.env.ROUTER_NAME).chunks[filepath].import()
 		)[name];
-		const json = await readBody(event);
+		let json = {};
+		if (event.method === "POST") {
+			json = await readBody(event);
+		} 
 		const result = action.apply(null, json);
 		try {
 			// Wait for any mutations
