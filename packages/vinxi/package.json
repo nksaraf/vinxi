@@ -29,6 +29,9 @@
       "import": "./lib/dev-server.js",
       "types": "./dist/types/lib/dev-server.d.ts"
     },
+    "./dist/types/*": {
+      "types": "./dist/types/*.d.ts"
+    },
     "./stack": {
       "import": "./stack/index.js"
     },
@@ -113,6 +116,9 @@
       ],
       "dev-server": [
         "./dist/types/lib/dev-server.d.ts"
+      ],
+      "dist/types/*": [
+        "./dist/types/*.d.ts"
       ],
       "server": [
         "./runtime/server-types.d.ts"
