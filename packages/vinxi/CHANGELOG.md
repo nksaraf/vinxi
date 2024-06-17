@@ -1,5 +1,21 @@
 # vinxi
 
+## 0.3.12
+
+### Patch Changes
+
+- 2f6e51c: fix: https type def
+- 0afc6ee: fix: style order in dev mode
+- 35259d3: Fix react ssr effect waring
+- 7b590e0: Vinxi now always runs Vite vanilla css hot updates, after Vinxis custom update logic. In particular this fixes hot updates for css files imported via `?url`.
+- 635df64: Swapped all virtual #vinxi references to $vinxi to be compatible with node imports
+- 3b0e0d5: fix: css module hmr update
+- 16d8949: fix: solidjs/solid-start#1401, css ref counting in dev
+- 23edbdd: Replaced stylesheet `precendence` attribute with `fetchpriority`.
+- dc786b2: Add ./dist/types exports to package.json
+- 49fefb8: chore(vinxi): ensure installing vinxi only install one esbuild version
+- 0d6b09b: server functions: allow get requests
+
 ## 0.3.11
 
 ### Patch Changes

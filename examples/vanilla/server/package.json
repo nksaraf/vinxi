@@ -9,6 +9,6 @@
     "start": "vinxi start -s server"
   },
   "dependencies": {
-    "vinxi": "0.3.11"
+    "vinxi": "0.3.12"
   }
 }
