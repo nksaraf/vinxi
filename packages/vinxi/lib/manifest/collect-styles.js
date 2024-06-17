@@ -116,13 +116,10 @@ async function findDeps(vite, node, deps, ssr) {
 		// }
 	} else if (!ssr) {
 		for (const { url } of node.importedModules) {
-			await add_by_url(url, ssr);
+			if (node.staticImportedUrls?.size) {
+				branches.push(add_by_url(node.url, ssr));
+			}
 		}
-
-		// Parallel version with incorrect style order
-		/* node.importedModules.forEach((node) =>
-			branches.push(add_by_url(node.url, ssr)),
-		); */
 	}
 }
 
