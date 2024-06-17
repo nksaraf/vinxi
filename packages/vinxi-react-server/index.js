@@ -10,7 +10,7 @@ function appEntry() {
 	return config("alias", {
 		resolve: {
 			alias: {
-				"#vinxi/app": join(process.cwd(), "app", "app.tsx"),
+				"$vinxi/app": join(process.cwd(), "app", "app.tsx"),
 			},
 		},
 	});
@@ -48,7 +48,7 @@ export function defineConfig() {
 					config("other", {
 						resolve: {
 							alias: {
-								"#vinxi/app/client": fileURLToPath(
+								"$vinxi/app/client": fileURLToPath(
 									new URL("./app/client.ts", import.meta.url),
 								),
 							},

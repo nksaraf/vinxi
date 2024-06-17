@@ -1,4 +1,4 @@
-import appRouter from "#vinxi/trpc/router";
+import appRouter from "$vinxi/trpc/router";
 import { createHTTPHandler } from "@trpc/server/adapters/standalone";
 import { fromNodeMiddleware } from "vinxi/http";
 
