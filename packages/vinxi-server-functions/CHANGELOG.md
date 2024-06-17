@@ -1,5 +1,23 @@
 # @vinxi/plugin-references
 
+## 0.3.3
+
+### Patch Changes
+
+- 0d6b09b: server functions: allow get requests
+- Updated dependencies [2f6e51c]
+- Updated dependencies [0afc6ee]
+- Updated dependencies [35259d3]
+- Updated dependencies [7b590e0]
+- Updated dependencies [635df64]
+- Updated dependencies [3b0e0d5]
+- Updated dependencies [16d8949]
+- Updated dependencies [23edbdd]
+- Updated dependencies [dc786b2]
+- Updated dependencies [49fefb8]
+- Updated dependencies [0d6b09b]
+  - vinxi@0.3.12
+
 ## 0.3.2
 
 ### Patch Changes

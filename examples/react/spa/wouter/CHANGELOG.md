@@ -4,6 +4,13 @@
 
 ### Patch Changes
 
+- Updated dependencies [35259d3]
+  - @vinxi/react@0.2.3
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [38a6d0d]
   - @vinxi/react@0.2.2
 

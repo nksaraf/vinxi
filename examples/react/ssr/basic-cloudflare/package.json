@@ -14,7 +14,7 @@
     "@miniflare/kv": "^2.14.1",
     "@miniflare/web-sockets": "^2.14.1",
     "@picocss/pico": "^1.5.10",
-    "@vinxi/react": "0.2.2",
+    "@vinxi/react": "0.2.3",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.15",
     "miniflare": "^2.14.1",
@@ -22,7 +22,7 @@
     "react-dom": "0.0.0-experimental-035a41c4e-20230704",
     "tailwindcss": "^3.3.3",
     "unenv": "^1.9.0",
-    "vinxi": "0.3.11",
+    "vinxi": "0.3.12",
     "ws": "^8.13.0"
   },
   "devDependencies": {

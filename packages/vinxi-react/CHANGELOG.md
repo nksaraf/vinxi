@@ -1,5 +1,11 @@
 # @vinxi/react
 
+## 0.2.3
+
+### Patch Changes
+
+- 35259d3: Fix react ssr effect waring
+
 ## 0.2.2
 
 ### Patch Changes

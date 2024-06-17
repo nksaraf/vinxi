@@ -1,5 +1,15 @@
 # @vinxi/react-server
 
+## 0.2.6
+
+### Patch Changes
+
+- 635df64: Swapped all virtual #vinxi references to $vinxi to be compatible with node imports
+- Updated dependencies [35259d3]
+- Updated dependencies [0d6b09b]
+  - @vinxi/react@0.2.3
+  - @vinxi/server-functions@0.3.3
+
 ## 0.2.5
 
 ### Patch Changes
