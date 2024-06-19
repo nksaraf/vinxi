@@ -116,9 +116,7 @@ async function findDeps(vite, node, deps, ssr) {
 		// }
 	} else if (!ssr) {
 		for (const { url } of node.importedModules) {
-			if (node.staticImportedUrls?.size) {
-				await add_by_url(node.url, ssr);
-			}
+			await add_by_url(url, ssr);
 		}
 	}
 }
