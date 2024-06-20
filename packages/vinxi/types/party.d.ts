@@ -4,6 +4,8 @@
 // 	DurableObjectStorage,
 // 	WebSocket,
 // } from "@cloudflare/workers-types";
+import type { Peer } from "crossws";
+
 import { EventHandler } from "../runtime/server";
 
 export type StaticAssetsManifestType = {
@@ -403,9 +405,8 @@ export type WebSocketEvent =
 	  };
 
 export type PartyHandler = {
-	onStart?: ((party: Party) => void | Promise<void>) | undefined;
 	onConnect?:
-		| ((party: Party, connection: Connection) => void | Promise<void>)
+		| ((party: Party, peer: Peer) => void | Promise<void>)
 		| undefined;
 	onMessage?:
 		| ((
@@ -415,17 +416,14 @@ export type PartyHandler = {
 		  ) => void | Promise<void>)
 		| undefined;
 	onClose?:
-		| ((party: Party, connection: Connection) => void | Promise<void>)
+		| ((party: Party, peer: Peer) => void | Promise<void>)
 		| undefined;
 	onError?:
 		| ((
 				party: Party,
-				connection: Connection,
+				peer: Peer,
 				error: Error,
 		  ) => void | Promise<void>)
-		| undefined;
-	onRequest?:
-		| ((party: Party, req: Request) => Response | Promise<Response>)
 		| undefined;
 };
 
