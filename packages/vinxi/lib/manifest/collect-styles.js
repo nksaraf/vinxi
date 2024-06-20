@@ -115,8 +115,10 @@ async function findDeps(vite, node, deps, ssr) {
 		//   node.ssrTransformResult.dynamicDeps.forEach(url => branches.push(add_by_url(url)));
 		// }
 	} else if (!ssr) {
-		for (const { url } of node.importedModules) {
-			await add_by_url(url, ssr);
+		for (const module of node.importedModules) {
+			if (module.staticImportedUrls?.size || module.url.endsWith(".css")) {
+				await add_by_url(module.url, ssr);
+			}
 		}
 	}
 }
