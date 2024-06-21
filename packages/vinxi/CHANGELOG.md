@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.3.13
+
+### Patch Changes
+
+- 308d489: Fixed a bug in the dev style collection that resulted in flashes of unstyled content.
+
 ## 0.3.12
 
 ### Patch Changes
