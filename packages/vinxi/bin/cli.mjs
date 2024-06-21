@@ -247,8 +247,8 @@ const command = defineCommand({
 					description: "Port to listen on (default: 3000)",
 				},
 				host: {
-					type: "boolean",
-					description: "Expose to host (default: false)",
+					type: "string",
+					description: "Expose to host (default: 0.0.0.0)",
 				},
 			},
 			async run({ args }) {
