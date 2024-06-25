@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function Counter({ onChange }) {
+	useEffect(() => {
+		document.documentElement.dataset.ready = "";
+		return () => {
+			document.documentElement.dataset.ready = null;
+		}
+	}, []);
 	const [count, setCount] = useState(0);
 	return (
 		<button

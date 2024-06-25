@@ -32,6 +32,7 @@ testDevAndProd("srv-fn", ({ createFixture }) => {
 	test("spa", async ({ page }) => {
 		let app = new PlaywrightFixture(appFixture, page);
 		await app.goto("/", true);
+		await app.isReady();
 
 		let responses = app.collectResponses();
 		await app.clickElement("[data-test-id=button]");

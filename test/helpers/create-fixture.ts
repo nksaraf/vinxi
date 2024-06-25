@@ -133,8 +133,10 @@ export async function createDevFixture(init: FixtureInit) {
 					await fse.remove(path.join(projectDir, filename));
 				} else {
 					await fse.writeFile(path.join(projectDir, filename), prevValue);
+					await new Promise((r) => setTimeout(r, 2000));
 				}
 			}
+			cache.clear();
 			// await fse.remove(projectDir);
 			// projectDir = await createFixtureProject(init);
 		},
@@ -157,6 +159,7 @@ export async function createDevFixture(init: FixtureInit) {
 			}
 
 			await fse.writeFile(path.join(projectDir, filename), content);
+			await new Promise((r) => setTimeout(r, 2000));
 		},
 		createServer: async () => {
 			return {
