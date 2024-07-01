@@ -22,7 +22,7 @@ function createHtmlTagsForAssets(router, app, assets) {
 				href: joinURL(app.config.server.baseURL ?? "/", router.base, asset),
 				key: join(app.config.server.baseURL ?? "", router.base, asset),
 				...(asset.endsWith(".css")
-					? { rel: "stylesheet", fetchpriority: "high" }
+					? { rel: "stylesheet", fetchPriority: "high" }
 					: { rel: "modulepreload" }),
 			},
 		}));
