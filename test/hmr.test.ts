@@ -74,8 +74,6 @@ test.describe("hmr", () => {
 			}`,
 		);
 
-		await new Promise((r) => setTimeout(r, 1000));
-
 		res = await fixture.requestDocument("/");
 		expect(res.status).toBe(200);
 		expect(res.headers.get("Content-Type")).toBe("text/html");
@@ -87,6 +85,7 @@ test.describe("hmr", () => {
 	test("client hmr", async ({ page }) => {
 		let app = new PlaywrightFixture(appFixture, page);
 		await app.goto("/", true);
+		await app.isReady();
 
 		expect(await app.getHtml("[data-test-id=content]")).toBe(
 			prettyHtml(`<h1 data-test-id="content">Hello from Vinxi</h1>`),
@@ -118,8 +117,6 @@ test.describe("hmr", () => {
 			}`,
 		);
 
-		await new Promise((r) => setTimeout(r, 1000));
-
 		expect(await app.getHtml("[data-test-id=button]")).toBe(
 			prettyHtml(`<button data-test-id="button">Click me again</button>`),
 		);
@@ -138,8 +135,6 @@ test.describe("hmr", () => {
 			}`,
 		);
 
-		await new Promise((r) => setTimeout(r, 1000));
-
 		res = await fixture.requestDocument("/api/hello");
 		expect(res.status).toBe(200);
 		expect(res.headers.get("Content-Type")).toBe("text/html");
@@ -151,8 +146,6 @@ test.describe("hmr", () => {
 				return "Hello new";
 			}`,
 		);
-
-		await new Promise((r) => setTimeout(r, 2000));
 
 		res = await fixture.requestDocument("/api/new");
 		expect(res.status).toBe(200);

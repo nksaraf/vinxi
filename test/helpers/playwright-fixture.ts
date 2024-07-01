@@ -190,6 +190,36 @@ export class PlaywrightFixture {
     cp.exec(`open ${this.app.serverUrl}${href}`);
     return new Promise(res => setTimeout(res, ms));
   }
+
+  /**
+   * Checks if the page is hydrated via a data-ready attribute, 
+   * that is being set with useEffect.
+   */
+  async isReady () {
+    let DEBUG = !!process.env.DEBUG;
+    
+    const readyCheck = async (timeout?: number) => {
+      await this.page.waitForLoadState("networkidle");
+      await this.page.waitForLoadState("load");
+      await this.page.locator('[data-ready]').waitFor({ state: "attached", timeout });
+    }
+
+    for(let i = 1; i <= 5; i++) {
+      try {
+        await readyCheck(20 * i * 1000)
+        // Give React Suspense some extra time to remove its magical display: hidden
+        await new Promise(res => setTimeout(res, 2000));
+        return true;
+      } catch(err) {
+        if (DEBUG) {
+          console.log('Something went wrong during the page hydration, reloading the page')
+        }
+        await this.page.reload()
+      }
+    }
+
+    throw new Error('Page hydration failed');
+  }
 }
 
 export async function getHtml(page: Page, selector?: string) {

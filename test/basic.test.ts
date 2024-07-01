@@ -44,6 +44,7 @@ testDevAndProd("basic", ({ createFixture }) => {
 	test("hydrates", async ({ page }) => {
 		let app = new PlaywrightFixture(appFixture, page);
 		await app.goto("/", true);
+		await app.isReady();
 
 		expect(await app.getHtml("[data-test-id=content]")).toBe(
 			prettyHtml(`<h1 data-test-id="content">Hello from Vinxi</h1>`),
