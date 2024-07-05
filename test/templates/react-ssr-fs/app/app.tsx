@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Counter } from "./Counter";
 import "./style.css";
 
 export default function App({ assets, children }) {
-	const [count, setCount] = React.useState(0);
+	useEffect(() => {
+		document.documentElement.dataset.ready = "";
+		return () => {
+			document.documentElement.dataset.ready = null;
+		}
+	}, []);
+
 	return (
 		<html lang="en">
 			<head>

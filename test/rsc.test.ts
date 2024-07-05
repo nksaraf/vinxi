@@ -36,6 +36,7 @@ test.describe("rsc", () => {
 	test("spa", async ({ page }) => {
 		let app = new PlaywrightFixture(appFixture, page);
 		await app.goto("/", true);
+		await app.isReady();
 
 		expect(await app.getHtml("[data-test-id=title]")).toBe(
 			prettyHtml(`<h1 data-test-id="title">Hello from Vinxi</h1>`),

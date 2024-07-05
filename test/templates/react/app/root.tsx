@@ -1,8 +1,15 @@
 import React from "react";
-
+import { useEffect } from "react";
 import { Counter } from "./Counter";
 
 export default function App({ assets }) {
+	useEffect(() => {
+		document.documentElement.dataset.ready = "";
+		return () => {
+			document.documentElement.dataset.ready = null;
+		}
+	}, []);
+
 	return (
 		<html lang="en">
 			<head>

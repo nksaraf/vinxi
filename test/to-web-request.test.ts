@@ -32,6 +32,7 @@ testDevAndProd("toWebRequest", ({ createFixture }) => {
 	test("readBody call after toWebRequest does not block", async ({ page }) => {
 		let app = new PlaywrightFixture(appFixture, page);
 		await app.goto("/", true);
+		await app.isReady();
 
 		const el = await page.$("[data-test-id=button]");
 		await el.click();

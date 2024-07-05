@@ -60,6 +60,7 @@ testDevAndProd("fs-router", ({ createFixture }) => {
 	test("hydrates", async ({ page }) => {
 		let app = new PlaywrightFixture(appFixture, page);
 		await app.goto("/", true);
+		await app.isReady();
 
 		expect(await app.getHtml("[data-test-id=title]")).toBe(
 			prettyHtml(`<h1 data-test-id="title">Vinxi Home</h1>`),
@@ -76,7 +77,7 @@ testDevAndProd("fs-router", ({ createFixture }) => {
 
 		await app.clickElement("a[href='/hello']");
 		await app.waitForURL("/hello");
-		await new Promise((r) => setTimeout(r, 1000));
+		await app.isReady();
 
 		expect(await app.getHtml("[data-test-id=title]")).toBe(
 			prettyHtml(`<h1 data-test-id="title">Hello from Vinxi</h1>`),
@@ -87,7 +88,7 @@ testDevAndProd("fs-router", ({ createFixture }) => {
 
 		await app.clickElement("a[href='/']");
 		await app.waitForURL("/");
-		await new Promise((r) => setTimeout(r, 2000));
+		await app.isReady();
 
 		expect(await app.getHtml("[data-test-id=title]")).toBe(
 			prettyHtml(`<h1 data-test-id="title">Vinxi Home</h1>`),
