@@ -76,7 +76,7 @@ export async function createBuild(app, buildConfig) {
 			process.env.NITRO_PRESET ??
 			process.env.NITRO_TARGET ??
 			app.config.server.preset ??
-			(process.versions.bun !== undefined ? "bun" : "node-server"),
+			(process.versions.bun !== undefined ? "bun" : undefined),
 		alias: {
 			/**
 			 * These
