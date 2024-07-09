@@ -451,7 +451,7 @@ async function createRouterBuild(app, router) {
 }
 
 const buildTargetPlugin = {
-	server: () => [routes(), handerBuild(), treeShake(), manifest()],
+	server: () => [routes(), handlerBuild(), treeShake(), manifest()],
 	browser: () => [routes(), browserBuild(), treeShake(), manifest()],
 };
 
@@ -658,7 +658,7 @@ export async function getEntries(router) {
 /**
  * @returns {import('./vite-dev.d.ts').Plugin}
  */
-function handerBuild() {
+function handlerBuild() {
 	return {
 		name: "react-rsc:handler",
 		async config({ router, app }, env) {
