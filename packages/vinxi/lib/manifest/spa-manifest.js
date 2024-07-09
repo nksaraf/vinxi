@@ -54,7 +54,7 @@ export async function createSPAManifest(config, bundle, format) {
 							href: join(config.base, asset),
 							key: join(config.base, asset),
 							rel: "stylesheet",
-							fetchpriority: "high",
+							fetchPriority: "high",
 						},
 					})),
 			};
@@ -76,7 +76,7 @@ export async function createSPAManifest(config, bundle, format) {
 		// 				href: join(config.base, asset),
 		// 				key: join(config.base, asset),
 		// 				rel: "stylesheet",
-		// 				fetchpriority: "high",
+		// 				fetchPriority: "high",
 		// 			},
 		// 		})),
 		// };
