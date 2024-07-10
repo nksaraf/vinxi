@@ -100,7 +100,7 @@ async function findDeps(vite, node, deps, ssr) {
 
 	if (
 		node.url.endsWith(".css") ||
-		node.transformResult?.map?.sourcesContent.some((code) => code.match(IGNORE_COMMENT_REGEXP))
+		node.transformResult?.map?.sourcesContent?.some((code) => code.match(IGNORE_COMMENT_REGEXP))
 	) {
 		return;
 	}
