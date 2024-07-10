@@ -1,5 +1,15 @@
 # vinxi
 
+## 0.3.13
+
+### Patch Changes
+
+- bdd5a11: fix automatic deployment detection by not forcing node preset
+- 308d489: Fixed a bug in the dev style collection that resulted in flashes of unstyled content.
+- f289889: Fixed casing of `fetchPriority` according to the HTML standard.
+- ce9c269: fix: vite plugin assets order
+- 0208a90: Change host to string for start command, to be able to set host
+
 ## 0.3.12
 
 ### Patch Changes
