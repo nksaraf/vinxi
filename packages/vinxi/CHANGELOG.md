@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.3.14
+
+### Patch Changes
+
+- c745546: fix missing null check on css exclusion
+
 ## 0.3.13
 
 ### Patch Changes
