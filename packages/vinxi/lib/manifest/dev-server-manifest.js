@@ -140,48 +140,43 @@ export function createDevManifest(app) {
 								let isHandler = router.handler === relativePath;
 
 								async function getVitePluginAssets() {
-									const pluginList = router.internals?.devServer
+									const plugins = router.internals?.devServer
 										? router.internals.devServer.config.plugins
 										: [];
-									// @ts-ignore
-									const indexHtmlTransformers = [];
-									for (
-										let i = 0, pre = 0, post = 0;
-										i < pluginList.length;
-										i++
-									) {
-										const plugin = pluginList[i];
-										if (plugin != null && plugin.transformIndexHtml != null) {
-											const order =
-												typeof plugin.transformIndexHtml === "function"
-													? null
-													: plugin.transformIndexHtml.order ??
-													  plugin.transformIndexHtml.enforce;
-											const func =
-												typeof plugin.transformIndexHtml === "function"
-													? plugin.transformIndexHtml
-													: "handler" in plugin.transformIndexHtml
-													? plugin.transformIndexHtml.handler
-													: plugin.transformIndexHtml.transform;
-											if (order === "pre") {
-												// @ts-ignore
-												indexHtmlTransformers.splice(pre, 0, func);
-												pre++;
-											} else if (order === "post") {
-												// @ts-ignore
-												indexHtmlTransformers.splice(post, 0, func);
-												post++;
+
+									// https://github.com/vitejs/vite/blob/167006e74751a66776f4f48316262449b19bf186/packages/vite/src/node/plugins/html.ts#L1253-L1264
+
+									const preHooks = [];
+									const normalHooks = [];
+									const postHooks = [];
+
+									for (const plugin of plugins) {
+										const hook = plugin.transformIndexHtml
+										if (!hook) continue
+
+										if (typeof hook === 'function') {
+											normalHooks.push(hook)
+										} else {
+											// `enforce` had only two possible values for the `transformIndexHtml` hook
+											// `'pre'` and `'post'` (the default). `order` now works with three values
+											// to align with other hooks (`'pre'`, normal, and `'post'`). We map
+											// both `enforce: 'post'` to `order: undefined` to avoid a breaking change
+											const order = hook.order ?? (hook.enforce === 'pre' ? 'pre' : undefined)
+											// @ts-expect-error union type
+											const handler = hook.handler ?? hook.transform
+											if (order === 'pre') {
+												preHooks.push(handler)
+											} else if (order === 'post') {
+												postHooks.push(handler)
 											} else {
-												// @ts-ignore
-												indexHtmlTransformers.splice(
-													Math.max(post - 1, 0),
-													0,
-													func,
-												);
-												post++;
+												normalHooks.push(handler)
 											}
 										}
 									}
+
+									// @ts-ignore
+									const indexHtmlTransformers = [preHooks, normalHooks, postHooks].flat();
+
 									let pluginAssets = [];
 									// @ts-ignore
 									for (let transformer of indexHtmlTransformers) {
