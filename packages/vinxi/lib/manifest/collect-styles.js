@@ -10,6 +10,8 @@ const skip = [
 	"@vinxi/react-server-dom/runtime",
 ];
 
+const IGNORE_COMMENT_REGEXP = /^(?:(?:\/\/.+\n)|(?:\/\*.+\*\/)|\s)*(\/\/ *@vinxi-ignore-style-collection\n)/;
+
 async function getViteModuleNode(vite, file, ssr) {
 	if (file.startsWith("node:") || isBuiltin(file)) {
 		return null;
@@ -96,7 +98,10 @@ async function findDeps(vite, node, deps, ssr) {
 		}
 	}
 
-	if (node.url.endsWith(".css")) {
+	if (
+		node.url.endsWith(".css") ||
+		node.transformResult?.map?.sourcesContent.some((code) => code.match(IGNORE_COMMENT_REGEXP))
+	) {
 		return;
 	}
 	if (ssr && node.ssrTransformResult) {
