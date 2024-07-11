@@ -10,7 +10,7 @@ import { resolve } from "./resolve.js";
 export { z };
 /**
  * @typedef {{ routes?: CompiledRouter; devServer?: import('vite').ViteDevServer; appWorker?: import('./app-worker-client.js').AppWorkerClient; type: import("./router-mode.js").RouterMode }} Internals
- * @typedef {{ getRoutes(): Promise<any[]>; } & EventTarget} CompiledRouter
+ * @typedef {import('./fs-router.js').BaseFileSystemRouter} CompiledRouter
  * @typedef {(router: RouterSchemaInput, app: import("./app.js").AppOptions) => CompiledRouter} RouterStyleFn
  * */
 export const staticRouterSchema = z.object({

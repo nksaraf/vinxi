@@ -1,36 +1,43 @@
-import { fileURLToPath } from "node:url";
-
-import { normalize } from "../path.js";
+import { moduleId } from "./routes.js";
 
 /**
  *
  * @param {import('vite').FSWatcher} watcher
- * @param {import("../router-modes.js").RouterSchema} router
+ * @param {import("../router-modes.js").CompiledRouter} routes
  */
-function setupWatcher(watcher, router) {
-	if (router.internals?.routes) {
-		watcher.on("unlink", async (path) => {
-			if (router.internals?.routes) {
-				await router.internals?.routes.removeRoute(path);
-			}
-		});
+function setupWatcher(watcher, routes) {
+	watcher.on("unlink", (path) => routes.removeRoute(path));
+	watcher.on("add", (path) => routes.addRoute(path));
+	watcher.on("change", (path) => routes.updateRoute(path));
+}
 
-		watcher.on("add", async (path) => {
-			if (router.internals?.routes) {
-				await router.internals?.routes.addRoute(path);
-			}
-		});
-
-		watcher.on("change", async (path) => {
-			if (router.internals?.routes) {
-				await router.internals?.routes.updateRoute(path);
-			}
-		});
+/**
+ * @param {import('vite').ViteDevServer} server
+ * @param {import("../router-modes.js").CompiledRouter} routes
+ */
+function createRoutesReloader(server, routes) {
+	routes.addEventListener("reload", handleRoutesReload);
+	return () => routes.removeEventListener("reload", handleRoutesReload);
+	function handleRoutesReload() {
+		const { moduleGraph } = server;
+		const mod = moduleGraph.getModuleById(moduleId);
+		if (mod) {
+			const seen = new Set();
+			moduleGraph.invalidateModule(mod, seen);
+			server.reloadModule(mod);
+		}
+		if (!server.config.server.hmr) {
+			server.ws.send({ type: "full-reload" });
+		}
 	}
 }
+
 export const fileSystemWatcher = () => {
-	/** @type {import('../vite-dev.js').ViteConfig} */
+	/** @type {import('../vite-dev.js').ViteConfig & { router: any }} */
 	let config;
+
+	/** @type {undefined|(() => void)} */
+	let close;
 
 	/** @type {import('../vite-dev.js').Plugin} */
 	const plugin = {
@@ -40,25 +47,14 @@ export const fileSystemWatcher = () => {
 			config = resolvedConfig;
 		},
 		configureServer(server) {
-			if (config.router.internals?.routes) {
-				setupWatcher(server.watcher, config.router);
-				config.router.internals.routes.addEventListener("reload", () => {
-					const { moduleGraph } = server;
-					const mods = moduleGraph.getModulesByFile(
-						normalize(fileURLToPath(new URL("../routes.js", import.meta.url))),
-					);
-					if (mods) {
-						const seen = new Set();
-						mods.forEach((mod) => {
-							moduleGraph.invalidateModule(mod, seen);
-						});
-					}
-					// debug.hmr("Reload generated pages.");
-					server.ws.send({
-						type: "full-reload",
-					});
-				});
+			const routes = config.router?.internals?.routes;
+			if (routes) {
+				setupWatcher(server.watcher, routes);
+				close = createRoutesReloader(server, routes);
 			}
+		},
+		closeBundle() {
+			close?.();
 		},
 	};
 	return plugin;
