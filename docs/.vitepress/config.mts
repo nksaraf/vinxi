@@ -20,7 +20,6 @@ export default defineConfig({
 		sidebar: [
 			{
 				text: "Guide",
-				link: "/guide",
 				items: [
 					{ text: "Why Vinxi", link: "/guide/why-vinxi" },
 					{ text: "Get Started", link: "/guide/getting-started" },
@@ -49,7 +48,6 @@ export default defineConfig({
 			},
 			{
 				text: "APIs",
-				link: "/api",
 				items: [
 					{ text: "App API", link: "/api/app" },
 					{
