@@ -1,0 +1,33 @@
+name: Continuous Releases
+
+on:
+  push:
+    branches:
+      - main
+  merge_group:
+  pull_request:
+
+jobs:
+  cr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build start
+        run: pnpm run build && pnpm run types
+
+      - name: Release
+        run: pnpm dlx pkg-pr-new@0.0 publish './packages/*' --template './examples/*' --compact 
