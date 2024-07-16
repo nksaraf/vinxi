@@ -43,7 +43,6 @@
       "types": "./dist/types/lib/fs-router.d.ts"
     },
     "./routes": {
-      "import": "./lib/routes.js",
       "types": "./types/routes.d.ts"
     },
     "./client": {

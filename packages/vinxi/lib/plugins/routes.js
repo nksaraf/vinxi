@@ -1,6 +1,6 @@
-import { fileURLToPath } from "node:url";
-
 import { relative } from "../path.js";
+
+export const moduleId = "vinxi/routes";
 
 /**
  *
@@ -8,7 +8,7 @@ import { relative } from "../path.js";
  */
 export function routes() {
 	/**
-	 * @type {Exclude<import("../app").RouterSchema, import("../app").StaticRouterSchema>}
+	 * @type {Exclude<import("../router-modes.js").RouterSchema, import("../router-modes.js").StaticRouterSchema>}
 	 */
 	let router;
 	/**
@@ -35,18 +35,16 @@ export function routes() {
 			root = config.root;
 			router = config.router;
 		},
-		/**
-		 * @param {{ split: (arg0: string) => [any, any]; }} url
-		 */
-		async load(url) {
-			const [id, query] = url.split("?");
-			if (
-				id ===
-				fileURLToPath(new URL("../routes.js", import.meta.url)).replaceAll(
-					"\\",
-					"/",
-				)
-			) {
+		resolveId: {
+			order: "pre",
+			handler(id) {
+				if (id === moduleId) {
+					return id;
+				}
+			},
+		},
+		async load(id) {
+			if (id === moduleId) {
 				const js = jsCode();
 				const routes = await router.internals.routes?.getRoutes();
 
