@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.4.0
+
+### Minor Changes
+
+- 8cbae91: virtual routes module
+
 ## 0.3.14
 
 ### Patch Changes
