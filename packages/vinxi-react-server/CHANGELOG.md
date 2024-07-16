@@ -1,5 +1,14 @@
 # @vinxi/react-server
 
+## 0.2.8
+
+### Patch Changes
+
+- bd2021e3: fix relative versioning
+- Updated dependencies [bd2021e3]
+  - @vinxi/server-components@0.4.1
+  - @vinxi/server-functions@0.4.1
+
 ## 0.2.7
 
 ### Patch Changes
