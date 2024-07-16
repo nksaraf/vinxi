@@ -41,8 +41,8 @@
     "@vinxi/plugin-references": "0.0.29",
     "@vinxi/react": "0.2.3",
     "@vinxi/react-server-dom": "^0.0.3",
-    "@vinxi/server-components": "1.0.0",
-    "@vinxi/server-functions": "1.0.0",
+    "@vinxi/server-components": "0.4.0",
+    "@vinxi/server-functions": "0.4.0",
     "@vitejs/plugin-react": "^4.0.4"
   }
 }

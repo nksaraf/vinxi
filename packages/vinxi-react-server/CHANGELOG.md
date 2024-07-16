@@ -4,8 +4,8 @@
 
 ### Patch Changes
 
-- @vinxi/server-components@1.0.0
-- @vinxi/server-functions@1.0.0
+- @vinxi/server-components@0.4.0
+- @vinxi/server-functions@0.4.0
 
 ## 0.2.6
 
@@ -46,8 +46,8 @@
 ### Patch Changes
 
 - Updated dependencies [b039359]
-  - @vinxi/server-components@1.0.0
-  - @vinxi/server-functions@1.0.0
+  - @vinxi/server-components@0.4.0
+  - @vinxi/server-functions@0.4.0
 
 ## 0.2.1
 
@@ -67,8 +67,8 @@
 - Updated dependencies [d2fcee6]
 - Updated dependencies [276ba5d]
   - @vinxi/react@0.2.0
-  - @vinxi/server-functions@1.0.0
-  - @vinxi/server-components@1.0.0
+  - @vinxi/server-functions@0.4.0
+  - @vinxi/server-components@0.4.0
 
 ## 0.1.5
 
@@ -118,8 +118,8 @@
 
 - Updated dependencies [e31abb2]
   - @vinxi/react@0.1.0
-  - @vinxi/server-components@1.0.0
-  - @vinxi/server-functions@1.0.0
+  - @vinxi/server-components@0.4.0
+  - @vinxi/server-functions@0.4.0
 
 ## 0.0.49
 

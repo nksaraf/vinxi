@@ -1,12 +1,12 @@
 # @vinxi/plugin-references
 
-## 1.0.0
+## 0.4.0
 
 ### Patch Changes
 
 - Updated dependencies [8cbae91]
   - vinxi@0.4.0
-  - @vinxi/plugin-directives@1.0.0
+  - @vinxi/plugin-directives@0.4.0
 
 ## 0.3.3
 
@@ -43,7 +43,7 @@
 - Updated dependencies [54214a7]
   - vinxi@0.3.7
 
-## 1.0.0
+## 0.4.0
 
 ### Patch Changes
 
@@ -54,7 +54,7 @@
 - Updated dependencies [5e904e3]
 - Updated dependencies [fd2d5e4]
   - vinxi@0.3.0
-  - @vinxi/plugin-directives@1.0.0
+  - @vinxi/plugin-directives@0.4.0
 
 ## 0.2.1
 
@@ -64,7 +64,7 @@
 - Updated dependencies [b25063b]
   - vinxi@0.2.1
 
-## 1.0.0
+## 0.4.0
 
 ### Minor Changes
 
@@ -77,7 +77,7 @@
 - Updated dependencies [2670f50]
 - Updated dependencies [4a14764]
   - vinxi@0.2.0
-  - @vinxi/plugin-directives@1.0.0
+  - @vinxi/plugin-directives@0.4.0
 
 ## 0.1.4
 
@@ -118,7 +118,7 @@
   - vinxi@0.1.2
   - @vinxi/plugin-directives@0.1.1
 
-## 1.0.0
+## 0.4.0
 
 ### Minor Changes
 
@@ -129,7 +129,7 @@
 - Updated dependencies [e31abb2]
 - Updated dependencies [b2ef06f]
   - vinxi@0.1.0
-  - @vinxi/plugin-directives@1.0.0
+  - @vinxi/plugin-directives@0.4.0
 
 ## 0.0.61
 

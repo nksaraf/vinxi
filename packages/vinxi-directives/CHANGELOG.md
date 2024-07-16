@@ -1,6 +1,6 @@
 # @vinxi/plugin-references
 
-## 1.0.0
+## 0.4.0
 
 ### Patch Changes
 
@@ -15,7 +15,7 @@
 - Updated dependencies [4caab63]
   - vinxi@0.3.10
 
-## 1.0.0
+## 0.4.0
 
 ### Patch Changes
 
@@ -26,7 +26,7 @@
 - Updated dependencies [fd2d5e4]
   - vinxi@0.3.0
 
-## 1.0.0
+## 0.4.0
 
 ### Patch Changes
 
@@ -67,7 +67,7 @@
 - Updated dependencies [a011795]
   - vinxi@0.1.2
 
-## 1.0.0
+## 0.4.0
 
 ### Minor Changes
 
