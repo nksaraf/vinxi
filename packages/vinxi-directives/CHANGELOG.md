@@ -1,5 +1,11 @@
 # @vinxi/plugin-references
 
+## 0.4.1
+
+### Patch Changes
+
+- bd2021e3: fix relative versioning
+
 ## 0.4.0
 
 ### Patch Changes
