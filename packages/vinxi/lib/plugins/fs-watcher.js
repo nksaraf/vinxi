@@ -33,7 +33,7 @@ function createRoutesReloader(server, routes) {
 }
 
 export const fileSystemWatcher = () => {
-	/** @type {import('../vite-dev.js').ViteConfig & { router: any }} */
+	/** @type {import('vite').ResolvedConfig & { router: Exclude<import('../router-modes.js').RouterSchema, import('../router-modes.js').StaticRouterSchema> }} */
 	let config;
 
 	/** @type {undefined|(() => void)} */
@@ -43,6 +43,9 @@ export const fileSystemWatcher = () => {
 	const plugin = {
 		name: "fs-watcher",
 		apply: "serve",
+		/**
+		 * @param {import('vite').ResolvedConfig & { router: any }} resolvedConfig
+		 */
 		configResolved(resolvedConfig) {
 			config = resolvedConfig;
 		},

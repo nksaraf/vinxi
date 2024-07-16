@@ -8,7 +8,7 @@ export const moduleId = "vinxi/routes";
  */
 export function routes() {
 	/**
-	 * @type {Exclude<import("../app").RouterSchema, import("../app").StaticRouterSchema>}
+	 * @type {Exclude<import("../router-modes.js").RouterSchema, import("../router-modes.js").StaticRouterSchema>}
 	 */
 	let router;
 	/**
