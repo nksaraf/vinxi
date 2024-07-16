@@ -4,6 +4,14 @@
 
 ### Patch Changes
 
+- Updated dependencies [8cbae91]
+  - vinxi@0.4.0
+  - @vinxi/react@0.2.3
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [c745546]
   - vinxi@0.3.14
   - @vinxi/react@0.2.3
