@@ -10,6 +10,7 @@
     "test": "pnpm --filter vinxi-tests clean && pnpm --filter \"./packages/*\" test && pnpm --filter vinxi-tests test --",
     "test:directives": "pnpm --filter @vinxi/plugin-directives test --",
     "ci": "pnpm -r --stream run ci",
+    "readme": "cp README.md packages/vinxi/README.md",
     "release": "pnpm run build && pnpm run types && changeset publish",
     "test:packages": "pnpm -r --stream run test",
     "test:prettier": "prettier --check --ignore-path .gitignore --ignore-unknown . '!pnpm-lock.yaml'",
