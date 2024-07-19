@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.4.1
+
+### Patch Changes
+
+- 4bf73294: fix #338 add readme to Vinxi package
+- f1e17602: fix #332 - dramatic performance improvement of findAssetsInViteManifest
+
 ## 0.4.0
 
 ### Minor Changes
