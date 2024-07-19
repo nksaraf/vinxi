@@ -64,8 +64,7 @@ function createPlugin(
 			transformMdx = createTransformer(root, namedImports);
 		},
 		async transform(code, id, ssr) {
-			const [path, query] = id.split("?");
-			if (/\.mdx?$/.test(path)) {
+			if (/\.mdx?$/.test(id)) {
 				if (!transformMdx)
 					throw new Error(
 						"vite-plugin-mdx: configResolved hook should be called before calling transform hook",
@@ -73,17 +72,17 @@ function createPlugin(
 
 				const mdxOptions = mergeOptions(
 					globalMdxOptions,
-					getMdxOptions?.(path),
+					getMdxOptions?.(id),
 				);
 
-				const input = new VFile({ value: code, path })
+				const input = new VFile({ value: code, path: id })
 
 				code = await transformMdx(input, { ...mdxOptions });
 				// @ts-ignore
 				const refreshResult = await reactRefresh?.transform!.call(
 					this,
 					code,
-					path + ".js",
+					id + ".js",
 					ssr,
 				);
 
