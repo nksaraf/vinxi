@@ -40,11 +40,11 @@
     "typescript": "^5.2.2",
     "vite": "4.5.0"
   },
-  "description": "Vite plugin for MDX",
+  "description": "Vinxi plugin for MDX",
   "license": "MIT",
-  "repository": "https://github.com/brillout/vite-plugin-mdx",
+  "repository": "https://github.com/nksaraf/vinxi/blob/main/packages/vinxi-mdx",
   "keywords": [
-    "vite",
+    "vinxi",
     "mdx"
   ],
   "publishConfig": {
