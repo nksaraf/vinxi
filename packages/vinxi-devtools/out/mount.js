@@ -1,8 +1,8 @@
 // /home/runner/work/vinxi/vinxi/packages/vinxi-devtools/node_modules/solid-js/dist/solid.js
-var setHydrateContext = function(context) {
+function setHydrateContext(context) {
   sharedConfig.context = context;
-};
-var createRoot = function(fn, detachedOwner) {
+}
+function createRoot(fn, detachedOwner) {
   const listener = Listener, owner = Owner, unowned = fn.length === 0, current = detachedOwner === undefined ? owner : detachedOwner, root = unowned ? UNOWNED : {
     owned: null,
     cleanups: null,
@@ -17,8 +17,8 @@ var createRoot = function(fn, detachedOwner) {
     Listener = listener;
     Owner = owner;
   }
-};
-var createSignal = function(value, options) {
+}
+function createSignal(value, options) {
   options = options ? Object.assign({}, signalOptions, options) : signalOptions;
   const s = {
     value,
@@ -36,15 +36,15 @@ var createSignal = function(value, options) {
     return writeSignal(s, value2);
   };
   return [readSignal.bind(s), setter];
-};
-var createRenderEffect = function(fn, value, options) {
+}
+function createRenderEffect(fn, value, options) {
   const c = createComputation(fn, value, false, STALE);
   if (Scheduler && Transition && Transition.running)
     Updates.push(c);
   else
     updateComputation(c);
-};
-var createEffect = function(fn, value, options) {
+}
+function createEffect(fn, value, options) {
   runEffects = runUserEffects;
   const c = createComputation(fn, value, false, STALE), s = SuspenseContext && useContext(SuspenseContext);
   if (s)
@@ -52,8 +52,8 @@ var createEffect = function(fn, value, options) {
   if (!options || !options.render)
     c.user = true;
   Effects ? Effects.push(c) : updateComputation(c);
-};
-var createMemo = function(fn, value, options) {
+}
+function createMemo(fn, value, options) {
   options = options ? Object.assign({}, signalOptions, options) : signalOptions;
   const c = createComputation(fn, value, true, 0);
   c.observers = null;
@@ -65,8 +65,8 @@ var createMemo = function(fn, value, options) {
   } else
     updateComputation(c);
   return readSignal.bind(c);
-};
-var untrack = function(fn) {
+}
+function untrack(fn) {
   if (Listener === null)
     return fn();
   const listener = Listener;
@@ -76,8 +76,8 @@ var untrack = function(fn) {
   } finally {
     Listener = listener;
   }
-};
-var onCleanup = function(fn) {
+}
+function onCleanup(fn) {
   if (Owner === null)
     ;
   else if (Owner.cleanups === null)
@@ -85,8 +85,8 @@ var onCleanup = function(fn) {
   else
     Owner.cleanups.push(fn);
   return fn;
-};
-var startTransition = function(fn) {
+}
+function startTransition(fn) {
   if (Transition && Transition.running) {
     fn();
     return Transition.done;
@@ -113,19 +113,19 @@ var startTransition = function(fn) {
     Listener = Owner = null;
     return t ? t.done : undefined;
   });
-};
-var createContext = function(defaultValue, options) {
+}
+function createContext(defaultValue, options) {
   const id = Symbol("context");
   return {
     id,
     Provider: createProvider(id),
     defaultValue
   };
-};
-var useContext = function(context) {
+}
+function useContext(context) {
   return Owner && Owner.context && Owner.context[context.id] !== undefined ? Owner.context[context.id] : context.defaultValue;
-};
-var children = function(fn) {
+}
+function children(fn) {
   const children2 = createMemo(fn);
   const memo = createMemo(() => resolveChildren(children2()));
   memo.toArray = () => {
@@ -133,8 +133,8 @@ var children = function(fn) {
     return Array.isArray(c) ? c : c != null ? [c] : [];
   };
   return memo;
-};
-var readSignal = function() {
+}
+function readSignal() {
   const runningTransition = Transition && Transition.running;
   if (this.sources && (runningTransition ? this.tState : this.state)) {
     if ((runningTransition ? this.tState : this.state) === STALE)
@@ -166,8 +166,8 @@ var readSignal = function() {
   if (runningTransition && Transition.sources.has(this))
     return this.tValue;
   return this.value;
-};
-var writeSignal = function(node, value, isComp) {
+}
+function writeSignal(node, value, isComp) {
   let current = Transition && Transition.running && Transition.sources.has(node) ? node.tValue : node.value;
   if (!node.comparator || !node.comparator(current, value)) {
     if (Transition) {
@@ -210,8 +210,8 @@ var writeSignal = function(node, value, isComp) {
     }
   }
   return value;
-};
-var updateComputation = function(node) {
+}
+function updateComputation(node) {
   if (!node.fn)
     return;
   cleanNode(node);
@@ -230,8 +230,8 @@ var updateComputation = function(node) {
   }
   Listener = listener;
   Owner = owner;
-};
-var runComputation = function(node, value, time) {
+}
+function runComputation(node, value, time) {
   let nextValue;
   try {
     nextValue = node.fn(value);
@@ -260,8 +260,8 @@ var runComputation = function(node, value, time) {
       node.value = nextValue;
     node.updatedAt = time;
   }
-};
-var createComputation = function(fn, init, pure, state = STALE, options) {
+}
+function createComputation(fn, init, pure, state = STALE, options) {
   const c = {
     fn,
     state,
@@ -308,8 +308,8 @@ var createComputation = function(fn, init, pure, state = STALE, options) {
     };
   }
   return c;
-};
-var runTop = function(node) {
+}
+function runTop(node) {
   const runningTransition = Transition && Transition.running;
   if ((runningTransition ? node.tState : node.state) === 0)
     return;
@@ -342,8 +342,8 @@ var runTop = function(node) {
       Updates = updates;
     }
   }
-};
-var runUpdates = function(fn, init) {
+}
+function runUpdates(fn, init) {
   if (Updates)
     return fn();
   let wait = false;
@@ -364,8 +364,8 @@ var runUpdates = function(fn, init) {
     Updates = null;
     handleError(err);
   }
-};
-var completeUpdates = function(wait) {
+}
+function completeUpdates(wait) {
   if (Updates) {
     if (Scheduler && Transition && Transition.running)
       scheduleQueue(Updates);
@@ -418,12 +418,12 @@ var completeUpdates = function(wait) {
     runUpdates(() => runEffects(e), false);
   if (res)
     res();
-};
-var runQueue = function(queue) {
+}
+function runQueue(queue) {
   for (let i = 0;i < queue.length; i++)
     runTop(queue[i]);
-};
-var scheduleQueue = function(queue) {
+}
+function scheduleQueue(queue) {
   for (let i = 0;i < queue.length; i++) {
     const item = queue[i];
     const tasks = Transition.queue;
@@ -439,8 +439,8 @@ var scheduleQueue = function(queue) {
       });
     }
   }
-};
-var runUserEffects = function(queue) {
+}
+function runUserEffects(queue) {
   let i, userLength = 0;
   for (i = 0;i < queue.length; i++) {
     const e = queue[i];
@@ -463,8 +463,8 @@ var runUserEffects = function(queue) {
   }
   for (i = 0;i < userLength; i++)
     runTop(queue[i]);
-};
-var lookUpstream = function(node, ignore) {
+}
+function lookUpstream(node, ignore) {
   const runningTransition = Transition && Transition.running;
   if (runningTransition)
     node.tState = 0;
@@ -481,8 +481,8 @@ var lookUpstream = function(node, ignore) {
         lookUpstream(source, ignore);
     }
   }
-};
-var markDownstream = function(node) {
+}
+function markDownstream(node) {
   const runningTransition = Transition && Transition.running;
   for (let i = 0;i < node.observers.length; i += 1) {
     const o = node.observers[i];
@@ -498,8 +498,8 @@ var markDownstream = function(node) {
       o.observers && markDownstream(o);
     }
   }
-};
-var cleanNode = function(node) {
+}
+function cleanNode(node) {
   let i;
   if (node.sources) {
     while (node.sources.length) {
@@ -535,8 +535,8 @@ var cleanNode = function(node) {
     node.tState = 0;
   else
     node.state = 0;
-};
-var reset = function(node, top) {
+}
+function reset(node, top) {
   if (!top) {
     node.tState = 0;
     Transition.disposed.add(node);
@@ -545,23 +545,23 @@ var reset = function(node, top) {
     for (let i = 0;i < node.owned.length; i++)
       reset(node.owned[i]);
   }
-};
-var castError = function(err) {
+}
+function castError(err) {
   if (err instanceof Error)
     return err;
   return new Error(typeof err === "string" ? err : "Unknown error", {
     cause: err
   });
-};
-var runErrors = function(err, fns, owner) {
+}
+function runErrors(err, fns, owner) {
   try {
     for (const f of fns)
       f(err);
   } catch (e) {
     handleError(e, owner && owner.owner || null);
   }
-};
-var handleError = function(err, owner = Owner) {
+}
+function handleError(err, owner = Owner) {
   const fns = ERROR && owner && owner.context && owner.context[ERROR];
   const error = castError(err);
   if (!fns)
@@ -575,8 +575,8 @@ var handleError = function(err, owner = Owner) {
     });
   else
     runErrors(error, fns, owner);
-};
-var resolveChildren = function(children2) {
+}
+function resolveChildren(children2) {
   if (typeof children2 === "function" && !children2.length)
     return resolveChildren(children2());
   if (Array.isArray(children2)) {
@@ -588,8 +588,8 @@ var resolveChildren = function(children2) {
     return results;
   }
   return children2;
-};
-var createProvider = function(id, options) {
+}
+function createProvider(id, options) {
   return function provider(props) {
     let res;
     createRenderEffect(() => res = untrack(() => {
@@ -601,7 +601,7 @@ var createProvider = function(id, options) {
     }), undefined);
     return res;
   };
-};
+}
 var sharedConfig = {
   context: undefined,
   registry: undefined
@@ -631,13 +631,13 @@ var Listener = null;
 var Updates = null;
 var Effects = null;
 var ExecCount = 0;
-var [transPending, setTransPending] = createSignal(false);
+var [transPending, setTransPending] = /* @__PURE__ */ createSignal(false);
 var SuspenseContext;
 var FALLBACK = Symbol("fallback");
 var SuspenseListContext = createContext();
 
 // /home/runner/work/vinxi/vinxi/packages/vinxi-devtools/node_modules/solid-js/web/dist/web.js
-var reconcileArrays = function(parentNode, a, b) {
+function reconcileArrays(parentNode, a, b) {
   let bLength = b.length, aEnd = a.length, bEnd = bLength, aStart = 0, bStart = 0, after = a[aEnd - 1].nextSibling, map = null;
   while (aStart < aEnd || bStart < bEnd) {
     if (a[aStart] === b[bStart]) {
@@ -692,8 +692,8 @@ var reconcileArrays = function(parentNode, a, b) {
         a[aStart++].remove();
     }
   }
-};
-var render = function(code, element, init, options = {}) {
+}
+function render(code, element, init, options = {}) {
   let disposer;
   createRoot((dispose) => {
     disposer = dispose;
@@ -703,15 +703,15 @@ var render = function(code, element, init, options = {}) {
     disposer();
     element.textContent = "";
   };
-};
-var insert = function(parent, accessor, marker, initial) {
+}
+function insert(parent, accessor, marker, initial) {
   if (marker !== undefined && !initial)
     initial = [];
   if (typeof accessor !== "function")
     return insertExpression(parent, accessor, initial, marker);
   createRenderEffect((current) => insertExpression(parent, accessor(), current, marker), initial);
-};
-var insertExpression = function(parent, value, current, marker, unwrapArray) {
+}
+function insertExpression(parent, value, current, marker, unwrapArray) {
   if (sharedConfig.context) {
     !current && (current = [...parent.childNodes]);
     let cleaned = [];
@@ -807,8 +807,8 @@ var insertExpression = function(parent, value, current, marker, unwrapArray) {
   } else
     ;
   return current;
-};
-var normalizeIncomingArray = function(normalized, array, current, unwrap) {
+}
+function normalizeIncomingArray(normalized, array, current, unwrap) {
   let dynamic = false;
   for (let i = 0, len = array.length;i < len; i++) {
     let item = array[i], prev = current && current[i], t;
@@ -836,12 +836,12 @@ var normalizeIncomingArray = function(normalized, array, current, unwrap) {
     }
   }
   return dynamic;
-};
-var appendNodes = function(parent, array, marker = null) {
+}
+function appendNodes(parent, array, marker = null) {
   for (let i = 0, len = array.length;i < len; i++)
     parent.insertBefore(array[i], marker);
-};
-var cleanChildren = function(parent, current, marker, replacement) {
+}
+function cleanChildren(parent, current, marker, replacement) {
   if (marker === undefined)
     return parent.textContent = "";
   const node = replacement || document.createTextNode("");
@@ -861,14 +861,14 @@ var cleanChildren = function(parent, current, marker, replacement) {
   } else
     parent.insertBefore(node, marker);
   return [node];
-};
+}
 var booleans = ["allowfullscreen", "async", "autofocus", "autoplay", "checked", "controls", "default", "disabled", "formnovalidate", "hidden", "indeterminate", "ismap", "loop", "multiple", "muted", "nomodule", "novalidate", "open", "playsinline", "readonly", "required", "reversed", "seamless", "selected"];
-var Properties = new Set(["className", "value", "readOnly", "formNoValidate", "isMap", "noModule", "playsInline", ...booleans]);
-var Aliases = Object.assign(Object.create(null), {
+var Properties = /* @__PURE__ */ new Set(["className", "value", "readOnly", "formNoValidate", "isMap", "noModule", "playsInline", ...booleans]);
+var Aliases = /* @__PURE__ */ Object.assign(Object.create(null), {
   className: "class",
   htmlFor: "for"
 });
-var PropAliases = Object.assign(Object.create(null), {
+var PropAliases = /* @__PURE__ */ Object.assign(Object.create(null), {
   class: "className",
   formnovalidate: {
     $: "formNoValidate",
@@ -908,7 +908,7 @@ async function mount() {
     const [isHovering, setIsHovering] = createSignal(false);
     createEffect(() => {
     });
-    return React.createElement(Fragment, null, React.createElement("style", null, style2), React.createElement("div", {
+    return /* @__PURE__ */ React.createElement(Fragment, null, /* @__PURE__ */ React.createElement("style", null, style2), /* @__PURE__ */ React.createElement("div", {
       id: "nuxt-devtools-anchor",
       style: {
         left: "50%"
@@ -916,9 +916,9 @@ async function mount() {
       onMouseMove: () => {
         setIsHovering(true);
       }
-    }, React.createElement("div", {
+    }, /* @__PURE__ */ React.createElement("div", {
       class: "nuxt-devtools-glowing"
-    }), React.createElement("div", {
+    }), /* @__PURE__ */ React.createElement("div", {
       ref,
       className: "nuxt-devtools-panel",
       style: {
@@ -935,24 +935,24 @@ async function mount() {
       onClick: () => {
         setIsOpen((o) => !o);
       }
-    }, React.createElement("svg", {
+    }, /* @__PURE__ */ React.createElement("svg", {
       viewBox: "0 0 128 128",
       fill: "none",
       style: { color: "white", width: "16px", height: "16px" },
       xmlns: "http://www.w3.org/2000/svg"
-    }, React.createElement("g", {
+    }, /* @__PURE__ */ React.createElement("g", {
       "clip-path": "url(#clip0_1_9)"
-    }, React.createElement("path", {
+    }, /* @__PURE__ */ React.createElement("path", {
       d: "M93.0704 3.61125L25.7606 54.3447L25 58.9291L25.7606 60.1516L27.2817 62.291L30.7042 64.4303L35.6479 66.5697L40.2113 68.4034L44.0141 71.154L46.2958 74.5159L47.0563 77.2665V81.5452L34.507 124.333V126.472L35.2676 127.694L36.4085 128L38.6901 127.389L104.479 77.2665L106 75.1271V72.3765L105.239 70.2372L103.338 68.4034L89.6479 61.9853L86.2254 58.9291L83.5634 54.3447V49.4548L96.1127 6.97311V3.30562L94.9718 3L93.0704 3.61125Z",
       fill: "currentColor",
       stroke: "currentColor"
-    })), React.createElement("defs", null, React.createElement("clipPath", {
+    })), /* @__PURE__ */ React.createElement("defs", null, /* @__PURE__ */ React.createElement("clipPath", {
       id: "clip0_1_9"
-    }, React.createElement("rect", {
+    }, /* @__PURE__ */ React.createElement("rect", {
       width: "128",
       height: "128",
       fill: "currentColor"
-    }))))), isOpen() ? React.createElement("div", {
+    }))))), isOpen() ? /* @__PURE__ */ React.createElement("div", {
       class: "nuxt-devtools-frame",
       style: {
         position: "absolute",
@@ -973,11 +973,11 @@ async function mount() {
         "justify-content": "center",
         "box-shadow": "rgba(99, 99, 99, 0.2) 0px 8px 16px 0px"
       }
-    }, React.createElement("iframe", {
+    }, /* @__PURE__ */ React.createElement("iframe", {
       src: "/__devtools/client/index.html"
     })) : null));
   }
-  render(() => React.createElement(App, null), shadow.shadowRoot);
+  render(() => /* @__PURE__ */ React.createElement(App, null), shadow.shadowRoot);
 }
 export {
   mount as default
