@@ -1,7 +1,7 @@
  <p align="center">
   <h1  align="center" ><img src="/docs/public/logo.png" width="196" /></h1>
   <p align="center">
-	 <i>The JavaScript SDK to build full stack apps and frameworks with your own opinions.<br>powered by <code><a href="https://github.com/vitejs/vite">vite</a></code> and <code><a href="https://github.com/unjs/nitro">nitro</a></code></i>
+	 <i>The JavaScript toolkit to build full stack apps and frameworks with your own opinions.<br>powered by <code><a href="https://github.com/vitejs/vite">vite</a></code> and <code><a href="https://github.com/unjs/nitro">nitro</a></code></i>
   </p>
   <div align="center"><img src="https://badge.fury.io/js/vinxi.svg" /></div>
 </p>
