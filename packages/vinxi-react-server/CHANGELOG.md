@@ -1,5 +1,11 @@
 # @vinxi/react-server
 
+## 0.2.10
+
+### Patch Changes
+
+- 3dac3a9b: Update package.json
+
 ## 0.2.9
 
 ### Patch Changes

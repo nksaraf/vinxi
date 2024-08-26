@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/react-server",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "files": [
