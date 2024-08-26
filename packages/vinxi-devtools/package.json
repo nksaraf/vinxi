@@ -5,7 +5,7 @@
   "module": "index.js",
   "scripts": {
     "dev": "node dev.js --dev --force",
-    "build": "node build.js --build",
+    "//build": "node build.js --build",
     "build:mount": "bun build --jsx-runtime=classic --jsx-import-source=preact --external '*?raw' --outdir out mount.jsx"
   },
   "dependencies": {
