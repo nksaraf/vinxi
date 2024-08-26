@@ -328,6 +328,10 @@ const command = defineCommand({
 					process.env.NITRO_TARGET ??
 					"node-server";
 
+				const { log, c } = await import("../lib/logger.js");
+				log(c.dim(c.yellow(`v${packageJson.version}`)));
+				log('deploying')
+
 				switch (process.env.SERVER_PRESET) {
 					case "node-server":
 						await import(
