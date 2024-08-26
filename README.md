@@ -16,7 +16,7 @@ Inspired by the [Bun.App](https://bun.sh/blog/bun-bundler#sneak-peek-bun-app) AP
 
 There are currently two frameworks actively being developed on `vinxi`:
 - [SolidStart](https://github.com/solidjs/solid-start)
-- [TanstackStart]
+- [TanstackStart](https://github.com/tanstack/router)
 
 ## Examples
 
