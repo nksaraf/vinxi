@@ -9,6 +9,11 @@
     "*.d.ts",
     "plugins"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nksaraf/vinxi.git",
+    "directory": "packages/vinxi-directives"
+  },
   "scripts": {
     "test": "vitest --run"
   },

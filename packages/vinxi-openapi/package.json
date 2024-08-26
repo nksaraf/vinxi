@@ -3,6 +3,11 @@
   "version": "0.2.0",
   "type": "module",
   "module": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nksaraf/vinxi.git",
+    "directory": "packages/vinxi-openapi"
+  },
   "dependencies": {
     "@vinxi/doc": "workspace:0.1.1",
     "openapi-types": "^12.1.3"

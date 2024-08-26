@@ -3,6 +3,11 @@
   "module": "doc.js",
   "type": "module",
   "version": "0.1.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nksaraf/vinxi.git",
+    "directory": "packages/vinxi-doc"
+  },
   "exports": {
     ".": {
       "import": "./doc.js",
