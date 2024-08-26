@@ -203,6 +203,10 @@ const command = defineCommand({
 					type: "string",
 					description: "Server preset (default: node-server)",
 				},
+				router: {
+					type: "string",
+					description: "Router to build (by default, vinxi builds all your routers in separate processed and then into an app bundle, use this option to just build a single router",
+				},
 				version: {
 					type: "boolean",
 					description: "Print the versions of Vinxi core dependencies",
@@ -224,7 +228,7 @@ const command = defineCommand({
 				}
 				process.env.NODE_ENV = "production";
 				const { createBuild } = await import("../lib/build.js");
-				await createBuild(app, { preset: args.preset });
+				await createBuild(app, { preset: args.preset, router: args.router });
 			},
 		},
 		start: {

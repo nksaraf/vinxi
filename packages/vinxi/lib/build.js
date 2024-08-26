@@ -29,12 +29,35 @@ const require = createRequire(import.meta.url);
  * @param {BuildConfig} buildConfig
  */
 export async function createBuild(app, buildConfig) {
-	console.log("\n");
-	console.log(`⚙  ${c.green("Building your app...")}`);
-	await app.hooks.callHook("app:build:start", { app, buildConfig });
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
 	const { join } = await import("./path.js");
 	const { fileURLToPath } = await import("url");
+	
+	if (buildConfig.router) {
+		console.log("\n");
+		console.log(`⚙ ${c.green(`Building your router ${buildConfig.router}...`)}`);
+		let router = app.config.routers.find((r) => r.name === buildConfig.router);
+		if (router.build !== false) {
+			if (existsSync(router.outDir)) {
+				await withLogger({ router, requestId: "clean" }, async () => {
+				console.log(`removing ${router.outDir}`);
+				await fsPromises.rm(router.outDir, { recursive: true });
+			});
+		}
+
+			await withLogger({ router, requestId: "build" }, async () => {
+				await createRouterBuild(app, router);
+			});
+		}
+
+		console.log(`⚙ ${c.green(`Built your router ${buildConfig.router} successfully`)}`);
+		return
+	}
+
+	console.log("\n");
+	console.log(`⚙  ${c.green("Building your app...")}`);
+	await app.hooks.callHook("app:build:start", { app, buildConfig });
+
 	app.config.routers = app.config.routers.filter(
 		(router) => router.build !== false,
 	);
@@ -56,7 +79,7 @@ export async function createBuild(app, buildConfig) {
 	for (const router of app.config.routers) {
 		if (router.type !== "static" && router.build !== false) {
 			await withLogger({ router, requestId: "build" }, async () => {
-				await createRouterBuild(app, router);
+				await createRouterBuildInWorker(app, router);
 			});
 		}
 	}
@@ -323,6 +346,11 @@ async function createViteBuild(config) {
 	return output;
 }
 
+async function createRouterBuildInWorker(app, router) {
+	const sh = await import("../runtime/sh.js");
+	const { fileURLToPath } = await import("url");
+	await sh.default`node ${fileURLToPath(new URL("../bin/cli.mjs", import.meta.url).href)} build --router=${router.name}`;
+}
 /**
  *
  * @param {import("./app.js").App} app
