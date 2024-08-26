@@ -50,7 +50,7 @@ importers:
         specifier: ^1.5.10
         version: 1.5.10
       '@vinxi/react-server':
-        specifier: 0.2.9
+        specifier: 0.2.10
         version: link:../../../../packages/vinxi-react-server
       '@vinxi/react-server-dom':
         specifier: 0.0.3
