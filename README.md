@@ -14,6 +14,10 @@ Inspired by the [Bun.App](https://bun.sh/blog/bun-bundler#sneak-peek-bun-app) AP
 
 - **Routers** are handlers that tell us how specific URLs should be handled. We support various router modes: "static", "spa", "http", (and new ones can be added). Routers specify the handler file (entrypoint) to use for their `base`-prefixed routes. They can also specify a `dir` and `style` in some router modes to include a file system router that is provided to the handler. Routers specify their bundler configuration, via the `build` property. The routers tell the bundler what entry points to build, what vite plugins to use, etc.
 
+There are currently two frameworks actively being developed on `vinxi`:
+- [SolidStart](https://github.com/solidjs/solid-start)
+- [TanstackStart]
+
 ## Examples
 
 | Framework | Category | Example               | StackBlitz Link                                                                                                                                            |
