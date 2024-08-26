@@ -18,6 +18,11 @@
     "./lib/*": "./lib/*.js",
     "./runtime/*": "./runtime/*.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nksaraf/vinxi.git",
+    "directory": "packages/vinxi-solid"
+  },
   "typesVersions": {
     "*": {
       ".": [

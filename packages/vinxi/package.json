@@ -13,6 +13,11 @@
     "dist/types",
     "*.d.ts"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nksaraf/vinxi.git",
+    "directory": "packages/vinxi"
+  },
   "scripts": {
     "types": "npm run tsc",
     "tsc": "rm -rf dist/types && tsc; cp -r types dist/types/types; cp -r lib/*.d.ts dist/types/lib/",

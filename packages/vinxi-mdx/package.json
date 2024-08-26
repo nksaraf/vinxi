@@ -42,7 +42,11 @@
   },
   "description": "Vinxi plugin for MDX",
   "license": "MIT",
-  "repository": "https://github.com/nksaraf/vinxi/blob/main/packages/vinxi-mdx",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nksaraf/vinxi.git",
+    "directory": "packages/vinxi-mdx"
+  },
   "keywords": [
     "vinxi",
     "mdx"

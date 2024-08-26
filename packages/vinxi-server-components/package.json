@@ -7,6 +7,11 @@
     "*.js",
     "*.d.ts"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nksaraf/vinxi.git",
+    "directory": "packages/vinxi-server-components"
+  },
   "types": "./index.d.ts",
   "exports": {
     ".": "./index.js",
