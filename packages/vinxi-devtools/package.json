@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/devtools",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "private": true,
   "repository": {
@@ -73,6 +73,6 @@
     "tailwind-merge": "^1.14.0",
     "unocss": "^0.56.5",
     "unocss-preset-radix": "^2.5.5",
-    "vinxi": "0.4.1"
+    "vinxi": "0.4.2"
   }
 }

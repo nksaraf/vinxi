@@ -2,7 +2,7 @@
   "name": "@vinxi/doc",
   "module": "doc.js",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nksaraf/vinxi.git",
@@ -20,7 +20,7 @@
   "types": "./dist/doc.d.ts",
   "dependencies": {
     "@types/node": "^20.10.5",
-    "@vinxi/deno-doc": "0.1.0",
+    "@vinxi/deno-doc": "0.1.1",
     "resolve": "^1.22.8"
   }
 }

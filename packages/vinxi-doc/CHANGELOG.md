@@ -1,5 +1,13 @@
 # @vinxi/doc
 
+## 0.1.2
+
+### Patch Changes
+
+- f1f81b0c: Update package.json
+- Updated dependencies [f1f81b0c]
+  - @vinxi/deno-doc@0.1.1
+
 ## 0.1.1
 
 ### Patch Changes

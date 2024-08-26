@@ -1,5 +1,11 @@
 # @vinxi/doc
 
+## 0.1.1
+
+### Patch Changes
+
+- f1f81b0c: Update package.json
+
 ## 0.1.0
 
 ### Minor Changes
