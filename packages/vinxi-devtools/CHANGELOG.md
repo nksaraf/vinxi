@@ -1,5 +1,11 @@
 # @vinxi/openapi
 
+## 0.2.1
+
+### Patch Changes
+
+- f1f81b0c: Update package.json
+
 ## 0.2.0
 
 ### Minor Changes

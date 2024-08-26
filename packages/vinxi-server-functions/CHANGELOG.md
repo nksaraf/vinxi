@@ -1,5 +1,15 @@
 # @vinxi/plugin-references
 
+## 0.4.2
+
+### Patch Changes
+
+- f1f81b0c: Update package.json
+- Updated dependencies [f1f81b0c]
+- Updated dependencies [8707a798]
+  - @vinxi/plugin-directives@0.4.2
+  - vinxi@0.4.2
+
 ## 0.4.1
 
 ### Patch Changes

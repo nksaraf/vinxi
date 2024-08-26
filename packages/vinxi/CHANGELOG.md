@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.4.2
+
+### Patch Changes
+
+- f1f81b0c: Update package.json
+- 8707a798: perf: run each router build in separate node processes
+
 ## 0.4.1
 
 ### Patch Changes

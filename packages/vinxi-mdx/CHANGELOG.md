@@ -1,5 +1,11 @@
 # @vinxi/plugin-mdx
 
+## 3.7.2
+
+### Patch Changes
+
+- f1f81b0c: Update package.json
+
 ## 3.7.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @vinxi/react
 
+## 0.2.4
+
+### Patch Changes
+
+- f1f81b0c: Update package.json
+
 ## 0.2.3
 
 ### Patch Changes
