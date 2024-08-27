@@ -3,6 +3,7 @@
   "version": "0.2.10",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
+  "license": "MIT",
   "files": [
     "*.jsx",
     "invariant.js",

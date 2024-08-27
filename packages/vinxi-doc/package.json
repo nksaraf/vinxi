@@ -3,6 +3,7 @@
   "module": "doc.js",
   "type": "module",
   "version": "0.1.2",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nksaraf/vinxi.git",

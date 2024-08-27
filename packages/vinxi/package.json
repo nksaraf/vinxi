@@ -3,6 +3,7 @@
   "version": "0.4.2",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
+  "license": "MIT",
   "files": [
     "bin",
     "lib",

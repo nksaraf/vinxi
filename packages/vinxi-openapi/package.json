@@ -2,6 +2,7 @@
   "name": "@vinxi/openapi",
   "version": "0.2.1",
   "type": "module",
+  "license": "MIT",
   "module": "index.js",
   "repository": {
     "type": "git",
