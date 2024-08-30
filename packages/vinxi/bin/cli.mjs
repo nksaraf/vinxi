@@ -23,6 +23,10 @@ const command = defineCommand({
 			type: "string",
 			description: "Path to config file (default: app.config.js)",
 		},
+		mode: {
+			type: "string",
+			description: "Vite mode",
+		}
 	},
 	subCommands: () => ({
 		dev: {
@@ -419,6 +423,7 @@ const command = defineCommand({
 				const { fetchModule, createServer } = await import("vite");
 				const { ViteRuntime, ESModulesRunner } = await import("vite/runtime");
 				const server = await createServer({
+					mode: context.args.mode,
 					resolve: {
 						alias: {
 							"vinxi/sh": fileURLToPath(

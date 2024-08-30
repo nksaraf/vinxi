@@ -369,6 +369,7 @@ async function createRouterBuild(app, router) {
 		await createViteBuild({
 			app: app,
 			root: router.root,
+			mode: app.config.mode,
 			build: {
 				ssr: true,
 				ssrManifest: true,
