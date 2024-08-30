@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
-import { join } from "vinxi/lib/path";
 
 import { viteManifestPath } from "./manifest-path.js";
+import { join } from "./path.js";
 
 const CHUNK_PREFIX = "c_";
 
@@ -57,19 +57,31 @@ export const chunksServerVirtualModule =
 		`;
 	};
 
+const hashes = new Map();
+const regexReturnCharacters = /\r/g;
+
 /**
+ * djb2 hashing
  *
- * @param {string} str
- * @returns
+ * @param {string} input
+ * @returns {string}
+ *
+ * Source: https://github.com/sveltejs/svelte/blob/0203eb319b5d86138236158e3ae6ecf29e26864c/packages/svelte/src/utils.js#L7
+ * Source License: MIT
  */
-export function hash(str) {
-	let hash = 0;
+export function hash(input) {
+	const cachedResult = hashes.get(input);
+	if (cachedResult) return cachedResult;
 
-	for (let i = 0; i < str.length; i++) {
-		hash += str.charCodeAt(i);
-	}
+	let str = input.replace(regexReturnCharacters, "");
+	let hash = 5381;
+	let i = str.length;
 
-	return hash;
+	while (i--) hash = ((hash << 5) - hash) ^ str.charCodeAt(i);
+	const result = (hash >>> 0).toString(36);
+	hashes.set(input, result);
+
+	return result;
 }
 
 /**
