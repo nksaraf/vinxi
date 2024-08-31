@@ -18,6 +18,9 @@ There are currently two frameworks actively being developed on `vinxi`:
 - [SolidStart](https://github.com/solidjs/solid-start)
 - [TanstackStart](https://github.com/tanstack/router)
 
+There are also a few other frameworks experimenting with vinxi:
+- [AngularStart](https://github.com/brandonroberts/analog-angular-start)
+
 ## Examples
 
 | Framework | Category | Example               | StackBlitz Link                                                                                                                                            |
