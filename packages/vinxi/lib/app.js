@@ -14,6 +14,7 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 	string;
 	server?: Omit<import('nitropack').NitroConfig, 'handlers' | 'devHandlers' | 'publicAssets' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual'> & { https?: import('@vinxi/listhen').HTTPSOptions | boolean };
 	root?: string
+	mode?: string
 }} AppOptions */
 
 /** @typedef {{
@@ -23,6 +24,7 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 		server: Omit<import('nitropack').NitroConfig, 'handlers' | 'devHandlers' | 'publicAssets' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual'> & { https?: import('@vinxi/listhen').HTTPSOptions | boolean };
 		routers: import("./router-mode.js").Router[];
 		root: string;
+		mode?: string;
 	};
 	addRouter: (router: any) => App;
 	addRouterPlugins: (apply: (router: import("./router-mode.js").Router) => boolean, plugins: () => any[]) => void;
@@ -45,6 +47,7 @@ export function createApp({
 	name = "vinxi",
 	server = {},
 	root = process.cwd(),
+	mode,
 } = {}) {
 	const hooks = createHooks();
 	hooks.afterEach((result) => {
@@ -96,6 +99,7 @@ export function createApp({
 					routers: parsedRouters,
 					server,
 					root,
+					mode,
 				},
 				index,
 			),
@@ -113,6 +117,7 @@ export function createApp({
 		routers: resolvedRouters,
 		server,
 		root,
+		mode,
 	};
 
 	hooks.callHook("app:config-resolved", { config });

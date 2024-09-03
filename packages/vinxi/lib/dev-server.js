@@ -69,6 +69,7 @@ export async function createViteHandler(router, app, serveConfig) {
 			force: serveConfig.force,
 		},
 		dev: serveConfig,
+		mode: app.config.mode,
 		router,
 		app,
 		server: {

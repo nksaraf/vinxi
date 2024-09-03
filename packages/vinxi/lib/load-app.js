@@ -128,6 +128,7 @@ async function loadFile(
 /**
  *
  * @param {string | undefined} configFile
+ * @param {{ mode?: string }} args
  * @returns {Promise<import("./app.js").App | undefined>}
  */
 export async function loadApp(configFile = undefined, args = {}) {
@@ -178,6 +179,7 @@ export async function loadApp(configFile = undefined, args = {}) {
 					);
 
 					const app = createApp({
+						mode: args.mode,
 						routers: [
 							{
 								name: "public",
