@@ -624,10 +624,10 @@ export function getResponseHeader(
 
 export function setResponseHeaders(
 	event: HTTPEvent,
-	headers: Record<HTTPHeaderName, Parameters<OutgoingMessage["setHeader"]>[1]>,
+	headers: Partial<Record<HTTPHeaderName, Parameters<OutgoingMessage["setHeader"]>[1]>>,
 ): void;
 export function setResponseHeaders(
-	headers: Record<HTTPHeaderName, Parameters<OutgoingMessage["setHeader"]>[1]>,
+	headers: Partial<Record<HTTPHeaderName, Parameters<OutgoingMessage["setHeader"]>[1]>>,
 ): void;
 
 export const setHeaders: typeof setResponseHeaders;
