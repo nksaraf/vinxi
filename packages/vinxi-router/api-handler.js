@@ -1,13 +1,12 @@
-import { pathToRegexp } from "path-to-regexp";
-import { eventHandler, toWebRequest } from "vinxi/http";
+import { match } from "path-to-regexp";
+import { eventHandler, toWebRequest, setContext } from "vinxi/http";
 import fileRoutes from "vinxi/routes";
 
 const routes = [
 	...fileRoutes.map((route) => ({
 		...route,
-		handler: async (event, params) => {
+		handler: async (event) => {
 			const mod = await route.$handler.import();
-			event.context['params'] = params
 			return await mod.default(event);
 		},
 	})),
@@ -15,12 +14,10 @@ const routes = [
 
 function createRouter(routes) {
 	const builtRoutes = routes.map((route) => {
-		const keys = [];
-		const regexp = pathToRegexp(route.path, keys);
+		const matcher = match(route.path)
 		return {
 			...route,
-			regexp,
-			keys,
+			matcher,
 		};
 	});
 
@@ -30,15 +27,11 @@ function createRouter(routes) {
 				const url = new URL(toWebRequest(event).url);
 				const path = url.pathname.replace(import.meta.env.BASE_URL, "");
 
-				const match = route.regexp.exec(path);
+				const match = route.matcher(path)
 				if (match) {
-					const params = {};
-					for (let i = 0; i < route.keys.length; i++) {
-						params[route.keys[i].name] = match[i + 1];
-					}
 					// add params to context object
-					event.context['params'] = params
-					return await route.handler(event);
+					setContext(event, 'params', { ...match.params })
+					return await route.handler(event)
 				}
 			}
 
