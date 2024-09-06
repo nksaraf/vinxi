@@ -17,7 +17,7 @@ class APIFileSystemRouter extends BaseFileSystemRouter {
 			.replace(/index$/, "")
 			.replace(/\[([^\/]+)\]/g, (_, m) => {
 				if (m.length > 3 && m.startsWith("...")) {
-					return `:${m.slice(3)}*`;
+					return `*${m.slice(3)}`;
 				}
 				if (m.length > 2 && m.startsWith("[") && m.endsWith("]")) {
 					return `:${m.slice(1, -1)}?`;
