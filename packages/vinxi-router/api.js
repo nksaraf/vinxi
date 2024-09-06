@@ -80,11 +80,11 @@ export function apiRouter({
 		handler,
 		target: "server",
 		plugins: async () => [
-			...(((await plugins?.()) ?? []).filter(Boolean) ?? []),
 			tsconfigPaths(),
 			config("env-vars", {
 				envPrefix: "PRIVATE_",
 			}),
+			...(((await plugins?.()) ?? []).filter(Boolean) ?? []),
 		],
 	};
 }
