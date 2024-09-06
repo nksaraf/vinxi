@@ -14,7 +14,7 @@ const routes = [
 
 function createRouter(routes) {
 	const builtRoutes = routes.map((route) => {
-		const matcher = match(route.path)
+		const matcher = match(route.path);
 		return {
 			...route,
 			matcher,
@@ -30,8 +30,8 @@ function createRouter(routes) {
 				const match = route.matcher(path)
 				if (match) {
 					// add params to context object
-					setContext(event, 'params', { ...match.params })
-					return await route.handler(event)
+					setContext(event, 'params', { ...match.params });
+					return await route.handler(event);
 				}
 			}
 
