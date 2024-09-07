@@ -2,7 +2,7 @@ import { mkdir, rm } from "fs/promises";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
 
-import { writeFileSync } from "node:fs";
+import { readdirSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 import { H3Event, createApp } from "../runtime/server.js";
@@ -32,26 +32,30 @@ export async function createBuild(app, buildConfig) {
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
 	const { join } = await import("./path.js");
 	const { fileURLToPath } = await import("url");
-	
+
 	if (buildConfig.router) {
 		console.log("\n");
-		console.log(`⚙ ${c.green(`Building your router ${buildConfig.router}...`)}`);
+		console.log(
+			`⚙ ${c.green(`Building your router ${buildConfig.router}...`)}`,
+		);
 		let router = app.config.routers.find((r) => r.name === buildConfig.router);
 		if (router.build !== false) {
 			if (existsSync(router.outDir)) {
 				await withLogger({ router, requestId: "clean" }, async () => {
-				console.log(`removing ${router.outDir}`);
-				await fsPromises.rm(router.outDir, { recursive: true });
-			});
-		}
+					console.log(`removing ${router.outDir}`);
+					await fsPromises.rm(router.outDir, { recursive: true });
+				});
+			}
 
 			await withLogger({ router, requestId: "build" }, async () => {
 				await createRouterBuild(app, router);
 			});
 		}
 
-		console.log(`⚙ ${c.green(`Built your router ${buildConfig.router} successfully`)}`);
-		return
+		console.log(
+			`⚙ ${c.green(`Built your router ${buildConfig.router} successfully`)}`,
+		);
+		return;
 	}
 
 	console.log("\n");
@@ -313,6 +317,31 @@ export async function createBuild(app, buildConfig) {
 	await mkdir(join(nitro.options.output.publicDir), { recursive: true });
 	await copyPublicAssets(nitro);
 
+	// remove js files from assets
+	// https://github.com/nksaraf/vinxi/issues/363
+	for (const router of app.config.routers.filter(
+		(r) => r.type === "http" && r.target === "server",
+	)) {
+		const assetsDir = join(
+			nitro.options.output.publicDir,
+			router.base,
+			"assets",
+		);
+		if (!existsSync(assetsDir)) {
+			continue;
+		}
+		const files = readdirSync(assetsDir);
+		for (const file of files) {
+			if (
+				file.endsWith(".js") ||
+				file.endsWith(".mjs") ||
+				file.endsWith(".cjs")
+			) {
+				await rm(join(assetsDir, file));
+			}
+		}
+	}
+
 	await app.hooks.callHook("app:build:nitro:assets:copy:end", { app, nitro });
 
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
@@ -349,7 +378,9 @@ async function createViteBuild(config) {
 async function createRouterBuildInWorker(app, router) {
 	const sh = await import("../runtime/sh.js");
 	const { fileURLToPath } = await import("url");
-	await sh.default`node ${fileURLToPath(new URL("../bin/cli.mjs", import.meta.url).href)} build --router=${router.name}`;
+	await sh.default`node ${fileURLToPath(
+		new URL("../bin/cli.mjs", import.meta.url).href,
+	)} build --router=${router.name}`;
 }
 /**
  *
