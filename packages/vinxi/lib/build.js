@@ -2,7 +2,7 @@ import { mkdir, rm } from "fs/promises";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
 
-import { readdirSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 import { H3Event, createApp } from "../runtime/server.js";
@@ -322,23 +322,31 @@ export async function createBuild(app, buildConfig) {
 	for (const router of app.config.routers.filter(
 		(r) => r.type === "http" && r.target === "server",
 	)) {
-		const assetsDir = join(
-			nitro.options.output.publicDir,
-			router.base,
-			"assets",
-		);
+		const routerDir = join(nitro.options.output.publicDir, router.base);
+		const assetsDir = join(routerDir, "assets");
 		if (!existsSync(assetsDir)) {
 			continue;
 		}
-		const files = readdirSync(assetsDir);
-		for (const file of files) {
+
+		let hasFilesDeleted = false;
+		const assetFiles = readdirSync(assetsDir);
+		for (const assetName of assetFiles) {
 			if (
-				file.endsWith(".js") ||
-				file.endsWith(".mjs") ||
-				file.endsWith(".cjs")
+				assetName.endsWith(".js") ||
+				assetName.endsWith(".mjs") ||
+				assetName.endsWith(".cjs")
 			) {
-				await rm(join(assetsDir, file));
+				if (!hasFilesDeleted) {
+					hasFilesDeleted = true;
+				}
+				await rm(join(assetsDir, assetName));
 			}
+		}
+
+		// if the router dir is empty (including its subdirectories), remove it
+		// if the subdirectories are empty, they will be removed recursively
+		if (hasFilesDeleted) {
+			await deleteEmptyDirs(routerDir);
 		}
 	}
 
@@ -791,4 +799,24 @@ function browserBuild() {
 			}
 		},
 	};
+}
+
+/**
+ * Recursively deletes empty directories starting from the given directory
+ *
+ * @param {string} dir
+ * @returns void
+ */
+async function deleteEmptyDirs(dir) {
+	const files = readdirSync(dir);
+	if (files.length === 0) {
+		await rm(dir);
+		return;
+	}
+	for (const file of files) {
+		const filePath = join(dir, file);
+		if (existsSync(filePath) && !file.startsWith(".")) {
+			deleteEmptyDirs(filePath);
+		}
+	}
 }
