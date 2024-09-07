@@ -317,7 +317,7 @@ export async function createBuild(app, buildConfig) {
 	await mkdir(join(nitro.options.output.publicDir), { recursive: true });
 	await copyPublicAssets(nitro);
 
-	// remove js files from assets
+	// remove js files from assets for 'http' routers targetting 'server'
 	// https://github.com/nksaraf/vinxi/issues/363
 	for (const router of app.config.routers.filter(
 		(r) => r.type === "http" && r.target === "server",
