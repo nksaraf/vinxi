@@ -1,8 +1,8 @@
-import { mkdir, rm } from "fs/promises";
+import { mkdir, rm, rmdir } from "fs/promises";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
 
-import { existsSync, readdirSync, writeFileSync } from "node:fs";
+import { readdirSync, statSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 import { H3Event, createApp } from "../runtime/server.js";
@@ -803,20 +803,27 @@ function browserBuild() {
 
 /**
  * Recursively deletes empty directories starting from the given directory
+ * and moving upwards but stopping at the initial directory.
+ * If the initial given directory is empty, it will be deleted.
  *
- * @param {string} dir
- * @returns void
+ * @param {string} dir The directory to start deleting from
+ * @param {string} startDir The initial directory to stop deleting at
+ * @returns {Promise<void>} A promise that resolves when all empty directories have been deleted
  */
-async function deleteEmptyDirs(dir) {
-	const files = readdirSync(dir);
-	if (files.length === 0) {
-		await rm(dir);
-		return;
+async function deleteEmptyDirs(dir, startDir = dir) {
+	const fileOrFolderList = readdirSync(dir);
+	if (fileOrFolderList.length === 0) {
+		await rmdir(dir);
+		if (dir === startDir) {
+			return;
+		}
 	}
-	for (const file of files) {
+
+	// if file is directory then recursively call deleteEmptyDirs
+	for (const file of fileOrFolderList) {
 		const filePath = join(dir, file);
-		if (existsSync(filePath) && !file.startsWith(".")) {
-			deleteEmptyDirs(filePath);
+		if (statSync(filePath).isDirectory()) {
+			await deleteEmptyDirs(filePath, startDir);
 		}
 	}
 }
