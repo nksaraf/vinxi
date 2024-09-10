@@ -74,6 +74,7 @@ export {
 	splitCookiesString,
 	sanitizeStatusCode,
 	sanitizeStatusMessage,
+	useBase,
 	type AddRouteShortcuts,
 	type App,
 	type AppOptions,
