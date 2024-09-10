@@ -61,6 +61,7 @@ import {
 	setResponseStatus as _setResponseStatus,
 	unsealSession as _unsealSession,
 	updateSession as _updateSession,
+	useBase as _useBase,
 	useSession as _useSession,
 	writeEarlyHints as _writeEarlyHints,
 } from "h3";
@@ -279,6 +280,7 @@ export const parseCookies = createWrapperFunction(_parseCookies);
 export const getCookie = createWrapperFunction(_getCookie);
 export const setCookie = createWrapperFunction(_setCookie);
 export const deleteCookie = createWrapperFunction(_deleteCookie);
+export const useBase = createWrapperFunction(_useBase);
 export const useSession = createWrapperFunction(_useSession);
 export const getSession = createWrapperFunction(_getSession);
 export const updateSession = createWrapperFunction(_updateSession);
