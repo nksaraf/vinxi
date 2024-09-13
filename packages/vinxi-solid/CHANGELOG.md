@@ -1,5 +1,11 @@
 # @vinxi/solid
 
+## 0.1.3
+
+### Patch Changes
+
+- 2b526da8: add "license" field to library package.json files
+
 ## 0.1.2
 
 ### Patch Changes
