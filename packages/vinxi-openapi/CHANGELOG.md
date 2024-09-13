@@ -1,5 +1,13 @@
 # @vinxi/openapi
 
+## 0.2.2
+
+### Patch Changes
+
+- 2b526da8: add "license" field to library package.json files
+- Updated dependencies [2b526da8]
+  - @vinxi/doc@0.1.3
+
 ## 0.2.1
 
 ### Patch Changes

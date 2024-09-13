@@ -10,13 +10,13 @@
   },
   "dependencies": {
     "@picocss/pico": "^1.5.10",
-    "@vinxi/react": "0.2.4",
+    "@vinxi/react": "0.2.5",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.15",
     "react": "0.0.0-experimental-035a41c4e-20230704",
     "react-dom": "0.0.0-experimental-035a41c4e-20230704",
     "tailwindcss": "^3.3.3",
-    "vinxi": "0.4.2"
+    "vinxi": "0.4.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.21",

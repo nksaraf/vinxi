@@ -1,5 +1,16 @@
 # vinxi
 
+## 0.4.3
+
+### Patch Changes
+
+- 2b526da8: add "license" field to library package.json files
+- b2ff2145: fix: add partial for setResponseHeaders
+- 1b4381a0: Add support for Vite --mode
+- 3a4ad779: Remove js bundles from the public directory for routers with a type of 'http' and targetting 'server'
+- af8381df: Re-export useBase
+- f0a1c26c: fix: hash chunks with djb2
+
 ## 0.4.2
 
 ### Patch Changes

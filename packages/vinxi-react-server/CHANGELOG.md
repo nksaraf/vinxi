@@ -1,5 +1,15 @@
 # @vinxi/react-server
 
+## 0.2.11
+
+### Patch Changes
+
+- 2b526da8: add "license" field to library package.json files
+- Updated dependencies [2b526da8]
+  - @vinxi/react@0.2.5
+  - @vinxi/server-components@0.4.3
+  - @vinxi/server-functions@0.4.3
+
 ## 0.2.10
 
 ### Patch Changes

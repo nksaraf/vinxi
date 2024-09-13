@@ -1,5 +1,18 @@
 # @vinxi/router
 
+## 0.4.4
+
+### Patch Changes
+
+- 6f858f49: Allow override for plugins in apiRoutes so that envPrefix can be updated
+- Updated dependencies [2b526da8]
+- Updated dependencies [b2ff2145]
+- Updated dependencies [1b4381a0]
+- Updated dependencies [3a4ad779]
+- Updated dependencies [af8381df]
+- Updated dependencies [f0a1c26c]
+  - vinxi@0.4.3
+
 ## 0.4.3
 
 ### Patch Changes
