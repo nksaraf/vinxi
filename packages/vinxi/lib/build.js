@@ -1,8 +1,8 @@
-import { mkdir, rm } from "fs/promises";
+import { mkdir, rm, rmdir } from "fs/promises";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
 
-import { writeFileSync } from "node:fs";
+import { readdirSync, statSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 import { H3Event, createApp } from "../runtime/server.js";
@@ -32,26 +32,30 @@ export async function createBuild(app, buildConfig) {
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
 	const { join } = await import("./path.js");
 	const { fileURLToPath } = await import("url");
-	
+
 	if (buildConfig.router) {
 		console.log("\n");
-		console.log(`⚙ ${c.green(`Building your router ${buildConfig.router}...`)}`);
+		console.log(
+			`⚙ ${c.green(`Building your router ${buildConfig.router}...`)}`,
+		);
 		let router = app.config.routers.find((r) => r.name === buildConfig.router);
 		if (router.build !== false) {
 			if (existsSync(router.outDir)) {
 				await withLogger({ router, requestId: "clean" }, async () => {
-				console.log(`removing ${router.outDir}`);
-				await fsPromises.rm(router.outDir, { recursive: true });
-			});
-		}
+					console.log(`removing ${router.outDir}`);
+					await fsPromises.rm(router.outDir, { recursive: true });
+				});
+			}
 
 			await withLogger({ router, requestId: "build" }, async () => {
 				await createRouterBuild(app, router);
 			});
 		}
 
-		console.log(`⚙ ${c.green(`Built your router ${buildConfig.router} successfully`)}`);
-		return
+		console.log(
+			`⚙ ${c.green(`Built your router ${buildConfig.router} successfully`)}`,
+		);
+		return;
 	}
 
 	console.log("\n");
@@ -313,6 +317,39 @@ export async function createBuild(app, buildConfig) {
 	await mkdir(join(nitro.options.output.publicDir), { recursive: true });
 	await copyPublicAssets(nitro);
 
+	// remove js files from assets for 'http' routers targetting 'server'
+	// https://github.com/nksaraf/vinxi/issues/363
+	for (const router of app.config.routers.filter(
+		(r) => r.type === "http" && r.target === "server",
+	)) {
+		const routerDir = join(nitro.options.output.publicDir, router.base);
+		const assetsDir = join(routerDir, "assets");
+		if (!existsSync(assetsDir)) {
+			continue;
+		}
+
+		let hasFilesDeleted = false;
+		const assetFiles = readdirSync(assetsDir);
+		for (const assetName of assetFiles) {
+			if (
+				assetName.endsWith(".js") ||
+				assetName.endsWith(".mjs") ||
+				assetName.endsWith(".cjs")
+			) {
+				if (!hasFilesDeleted) {
+					hasFilesDeleted = true;
+				}
+				await rm(join(assetsDir, assetName));
+			}
+		}
+
+		// if the router dir is empty (including its subdirectories), remove it
+		// if the subdirectories are empty, they will be removed recursively
+		if (hasFilesDeleted) {
+			await deleteEmptyDirs(routerDir);
+		}
+	}
+
 	await app.hooks.callHook("app:build:nitro:assets:copy:end", { app, nitro });
 
 	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
@@ -349,7 +386,9 @@ async function createViteBuild(config) {
 async function createRouterBuildInWorker(app, router) {
 	const sh = await import("../runtime/sh.js");
 	const { fileURLToPath } = await import("url");
-	await sh.default`node ${fileURLToPath(new URL("../bin/cli.mjs", import.meta.url).href)} build --router=${router.name}`;
+	await sh.default`node ${fileURLToPath(
+		new URL("../bin/cli.mjs", import.meta.url).href,
+	)} build --router=${router.name}`;
 }
 /**
  *
@@ -760,4 +799,31 @@ function browserBuild() {
 			}
 		},
 	};
+}
+
+/**
+ * Recursively deletes empty directories starting from the given directory
+ * and moving upwards but stopping at the initial directory.
+ * If the initial given directory is empty, it will be deleted.
+ *
+ * @param {string} dir The directory to start deleting from
+ * @param {string} startDir The initial directory to stop deleting at
+ * @returns {Promise<void>} A promise that resolves when all empty directories have been deleted
+ */
+async function deleteEmptyDirs(dir, startDir = dir) {
+	const fileOrFolderList = readdirSync(dir);
+	if (fileOrFolderList.length === 0) {
+		await rmdir(dir);
+		if (dir === startDir) {
+			return;
+		}
+	}
+
+	// if file is directory then recursively call deleteEmptyDirs
+	for (const file of fileOrFolderList) {
+		const filePath = join(dir, file);
+		if (statSync(filePath).isDirectory()) {
+			await deleteEmptyDirs(filePath, startDir);
+		}
+	}
 }
