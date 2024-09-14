@@ -9,7 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "path-to-regexp": "^6.2.1",
+    "path-to-regexp": "^8.0.0",
     "vite-tsconfig-paths": "^4.2.0"
   },
   "repository": {
