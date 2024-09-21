@@ -8,11 +8,46 @@
 
 # `vinxi`
 
-Compose full stack applications (and frameworks) using [**Vite**](https://github.com/vitejs/vite), the versatile bundler and dev server, and [**Nitro**](https://github.com/unjs/nitro), the universal production server. The core primitive in `vinxi` is a **router**.
+Compose full stack applications (and frameworks) using [**Vite**](https://github.com/vitejs/vite), the versatile bundler and dev server, and [**Nitro**](https://github.com/unjs/nitro), the universal production server. 
 
-Inspired by the [Bun.App](https://bun.sh/blog/bun-bundler#sneak-peek-bun-app) API.
+Inspired by the [Bun.App](https://bun.sh/blog/bun-bundler#sneak-peek-bun-app) API, the core primitive in Vinxi is the **router**, which is simply a brief specification defining how a group of URLs should be handled.
 
-- **Routers** are handlers that tell us how specific URLs should be handled. We support various router modes: "static", "spa", "http", (and new ones can be added). Routers specify the handler file (entrypoint) to use for their `base`-prefixed routes. They can also specify a `dir` and `style` in some router modes to include a file system router that is provided to the handler. Routers specify their bundler configuration, via the `build` property. The routers tell the bundler what entry points to build, what vite plugins to use, etc.
+Vinxi supports many common router types:
+- ['static'](https://vinxi.vercel.app/api/router/static.html) - for serving uncompiled, static assets
+- ['http'](https://vinxi.vercel.app/api/router/http.html) - for creating traditional web servers
+- ['spa'](https://vinxi.vercel.app/api/router/spa.html) - for building and serving single page application assets
+- ['client'](https://vinxi.vercel.app/api/router/client.html) - for building and serving of SSR application assets
+- [custom](https://vinxi.vercel.app/api/router/custom.html) - for adapting Vinxi to your use case
+
+Creating a new router is as simple as adding a specification object to the `routers` array in the `createApp` call:
+
+```ts
+import { createApp } from 'vinxi';
+
+export default createApp({
+  routers: [
+    // A static router serving files from the `public` directory
+    {
+      name: 'public',
+      type: 'static',
+      dir: './public',
+      base: '/',
+    },
+    // A http router for an api
+    {
+      name: 'api',
+      type: 'http',
+      handler: './app/api.ts',
+      base: '/api',
+      plugins: () => [
+        // Vite plugins applying exclusively to `http` router
+      ]
+    }
+  ],
+});
+```
+
+---
 
 There are currently two frameworks actively being developed on `vinxi`:
 - [SolidStart](https://github.com/solidjs/solid-start)
