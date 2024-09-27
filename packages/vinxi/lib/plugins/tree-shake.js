@@ -90,7 +90,7 @@ export function treeShake() {
 			const [path, queryString] = id.split("?");
 			const query = new URLSearchParams(queryString);
 			const ext = path.split(".").pop();
-			if (query.has("pick") && ["js", "jsx", "ts", "tsx"].includes(ext)) {
+			if (query.has("pick") && ["js", "jsx", "ts", "tsx", "md", "mdx"].includes(ext)) {
 				const transformed = await transform(id, code);
 
 				cache[path] ??= {};
