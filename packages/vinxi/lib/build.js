@@ -384,9 +384,9 @@ async function createViteBuild(config) {
 }
 
 async function createRouterBuildInWorker(app, router) {
-	const sh = await import("../runtime/sh.js");
+	const { $ } = await import("../runtime/sh.js");
 	const { fileURLToPath } = await import("url");
-	await sh.default`node ${fileURLToPath(
+	await $`node ${fileURLToPath(
 		new URL("../bin/cli.mjs", import.meta.url).href,
 	)} build --router=${router.name}`;
 }
