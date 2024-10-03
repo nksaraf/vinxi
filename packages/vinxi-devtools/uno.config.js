@@ -1,7 +1,6 @@
 import { parseColor } from "@unocss/preset-mini/utils";
 import {
 	defineConfig,
-	mergeDeep,
 	presetIcons,
 	presetUno,
 	presetWebFonts,

@@ -1,5 +1,4 @@
 import unocss from "unocss/vite";
-import { config } from "vinxi/plugins/config";
 import solid from "vite-plugin-solid";
 
 import { fileURLToPath } from "node:url";
