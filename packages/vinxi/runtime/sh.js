@@ -7,7 +7,7 @@ import { spawn } from 'node:child_process';
  * @returns {Promise<null>} A promise that resolves when the command completes successfully, or rejects with an error.
  * @throws {Error} If the command fails or encounters an error during execution.
  */
-export function $(strings, ...values) {
+export async function $(strings, ...values) {
   const command = strings.reduce((result, str, i) => 
     result + str + (values[i] || ''), '').trim();
 
