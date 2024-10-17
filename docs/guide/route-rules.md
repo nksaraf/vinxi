@@ -13,9 +13,9 @@ export default createApp({
         cors: true,
         headers: { "access-control-allow-methods": "GET" },
       },
-      "/old-page": { redirect: "/new-page" },
-      "/proxy/example": { proxy: "https://example.com" },
-      "/proxy/**": { proxy: "/api/**" },
+      "/old-page": { redirect: { to: "/new-page" } },
+      "/proxy/example": { proxy: { to: "https://example.com" } },
+      "/proxy/**": { proxy: { to: "/api/**" } },
     },
   },
   routers: [
