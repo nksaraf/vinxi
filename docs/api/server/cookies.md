@@ -6,7 +6,7 @@
 
 Parse the request to get HTTP Cookie header string and returning an object of all cookie name-value pairs.
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, parseCookies } from "vinxi/http"
 
 export default eventHandler(async (event) => {
@@ -30,7 +30,7 @@ export function parseCookies(event: HTTPEvent): Record<string, string>
 
 Get a cookie value by name.
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, getCookie } from "vinxi/http"
 
 export default eventHandler(async (event) => {
@@ -55,7 +55,7 @@ export function getCookie(event: HTTPEvent, name: string): string | undefined
 
 Set a cookie value by name.
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, setCookie } from "vinxi/http"
 
 export default eventHandler(async (event) => {

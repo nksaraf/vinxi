@@ -41,7 +41,10 @@ export default defineConfig({
 							{ text: "Vite Plugins", link: "/guide/vite-plugins" },
 							{ text: "Path Aliases", link: "/guide/aliases" },
 							{ text: "Route Rules", link: "/guide/route-rules" },
-							{ text: "File System Routing", link: "/guide/file-system-routing" },
+							{
+								text: "File System Routing",
+								link: "/guide/file-system-routing",
+							},
 						],
 					},
 				],
@@ -87,9 +90,7 @@ export default defineConfig({
 			level: [2, 3],
 		},
 
-		socialLinks: [
-			{ icon: "github", link: "https://github.com/nksaraf/vinxi" },
-		],
+		socialLinks: [{ icon: "github", link: "https://github.com/nksaraf/vinxi" }],
 	},
 	markdown: {
 		codeTransformers: [
