@@ -58,9 +58,10 @@ export default defineConfig({
 						link: "/api/router",
 						items: [
 							{ text: `"static"`, link: "/api/router/static" },
-							{ text: `"spa"`, link: "/api/router/spa" },
 							{ text: `"http"`, link: "/api/router/http" },
+							{ text: `"spa"`, link: "/api/router/spa" },
 							{ text: `"client"`, link: "/api/router/client" },
+							{ text: `custom`, link: "/api/router/custom" },
 						],
 					},
 					{ text: "vinxi CLI", link: "/api/cli" },
