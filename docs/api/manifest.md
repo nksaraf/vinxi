@@ -12,7 +12,18 @@ The manifest API is also the same between the server and client, development and
 You can access the manifest for any router by using calling `getManifest(routerName)` (exported by `vinxi/manifest`). This will give you a manifest object that looks like this:
 
 ```ts
-export type Asset = string;
+export type Asset = LinkAsset | ScriptOrStyleAsset;
+
+type LinkAsset = {
+	tag: 'link';
+	attrs: Record<string, string>
+}
+
+type ScriptOrStyleAsset = {
+	tag: 'script' | 'style';
+	attrs: Record<string, string>;
+	children?: string;
+}
 
 export type Manifest = {
   /** Name of the router */
