@@ -6,7 +6,7 @@
 
 Use the session to read and update the session data
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { type SessionConfig, eventHandler, useSession } from "vinxi/http"
 
 const sessionConfig = {
@@ -50,7 +50,7 @@ export function useSession<T extends SessionDataT = SessionDataT>(
 
 Get the session
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { type SessionConfig, eventHandler, getSession } from "vinxi/http"
 
 const sessionConfig = {
@@ -88,7 +88,7 @@ export function getSession<T extends SessionDataT = SessionDataT>(
 
 Update the session
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { type SessionConfig, eventHandler, updateSession } from "vinxi/http"
 
 const sessionConfig = {
@@ -125,7 +125,7 @@ export function updateSession<T extends SessionDataT = SessionDataT>(
 
 Clear the session
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { type SessionConfig, clearSession, eventHandler } from "vinxi/http"
 
 const sessionConfig = {
@@ -158,7 +158,7 @@ export function sealSession(event: HTTPEvent, config: SessionConfig): void
 
 Unseal the session
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { type SessionConfig, eventHandler, unsealSession } from "vinxi/http"
 
 const sessionConfig = {

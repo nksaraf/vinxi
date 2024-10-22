@@ -16,7 +16,7 @@ The first step is to make your `vite` app into a `vinxi` app. You don't need to 
 
 Here is an example of a `vite.config.ts` file that exports the same `vite` app as a `vinxi` app:
 
-```ts twoslash
+```ts
 import { createApp } from "vinxi";
 import { config } from "vinxi/plugins/config";
 

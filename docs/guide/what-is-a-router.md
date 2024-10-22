@@ -146,7 +146,7 @@ export default createApp({
 
 The type is available in your code as:
 
-```ts twoslash
+```ts
 import { isDev, isProd, isSSR, routerType } from "vinxi/manifest";
 
 routerType;

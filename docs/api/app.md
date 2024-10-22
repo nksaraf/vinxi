@@ -45,7 +45,7 @@ The `createApp` function return an instance of `App`. This instance has the foll
 
 Starts the development server for the app.
 
-```ts twoslash
+```ts
 import { createApp } from "vinxi";
 
 const app = createApp({
@@ -61,7 +61,7 @@ await app.dev();
 
 Builds the app for production.
 
-```ts twoslash
+```ts
 import { createApp } from "vinxi";
 
 const app = createApp({
@@ -77,7 +77,7 @@ await app.build();
 
 Gets a router by name.
 
-```ts twoslash
+```ts
 import { createApp } from "vinxi";
 
 const app = createApp({

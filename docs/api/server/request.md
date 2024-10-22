@@ -10,7 +10,7 @@
 
 Get the request headers
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, getRequestHeaders } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -32,7 +32,7 @@ export function getRequestHeaders(event: HTTPEvent): RequestHeaders;
 
 Get a request header by name
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, getRequestHeader } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -59,7 +59,7 @@ export function getRequestHeader(
 
 Reads request body and tries to safely parse as JSON using [destr](https://github.com/unjs/destr).
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, readBody } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -85,7 +85,7 @@ function readBody<
 
 Constructs a `FormData` object from an event, after converting it to a a web request.
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, readFormData } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -109,7 +109,7 @@ export function readFormData(event: HTTPEvent): Promise<FormData>;
 
 Tries to read and parse the body of an HTTPEvent as a multipart form.
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, readMultipartFormData } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -142,7 +142,7 @@ Tries to read the request body via `readBody`, then uses the provided validation
 
 #### Using `zod`
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, readValidatedBody } from "vinxi/http";
 import { z } from "zod";
 
@@ -158,7 +158,7 @@ export default eventHandler(async (event) => {
 
 #### Using custom validation function
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, readValidatedBody } from "vinxi/http";
 
 //
@@ -213,7 +213,7 @@ function readRawBody<E extends Encoding = "utf8">(
 
 Captures a [ReadableStream][readablestream] from a request.
 
-```ts twoslash
+```ts
 import { eventHandler, getRequestWebStream } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -223,7 +223,7 @@ export default eventHandler(async (event) => {
 
 ::: details Signature
 
-```ts twoslash
+```ts
 // @lib: es2015
 // @filename: index.d.ts
 import { HTTPEvent } from "vinxi/http";
@@ -247,7 +247,7 @@ export function getRequestWebStream(
 
 Get the query
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, getQuery } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -273,7 +273,7 @@ export function getQuery<
 
 Get the validated query
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, getValidatedQuery } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -305,7 +305,7 @@ export function getValidatedQuery<
 
 Get the request host
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, getRequestHost } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -332,7 +332,7 @@ export function getRequestHost(
 
 Get the request protocol, whether its `http` or `https`.
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, getRequestProtocol } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -359,7 +359,7 @@ export function getRequestProtocol(
 
 Get the request [URL][url]
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 // @noErrors
 import { eventHandler, getRequestURL } from "vinxi/http";
 
@@ -399,7 +399,7 @@ export function getRequestURL(
 
 Get the request IP, if visible.
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, getRequestIP } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -424,7 +424,7 @@ export function getRequestIP(
 
 Check if the request is a CORS preflight request
 
-```ts twoslash file=app/server.ts
+```ts file=app/server.ts
 import { eventHandler, isPreflightRequest } from "vinxi/http";
 
 export default eventHandler(async (event) => {
@@ -444,7 +444,7 @@ export function isPreflightRequest(event: HTTPEvent): boolean;
 
 Get a Web Fetch API compliant [`Request`][request] instance from the [`HTTPEvent`][httpevent]
 
-```ts twoslash
+```ts
 import { eventHandler, getWebRequest } from "vinxi/http";
 
 export default eventHandler(async (event) => {
