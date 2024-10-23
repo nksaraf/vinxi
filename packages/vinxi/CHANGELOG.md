@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.4.4
+
+### Patch Changes
+
+- c261150c: fix Asset type
+
 ## 0.4.3
 
 ### Patch Changes

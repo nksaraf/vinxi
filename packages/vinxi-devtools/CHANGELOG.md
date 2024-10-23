@@ -1,5 +1,11 @@
 # @vinxi/openapi
 
+## 0.2.3
+
+### Patch Changes
+
+- ccb418ca: chore: cleanup dependencies of vinxi-devtools
+
 ## 0.2.2
 
 ### Patch Changes

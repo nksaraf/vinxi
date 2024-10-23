@@ -43,6 +43,6 @@
   "devDependencies": {
     "@solidjs/meta": "^0.28.6",
     "solid-js": "^1.7.11",
-    "vinxi": "0.4.3"
+    "vinxi": "0.4.4"
   }
 }
