@@ -1134,8 +1134,8 @@ importers:
   packages/vinxi-router:
     dependencies:
       path-to-regexp:
-        specifier: ^6.2.1
-        version: 6.2.1
+        specifier: ^8.0.0
+        version: 8.2.0
       vite-tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.1(typescript@5.1.6)
@@ -11147,6 +11147,11 @@ packages:
 
   /path-to-regexp@6.2.1:
     resolution: {integrity: sha512-JLyh7xT1kizaEvcaXOQwOc2/Yhw6KZOvPf1S8401UyLk86CU79LN3vl7ztXGm/pZ+YjoyAJ4rxmHwbkBXJX+yw==}
+    dev: false
+
+  /path-to-regexp@8.2.0:
+    resolution: {integrity: sha512-TdrF7fW9Rphjq4RjrW0Kp2AW0Ahwu9sRGTkS6bvDi0SCwZlEZYmcfDbEsTz8RVk0EHIS/Vd1bv3JhG+1xZuAyQ==}
+    engines: {node: '>=16'}
     dev: false
 
   /path-type@4.0.0:
