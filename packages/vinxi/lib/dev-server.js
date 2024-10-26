@@ -8,7 +8,7 @@ import { join, normalize } from "./path.js";
 export * from "./router-dev-plugins.js";
 
 /** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: import('@vinxi/listhen').HTTPSOptions | boolean; }} DevConfigInput */
-/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https?: import('@vinxi/listhen').Certificate; }} DevConfig */
+/** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https?: import('@vinxi/listhen').Certificate; hmr?: Exclude<NonNullable<import("vite").UserConfig["server"]>["hmr"], boolean> }} DevConfig */
 
 /**
  *
@@ -49,7 +49,7 @@ export async function createViteDevServer(config) {
 export async function createViteHandler(router, app, serveConfig) {
 	const vite = await import("vite");
 	const { getRandomPort } = await import("get-port-please");
-	const port = await getRandomPort();
+	const port = serveConfig.hmr?.port ?? await getRandomPort();
 	const plugins = [
 		// ...(serveConfig.devtools ? [inspect()] : []),
 		...(((await router.internals.type.dev.plugins?.(router, app)) ?? []).filter(
@@ -81,6 +81,7 @@ export async function createViteHandler(router, app, serveConfig) {
 			},
 			middlewareMode: true,
 			hmr: {
+				...serveConfig.hmr,
 				port,
 			},
 			https: serveConfig.https,
