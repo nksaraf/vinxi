@@ -57,7 +57,7 @@ importers:
         version: 0.0.3(react-dom@0.0.0-experimental-035a41c4e-20230704)(react@0.0.0-experimental-035a41c4e-20230704)(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -103,7 +103,7 @@ importers:
         version: 8.4.0
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -152,7 +152,7 @@ importers:
         version: 8.4.0
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -189,7 +189,7 @@ importers:
         version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -232,7 +232,7 @@ importers:
         version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       path-to-regexp:
         specifier: ^6.2.1
         version: 6.2.1
@@ -293,7 +293,7 @@ importers:
         version: 8.4.0
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       axios:
         specifier: ^1.5.0
         version: 1.6.0
@@ -342,7 +342,7 @@ importers:
         version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       axios:
         specifier: ^1.5.0
         version: 1.6.0
@@ -398,7 +398,7 @@ importers:
         version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       tailwindcss:
         specifier: ^3.3.3
         version: 3.3.5
@@ -419,7 +419,7 @@ importers:
         version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -465,7 +465,7 @@ importers:
         version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       miniflare:
         specifier: ^2.14.1
         version: 2.14.1
@@ -520,7 +520,7 @@ importers:
         version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       axios:
         specifier: ^1.5.0
         version: 1.6.0
@@ -560,7 +560,7 @@ importers:
         version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       path-to-regexp:
         specifier: ^6.2.1
         version: 6.2.1
@@ -594,7 +594,7 @@ importers:
         version: 1.5.10
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       solid-js:
         specifier: ^1.7.11
         version: 1.8.5
@@ -627,7 +627,7 @@ importers:
         version: link:../../../../packages/vinxi-solid
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       solid-js:
         specifier: ^1.7.11
         version: 1.8.5
@@ -663,7 +663,7 @@ importers:
         version: link:../../../../packages/vinxi-solid
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       solid-js:
         specifier: ^1.7.11
         version: 1.8.5
@@ -697,7 +697,7 @@ importers:
         version: 0.0.29(vinxi@packages+vinxi)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       tailwindcss:
         specifier: ^3.3.3
         version: 3.3.5
@@ -721,7 +721,7 @@ importers:
         version: link:../../../packages/vinxi-server-functions
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       tailwindcss:
         specifier: ^3.3.3
         version: 3.3.5
@@ -742,7 +742,7 @@ importers:
         version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       tailwindcss:
         specifier: ^3.3.3
         version: 3.3.5
@@ -770,7 +770,7 @@ importers:
         version: 0.0.29(vinxi@packages+vinxi)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
@@ -966,7 +966,7 @@ importers:
         version: 1.14.0
       unocss:
         specifier: ^0.56.5
-        version: 0.56.5(postcss@8.4.47)(vite@4.5.0)
+        version: 0.56.5(postcss@8.4.49)(vite@4.5.0)
       unocss-preset-radix:
         specifier: ^2.5.5
         version: 2.5.5
@@ -1360,7 +1360,7 @@ importers:
         version: 8.4.0
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       react:
         specifier: 0.0.0-experimental-035a41c4e-20230704
         version: 0.0.0-experimental-035a41c4e-20230704
@@ -1425,7 +1425,7 @@ importers:
         version: 4.1.0(vite@4.5.0)
       autoprefixer:
         specifier: ^10.4.15
-        version: 10.4.16(postcss@8.4.47)
+        version: 10.4.16(postcss@8.4.49)
       path-to-regexp:
         specifier: ^6.2.1
         version: 6.2.1
@@ -6474,7 +6474,7 @@ packages:
       sirv: 2.0.3
     dev: true
 
-  /@unocss/postcss@0.56.5(postcss@8.4.47):
+  /@unocss/postcss@0.56.5(postcss@8.4.49):
     resolution: {integrity: sha512-oDY1vCdrCQZx/oxDkq3z77a0RoO+WVQT090oDZzLFO/cPWH3elSOHwnoJU/KzrpJLbUFpyTQKZ/k3VbBaEdGTA==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -6486,7 +6486,7 @@ packages:
       css-tree: 2.3.1
       fast-glob: 3.3.2
       magic-string: 0.30.7
-      postcss: 8.4.47
+      postcss: 8.4.49
     dev: true
 
   /@unocss/preset-attributify@0.56.5:
@@ -7408,7 +7408,7 @@ packages:
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  /autoprefixer@10.4.16(postcss@8.4.47):
+  /autoprefixer@10.4.16(postcss@8.4.49):
     resolution: {integrity: sha512-7vd3UC6xKp0HLfua5IjZlcXvGAGy7cBAXTg2lyQ/8WpNhd6SiZ8Be+xm3FyBSYJx5GKcpRCzBh7RH4/0dnY+uQ==}
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
@@ -7420,7 +7420,7 @@ packages:
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
-      postcss: 8.4.47
+      postcss: 8.4.49
       postcss-value-parser: 4.2.0
 
   /available-typed-arrays@1.0.5:
@@ -12016,6 +12016,7 @@ packages:
       nanoid: 3.3.7
       picocolors: 1.1.1
       source-map-js: 1.2.1
+    dev: false
 
   /postcss@8.4.49:
     resolution: {integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==}
@@ -12024,7 +12025,6 @@ packages:
       nanoid: 3.3.7
       picocolors: 1.1.1
       source-map-js: 1.2.1
-    dev: false
 
   /preact@10.18.1:
     resolution: {integrity: sha512-mKUD7RRkQQM6s7Rkmi7IFkoEHjuFqRQUaXamO61E6Nn7vqF/bo7EZCmSyrUnp2UWHw0O7XjZ2eeXis+m7tf4lg==}
@@ -13656,7 +13656,7 @@ packages:
       '@unocss/core': 0.55.7
     dev: true
 
-  /unocss@0.56.5(postcss@8.4.47)(vite@4.5.0):
+  /unocss@0.56.5(postcss@8.4.49)(vite@4.5.0):
     resolution: {integrity: sha512-tO+9St4CntSjHpLXZqBo0/etS06MtvFF1NEny/qFJCL9sCopWwmDKuzW6/LIb4wfqZLdMpVFoEACMNv8nP849A==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -13672,7 +13672,7 @@ packages:
       '@unocss/cli': 0.56.5
       '@unocss/core': 0.56.5
       '@unocss/extractor-arbitrary-variants': 0.56.5
-      '@unocss/postcss': 0.56.5(postcss@8.4.47)
+      '@unocss/postcss': 0.56.5(postcss@8.4.49)
       '@unocss/preset-attributify': 0.56.5
       '@unocss/preset-icons': 0.56.5
       '@unocss/preset-mini': 0.56.5
