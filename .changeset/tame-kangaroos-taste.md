@@ -1,5 +1,5 @@
 ---
-"vinxi": minor
+"vinxi": major
 ---
 
 Bump to Vite 6
