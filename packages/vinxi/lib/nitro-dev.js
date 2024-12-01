@@ -2,13 +2,14 @@ import { listen } from "@vinxi/listhen";
 import { watch } from "chokidar";
 import wsAdapter from "crossws/adapters/node";
 import {
-	H3Event,
 	createApp,
 	eventHandler,
 	fromNodeMiddleware,
+	isEvent,
 	promisifyNodeListener,
 	toNodeListener,
 } from "h3";
+import { createHooks } from "hookable";
 import httpProxy from "http-proxy";
 import { servePlaceholder } from "serve-placeholder";
 import serveStatic from "serve-static";
@@ -19,8 +20,7 @@ import {
 	createFetch as createLocalFetch,
 } from "unenv/runtime/fetch/index";
 
-import { createServerResponse } from "./http-stream.js";
-import { resolve } from "./path.js";
+import errorHandler from "./dev-error.js";
 import { createRouteRulesHandler } from "./route-rules.js";
 
 // import { createVFSHandler } from './vfs'
@@ -132,8 +132,48 @@ export async function createDevServer(nitro) {
 	// });
 	// nitro.hooks.hook("dev:reload", reload);
 
+	const hooks = createHooks();
+
+	const captureError = (error, context = {}) => {
+		const promise = hooks
+			.callHookParallel("error", error, context)
+			.catch((error_) => {
+				console.error("Error while capturing another error", error_);
+			});
+		if (context.event && isEvent(context.event)) {
+			const errors = context.event.context.nitro?.errors;
+			if (errors) {
+				errors.push({ error, context });
+			}
+			if (context.event.waitUntil) {
+				context.event.waitUntil(promise);
+			}
+		}
+	};
+
 	// App
-	const app = createApp();
+	const app = createApp({
+		debug: Boolean(process.env.DEBUG),
+		onError: (error, event) => {
+			captureError(error, { event, tags: ["request"] });
+			return errorHandler(error, event);
+		},
+		onRequest: async (event) => {
+			await hooks.callHook("request", event).catch((error) => {
+				captureError(error, { event, tags: ["request"] });
+			});
+		},
+		onBeforeResponse: async (event, response) => {
+			await hooks.callHook("beforeResponse", event, response).catch((error) => {
+				captureError(error, { event, tags: ["request", "response"] });
+			});
+		},
+		onAfterResponse: async (event, response) => {
+			await hooks.callHook("afterResponse", event, response).catch((error) => {
+				captureError(error, { event, tags: ["request", "response"] });
+			});
+		},
+	});
 
 	// Create local fetch callers
 	const localCall = createCall(promisifyNodeListener(toNodeListener(app)));
@@ -325,6 +365,8 @@ export async function createDevServer(nitro) {
 		localCall,
 		localFetch,
 		close,
+		hooks,
+		captureError,
 		// watcher,
 	};
 }

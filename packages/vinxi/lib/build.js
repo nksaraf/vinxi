@@ -91,9 +91,9 @@ export async function createBuild(app, buildConfig) {
 	const nitro = await createNitro({
 		...app.config.server,
 		dev: false,
-
+		compatibilityDate: "2024-12-01",
+		rootDir: "",
 		logLevel: +(process.env.NITRO_LOG_LEVEL || 1),
-
 		preset:
 			buildConfig.preset ??
 			process.env.TARGET ??

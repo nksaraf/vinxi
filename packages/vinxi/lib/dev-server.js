@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { consola, withLogger } from "./logger.js";
 import { join, normalize } from "./path.js";
+import { resolve } from "./resolve.js";
 
 export * from "./router-dev-plugins.js";
 
@@ -130,8 +131,9 @@ export async function createDevServer(
 	const { createNitro, writeTypes } = await import("nitropack");
 
 	const nitro = await createNitro({
-		...app.config.server,
+		compatibilityDate: "2024-12-01",
 		rootDir: "",
+		...app.config.server,
 		dev: true,
 		preset: "nitro-dev",
 		publicAssets: [
@@ -169,8 +171,9 @@ export async function createDevServer(
 					(asset) => Boolean(asset),
 				)
 				.flat(),
+			...(app.config.server.devHandlers ?? []),
 		],
-		handlers: [...(app.config.server.handlers ?? [])],
+		// handlers: [...(app.config.server.handlers ?? [])],
 		plugins: [...(app.config.server.plugins ?? [])],
 	});
 
