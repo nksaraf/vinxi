@@ -205,15 +205,27 @@ export async function createDevServer(
 	// }
 
 	// Running plugins manually
+	const devViteServer = await import("vite").then(({ createServer }) =>
+		createServer({}),
+	);
+
 	const plugins = [
-		new URL("./app-fetch.js", import.meta.url).href,
-		new URL("./app-manifest.js", import.meta.url).href,
+		fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
+		fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
+		...(app.config.server.plugins ?? []),
 	];
 
 	for (const plugin of plugins) {
-		const { default: pluginFn } = await import(plugin);
-		await pluginFn(devApp);
+		const { default: pluginFn } = await devViteServer.ssrLoadModule(plugin);
+		try {
+			await pluginFn(devApp);
+		} catch (error) {
+			console.error(`Error running plugin ${plugin}`);
+			console.error(error);
+		}
 	}
+
+	await devViteServer.close();
 
 	return {
 		...devApp,
