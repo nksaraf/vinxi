@@ -11,6 +11,7 @@ stats.html
 *.code-workspace
 
 .vinxi
+test/test-results
 
 # Local Netlify folder
 .netlify
