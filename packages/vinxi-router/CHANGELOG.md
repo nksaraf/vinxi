@@ -1,5 +1,16 @@
 # @vinxi/router
 
+## 0.5.0
+
+### Patch Changes
+
+- d50d3862: Update path-to-regexp and don't override the params on the routes handler
+- Updated dependencies [af82995d]
+- Updated dependencies [c261150c]
+- Updated dependencies [168cef26]
+- Updated dependencies [2a298125]
+  - vinxi@0.5.0
+
 ## 0.4.4
 
 ### Patch Changes

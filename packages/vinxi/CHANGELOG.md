@@ -1,5 +1,17 @@
 # vinxi
 
+## 0.5.0
+
+### Minor Changes
+
+- 168cef26: Bump to Vite 6
+- 2a298125: chore: bump nitro to v2.10.4, h3 to v13.0
+
+### Patch Changes
+
+- af82995d: feat: nitro plugin support in dev
+- c261150c: fix Asset type
+
 ## 0.4.3
 
 ### Patch Changes
