@@ -214,13 +214,13 @@
     "unctx": "^2.3.1",
     "unenv": "^1.9.0",
     "unstorage": "^1.10.1",
-    "vite": "^5.2.8",
+    "vite": "^6.0.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {
     "@types/node": "^18.17.11",
-    "@types/serve-static": "^1.15.2",
     "@types/resolve": "^1.20.6",
+    "@types/serve-static": "^1.15.2",
     "cookie-es": "^1.0.0",
     "prettier": "^2.8.8",
     "vitest": "^0.28.5"
