@@ -1,6 +1,7 @@
 import { mkdir, rm, rmdir } from "fs/promises";
 import { createRequire } from "module";
 import { build, copyPublicAssets, createNitro, prerender } from "nitropack";
+import { isRelative } from "ufo";
 
 import { readdirSync, statSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -12,7 +13,13 @@ import invariant from "./invariant.js";
 import { c, consola, log, withLogger } from "./logger.js";
 import { viteManifestPath } from "./manifest-path.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
-import { handlerModule, join, relative, virtualId } from "./path.js";
+import {
+	handlerModule,
+	isAbsolute,
+	join,
+	relative,
+	virtualId,
+} from "./path.js";
 import { config } from "./plugins/config.js";
 import { manifest } from "./plugins/manifest.js";
 import { routes } from "./plugins/routes.js";
@@ -124,7 +131,13 @@ export async function createBuild(app, buildConfig) {
 			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
 			fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
 			"$vinxi/chunks",
-			...(app.config.server.plugins ?? []),
+			...(app.config.server.plugins ?? []).map((plugin) =>
+				isRelative(plugin)
+					? plugin
+					: isAbsolute(plugin)
+					? plugin
+					: require.resolve(plugin, { paths: [app.config.root] }),
+			),
 		],
 		buildDir: ".vinxi",
 		handlers: [
