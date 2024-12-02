@@ -10,8 +10,8 @@
 - Updated dependencies [2a298125]
   - vinxi@0.5.0
   - @vinxi/react@0.2.5
-  - @vinxi/server-components@1.0.0
-  - @vinxi/server-functions@1.0.0
+  - @vinxi/server-components@0.5.0
+  - @vinxi/server-functions@0.5.0
 
 ## null
 

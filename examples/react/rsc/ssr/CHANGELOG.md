@@ -9,8 +9,8 @@
 - Updated dependencies [168cef26]
 - Updated dependencies [2a298125]
   - vinxi@0.5.0
-  - @vinxi/server-components@1.0.0
-  - @vinxi/server-functions@1.0.0
+  - @vinxi/server-components@0.5.0
+  - @vinxi/server-functions@0.5.0
 
 ## null
 
