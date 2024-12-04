@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.5.1
+
+### Patch Changes
+
+- db9b7747: Update collect-styles.js to use ?inline to get the css during ssr
+
 ## 0.5.0
 
 ### Minor Changes
