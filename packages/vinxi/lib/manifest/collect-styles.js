@@ -175,7 +175,11 @@ async function findStylesInModuleGraph(vite, match, ssr) {
 
 		if (isCssFile(dep.url ?? "")) {
 			try {
-				const mod = await vite.ssrLoadModule(dep.url);
+				let [path, query] = dep.url.split('?')
+				let searchParams = new URLSearchParams(query)
+				searchParams.set("inline", true)
+				let inlineDepURL = path + '?' + searchParams.toString()
+				const mod = await vite.ssrLoadModule(inlineDepURL);
 				if (isCssModulesFile(dep.file)) {
 					styles[join(vite.config.root, dep.url)] = vite.cssModules?.[dep.file];
 				} else {
