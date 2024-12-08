@@ -48,6 +48,9 @@ export type CustomizableConfig = Omit<
 		"outDir" | "ssr" | "ssrManifest" | "rollupOptions"
 	> & {
 		rollupOptions?: Omit<import("vite").BuildOptions["rollupOptions"], "input">;
+		server?: {
+			hmr?: Exclude<NonNullable<import("vite").UserConfig["server"]>["hmr"], boolean>;
+		}
 	};
 };
 
