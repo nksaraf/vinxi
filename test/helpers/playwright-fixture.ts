@@ -1,6 +1,6 @@
 import type { Page, Request, Response } from "@playwright/test";
 import { test } from "@playwright/test";
-import cheerio from "cheerio";
+import { load } from "cheerio";
 import cp from "child_process";
 import prettier from "prettier";
 
@@ -228,7 +228,8 @@ export async function getHtml(page: Page, selector?: string) {
 }
 
 export function getElement(source: string, selector: string) {
-  let el = cheerio(selector, source);
+  let $ = load(source);
+  let el = $(selector);
   if (!el.length) {
     throw new Error(`No element matches selector "${selector}"`);
   }
@@ -236,8 +237,9 @@ export function getElement(source: string, selector: string) {
 }
 
 export function selectHtml(source: string, selector: string) {
-  let el = getElement(source, selector);
-  return prettyHtml(cheerio.html(el)).trim();
+  let $ = load(source);
+  let el = $(selector);
+  return prettyHtml($.html(el)).trim();
 }
 
 export function selectText(source: string, selector: string) {
