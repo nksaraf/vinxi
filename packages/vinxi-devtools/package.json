@@ -19,7 +19,7 @@
     "@solidjs/router": "^0.8.3",
     "birpc": "^0.2.14",
     "solid-js": "^1.7.11",
-    "vite-plugin-inspect": "^0.7.38",
+    "vite-plugin-inspect": "^0.10.3",
     "vite-plugin-solid": "^2.7.0",
     "ws": "^8.13.0"
   },
