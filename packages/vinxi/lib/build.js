@@ -400,7 +400,7 @@ async function createViteBuild(config) {
  *
  * @param {import("./app.js").App} app
  * @param {import("./router-mode.js").Router} router
- * @param {string?} mode
+ * @param {string} [mode]
  */
 async function createRouterBuildInWorker(app, router, mode) {
 	const sh = await import("../runtime/sh.js");
@@ -413,7 +413,7 @@ async function createRouterBuildInWorker(app, router, mode) {
  *
  * @param {import("./app.js").App} app
  * @param {import("./router-mode.js").Router} router
- * @param {string?} mode
+ * @param {string} [mode]
  */
 async function createRouterBuild(app, router, mode) {
 	console.log("\n");
