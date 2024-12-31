@@ -55,7 +55,7 @@ export async function createBuild(app, buildConfig) {
 			}
 
 			await withLogger({ router, requestId: "build" }, async () => {
-				await createRouterBuild(app, router);
+				await createRouterBuild(app, router, buildConfig.mode);
 			});
 		}
 
@@ -90,7 +90,7 @@ export async function createBuild(app, buildConfig) {
 	for (const router of app.config.routers) {
 		if (router.type !== "static" && router.build !== false) {
 			await withLogger({ router, requestId: "build" }, async () => {
-				await createRouterBuildInWorker(app, router);
+				await createRouterBuildInWorker(app, router, buildConfig.mode);
 			});
 		}
 	}
@@ -396,19 +396,26 @@ async function createViteBuild(config) {
 	return output;
 }
 
-async function createRouterBuildInWorker(app, router) {
+/**
+ *
+ * @param {import("./app.js").App} app
+ * @param {import("./router-mode.js").Router} router
+ * @param {string?} mode
+ */
+async function createRouterBuildInWorker(app, router, mode) {
 	const sh = await import("../runtime/sh.js");
 	const { fileURLToPath } = await import("url");
 	await sh.default`node ${fileURLToPath(
 		new URL("../bin/cli.mjs", import.meta.url).href,
-	)} build --router=${router.name}`;
+	)} build --router=${router.name} ${mode ? `--mode=${mode}` : ""}`;
 }
 /**
  *
  * @param {import("./app.js").App} app
  * @param {import("./router-mode.js").Router} router
+ * @param {string?} mode
  */
-async function createRouterBuild(app, router) {
+async function createRouterBuild(app, router, mode) {
 	console.log("\n");
 	console.log(c.green(`📦 Compiling ${router.name} router...`));
 	await app.hooks.callHook("app:build:router:start", { app, router });
@@ -421,7 +428,7 @@ async function createRouterBuild(app, router) {
 		await createViteBuild({
 			app: app,
 			root: router.root,
-			mode: app.config.mode,
+			mode,
 			build: {
 				ssr: true,
 				ssrManifest: true,
@@ -502,6 +509,7 @@ async function createRouterBuild(app, router) {
 				},
 			},
 		],
+		mode,
 	};
 
 	await app.hooks.callHook("app:build:router:vite:config", {
