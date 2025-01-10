@@ -402,7 +402,7 @@ async function createRouterBuildInWorker(app, router, configFile) {
 	const { fileURLToPath } = await import("url");
 	await sh.default`node ${fileURLToPath(
 		new URL("../bin/cli.mjs", import.meta.url).href,
-	)} build --router=${router.name} --config=${configFile}`;
+	)} build --router=${router.name}${configFile ? ` --config=${configFile}` : ""}`;
 }
 /**
  *
