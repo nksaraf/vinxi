@@ -34,8 +34,9 @@ const require = createRequire(import.meta.url);
  *
  * @param {import('./app.js').App} app
  * @param {BuildConfig} buildConfig
+ * @param {string} configFile
  */
-export async function createBuild(app, buildConfig) {
+export async function createBuild(app, buildConfig, configFile) {
 	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
 	const { join } = await import("./path.js");
 	const { fileURLToPath } = await import("url");
@@ -90,7 +91,7 @@ export async function createBuild(app, buildConfig) {
 	for (const router of app.config.routers) {
 		if (router.type !== "static" && router.build !== false) {
 			await withLogger({ router, requestId: "build" }, async () => {
-				await createRouterBuildInWorker(app, router);
+				await createRouterBuildInWorker(app, router, configFile);
 			});
 		}
 	}
@@ -396,12 +397,12 @@ async function createViteBuild(config) {
 	return output;
 }
 
-async function createRouterBuildInWorker(app, router) {
+async function createRouterBuildInWorker(app, router, configFile) {
 	const sh = await import("../runtime/sh.js");
 	const { fileURLToPath } = await import("url");
 	await sh.default`node ${fileURLToPath(
 		new URL("../bin/cli.mjs", import.meta.url).href,
-	)} build --router=${router.name}`;
+	)} build --router=${router.name} ${configFile ? `--config=${configFile}` : ""}`;
 }
 /**
  *
