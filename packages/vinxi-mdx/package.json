@@ -9,19 +9,26 @@
     "// TypeScript": "",
     "tsc:watch": "tsc --build --watch",
     "tsc:once": "tsc --build",
-    "build:cjs": "esbuild --bundle --platform=node --external:esbuild --external:vite --external:@mdx-js/mdx src/index.ts > dist/index.cjs",
+    "build:cjs": "esbuild --bundle --platform=node --external:esbuild --external:vite --external:@mdx-js/mdx --outfile=dist/index.cjs --sourcemap=linked dist/index.js",
     "// Release": "",
-    "prepublishOnly": "pnpm run build:cjs",
+    "prepublishOnly": "pnpm run types && pnpm run build:cjs && node ./scripts/update-exports-prepublish.js",
+    "postpublish": "node ./scripts/update-exports-postpublish.js",
     "release": "npm version patch && npm publish && git push && git push --tags",
     "// Remove caches": "",
     "clean": "git clean -Xdff"
   },
   "main": "dist/index.cjs",
+  "exports": {
+    ".": {
+      "require": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
   "files": [
     "dist"
   ],
   "peerDependencies": {
-    "@mdx-js/mdx": "<3"
+    "@mdx-js/mdx": ">=3"
   },
   "dependencies": {
     "@alloc/quick-lru": "^5.2.0",
@@ -31,13 +38,13 @@
     "vfile": "^5.0.0"
   },
   "devDependencies": {
-    "@mdx-js/mdx": "2.3.0",
+    "@mdx-js/mdx": "3.1.0",
     "@types/es-module-lexer": "^0.3.0",
     "@types/mdast": "^3.0.12",
     "@types/node": "^14.18.56",
     "@types/resolve": "^1.20.2",
     "@types/unist": "^2.0.7",
-    "typescript": "^5.2.2",
+    "typescript": "^5.7.3",
     "vite": "4.5.0"
   },
   "description": "Vinxi plugin for MDX",

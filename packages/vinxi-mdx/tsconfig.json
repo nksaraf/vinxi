@@ -2,15 +2,18 @@
 	"compilerOptions": {
 		"rootDir": "./src/",
 		"outDir": "./dist/",
-		"target": "ES2015",
-		"module": "ESNext",
-		"moduleResolution": "Bundler",
+		"target": "ES2022",
+		"module": "NodeNext",
+		"lib": ["ES2022"],
 		"esModuleInterop": true,
 		"declaration": true,
 		"declarationMap": true,
 		"sourceMap": true,
 		"preserveWatchOutput": true,
 		"strict": false,
-		"skipLibCheck": true
-	}
+		"skipLibCheck": true,
+		"moduleDetection": "force",
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+	},
 }

@@ -1,13 +1,13 @@
 import LRUCache from "@alloc/quick-lru";
 import fs from "fs";
 import { isAbsolute } from "path";
-import { FSWatcher, Plugin, ResolvedConfig, normalizePath } from "vite";
+import { FSWatcher, type Plugin, type ResolvedConfig, normalizePath } from "vite";
 
-import { mergeArrays } from "../common";
-import { MdxOptions, MdxPlugin } from "../types";
-import { ImportMap } from "./ImportMap";
-import { createMdxAstCompiler } from "./createMdxAstCompiler";
-import { MdxAstCache, remarkTransclusion } from "./remarkTransclusion";
+import { mergeArrays } from "../common.js";
+import type { MdxOptions, MdxPlugin } from "../types.js";
+import { ImportMap } from "./ImportMap.js";
+import { createMdxAstCompiler } from "./createMdxAstCompiler.js";
+import { type MdxAstCache, remarkTransclusion } from "./remarkTransclusion.js";
 
 /**
  * With transclusion enabled, an `.mdx` file can import other `.mdx` or `.md`

@@ -1,4 +1,4 @@
-import mdx from "@mdx-js/mdx";
+import type { CompileOptions } from "@mdx-js/mdx";
 import type { Pluggable } from "unified";
 import type { Plugin as VitePlugin } from "vite";
 
@@ -6,7 +6,7 @@ export type RemarkPlugin = Pluggable | false;
 export type RehypePlugin = Pluggable | false;
 
 export interface MdxOptions
-	extends Omit<mdx.CompileOptions, "remarkPlugins" | "rehypePlugins"> {
+	extends Omit<CompileOptions, "remarkPlugins" | "rehypePlugins"> {
 	remarkPlugins?: Readonly<RemarkPlugin>[];
 	rehypePlugins?: Readonly<RehypePlugin>[];
 }

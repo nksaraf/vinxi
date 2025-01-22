@@ -52,9 +52,11 @@ export async function doc(src) {
 		const fromFile = path.join(fromDirectory, "noop.js");
 
 		const resolveFileName = () =>
+			// @ts-ignore "Property '_resolveFilename' does not exist on type 'typeof Module'."
 			Module._resolveFilename(moduleId, {
 				id: fromFile,
 				filename: fromFile,
+				// @ts-ignore "Property '_nodeModulePaths' does not exist on type 'typeof Module'.
 				paths: Module._nodeModulePaths(fromDirectory),
 			});
 

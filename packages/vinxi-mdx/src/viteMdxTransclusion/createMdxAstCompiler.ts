@@ -1,5 +1,5 @@
-import { requireFrom, resolveMdxImport } from '../imports'
-import { RemarkPlugin } from '../types'
+import { requireFrom, resolveMdxImport } from '../imports.js'
+import type { RemarkPlugin } from '../types.js'
 
 /**
  * Almost identical to the `createMdxAstCompiler` export of `@mdx-js/mdx`

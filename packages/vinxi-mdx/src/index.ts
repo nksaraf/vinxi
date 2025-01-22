@@ -1,13 +1,13 @@
 import type { Plugin } from "vite";
 
-import { mergeArrays } from "./common";
-import { NamedImports } from "./imports";
-import { createTransformer } from "./transform";
-import { MdxOptions, MdxPlugin } from "./types";
-import { viteMdxTransclusion } from "./viteMdxTransclusion";
-import { VFile, VFileCompatible } from "vfile";
+import { mergeArrays } from "./common.js";
+import type { NamedImports } from "./imports.js";
+import { createTransformer } from "./transform.js";
+import type { MdxOptions, MdxPlugin } from "./types.js";
+import { viteMdxTransclusion } from "./viteMdxTransclusion/index.js";
+import { VFile, type VFileCompatible } from "vfile";
 
-export { MdxOptions, MdxPlugin };
+export type { MdxOptions, MdxPlugin };
 
 export default function viteMdx(
 	mdxOptions?: MdxOptions | ((filename: string) => MdxOptions),
