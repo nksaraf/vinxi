@@ -20,7 +20,7 @@
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "prettier": "^2.8.8",
-    "typescript": "5.1.6"
+    "typescript": "5.7.3"
   },
   "dependencies": {
     "@changesets/cli": "^2.26.2",

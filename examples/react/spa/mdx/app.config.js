@@ -1,13 +1,11 @@
-import pkg from "@vinxi/plugin-mdx";
+import mdx from "@vinxi/plugin-mdx";
 import reactRefresh from "@vitejs/plugin-react";
 import { createApp, resolve } from "vinxi";
 import {
 	BaseFileSystemRouter,
-	analyzeModule,
 	cleanPath,
 } from "vinxi/fs-router";
 
-const { default: mdx } = pkg;
 
 class WouterFileSystemRouter extends BaseFileSystemRouter {
 	toPath(src) {

@@ -2,7 +2,7 @@ import type { Processor, Transformer } from 'unified'
 import type { Root, Content } from 'mdast'
 import type { Node } from 'unist'
 import LRUCache from '@alloc/quick-lru'
-import { ImportMap } from './ImportMap'
+import { ImportMap } from './ImportMap.js'
 
 const importRE = /^import ['"](.+)['"]\s*$/
 const mdxRE = /\.mdx?$/
