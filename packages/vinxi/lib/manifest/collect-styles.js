@@ -177,6 +177,7 @@ async function findStylesInModuleGraph(vite, match, ssr) {
 			try {
 				let [path, query] = dep.url.split('?')
 				let searchParams = new URLSearchParams(query)
+				searchParams.delete("url")
 				searchParams.set("inline", true)
 				let inlineDepURL = path + '?' + searchParams.toString()
 				const mod = await vite.ssrLoadModule(inlineDepURL);
