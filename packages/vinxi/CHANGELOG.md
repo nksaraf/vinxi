@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.5.2
+
+### Patch Changes
+
+- b85ab82c: Update unstorage
+
 ## 0.5.1
 
 ### Patch Changes
