@@ -34,11 +34,11 @@ jobs:
         # - solid-start-cloudflare-pages
         # - solid-start-deno
         os:
-          - ubuntu-latest
+          - ubuntu-22.04
           - macos-latest
           - windows-latest
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             playwright_binary_path: ~/.cache/ms-playwright
           - os: macos-latest
             playwright_binary_path: ~/Library/Caches/ms-playwright
@@ -91,12 +91,12 @@ jobs:
         run: pnpm run install:playwright
 
       - uses: oven-sh/setup-bun@v1
-        if: runner.os == 'ubuntu-latest' || runner.os == 'macos-latest'
+        if: runner.os == 'ubuntu-22.04' || runner.os == 'macos-latest'
         with:
           bun-version: latest
 
       - name: 👀 Build things that need to be built
-        if: runner.os == 'ubuntu-latest' || runner.os == 'macos-latest'
+        if: runner.os == 'ubuntu-22.04' || runner.os == 'macos-latest'
         env:
           START_ADAPTER: ${{ matrix.adapter }}
         run: npm run build

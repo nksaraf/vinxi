@@ -159,6 +159,40 @@ const isCssFile = (/** @type {string} */ file) => cssFileRegExp.test(file);
 export const isCssModulesFile = (/** @type {string} */ file) =>
 	cssModulesRegExp.test(file);
 
+// https://github.com/remix-run/remix/blob/65326e39099f3b2285d83aecfe734ba35f668396/packages/remix-dev/vite/styles.ts#L29
+const cssUrlParamsWithoutSideEffects = ["url", "inline", "raw", "inline-css"];
+export const isCssUrlWithoutSideEffects = (/** @type {string} */ url) => {
+	const queryString = url.split("?")[1];
+
+	if (!queryString) {
+		return false;
+	}
+
+	const params = new URLSearchParams(queryString);
+	for (let paramWithoutSideEffects of cssUrlParamsWithoutSideEffects) {
+		if (
+			// Parameter is blank and not explicitly set, i.e. "?url", not "?url="
+			params.get(paramWithoutSideEffects) === "" &&
+			!url.includes(`?${paramWithoutSideEffects}=`) &&
+			!url.includes(`&${paramWithoutSideEffects}=`)
+		) {
+			return true;
+		}
+	}
+
+	return false;
+};
+
+/**
+ * 
+ * @param {string} url 
+ * @param {string} query 
+ * Source: https://github.com/remix-run/remix/pull/10254
+ * @returns 
+ */
+const injectQuery = (url, query) =>
+	url.includes("?") ? url.replace("?", `?${query}&`) : `${url}?${query}`;
+
 /**
  *
  * @param {import('vite').ViteDevServer} vite
@@ -170,16 +204,14 @@ async function findStylesInModuleGraph(vite, match, ssr) {
 	const dependencies = await findDependencies(vite, match, ssr);
 
 	for (const dep of dependencies) {
-		const parsed = new URL(dep.url, "http://localhost/");
-		const query = parsed.searchParams;
-
 		if (isCssFile(dep.url ?? "")) {
 			try {
-				let [path, query] = dep.url.split('?')
-				let searchParams = new URLSearchParams(query)
-				searchParams.set("inline", true)
-				let inlineDepURL = path + '?' + searchParams.toString()
-				const mod = await vite.ssrLoadModule(inlineDepURL);
+				let depURL = dep.url;
+				if (!isCssUrlWithoutSideEffects(depURL)) {
+					depURL = injectQuery(dep.url, "inline");
+				}
+
+				const mod = await vite.ssrLoadModule(depURL);
 				if (isCssModulesFile(dep.file)) {
 					styles[join(vite.config.root, dep.url)] = vite.cssModules?.[dep.file];
 				} else {

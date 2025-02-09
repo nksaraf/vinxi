@@ -232,7 +232,7 @@ const command = defineCommand({
 				}
 				process.env.NODE_ENV = "production";
 				const { createBuild } = await import("../lib/build.js");
-				await createBuild(app, { preset: args.preset, router: args.router }, configFile);
+				await createBuild(app, { preset: args.preset, router: args.router, mode: args.mode }, configFile);
 			},
 		},
 		start: {
