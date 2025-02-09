@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.5.3
+
+### Patch Changes
+
+- 09cd59b1: enable vite mode flag via cli
+- 696defe4: Fix a regression that caused css imported with sideeffects such as `?url`, to be rendered during ssr (in dev).
+- fd93107b: fix: use CLI-given config file
+
 ## 0.5.2
 
 ### Patch Changes
