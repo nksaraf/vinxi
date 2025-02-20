@@ -39,7 +39,6 @@ export type CustomizableConfig = Omit<
 	| "mode"
 	| "server"
 	| "preview"
-	| "clearScreen"
 	| "configFile"
 	| "envFile"
 > & {
