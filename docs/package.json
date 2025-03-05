@@ -12,8 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@shikijs/vitepress-twoslash": "^1.22.0",
-    "vinxi": "0.4.3",
-    "vitepress": "1.4.1",
+    "vinxi": "0.5.3",
+    "vitepress": "^1.6.3",
     "vue": "^3.4.19"
   },
   "devDependencies": {
