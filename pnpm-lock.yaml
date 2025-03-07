@@ -846,8 +846,8 @@ importers:
         specifier: ^4.0.5
         version: 4.0.5
       nitropack:
-        specifier: ^2.11.1
-        version: 2.11.1(typescript@5.3.3)
+        specifier: ^2.11.3
+        version: 2.11.4(typescript@5.3.3)
       node-fetch-native:
         specifier: ^1.4.0
         version: 1.4.1
@@ -4294,26 +4294,6 @@ packages:
   /@polka/url@1.0.0-next.23:
     resolution: {integrity: sha512-C16M+IYz0rgRhWZdCmK+h58JMv8vijAA61gmz2rspCSwKwzBebpdcsiUmwrtJRdphuY30i6BSLEOP8ppbNLyLg==}
 
-  /@poppinss/colors@4.1.4:
-    resolution: {integrity: sha512-FA+nTU8p6OcSH4tLDY5JilGYr1bVWHpNmcLr7xmMEdbWmKHa+3QZ+DqefrXKmdjO/brHTnQZo20lLSjaO7ydog==}
-    engines: {node: '>=18.16.0'}
-    dependencies:
-      kleur: 4.1.5
-    dev: false
-
-  /@poppinss/dumper@0.6.2:
-    resolution: {integrity: sha512-FhE9rY15aZ6Qp6ltQ0NZjseVRhwgWZ7+sg16343FqnjdUQvvBBi5eSeH/aZA4LF1ZOV5779DYrJXTHT42JlHNg==}
-    dependencies:
-      '@poppinss/colors': 4.1.4
-      '@sindresorhus/is': 7.0.1
-      supports-color: 10.0.0
-    dev: false
-
-  /@poppinss/exception@1.2.0:
-    resolution: {integrity: sha512-WLneXKQYNClhaMXccO111VQmZahSrcSRDaHRbV6KL5R4pTvK87fMn/MXLUcvOjk0X5dTHDPKF61tM7j826wrjQ==}
-    engines: {node: '>=20.6.0'}
-    dev: false
-
   /@radix-ui/colors@3.0.0:
     resolution: {integrity: sha512-FUOsGBkHrYJwCSEtWRCIfQbZG7q1e6DgxCIOe1SUQzDe/7rXXeA47s8yCn6fuTNQAj1Zq4oTFi9Yjp3wzElcxg==}
     dev: true
@@ -6020,11 +6000,6 @@ packages:
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
-  /@sindresorhus/is@7.0.1:
-    resolution: {integrity: sha512-QWLl2P+rsCJeofkDNIT3WFmb6NrRud1SUYW8dIhXK/46XFV8Q/g7Bsvib0Askb0reRLe+WYPeeE+l5cH7SlkuQ==}
-    engines: {node: '>=18'}
-    dev: false
-
   /@sindresorhus/merge-streams@2.3.0:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
@@ -6043,10 +6018,6 @@ packages:
       solid-js: ^1.5.3
     dependencies:
       solid-js: 1.8.5
-    dev: false
-
-  /@speed-highlight/core@1.2.7:
-    resolution: {integrity: sha512-0dxmVj4gxg3Jg879kvFS/msl4s9F3T9UXC1InxgOf7t5NvcPD97u/WTA5vL/IxWHMn7qSxBozqrnnE2wvl1m8g==}
     dev: false
 
   /@tanstack/bling@0.0.3(vite@4.5.0):
@@ -7881,7 +7852,7 @@ packages:
       confbox: 0.1.8
       defu: 6.1.4
       dotenv: 16.4.7
-      exsolve: 1.0.1
+      exsolve: 1.0.2
       giget: 2.0.0
       jiti: 2.4.2
       magicast: 0.3.5
@@ -8277,11 +8248,6 @@ packages:
   /cookie@0.4.2:
     resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}
     engines: {node: '>= 0.6'}
-    dev: false
-
-  /cookie@1.0.2:
-    resolution: {integrity: sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==}
-    engines: {node: '>=18'}
     dev: false
 
   /copy-anything@3.0.5:
@@ -8760,10 +8726,6 @@ packages:
     resolution: {integrity: sha512-g/9rfnvnagiNf+DRMHEVGuGuIBlCIMDFoTA616HaP2l9PlCjGjVhD98PNbVSJvmK4TttqT5mV5tInMhoFgi+aA==}
     dev: false
 
-  /error-stack-parser-es@0.1.5:
-    resolution: {integrity: sha512-xHku1X40RO+fO8yJ8Wh2f2rZWVjqyhb1zgq1yZ8aZRQkv6OOKhKWRUaht3eSCUbAOBaKIgM+ykwFLE+QUxgGeg==}
-    dev: false
-
   /es-abstract@1.22.3:
     resolution: {integrity: sha512-eiiY8HQeYfYH2Con2berK+To6GrK2RxbPawDkGq4UiCQQfZHb6wX9qQqkbpPqaxQFcl8d9QzZqo0tGE0VcrdwA==}
     engines: {node: '>= 0.4'}
@@ -9175,8 +9137,8 @@ packages:
       jest-util: 29.7.0
     dev: false
 
-  /exsolve@1.0.1:
-    resolution: {integrity: sha512-Smf0iQtkQVJLaph8r/qS8C8SWfQkaq9Q/dFcD44MLbJj6DNhlWefVuaS21SjfqOsBbjVlKtbCj6L9ekXK6EZUg==}
+  /exsolve@1.0.2:
+    resolution: {integrity: sha512-ZEcIMbthn2zeX4/wD/DLxDUjuCltHXT8Htvm/JFlTkdYgWh2+HGppgwwNUnIVxzxP7yJOPtuBAec0dLx6lVY8w==}
     dev: false
 
   /extend@3.0.2:
@@ -11635,8 +11597,8 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
-  /nitropack@2.11.1(typescript@5.3.3):
-    resolution: {integrity: sha512-CyoM2KGCjwUMgDPL7YtDZdLK1cCYzhaYImPMPcrqWJoMZJ9UgpWiEmP1Yqjw1qNGe1+1u3kj+GNxx75mh9eovg==}
+  /nitropack@2.11.4(typescript@5.3.3):
+    resolution: {integrity: sha512-m0mSdvTAd/VKJK/B84JUtfKgFKIdqDFjJh5XoVvdeRhprldSvA3hs5G+Q1FlitP92UyBV4//F4D4zky7EIyxJw==}
     engines: {node: ^16.11.0 || >=17.0.0}
     hasBin: true
     peerDependencies:
@@ -11673,7 +11635,7 @@ packages:
       esbuild: 0.25.0
       escape-string-regexp: 5.0.0
       etag: 1.8.1
-      exsolve: 1.0.1
+      exsolve: 1.0.2
       fs-extra: 11.3.0
       globby: 14.1.0
       gzip-size: 7.0.0
@@ -11717,8 +11679,7 @@ packages:
       unstorage: 1.15.0(db0@0.3.1)(ioredis@5.5.0)
       untyped: 2.0.0
       unwasm: 0.3.9
-      youch: 4.1.0-beta.5
-      youch-core: 0.3.1
+      youch-redist: 4.1.0-beta.5-1
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -12265,7 +12226,7 @@ packages:
     resolution: {integrity: sha512-wmJwA+8ihJixSoHKxZJRBQG1oY8Yr9pGLzRmSsNms0iNWyHHAlZCa7mmKiFR10YPZuz/2k169JiS/inOjBCZ2A==}
     dependencies:
       confbox: 0.2.1
-      exsolve: 1.0.1
+      exsolve: 1.0.2
       pathe: 2.0.3
     dev: false
 
@@ -13485,11 +13446,6 @@ packages:
       copy-anything: 3.0.5
     dev: false
 
-  /supports-color@10.0.0:
-    resolution: {integrity: sha512-HRVVSbCCMbj7/kdWF9Q+bbckjBHLtHMEoJWlkmYzzdwhYMkjkOwubLM6t7NbWKjgKamGDrWL1++KrjUO1t9oAQ==}
-    engines: {node: '>=18'}
-    dev: false
-
   /supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
     engines: {node: '>=4'}
@@ -13931,7 +13887,7 @@ packages:
     resolution: {integrity: sha512-aygmJLhrEnuLKDCISMoOL7ceRJeksnvXJXvtEvFei4zoOXQfvQkUGhZe8u//iK5C++M4pq3CsMbhVjFmWvOlmA==}
     dependencies:
       defu: 6.1.4
-      exsolve: 1.0.1
+      exsolve: 1.0.2
       ohash: 2.0.11
       pathe: 2.0.3
       ufo: 1.5.4
@@ -15210,12 +15166,8 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
 
-  /youch-core@0.3.1:
-    resolution: {integrity: sha512-KOAmtABz17fgK+uBBJYIzaPpIgX+JgTRgY4t3zXH18akc5rRtFkRmcNTMCuSxLdbOJDY9+T/O3nyA/EQuN4EWA==}
-    engines: {node: '>=20.6.0'}
-    dependencies:
-      '@poppinss/exception': 1.2.0
-      error-stack-parser-es: 0.1.5
+  /youch-redist@4.1.0-beta.5-1:
+    resolution: {integrity: sha512-IlNgclEfelti10dh7yzGfQxhowEasVPr4zEN/At+uOzfWv74HiRx2Uz4gyvCRcez0dk1PDerl5aQhKxUKXKClg==}
     dev: false
 
   /youch@2.2.2:
@@ -15225,16 +15177,6 @@ packages:
       cookie: 0.4.2
       mustache: 4.2.0
       stack-trace: 0.0.10
-    dev: false
-
-  /youch@4.1.0-beta.5:
-    resolution: {integrity: sha512-92+bvKtAjm18S2o+IP0aLBpLtzY332Ji9geNLp07cLgHsK3aHVjWrg2eyE5LIKMv6j+GWu+Ehx4My7BTXxMbsA==}
-    engines: {node: '>=20.6.0'}
-    dependencies:
-      '@poppinss/dumper': 0.6.2
-      '@speed-highlight/core': 1.2.7
-      cookie: 1.0.2
-      youch-core: 0.3.1
     dev: false
 
   /zip-stream@6.0.1:
