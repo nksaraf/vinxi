@@ -846,7 +846,7 @@ importers:
         specifier: ^4.0.5
         version: 4.0.5
       nitropack:
-        specifier: ^2.11.3
+        specifier: ^2.11.4
         version: 2.11.4(typescript@5.3.3)
       node-fetch-native:
         specifier: ^1.4.0
