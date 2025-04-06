@@ -202,7 +202,7 @@
     "hookable": "^5.5.3",
     "http-proxy": "^1.18.1",
     "micromatch": "^4.0.5",
-    "nitropack": "^2.10.4",
+    "nitropack": "^2.11.4",
     "node-fetch-native": "^1.4.0",
     "path-to-regexp": "^6.2.1",
     "pathe": "^1.1.1",
