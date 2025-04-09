@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.5.4
+
+### Patch Changes
+
+- 6bb17d02: Update Nitro to 2.11.1
+- 1f899056: feat: allow custom HMR configuration on a per router basis
+- 6d71612e: feat: allow custom `clearScreen` configuration
+
 ## 0.5.3
 
 ### Patch Changes
