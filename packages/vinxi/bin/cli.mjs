@@ -74,6 +74,7 @@ const command = defineCommand({
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
 				const app = await loadApp(configFile, args);
+				app.config.mode = args.mode;
 
 				log(c.dim(c.green("starting dev server")));
 				let devServer;
