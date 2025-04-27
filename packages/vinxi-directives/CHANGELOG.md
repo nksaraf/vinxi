@@ -1,5 +1,16 @@
 # @vinxi/plugin-references
 
+## 0.5.1
+
+### Patch Changes
+
+- 8b99de63: chore: bump versions of prettier, common deps in vinxi
+- Updated dependencies [a231ae3d]
+- Updated dependencies [3a753f54]
+- Updated dependencies [f84285be]
+- Updated dependencies [8b99de63]
+  - vinxi@0.5.5
+
 ## 0.5.0
 
 ### Patch Changes

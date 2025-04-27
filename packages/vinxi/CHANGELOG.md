@@ -1,5 +1,14 @@
 # vinxi
 
+## 0.5.5
+
+### Patch Changes
+
+- a231ae3d: fix mode arg for dev command
+- 3a753f54: fix: use vite 6's environment API for vinxi run command
+- f84285be: feat: add custom babel plugins support for treeshake plugin
+- 8b99de63: chore: bump versions of prettier, common deps in vinxi
+
 ## 0.5.4
 
 ### Patch Changes
