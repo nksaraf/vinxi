@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.5.6
+
+### Patch Changes
+
+- 7a5bb6f1: fix: babel plugin options validation
+
 ## 0.5.5
 
 ### Patch Changes
