@@ -51,6 +51,11 @@ export const clientRouterSchema = z.object({
 	outDir: z.string().optional(),
 	target: z.enum(["browser"]).default("browser").optional(),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
+	babel: z.optional(
+		z.object({
+			plugins: z.array(z.string()).optional(),
+		}),
+	),
 	server: serverObjectSchema,
 });
 export const httpRouterSchema = z.object({
@@ -68,6 +73,11 @@ export const httpRouterSchema = z.object({
 	outDir: z.string().optional(),
 	target: z.enum(["server"]).default("server").optional(),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
+	babel: z.optional(
+		z.object({
+			plugins: z.array(z.string()).optional(),
+		}),
+	),
 	server: serverObjectSchema,
 });
 export const spaRouterSchema = z.object({
@@ -81,6 +91,11 @@ export const spaRouterSchema = z.object({
 	outDir: z.string().optional(),
 	target: z.enum(["browser"]).default("browser").optional(),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
+	babel: z.optional(
+		z.object({
+			plugins: z.array(z.string()).optional(),
+		}),
+	),
 	server: serverObjectSchema,
 });
 const customRouterSchema = z.object({
