@@ -1,6 +1,6 @@
 {
   "name": "@vinxi/plugin-directives",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "type": "module",
   "author": "Nikhil Saraf <nsaraf98@gmail.com>",
   "license": "MIT",
@@ -32,11 +32,11 @@
   },
   "devDependencies": {
     "@vitest/ui": "^0.34.6",
-    "vinxi": "^0.5.0",
+    "vinxi": "^0.5.5",
     "vitest": "^0.28.5"
   },
   "peerDependencies": {
-    "vinxi": "^0.5.0"
+    "vinxi": "^0.5.5"
   },
   "dependencies": {
     "@babel/parser": "^7.23.5",
