@@ -438,8 +438,7 @@ const command = defineCommand({
 			async run({ args}) {
 				const { log, c } = await import("../lib/logger.js");
 				const { join } = await import("../lib/path.js");
-				const { fetchModule, createServer } = await import("vite");
-				const { ViteRuntime, ESModulesRunner } = await import("vite/runtime");
+				const { createServer, isRunnableDevEnvironment } = await import("vite");
 
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
@@ -482,42 +481,41 @@ const command = defineCommand({
 						},
 					},
 				});
-				const runtime = new ViteRuntime(
-					{
-						root: process.cwd(),
-						fetchModule: (url, importer) => {
-							return fetchModule(server, url, importer);
-						},
-					},
-					new ESModulesRunner(),
-				);
 
-				const returnValue = await runtime.executeEntrypoint(
-					join(process.cwd(), args.script),
-				);
+				let environment = server.environments.ssr
+				// const runtime = new ViteRuntime(
+				// 	{
+				// 		root: process.cwd(),
+				// 		fetchModule: (url, importer) => {
+				// 			return fetchModule(server, url, importer);
+				// 		},
+				// 	},
+				// 	new ESModulesRunner(),
+				// );
 
-				let mod = returnValue?.default;
 
-				if (mod?.__is_handler__) {
-					const { createServer, toNodeListener } = await import(
-						"../runtime/http.js"
+				if (isRunnableDevEnvironment(environment)) {
+					const returnValue = await environment.runner.import(
+						join(process.cwd(), args.script),
 					);
-					const { listen } = await import("../runtime/listen.js");
-					const app = createServer().use(mod);
-					await listen(toNodeListener(app));
-				} else if (mod && mod.use && mod.handler && mod.stack) {
-					const { toNodeListener } = await import("../runtime/http.js");
-					const { listen } = await import("../runtime/listen.js");
-					await listen(toNodeListener(mod));
-				} else if (mod && typeof mod === "function") {
-					await mod();
+
+					let mod = returnValue?.default;
+
+					if (mod?.__is_handler__) {
+						const { createServer, toNodeListener } = await import(
+							"../runtime/http.js"
+						);
+						const { listen } = await import("../runtime/listen.js");
+						const app = createServer().use(mod);
+						await listen(toNodeListener(app));
+					} else if (mod && mod.use && mod.handler && mod.stack) {
+						const { toNodeListener } = await import("../runtime/http.js");
+						const { listen } = await import("../runtime/listen.js");
+						await listen(toNodeListener(mod));
+					} else if (mod && typeof mod === "function") {
+						await mod();
+					}
 				}
-				// else if () {
-				// if (typeof mod === "function") {
-				// 	await returnValue()
-				// 	process.exit(0)
-				// } else
-				// }
 
 				server.close();
 
