@@ -29,7 +29,7 @@ jobs:
       matrix:
         node-version: [18, 20, 22]
         # adapter:
-          # - solid-start-node
+        # - solid-start-node
         # - solid-start-cloudflare-workers
         # - solid-start-cloudflare-pages
         # - solid-start-deno

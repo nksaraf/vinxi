@@ -631,7 +631,7 @@ export function setResponseHeaders(
 	headers: Partial<Record<HTTPHeaderName, Parameters<OutgoingMessage["setHeader"]>[1]>>,
 ): void;
 
-export const setHeaders: typeof setResponseHeaders;
+export var setHeaders: typeof setResponseHeaders;
 
 
 export function setResponseHeader(
@@ -644,7 +644,7 @@ export function setResponseHeader(
 	value: Parameters<OutgoingMessage["setHeader"]>[1],
 ): void;
 
-export const setHeader: typeof setResponseHeader;
+export var setHeader: typeof setResponseHeader;
 
 export function appendResponseHeaders(
 	event: HTTPEvent,
@@ -652,7 +652,7 @@ export function appendResponseHeaders(
 ): void;
 export function appendResponseHeaders(headers: Record<string, string>): void;
 
-export const appendHeaders: typeof appendResponseHeaders;
+export var appendHeaders: typeof appendResponseHeaders;
 
 export function appendResponseHeader(
 	event: HTTPEvent,
@@ -664,7 +664,7 @@ export function appendResponseHeader(
 	value: string,
 ): void;
 
-export const appendHeader: typeof appendResponseHeader;
+export var appendHeader: typeof appendResponseHeader;
 /**
  * Remove all response headers, or only those specified in the headerNames array.
  * @param event H3 event
@@ -695,7 +695,7 @@ export function writeEarlyHints(
 export function getRequestHeaders(event: HTTPEvent): RequestHeaders;
 export function getRequestHeaders(): RequestHeaders;
 
-export const getHeaders: typeof getRequestHeaders;
+export var getHeaders: typeof getRequestHeaders;
 
 export function getRequestHeader(
 	event: HTTPEvent,
@@ -703,7 +703,7 @@ export function getRequestHeader(
 ): RequestHeaders[string];
 export function getRequestHeader(name: HTTPHeaderName): RequestHeaders[string];
 
-export const getHeader: typeof getRequestHeader;
+export var getHeader: typeof getRequestHeader;
 
 /**
  * Check request caching headers (`If-Modified-Since`) and add caching headers (Last-Modified, Cache-Control)

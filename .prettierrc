@@ -1,16 +1,24 @@
 {
-	"trailingComma": "all",
+	"semi": true,
 	"useTabs": true,
-	"plugins": ["@trivago/prettier-plugin-sort-imports"],
+	"trailingComma": "all",
+	"importOrderSeparation": true,
+	"importOrderSortSpecifiers": true,
+	"importOrderParserPlugins": [
+		"explicitResourceManagement",
+		"typescript",
+		"jsx",
+		"classProperties",
+		"decoratorsLegacy"
+	],
+	"importOrderSideEffects": false,
 	"importOrder": [
 		"^(fully-react/(.*)$)|^(fully-react$)",
 		"<THIRD_PARTY_MODULES>",
 		"^node:(.*)$",
 		"^[./]"
 	],
-	"importAttributes": true,
-	"importOrderSeparation": true,
-	"importOrderSortSpecifiers": true,
+	"plugins": ["@trivago/prettier-plugin-sort-imports"],
 	"overrides": [
 		{
 			"files": "**/*.md",
