@@ -73,7 +73,9 @@ const command = defineCommand({
 
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
-				const app = await loadApp(configFile, args);
+				const app = await loadApp(configFile, {
+					mode: args.mode,
+				});
 				app.config.mode = args.mode;
 
 				log(c.dim(c.green("starting dev server")));
@@ -96,7 +98,9 @@ const command = defineCommand({
 						log(c.dim(c.green("change detected in " + path)));
 						log(c.dim(c.green("reloading app")));
 						try {
-							const newApp = await loadApp(configFile, args);
+							const newApp = await loadApp(configFile, {
+								mode: args.mode,
+							});
 							if (!newApp) return;
 							restartDevServer(newApp);
 						} catch (e) {
@@ -160,7 +164,9 @@ const command = defineCommand({
 						log(c.dim(c.green("change detected in " + path)));
 						log(c.dim(c.green("reloading app")));
 						try {
-							const newApp = await loadApp(configFile, args);
+							const newApp = await loadApp(configFile, {
+								mode: args.mode,
+							});
 							if (!newApp) return;
 
 							fsWatcher.close();
@@ -228,7 +234,9 @@ const command = defineCommand({
 					await printVersions();
 				}
 				const { loadApp } = await import("../lib/load-app.js");
-				const app = await loadApp(configFile, args);
+				const app = await loadApp(configFile, {
+					mode: args.mode,
+				});
 				if (!app) {
 					throw new Error("Couldn't load app");
 				}
@@ -422,14 +430,34 @@ const command = defineCommand({
 					type: "number",
 					description: "Port to listen on (default: 3000)",
 				},
+				router: {
+					type: "string",
+					description: "Router to run",
+				}
 			},
-			async run(context) {
+			async run({ args}) {
 				const { log, c } = await import("../lib/logger.js");
 				const { join } = await import("../lib/path.js");
-				const { fetchModule, createServer } = await import("vite");
-				const { ViteRuntime, ESModulesRunner } = await import("vite/runtime");
+				const { createServer, isRunnableDevEnvironment } = await import("vite");
+
+				const configFile = args.config;
+				globalThis.MANIFEST = {};
+
+				const { loadApp } = await import("../lib/load-app.js");
+				const app = await loadApp(configFile, {
+					mode: args.mode,
+				});
+				if (!app) {
+					throw new Error("Couldn't load app");
+				}
+
+
+				let runnerRouter = args.router 
+					? app.config.routers.find((r) => r.name === args.router) 
+					: app.config.routers.find((r) => r.target === "server");
+
 				const server = await createServer({
-					mode: context.args.mode,
+					plugins: [...((await runnerRouter?.plugins?.()) ?? [])],
 					resolve: {
 						alias: {
 							"vinxi/sh": fileURLToPath(
@@ -453,42 +481,41 @@ const command = defineCommand({
 						},
 					},
 				});
-				const runtime = new ViteRuntime(
-					{
-						root: process.cwd(),
-						fetchModule: (url, importer) => {
-							return fetchModule(server, url, importer);
-						},
-					},
-					new ESModulesRunner(),
-				);
 
-				const returnValue = await runtime.executeEntrypoint(
-					join(process.cwd(), context.args.script),
-				);
+				let environment = server.environments.ssr
+				// const runtime = new ViteRuntime(
+				// 	{
+				// 		root: process.cwd(),
+				// 		fetchModule: (url, importer) => {
+				// 			return fetchModule(server, url, importer);
+				// 		},
+				// 	},
+				// 	new ESModulesRunner(),
+				// );
 
-				let mod = returnValue?.default;
 
-				if (mod?.__is_handler__) {
-					const { createServer, toNodeListener } = await import(
-						"../runtime/http.js"
+				if (isRunnableDevEnvironment(environment)) {
+					const returnValue = await environment.runner.import(
+						join(process.cwd(), args.script),
 					);
-					const { listen } = await import("../runtime/listen.js");
-					const app = createServer().use(mod);
-					await listen(toNodeListener(app));
-				} else if (mod && mod.use && mod.handler && mod.stack) {
-					const { toNodeListener } = await import("../runtime/http.js");
-					const { listen } = await import("../runtime/listen.js");
-					await listen(toNodeListener(mod));
-				} else if (mod && typeof mod === "function") {
-					await mod();
+
+					let mod = returnValue?.default;
+
+					if (mod?.__is_handler__) {
+						const { createServer, toNodeListener } = await import(
+							"../runtime/http.js"
+						);
+						const { listen } = await import("../runtime/listen.js");
+						const app = createServer().use(mod);
+						await listen(toNodeListener(app));
+					} else if (mod && mod.use && mod.handler && mod.stack) {
+						const { toNodeListener } = await import("../runtime/http.js");
+						const { listen } = await import("../runtime/listen.js");
+						await listen(toNodeListener(mod));
+					} else if (mod && typeof mod === "function") {
+						await mod();
+					}
 				}
-				// else if () {
-				// if (typeof mod === "function") {
-				// 	await returnValue()
-				// 	process.exit(0)
-				// } else
-				// }
 
 				server.close();
 

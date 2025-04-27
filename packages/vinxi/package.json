@@ -218,6 +218,7 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
+    "@types/babel__core": "^7.20.1",
     "@types/node": "^18.17.11",
     "@types/resolve": "^1.20.6",
     "@types/serve-static": "^1.15.2",
