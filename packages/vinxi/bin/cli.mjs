@@ -70,7 +70,7 @@ const command = defineCommand({
 				if (args.version) {
 					await printVersions()
 				}
-				
+
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
 				const app = await loadApp(configFile, args);
@@ -159,15 +159,15 @@ const command = defineCommand({
 					fsWatcher.on("all", async (path) => {
 						log(c.dim(c.green("change detected in " + path)));
 						log(c.dim(c.green("reloading app")));
-							try {
-								const newApp = await loadApp(configFile, args);
-								if (!newApp) return;
+						try {
+							const newApp = await loadApp(configFile, args);
+							if (!newApp) return;
 
-								fsWatcher.close();
-								createWatcher();
-								restartDevServer(newApp);
-							} catch (e) {
-								console.error(e)
+							fsWatcher.close();
+							createWatcher();
+							restartDevServer(newApp);
+						} catch (e) {
+							console.error(e);
 						}
 					});
 					return;
@@ -210,12 +210,13 @@ const command = defineCommand({
 				},
 				router: {
 					type: "string",
-					description: "Router to build (by default, vinxi builds all your routers in separate processed and then into an app bundle, use this option to just build a single router",
+					description:
+						"Router to build (by default, vinxi builds all your routers in separate processed and then into an app bundle, use this option to just build a single router",
 				},
 				version: {
 					type: "boolean",
 					description: "Print the versions of Vinxi core dependencies",
-				}
+				},
 			},
 			async run({ args }) {
 				const configFile = args.config;
@@ -224,7 +225,7 @@ const command = defineCommand({
 				log(c.dim(c.yellow(`v${packageJson.version}`)));
 
 				if (args.version) {
-					await printVersions()
+					await printVersions();
 				}
 				const { loadApp } = await import("../lib/load-app.js");
 				const app = await loadApp(configFile, args);
@@ -233,7 +234,11 @@ const command = defineCommand({
 				}
 				process.env.NODE_ENV = "production";
 				const { createBuild } = await import("../lib/build.js");
-				await createBuild(app, { preset: args.preset, router: args.router, mode: args.mode }, configFile);
+				await createBuild(
+					app,
+					{ preset: args.preset, router: args.router, mode: args.mode },
+					configFile,
+				);
 			},
 		},
 		start: {
@@ -500,24 +505,25 @@ const command = defineCommand({
 				console.log(packageJson.version);
 				const { log, c } = await import("../lib/logger.js");
 				log(c.dim(c.yellow(`v${packageJson.version}`)));
-				
-				await printVersions();
 
+				await printVersions();
 			},
-		}
+		},
 	}),
 });
 
 async function printVersions() {
 	const { log, c } = await import("../lib/logger.js");
-	
-	let vite = await import("vite/package.json", { assert: { type: "json" }});
+
+	let vite = await import("vite/package.json", { assert: { type: "json" } });
 	log(c.dim(c.yellow(`vite v${vite.default.version}`)));
 
-	let nitro = await import("nitropack/package.json", { assert: { type: "json" }});
+	let nitro = await import("nitropack/package.json", {
+		assert: { type: "json" },
+	});
 	log(c.dim(c.yellow(`nitro v${nitro.default.version}`)));
 
-	let h3 = await import("h3/package.json", { assert: { type: "json" }});
+	let h3 = await import("h3/package.json", { assert: { type: "json" } });
 	log(c.dim(c.yellow(`h3 v${h3.default.version}`)));
 }
 

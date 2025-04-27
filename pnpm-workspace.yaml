@@ -5,6 +5,5 @@ packages:
   - "test/"
   - "test/templates/**"
   - "docs/**"
-  - 'talks/**'
+  - "talks/**"
   - "!**/.tmp/**"
-

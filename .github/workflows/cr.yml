@@ -37,4 +37,4 @@ jobs:
         run: pnpm run build && pnpm run types
 
       - name: Release
-        run: pnpm dlx pkg-pr-new@0.0 publish './packages/*' --template './examples/*' --compact 
+        run: pnpm dlx pkg-pr-new@0.0 publish './packages/*' --template './examples/*' --compact
