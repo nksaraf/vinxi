@@ -73,7 +73,9 @@ const command = defineCommand({
 
 				const configFile = args.config;
 				globalThis.MANIFEST = {};
-				const app = await loadApp(configFile, args);
+				const app = await loadApp(configFile, {
+					mode: args.mode,
+				});
 				app.config.mode = args.mode;
 
 				log(c.dim(c.green("starting dev server")));
@@ -96,7 +98,9 @@ const command = defineCommand({
 						log(c.dim(c.green("change detected in " + path)));
 						log(c.dim(c.green("reloading app")));
 						try {
-							const newApp = await loadApp(configFile, args);
+							const newApp = await loadApp(configFile, {
+								mode: args.mode,
+							});
 							if (!newApp) return;
 							restartDevServer(newApp);
 						} catch (e) {
@@ -160,7 +164,9 @@ const command = defineCommand({
 						log(c.dim(c.green("change detected in " + path)));
 						log(c.dim(c.green("reloading app")));
 						try {
-							const newApp = await loadApp(configFile, args);
+							const newApp = await loadApp(configFile, {
+								mode: args.mode,
+							});
 							if (!newApp) return;
 
 							fsWatcher.close();
@@ -228,7 +234,9 @@ const command = defineCommand({
 					await printVersions();
 				}
 				const { loadApp } = await import("../lib/load-app.js");
-				const app = await loadApp(configFile, args);
+				const app = await loadApp(configFile, {
+					mode: args.mode,
+				});
 				if (!app) {
 					throw new Error("Couldn't load app");
 				}
@@ -422,14 +430,35 @@ const command = defineCommand({
 					type: "number",
 					description: "Port to listen on (default: 3000)",
 				},
+				router: {
+					type: "string",
+					description: "Router to run",
+				}
 			},
-			async run(context) {
+			async run({ args}) {
 				const { log, c } = await import("../lib/logger.js");
 				const { join } = await import("../lib/path.js");
 				const { fetchModule, createServer } = await import("vite");
 				const { ViteRuntime, ESModulesRunner } = await import("vite/runtime");
+
+				const configFile = args.config;
+				globalThis.MANIFEST = {};
+
+				const { loadApp } = await import("../lib/load-app.js");
+				const app = await loadApp(configFile, {
+					mode: args.mode,
+				});
+				if (!app) {
+					throw new Error("Couldn't load app");
+				}
+
+
+				let runnerRouter = args.router 
+					? app.config.routers.find((r) => r.name === args.router) 
+					: app.config.routers.find((r) => r.target === "server");
+
 				const server = await createServer({
-					mode: context.args.mode,
+					plugins: [...((await runnerRouter?.plugins?.()) ?? [])],
 					resolve: {
 						alias: {
 							"vinxi/sh": fileURLToPath(
@@ -464,7 +493,7 @@ const command = defineCommand({
 				);
 
 				const returnValue = await runtime.executeEntrypoint(
-					join(process.cwd(), context.args.script),
+					join(process.cwd(), args.script),
 				);
 
 				let mod = returnValue?.default;
