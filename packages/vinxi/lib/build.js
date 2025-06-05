@@ -348,7 +348,10 @@ export async function createBuild(app, buildConfig, configFile) {
 			if (
 				assetName.endsWith(".js") ||
 				assetName.endsWith(".mjs") ||
-				assetName.endsWith(".cjs")
+				assetName.endsWith(".cjs") ||
+				assetName.includes(".js.") ||
+				assetName.includes(".cjs.") ||
+				assetName.includes(".mjs.")
 			) {
 				if (!hasFilesDeleted) {
 					hasFilesDeleted = true;
