@@ -1,7 +1,7 @@
 import { init } from "es-module-lexer";
 import { parse } from "es-module-lexer";
 import esbuild from "esbuild";
-import fg from "fast-glob";
+import { convertPathToPattern, globSync } from "tinyglobby";
 import fs from "fs";
 import micromatch from "micromatch";
 import { posix } from "path";
@@ -16,7 +16,7 @@ export { pathToRegexp };
  * @param {string} path
  * @returns {string[]}
  */
-export const glob = (path) => fg.sync(path, { absolute: true });
+export const glob = (path) => globSync(path, { absolute: true, expandDirectories: false });
 
 /** @typedef {{ dir: string; extensions: string[] }} FileSystemRouterConfig */
 /** @typedef {{ path: string } & any} Route */
@@ -78,7 +78,7 @@ export class BaseFileSystemRouter extends EventTarget {
 
 	glob() {
 		return (
-			posix.join(fg.convertPathToPattern(this.config.dir), "**/*") +
+			posix.join(convertPathToPattern(this.config.dir), "**/*") +
 			`.{${this.config.extensions.join(",")}}`
 		);
 	}
