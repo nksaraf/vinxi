@@ -225,28 +225,33 @@ const command = defineCommand({
 				},
 			},
 			async run({ args }) {
-				const configFile = args.config;
-				globalThis.MANIFEST = {};
-				const { log, c } = await import("../lib/logger.js");
-				log(c.dim(c.yellow(`v${packageJson.version}`)));
+				try {
+					const configFile = args.config;
+					globalThis.MANIFEST = {};
+					const { log, c } = await import("../lib/logger.js");
+					log(c.dim(c.yellow(`v${packageJson.version}`)));
 
-				if (args.version) {
-					await printVersions();
+					if (args.version) {
+						await printVersions();
+					}
+					const { loadApp } = await import("../lib/load-app.js");
+					const app = await loadApp(configFile, {
+						mode: args.mode,
+					});
+					if (!app) {
+						throw new Error("Couldn't load app");
+					}
+					process.env.NODE_ENV = "production";
+					const { createBuild } = await import("../lib/build.js");
+					await createBuild(
+						app,
+						{ preset: args.preset, router: args.router, mode: args.mode },
+						configFile,
+					);
+				} catch (error) {
+					console.error("Build failed:", error);
+					process.exit(1);
 				}
-				const { loadApp } = await import("../lib/load-app.js");
-				const app = await loadApp(configFile, {
-					mode: args.mode,
-				});
-				if (!app) {
-					throw new Error("Couldn't load app");
-				}
-				process.env.NODE_ENV = "production";
-				const { createBuild } = await import("../lib/build.js");
-				await createBuild(
-					app,
-					{ preset: args.preset, router: args.router, mode: args.mode },
-					configFile,
-				);
 			},
 		},
 		start: {
