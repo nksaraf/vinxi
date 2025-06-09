@@ -1,5 +1,14 @@
 # vinxi
 
+## 0.5.7
+
+### Patch Changes
+
+- 5a956826: fix: ensure build process returns non-zero exit code on errors
+- 4e841814: fix: nitro H3Event extension
+- da024716: chore: switch to tinyglobby
+- a25b8fdf: fix: server code leaked in client bundle in compressed js files.
+
 ## 0.5.6
 
 ### Patch Changes
