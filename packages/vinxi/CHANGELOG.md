@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.5.8
+
+### Patch Changes
+
+- 0beb1564: Update tree-shake.js
+
 ## 0.5.7
 
 ### Patch Changes
