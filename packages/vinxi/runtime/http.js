@@ -139,10 +139,16 @@ function toWebRequestH3(/** @type {import('h3').H3Event} */ event) {
 }
 
 export function toWebRequest(/** @type {import('h3').H3Event} */ event) {
-	event.web ??= {
-		request: toWebRequestH3(event),
-		url: getRequestURL(event),
-	};
+	event.web ??= event.context.cloudflare
+		? {
+				request: event.context.cloudflare.request,
+				url: new URL(event.context.cloudflare.request.url),
+		  }
+		: {
+				request: toWebRequestH3(event),
+				url: getRequestURL(event),
+		  };
+
 	return event.web.request;
 }
 
