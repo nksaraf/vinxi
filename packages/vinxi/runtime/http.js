@@ -142,9 +142,9 @@ export function toWebRequest(/** @type {import('h3').H3Event} */ event) {
 	if (event.context.cloudflare) {
 		// event.context.event is for cloudflare-worker and event.context.cloudflare is for cloudflare-pages
 		event.web = {
-			request: (event.context.event || event.context.cloudflare).request,
+			request: (event.context.cloudflare.event || event.context.cloudflare).request,
 			url: new URL(
-				(event.context.event || event.context.cloudflare).request.url,
+				(event.context.cloudflare.event || event.context.cloudflare).request.url,
 			),
 		};
 	} else {
