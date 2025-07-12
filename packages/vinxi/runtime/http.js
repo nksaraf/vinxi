@@ -140,11 +140,12 @@ function toWebRequestH3(/** @type {import('h3').H3Event} */ event) {
 
 export function toWebRequest(/** @type {import('h3').H3Event} */ event) {
 	if (event.context.cloudflare) {
-		// event.context.event is for cloudflare-worker and event.context.cloudflare is for cloudflare-pages
+		// event.context.cloudflare.event is for cloudflare-worker and event.context.cloudflare is for cloudflare-pages
+		const cf = event.context.cloudflare.event || event.context.cloudflare
 		event.web = {
-			request: (event.context.cloudflare.event || event.context.cloudflare).request,
+			request: cf.request,
 			url: new URL(
-				(event.context.cloudflare.event || event.context.cloudflare).request.url,
+				cf.request.url,
 			),
 		};
 	} else {
