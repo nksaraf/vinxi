@@ -139,10 +139,22 @@ function toWebRequestH3(/** @type {import('h3').H3Event} */ event) {
 }
 
 export function toWebRequest(/** @type {import('h3').H3Event} */ event) {
-	event.web ??= {
-		request: toWebRequestH3(event),
-		url: getRequestURL(event),
-	};
+	if (event.context.cloudflare) {
+		// event.context.cloudflare.event is for cloudflare-worker and event.context.cloudflare is for cloudflare-pages
+		const cf = event.context.cloudflare.event || event.context.cloudflare
+		event.web ??= {
+			request: cf.request,
+			url: new URL(
+				cf.request.url,
+			),
+		};
+	} else {
+		event.web ??= {
+			request: toWebRequestH3(event),
+			url: getRequestURL(event),
+		};
+	}
+
 	return event.web.request;
 }
 
