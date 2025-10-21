@@ -26,6 +26,7 @@ type Router<T = {}> = T & {
 	root: string;
 	name: string;
 	handler?: string;
+	build?: false;
 	server?: {
 		hmr?: Exclude<NonNullable<import("vite").UserConfig["server"]>["hmr"], boolean>;
 	};

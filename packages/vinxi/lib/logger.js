@@ -20,6 +20,20 @@ export const log = (...args) => {
 	);
 };
 
+export const debug = (...args) => {
+	if (process.env.DEBUG?.includes("vinxi") || process.env.DEBUG === "true") {
+		console.log(
+			colors.dim(
+				[colors.blue("vinxi"), isMainThread ? undefined : "worker"]
+					.filter(Boolean)
+					.join(":"),
+			),
+
+			...args,
+		);
+	}
+};
+
 export let requestIdCounter = 0;
 
 export function withLogger(logger, fn) {
