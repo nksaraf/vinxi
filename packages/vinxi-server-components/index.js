@@ -17,4 +17,13 @@ export const serverComponents = {
 		...(overrides ?? {}),
 		plugins: async () => [server(), ...((await overrides?.plugins?.()) ?? [])],
 	}),
+	serverService: (overrides) => ({
+		name: "server",
+		type: "http",
+		base: "/_server",
+		handler: fileURLToPath(new URL("./server-handler.js", import.meta.url)),
+		target: "server",
+		...(overrides ?? {}),
+		plugins: async () => [server(), ...((await overrides?.plugins?.()) ?? [])],
+	}),
 };

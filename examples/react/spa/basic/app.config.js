@@ -2,7 +2,7 @@ import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 
 export default createApp({
-	routers: [
+	services: [
 		{
 			name: "public",
 			type: "static",
