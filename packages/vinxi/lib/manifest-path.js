@@ -5,7 +5,7 @@ import { createRequire } from "node:module";
 export const require = createRequire(import.meta.url);
 
 export function viteManifestPath(
-	/** @type {import("./router-mode").Router} */ router,
+	/** @type {import("./service-modes").Router} */ router,
 ) {
 	let vite = require("vite/package.json");
 	if (vite.version.startsWith("5") || vite.version.startsWith("6")) {

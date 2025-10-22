@@ -1,23 +1,23 @@
 import { virtual } from "./virtual";
 
 export function viteServer() {
-	let router;
+	let service;
 	return [
 		{
 			configResolved(config) {
-				router = config.router;
+				service = config.service;
 			},
 			name: "vite-dev-server",
 			configureServer(server) {
 				globalThis.viteServers ??= {};
-				globalThis.viteServers[router.name] = server;
+				globalThis.viteServers[service.name] = server;
 			},
 		},
 		virtual({
 			"#vite-dev-server": ({ env }) =>
 				env.command === "build"
 					? `export default undefined`
-					: `export default viteServers['${router.name}']`,
+					: `export default viteServers['${service.name}']`,
 		}),
 	];
 }

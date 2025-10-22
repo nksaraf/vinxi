@@ -1,7 +1,7 @@
 /**
  *
  * @param {string} tag
- * @param {import('../vite-dev.d.ts').CustomizableConfig | ((router: import('../router-mode.d.ts').Router, app: import('../app-types.d.ts').App, env:import('../vite-dev.d.ts').ConfigEnv) => import('../vite-dev.d.ts').CustomizableConfig) } conf
+ * @param {import('../vite-dev.d.ts').CustomizableConfig | ((service: import('../service-mode.js').Service, app: import('../app-types.d.ts').App, env:import('../vite-dev.d.ts').ConfigEnv) => import('../vite-dev.d.ts').CustomizableConfig) } conf
  * @returns {import('../vite-dev.d.ts').Plugin}
  */
 export function config(tag, conf) {
@@ -11,7 +11,7 @@ export function config(tag, conf) {
 		// @ts-ignore
 		config(c, env) {
 			let overrides =
-				typeof conf === "function" ? conf(c.router, c.app, env) : conf;
+				typeof conf === "function" ? conf(c.service, c.app, env) : conf;
 			return { ...overrides };
 		},
 	};

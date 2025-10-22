@@ -12,9 +12,9 @@ type ScriptOrStyleAsset = {
 }
 
 export type Manifest = {
-	/** Name of the router */
+	/** Name of the service */
 	name: string;
-	/** Handler path for the router */
+	/** Handler path for the service */
 	handler: string;
 	base: string;
 	routes(): Promise<

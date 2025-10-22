@@ -11,14 +11,14 @@ export function createDevManifest(app) {
 	const manifest = new Proxy(
 		{},
 		{
-			get(target, bundlerName) {
-				invariant(typeof bundlerName === "string", "Bundler name expected");
+			get(target, serviceName) {
+				invariant(typeof serviceName === "string", "Service name expected");
 
-				let router = app.getRouter(bundlerName);
+				let service = app.getService(serviceName);
 
-				let base = join(app.config.server.baseURL ?? "", router.base);
+				let base = join(app.config.server.baseURL ?? "", service.base);
 
-				if (router.type === "static") {
+				if (service.type === "static") {
 					return {
 						json() {
 							return {};
@@ -31,14 +31,14 @@ export function createDevManifest(app) {
 						},
 						base,
 						target: "static",
-						type: router.type,
+						type: service.type,
 						handler: undefined,
 						chunks: {},
 						inputs: {},
 					};
 				}
 
-				const viteServer = router.internals.devServer;
+				const viteServer = service.internals.devServer;
 
 				async function viteAssets(paths, ssr) {
 					invariant(viteServer, "Vite server expected");
@@ -69,10 +69,10 @@ export function createDevManifest(app) {
 					dev: {
 						server: viteServer,
 					},
-					handler: router.handler,
+					handler: service.handler,
 					base,
-					target: router.target,
-					type: router.type,
+					target: service.target,
+					type: service.type,
 					chunks: new Proxy(
 						{},
 						{
@@ -82,11 +82,11 @@ export function createDevManifest(app) {
 									? chunk
 									: join(app.config.root, chunk);
 								invariant(
-									router.type != "static",
-									"No manifest for static router",
+									service.type != "static",
+									"No manifest for static service",
 								);
 
-								if (router.target === "browser") {
+								if (service.target === "browser") {
 									return {
 										output: {
 											path: join(base, "@fs", absolutePath),
@@ -95,7 +95,7 @@ export function createDevManifest(app) {
 								} else {
 									return {
 										import() {
-											return router.internals.devServer?.ssrLoadModule(
+											return service.internals.devServer?.ssrLoadModule(
 												/* @vite-ignore */ absolutePath,
 											);
 										},
@@ -108,7 +108,7 @@ export function createDevManifest(app) {
 						},
 					),
 					async routes() {
-						return (await router.internals.routes?.getRoutes()) ?? [];
+						return (await service.internals.routes?.getRoutes()) ?? [];
 					},
 					inputs: new Proxy(
 						{},
@@ -133,15 +133,15 @@ export function createDevManifest(app) {
 
 								let relativePath = relative(app.config.root, input);
 								invariant(
-									router.type != "static",
-									"No manifest for static router",
+									service.type != "static",
+									"No manifest for static service",
 								);
 
-								let isHandler = router.handler === relativePath;
+								let isHandler = service.handler === relativePath;
 
 								async function getVitePluginAssets() {
-									const plugins = router.internals?.devServer
-										? router.internals.devServer.config.plugins
+									const plugins = service.internals?.devServer
+										? service.internals.devServer.config.plugins
 										: [];
 
 									// https://github.com/vitejs/vite/blob/167006e74751a66776f4f48316262449b19bf186/packages/vite/src/node/plugins/html.ts#L1253-L1264
@@ -151,31 +151,37 @@ export function createDevManifest(app) {
 									const postHooks = [];
 
 									for (const plugin of plugins) {
-										const hook = plugin.transformIndexHtml
-										if (!hook) continue
+										const hook = plugin.transformIndexHtml;
+										if (!hook) continue;
 
-										if (typeof hook === 'function') {
-											normalHooks.push(hook)
+										if (typeof hook === "function") {
+											normalHooks.push(hook);
 										} else {
 											// `enforce` had only two possible values for the `transformIndexHtml` hook
 											// `'pre'` and `'post'` (the default). `order` now works with three values
 											// to align with other hooks (`'pre'`, normal, and `'post'`). We map
 											// both `enforce: 'post'` to `order: undefined` to avoid a breaking change
-											const order = hook.order ?? (hook.enforce === 'pre' ? 'pre' : undefined)
+											const order =
+												hook.order ??
+												(hook.enforce === "pre" ? "pre" : undefined);
 											// @ts-expect-error union type
-											const handler = hook.handler ?? hook.transform
-											if (order === 'pre') {
-												preHooks.push(handler)
-											} else if (order === 'post') {
-												postHooks.push(handler)
+											const handler = hook.handler ?? hook.transform;
+											if (order === "pre") {
+												preHooks.push(handler);
+											} else if (order === "post") {
+												postHooks.push(handler);
 											} else {
-												normalHooks.push(handler)
+												normalHooks.push(handler);
 											}
 										}
 									}
 
 									// @ts-ignore
-									const indexHtmlTransformers = [preHooks, normalHooks, postHooks].flat();
+									const indexHtmlTransformers = [
+										preHooks,
+										normalHooks,
+										postHooks,
+									].flat();
 
 									let pluginAssets = [];
 									// @ts-ignore
@@ -202,10 +208,10 @@ export function createDevManifest(app) {
 									});
 								}
 
-								if (router.target === "browser") {
+								if (service.target === "browser") {
 									return {
 										import() {
-											return router.internals.devServer?.ssrLoadModule(
+											return service.internals.devServer?.ssrLoadModule(
 												/* @vite-ignore */ join(absolutePath),
 											);
 										},
@@ -216,7 +222,7 @@ export function createDevManifest(app) {
 															await viteAssets(
 																[
 																	absolutePath.endsWith(".ts") &&
-																	router.type === "spa"
+																	service.type === "spa"
 																		? undefined
 																		: absolutePath,
 																],
@@ -249,7 +255,7 @@ export function createDevManifest(app) {
 								} else {
 									return {
 										import() {
-											return router.internals.devServer?.ssrLoadModule(
+											return service.internals.devServer?.ssrLoadModule(
 												/* @vite-ignore */ join(absolutePath),
 											);
 										},

@@ -8,11 +8,11 @@ function toRouteId(route) {
 	return `${route.src}?${route.pick.map((p) => `pick=${p}`).join("&")}`;
 }
 
-async function getEntries(router) {
+async function getEntries(service) {
 	return [
-		router.handler,
+		service.handler,
 		...(
-			(await router.internals.routes?.getRoutes()).map((r) =>
+			(await service.internals.routes?.getRoutes()).map((r) =>
 				Object.entries(r)
 					.filter(([r, v]) => v && r.startsWith("$") && !r.startsWith("$$"))
 					.map(([, v]) => toRouteId(v)),
@@ -32,20 +32,20 @@ export async function createSPAManifest(config, bundle, format) {
 	const manifest = createViteManifest(config, bundle, format);
 	/** @type {Record<string, any>} */
 	let routeManifest = {};
-	if (config.router && config.router.internals.routes) {
-		const entries = await getEntries(config.router);
+	if (config.service && config.service.internals.routes) {
+		const entries = await getEntries(config.service);
 
 		log(entries);
 
 		for (const route of entries) {
-			routeManifest[relative(config.router.root, route)] = {
+			routeManifest[relative(config.service.root, route)] = {
 				output: join(
 					config.base,
-					manifest[relative(config.router.root, route)].file,
+					manifest[relative(config.service.root, route)].file,
 				),
 				assets: findAssetsInViteManifest(
 					manifest,
-					relative(config.router.root, route),
+					relative(config.service.root, route),
 				)
 					.filter((asset) => asset.endsWith(".css"))
 					.map((asset) => ({

@@ -6,18 +6,15 @@ import { handlerModule, join, virtualId } from "../path.js";
 const manifest = new Proxy(
 	{},
 	{
-		get(target, routerName) {
-			invariant(
-				typeof routerName === "string",
-				"Bundler name should be a string",
-			);
+		get(target, service) {
+			invariant(typeof service === "string", "Bundler name should be a string");
 			return {
-				name: routerName,
-				type: import.meta.env.ROUTER_TYPE,
+				name: service,
+				type: import.meta.env.SERVICE_TYPE,
 				handler: import.meta.env.DEV
-					? join(import.meta.env.CWD, import.meta.env.ROUTER_HANDLER)
+					? join(import.meta.env.CWD, import.meta.env.SERVICE_HANDLER)
 					: // @ts-ignore
-					  virtualId(handlerModule({ name: routerName })),
+					  virtualId(handlerModule({ name: service })),
 				baseURL: import.meta.env.BASE_URL,
 				chunks: new Proxy(
 					{},
@@ -56,7 +53,7 @@ const manifest = new Proxy(
 										const assetsPath =
 											join(
 												import.meta.env.BASE_URL,
-												`@manifest/${routerName}/${Date.now()}/assets`,
+												`@manifest/${service}/${Date.now()}/assets`,
 											) + `?id=${input}`;
 										return (await import(/* @vite-ignore */ assetsPath))
 											.default;

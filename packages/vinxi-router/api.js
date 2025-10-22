@@ -62,7 +62,7 @@ export function apiRoutes(config) {
 /**
  *
  * @param {{ plugins?: () => (import('vinxi').Plugin[] | Promise<import('vinxi').Plugin[]>); dir?: string; style?: any; base?: string; handler?: string }} param0
- * @returns {Partial<import('vinxi').RouterSchema>}
+ * @returns {Partial<import('vinxi').ServiceSchema>}
  */
 export function apiRouter({
 	dir = "./app/api/routes",

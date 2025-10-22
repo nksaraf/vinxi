@@ -5,12 +5,12 @@ import { isMainThread } from "worker_threads";
 
 import invariant, { InvariantError } from "./invariant.js";
 import { c, consola, withLogger } from "./logger.js";
-import { resolveRouterConfig, routerSchema } from "./router-modes.js";
+import { resolveServiceConfig, serviceSchema } from "./service-modes.js";
 
 /** @typedef {{
 	devtools?: boolean;
-	routers?: import("./router-modes.js").ServiceSchemaInput[];
-	services?: import("./router-modes.js").ServiceSchemaInput[];
+	routers?: import("./service-modes.js").ServiceSchemaInput[];
+	services?: import("./service-modes.js").ServiceSchemaInput[];
 	name?:
 	string;
 	server?: Omit<import('nitropack').NitroConfig, 'handlers' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual' | 'dev'  | 'buildDir'> & { https?: import('@vinxi/listhen').HTTPSOptions | boolean };
@@ -23,24 +23,20 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 		name: string;
 		devtools: boolean;
 		server: Omit<import('nitropack').NitroConfig, 'handlers' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual' | 'dev' | 'buildDir'> & { https?: import('@vinxi/listhen').HTTPSOptions | boolean };
-		routers: import("./router-mode.js").Router[];
-		services: import("./router-mode.js").Router[];
+		services: import("./service-mode.js").Service[];
+		routers: import("./service-mode.js").Service[];
 		root: string;
 		mode?: string;
 	};
 
-	// @deprecated
 	addRouter: (router: any) => App; 
 	
-	// @deprecated
-	// addRouterPlugins: (apply: (router: import("./router-mode.js").Router) => boolean, plugins: () => any[]) => void;
+	addRouterPlugins: (apply: (router: import("./service-mode.js").Service) => boolean, plugins: () => any[]) => void;
 	
-	// @deprecated
-	// getRouter: (name: string) => import("./router-mode.js").Router;
-	
-	addService: (service: import("./router-modes.js").ServiceSchemaInput) => App;
-	addServicePlugins: (apply: (service: import("./router-modes.js").ServiceSchemaInput) => boolean, plugins: () => any[]) => void;
-	getService: (name: string) => import("./router-modes.js").ServiceSchemaInput;
+	getRouter: (name: string) => import("./service-mode.js").Service;
+	addService: (service: import("./service-modes.js").ServiceSchemaInput) => App;
+	addServicePlugins: (apply: (service: import("./service-modes.js").ServiceSchemaInput) => boolean, plugins: () => any[]) => void;
+	getService: (name: string) => any;
 	resolveSync: (mod: string) => string;
 	import: (mod: string) => Promise<any>;
 	stack: (stack: (app: App) => void | Promise<void>) => Promise<App>;
@@ -65,8 +61,8 @@ export function createApp({
 	const hooks = createHooks();
 	hooks.afterEach((result) => {
 		if (process.env.DEBUG) {
-			const output = result.args[0].router
-				? [c.yellow(result.args[0].router?.name), result.name]
+			const output = result.args[0].service
+				? [c.yellow(result.args[0].service?.name), result.name]
 				: [result.name];
 			consola.log(
 				c.dim(c.blue("vinxi")),
@@ -79,19 +75,19 @@ export function createApp({
 	// 	routers = [devtoolsClient(), devtoolsRpc(), ...routers];
 	// }
 
-	function parseRouter(router) {
-		if (typeof router.type === "string") {
+	function parseService(service) {
+		if (typeof service.type === "string") {
 			invariant(
-				router.type in routerSchema,
-				`Invalid router mode ${router.type}`,
+				service.type in serviceSchema,
+				`Invalid service mode ${service.type}`,
 			);
-			const result = routerSchema[router.type].safeParse(router);
+			const result = serviceSchema[service.type].safeParse(service);
 			if (result.success !== true) {
 				const issues = result.error.issues.map((issue) => {
 					return issue.path.map((p) => p).join(".") + " " + issue.message;
 				});
 				throw new InvariantError(
-					`Errors in router configuration: ${router.name}\n${issues.join(
+					`Errors in service configuration: ${service.name}\n${issues.join(
 						"\n",
 					)}`,
 				);
@@ -99,13 +95,13 @@ export function createApp({
 			return result.data;
 		}
 
-		return router;
+		return service;
 	}
 
-	function resolveRouter(router, index) {
+	function resolveService(service, index) {
 		return {
-			...resolveRouterConfig(
-				router,
+			...resolveServiceConfig(
+				service,
 				{
 					name: name ?? "vinxi",
 					// @ts-ignore
@@ -120,9 +116,9 @@ export function createApp({
 		};
 	}
 
-	const parsedServices = services.map(parseRouter);
+	const parsedServices = services.map(parseService);
 
-	const resolvedServices = services.map(resolveRouter);
+	const resolvedServices = services.map(resolveService);
 
 	/** @type {App['config']} */
 	const config = {
@@ -142,8 +138,8 @@ export function createApp({
 		config,
 		hooks,
 		addService(service) {
-			const parsedService = parseRouter(service);
-			const resolvedService = resolveRouter(
+			const parsedService = parseService(service);
+			const resolvedService = resolveService(
 				parsedService,
 				config.services.length,
 			);
@@ -154,17 +150,17 @@ export function createApp({
 			return app.addService(router);
 		},
 		addServicePlugins(apply, plugins) {
-			const routers = app.config.routers.filter(apply);
+			const services = app.config.services.filter(apply);
 
-			routers.forEach((router) => {
-				if (router.plugins) {
-					let prevPlugins = router.plugins;
-					router.plugins = () => [
+			services.forEach((service) => {
+				if (service.plugins) {
+					let prevPlugins = service.plugins;
+					service.plugins = () => [
 						...(plugins?.() ?? []),
 						...(prevPlugins() ?? []),
 					];
-				} else if (router.plugins === undefined) {
-					router.plugins = plugins;
+				} else if (service.plugins === undefined) {
+					service.plugins = plugins;
 				}
 			});
 		},

@@ -8,7 +8,7 @@ import findAssetsInViteManifest from "./vite-manifest.js";
 
 /** @typedef {import("../app.js").App & { config: { buildManifest: { [key:string]: any } }}} ProdApp */
 
-function createHtmlTagsForAssets(router, app, assets) {
+function createHtmlTagsForAssets(service, app, assets) {
 	return assets
 		.filter(
 			(asset) =>
@@ -19,8 +19,8 @@ function createHtmlTagsForAssets(router, app, assets) {
 		.map((asset) => ({
 			tag: "link",
 			attrs: {
-				href: joinURL(app.config.server.baseURL ?? "/", router.base, asset),
-				key: join(app.config.server.baseURL ?? "", router.base, asset),
+				href: joinURL(app.config.server.baseURL ?? "/", service.base, asset),
+				key: join(app.config.server.baseURL ?? "", service.base, asset),
 				...(asset.endsWith(".css")
 					? { rel: "stylesheet", fetchPriority: "high" }
 					: { rel: "modulepreload" }),
@@ -37,22 +37,24 @@ export function createProdManifest(app) {
 	const manifest = new Proxy(
 		{},
 		{
-			get(target, routerName) {
-				invariant(typeof routerName === "string", "Bundler name expected");
-				const router = app.getRouter(routerName);
-				const bundlerManifest = app.config.buildManifest[routerName];
+			get(target, serviceName) {
+				invariant(typeof serviceName === "string", "Bundler name expected");
+				const service = app.getService(serviceName);
+				const bundlerManifest = app.config.buildManifest[serviceName];
 
 				invariant(
-					router.type !== "static",
-					"manifest not available for static router",
+					service.type !== "static",
+					"manifest not available for static service",
 				);
 				return {
-					handler: router.handler,
+					handler: service.handler,
 					async assets() {
 						/** @type {{ [key: string]: string[] }} */
 						let assets = {};
-						assets[router.handler] = await this.inputs[router.handler].assets();
-						for (const route of (await router.internals.routes?.getRoutes()) ??
+						assets[service.handler] = await this.inputs[
+							service.handler
+						].assets();
+						for (const route of (await service.internals.routes?.getRoutes()) ??
 							[]) {
 							assets[route.filePath] = await this.inputs[
 								route.filePath
@@ -61,7 +63,7 @@ export function createProdManifest(app) {
 						return assets;
 					},
 					async routes() {
-						return (await router.internals.routes?.getRoutes()) ?? [];
+						return (await service.internals.routes?.getRoutes()) ?? [];
 					},
 					async json() {
 						/** @type {{ [key: string]: { output: string; assets: string[]} }} */
@@ -80,8 +82,8 @@ export function createProdManifest(app) {
 							get(target, chunk) {
 								invariant(typeof chunk === "string", "Chunk expected");
 								const chunkPath = join(
-									router.outDir,
-									router.base,
+									service.outDir,
+									service.base,
 									chunk + ".mjs",
 								);
 								return {
@@ -118,45 +120,45 @@ export function createProdManifest(app) {
 							get(target, input) {
 								invariant(typeof input === "string", "Input expected");
 								const id = input;
-								if (router.target === "server") {
+								if (service.target === "server") {
 									const id =
-										input === router.handler
-											? virtualId(handlerModule(router))
+										input === service.handler
+											? virtualId(handlerModule(service))
 											: input;
 									return {
 										assets() {
 											return createHtmlTagsForAssets(
-												router,
+												service,
 												app,
 												findAssetsInViteManifest(bundlerManifest, id),
 											);
 										},
 										output: {
 											path: join(
-												router.outDir,
-												router.base,
+												service.outDir,
+												service.base,
 												bundlerManifest[id].file,
 											),
 										},
 									};
-								} else if (router.target === "browser") {
+								} else if (service.target === "browser") {
 									const id =
-										input === router.handler && !input.endsWith(".html")
-											? virtualId(handlerModule(router))
+										input === service.handler && !input.endsWith(".html")
+											? virtualId(handlerModule(service))
 											: input;
 									return {
 										import() {
 											return import(
 												/* @vite-ignore */ joinURL(
 													app.config.server.baseURL ?? "",
-													router.base,
+													service.base,
 													bundlerManifest[id].file,
 												)
 											);
 										},
 										assets() {
 											return createHtmlTagsForAssets(
-												router,
+												service,
 												app,
 												findAssetsInViteManifest(bundlerManifest, id),
 											);
@@ -164,7 +166,7 @@ export function createProdManifest(app) {
 										output: {
 											path: joinURL(
 												app.config.server.baseURL ?? "",
-												router.base,
+												service.base,
 												bundlerManifest[id].file,
 											),
 										},

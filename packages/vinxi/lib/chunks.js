@@ -8,28 +8,28 @@ const CHUNK_PREFIX = "c_";
 /**
  *
  * @param {import('vinxi').App} app
- * @param {string} routerName
+ * @param {string} serviceName
  * @param {number} modIndex
  * @returns
  */
-function getChunks(app, routerName, modIndex) {
-	const router = app.getRouter(routerName);
-	if (router.target !== "server") {
+function getChunks(app, serviceName, modIndex) {
+	const service = app.getService(serviceName);
+	if (service.target !== "server") {
 		return "";
 	}
 
 	try {
 		const bundlerManifest = JSON.parse(
-			readFileSync(viteManifestPath(router), "utf-8"),
+			readFileSync(viteManifestPath(service), "utf-8"),
 		);
 
 		const chunks = Object.entries(bundlerManifest)
 			.filter(
 				([name, chunk]) =>
-					chunk.file.startsWith(CHUNK_PREFIX) && name !== router.handler,
+					chunk.file.startsWith(CHUNK_PREFIX) && name !== service.handler,
 			)
 			.map(([name, chunk], index) => {
-				const chunkPath = join(router.outDir, router.base, chunk.file);
+				const chunkPath = join(service.outDir, service.base, chunk.file);
 				return `
 				import * as mod_${index}_${modIndex} from '${chunkPath}';
 				chunks['${chunk.file}'] = mod_${index}_${modIndex}
@@ -44,8 +44,8 @@ function getChunks(app, routerName, modIndex) {
 
 export const chunksServerVirtualModule =
 	() => (/** @type {import('vinxi').App}*/ app) => {
-		const chunks = app.config.routers.map((router, index) =>
-			getChunks(app, router.name, index),
+		const chunks = app.config.services.map((service, index) =>
+			getChunks(app, service.name, index),
 		);
 
 		return `

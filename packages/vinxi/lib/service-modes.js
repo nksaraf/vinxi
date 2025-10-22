@@ -27,11 +27,11 @@ const serverObjectSchema = z
 	.optional();
 
 /**
- * @typedef {{ routes?: CompiledRouter; devServer?: import('vite').ViteDevServer; appWorker?: import('./app-worker-client.js').AppWorkerClient; type: import("./router-mode.js").RouterMode }} Internals
+ * @typedef {{ routes?: CompiledRouter; devServer?: import('vite').ViteDevServer; appWorker?: import('./app-worker-client.js').AppWorkerClient; type: import("./service-modes.js").ServiceMode }} Internals
  * @typedef {import('./fs-router.js').BaseFileSystemRouter} CompiledRouter
- * @typedef {(router: ServiceSchemaInput, app: import("./app.js").AppOptions) => CompiledRouter} RouterStyleFn
+ * @typedef {(service: ServiceSchemaInput, app: import("./app.js").AppOptions) => CompiledRouter} RouterStyleFn
  * */
-export const staticRouterSchema = z.object({
+export const staticServiceSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
 	type: z.literal("static").default("static"),
@@ -39,7 +39,7 @@ export const staticRouterSchema = z.object({
 	root: z.optional(z.string()),
 	server: serverObjectSchema,
 });
-export const clientRouterSchema = z.object({
+export const clientServiceSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
 	root: z.optional(z.string()),
@@ -58,7 +58,7 @@ export const clientRouterSchema = z.object({
 	),
 	server: serverObjectSchema,
 });
-export const httpRouterSchema = z.object({
+export const httpServiceSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
 	root: z.optional(z.string()),
@@ -80,7 +80,7 @@ export const httpRouterSchema = z.object({
 	),
 	server: serverObjectSchema,
 });
-export const spaRouterSchema = z.object({
+export const spaServiceSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
 	root: z.optional(z.string()),
@@ -98,7 +98,7 @@ export const spaRouterSchema = z.object({
 	),
 	server: serverObjectSchema,
 });
-const customRouterSchema = z.object({
+const customServiceSchema = z.object({
 	name: z.string(),
 	base: z.optional(z.string().default("/")),
 	root: z.optional(z.string()),
@@ -113,76 +113,79 @@ const customRouterSchema = z.object({
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
 	server: serverObjectSchema,
 });
-export const routerSchema = {
-	static: staticRouterSchema,
-	client: clientRouterSchema,
-	spa: spaRouterSchema,
-	http: httpRouterSchema,
-	custom: customRouterSchema,
+export const serviceSchema = {
+	static: staticServiceSchema,
+	client: clientServiceSchema,
+	spa: spaServiceSchema,
+	http: httpServiceSchema,
+	custom: customServiceSchema,
 };
-/** @typedef {z.infer<typeof clientRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} ClientRouterSchema */
-/** @typedef {z.infer<typeof customRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} CustomRouterSchema */
-/** @typedef {z.infer<typeof staticRouterSchema> & { outDir: string; base: string; order: number; internals: Internals }} StaticRouterSchema */
-/** @typedef {z.infer<typeof httpRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} HTTPRouterSchema */
-/** @typedef {z.infer<typeof httpRouterSchema>} HandlerRouterInput */
-/** @typedef {z.infer<typeof spaRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} SPARouterSchema */
-/** @typedef {(HTTPRouterSchema | ClientRouterSchema | SPARouterSchema | StaticRouterSchema | CustomRouterSchema )} RouterSchema  */
-/** @typedef {(z.infer<typeof clientRouterSchema> | z.infer<typeof staticRouterSchema> | z.infer<typeof spaRouterSchema> |  z.infer<typeof httpRouterSchema> | z.infer<typeof customRouterSchema>)} ServiceSchemaInput  */
+/** @typedef {z.infer<typeof clientServiceSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} ClientServiceSchema */
+/** @typedef {z.infer<typeof customServiceSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} CustomServiceSchema */
+/** @typedef {z.infer<typeof staticServiceSchema> & { outDir: string; base: string; order: number; internals: Internals }} StaticServicesSchema */
+/** @typedef {z.infer<typeof httpServiceSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} HTTPServicesSchema */
+/** @typedef {z.infer<typeof httpServiceSchema>} HandlerRouterInput */
+/** @typedef {z.infer<typeof spaServiceSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} SPAServicesSchema */
+/** @typedef {(HTTPServicesSchema | ClientServiceSchema | SPAServicesSchema | StaticServicesSchema | CustomServiceSchema )} ServiceSchema  */
+/** @typedef {(z.infer<typeof clientServiceSchema> | z.infer<typeof staticServiceSchema> | z.infer<typeof spaServiceSchema> |  z.infer<typeof httpServiceSchema> | z.infer<typeof customServiceSchema>)} ServiceSchemaInput  */
 
 /**
  * @template X
  * @param {X} schema
- * @param {import("./router-mode.js").RouterMode<z.z.infer<X>>} mode
- * @returns {import("./router-mode.js").RouterMode<z.z.infer<X>>}
+ * @param {import("./service-modes.js").ServiceMode<z.z.infer<X>>} mode
+ * @returns {import("./service-modes.js").ServiceMode<z.z.infer<X>>}
  */
-export function createRouterMode(schema, mode) {
+export function createServiceMode(schema, mode) {
 	return mode;
 }
 
-/** @type {Record<string, import("./router-mode.js").RouterMode<any>>} */
-const routerModes = {
-	static: createRouterMode(staticRouterSchema, {
+/** @type {Record<string, import("./service-modes.js").ServiceMode<any>>} */
+const serviceModes = {
+	static: createServiceMode(staticServiceSchema, {
 		name: "static",
 		dev: {
-			publicAssets: (router) => {
+			publicAssets: (service) => {
 				return {
-					dir: router.dir,
-					baseURL: router.base,
+					dir: service.dir,
+					baseURL: service.base,
 					fallthrough: true,
 				};
 			},
 			plugins: () => {},
 		},
-		resolveConfig(router, appConfig, order) {
-			invariant(router.type === "static", "Invalid router mode");
+		resolveConfig(service, appConfig, order) {
+			invariant(service.type === "static", "Invalid service mode");
 			const appRoot = appConfig.root ?? process.cwd();
-			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
+			const root = resolve.absolute(service.root, appRoot) ?? appRoot;
 			return {
-				...router,
-				base: router.base ?? "/",
+				...service,
+				base: service.base ?? "/",
 				root,
 				order: order ?? 0,
 				internals: {
-					type: routerModes.static,
+					type: serviceModes.static,
 				},
-				outDir: join(appRoot, ".vinxi", "build", router.name),
+				outDir: join(appRoot, ".vinxi", "build", service.name),
 			};
 		},
 	}),
-	client: createRouterMode(clientRouterSchema, {
+	client: createServiceMode(clientServiceSchema, {
 		name: "client",
 		dev: {
-			plugins: async (router) => {
-				const { ROUTER_MODE_DEV_PLUGINS } = await import(
-					"./router-dev-plugins.js"
-				);
-				return await ROUTER_MODE_DEV_PLUGINS.client(router);
+			plugins: async (service) => {
+				const { SERVICE_MODE_DEV_PLUGINS: ROUTER_MODE_DEV_PLUGINS } =
+					await import("./service-dev-plugins.js");
+				return await ROUTER_MODE_DEV_PLUGINS.client(service);
 			},
-			handler: async (router, app, serveConfig) => {
+			handler: async (service, app, serveConfig) => {
 				const { createViteHandler } = await import("./dev-server.js");
 				const { joinURL } = await import("ufo");
 				const { fromNodeMiddleware, eventHandler } = await import("h3");
-				const viteDevServer = await createViteHandler(router, app, serveConfig);
+				const viteDevServer = await createViteHandler(
+					service,
+					app,
+					serveConfig,
+				);
 
 				viteDevServer.middlewares.stack.unshift({
 					route: "",
@@ -191,7 +194,7 @@ const routerModes = {
 						req.__preViteUrl = req.url;
 						req.url = joinURL(
 							app.config.server.baseURL ?? "",
-							router.base,
+							service.base,
 							req.url,
 						);
 						await next();
@@ -200,105 +203,104 @@ const routerModes = {
 				});
 
 				return {
-					route: router.base,
+					route: service.base,
 					handler: eventHandler({
 						handler: fromNodeMiddleware(viteDevServer.middlewares),
 					}),
 				};
 			},
 		},
-		resolveConfig(router, appConfig, order) {
-			invariant(router.type === "client", "Invalid router mode");
+		resolveConfig(service, appConfig, order) {
+			invariant(service.type === "client", "Invalid service mode");
 			const appRoot = appConfig.root ?? process.cwd();
-			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
-			/** @type {ClientRouterSchema} */
-			const buildRouter = {
-				...router,
+			const root = resolve.absolute(service.root, appRoot) ?? appRoot;
+			/** @type {ClientServiceSchema} */
+			const resolvedService = {
+				...service,
 				root,
-				base: router.base ?? "/",
-				handler: resolve.relative(router.handler, root),
-				target: router.target ?? "browser",
-				outDir: router.outDir
-					? join(appRoot, router.outDir)
-					: join(appRoot, ".vinxi", "build", router.name),
+				base: service.base ?? "/",
+				handler: resolve.relative(service.handler, root),
+				target: service.target ?? "browser",
+				outDir: service.outDir
+					? join(appRoot, service.outDir)
+					: join(appRoot, ".vinxi", "build", service.name),
 				// @ts-ignore
 				internals: {},
 				order: order ?? 0,
 			};
 
-			buildRouter.internals = {
-				type: routerModes.build,
-				routes: router.routes
-					? router.routes(buildRouter, appConfig)
+			resolvedService.internals = {
+				type: serviceModes.build,
+				routes: service.routes
+					? service.routes(resolvedService, appConfig)
 					: undefined,
 				devServer: undefined,
 			};
 
-			return buildRouter;
+			return resolvedService;
 		},
 	}),
-	http: createRouterMode(httpRouterSchema, {
+	http: createServiceMode(httpServiceSchema, {
 		name: "http",
 		dev: {
-			publicAssets: (router) => {
+			publicAssets: (service) => {
 				/**
 				 * Added here to support static asset imports. Vite transforms these using the server base path. During development it expects that the file system will be available. So we need to serve the whole src diectory (including node_modules) during dev.
 				 */
 				return {
-					dir: join(router.root),
-					baseURL: router.base,
+					dir: join(service.root),
+					baseURL: service.base,
 					fallthrough: true,
 				};
 			},
-			plugins: async (router) => {
-				const { ROUTER_MODE_DEV_PLUGINS } = await import(
-					"./router-dev-plugins.js"
-				);
-				return await ROUTER_MODE_DEV_PLUGINS.http(router);
+			plugins: async (service) => {
+				const { SERVICE_MODE_DEV_PLUGINS: ROUTER_MODE_DEV_PLUGINS } =
+					await import("./service-dev-plugins.js");
+				return await ROUTER_MODE_DEV_PLUGINS.http(service);
 			},
-			handler: async (router, app, serveConfig) => {
+			handler: async (service, app, serveConfig) => {
 				const { eventHandler, fromNodeMiddleware } = await import(
 					"../runtime/http.js"
 				);
-				if (router.type === "http" && router.worker && isMainThread) {
-					if (!router.internals.appWorker) {
+				if (service.type === "http" && service.worker && isMainThread) {
+					if (!service.internals.appWorker) {
 						const { AppWorkerClient } = await import("./app-worker-client.js");
-						router.internals.appWorker = new AppWorkerClient(
+						service.internals.appWorker = new AppWorkerClient(
 							new URL("./app-worker.js", import.meta.url),
 						);
 					}
 
 					const handler = eventHandler(async (event) => {
 						invariant(
-							router.internals.appWorker,
+							service.internals.appWorker,
 							"Router App Worker not initialized",
 						);
-						await router.internals.appWorker.init(
-							{ name: router.name, base: router.base },
+						await service.internals.appWorker.init(
+							{ name: service.name, base: service.base },
 							() => {},
 						);
-						await router.internals.appWorker.handle(event);
+						await service.internals.appWorker.handle(event);
 					});
 					return [
 						{
-							route: `${router.base}/**`,
+							route: `${service.base}/**`,
 							handler,
 						},
 						{
-							route: router.base,
+							route: service.base,
 							handler,
 						},
 					];
 				}
 
 				const { createViteHandler } = await import("./dev-server.js");
-				const viteServer = await createViteHandler(router, app, serveConfig);
+				const viteServer = await createViteHandler(service, app, serveConfig);
 				const viteMiddleware = fromNodeMiddleware(viteServer.middlewares);
 
 				function createHook(hook) {
 					return async function callWebSocketHook(...args) {
 						const { default: handler } = await viteServer.ssrLoadModule(
-							handlerModule(router),
+							handlerModule(service),
 						);
 						return await handler.__websocket__?.[hook]?.(...args);
 					};
@@ -311,7 +313,7 @@ const routerModes = {
 							return;
 						}
 						const { default: handler } = await viteServer.ssrLoadModule(
-							handlerModule(router),
+							handlerModule(service),
 						);
 						return handler(event);
 					},
@@ -325,56 +327,55 @@ const routerModes = {
 				});
 				return [
 					{
-						route: `${router.base}/**`,
+						route: `${service.base}/**`,
 						handler,
 					},
 					{
-						route: router.base,
+						route: service.base,
 						handler,
 					},
 				];
 			},
 		},
-		resolveConfig(router, appConfig, order) {
-			invariant(router.type === "http", "Invalid router mode");
+		resolveConfig(service, appConfig, order) {
+			invariant(service.type === "http", "Invalid service mode");
 			const appRoot = appConfig.root ?? process.cwd();
-			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
-			/** @type {HTTPRouterSchema} */
-			const handlerRouter = {
-				...router,
+			const root = resolve.absolute(service.root, appRoot) ?? appRoot;
+			/** @type {HTTPServicesSchema} */
+			const resolvedService = {
+				...service,
 				root,
-				base: router.base ?? "/",
+				base: service.base ?? "/",
 				// @ts-ignore
 				internals: {},
-				handler: resolve.relative(router.handler, root),
-				middleware: resolve.relative(router.middleware, root),
-				target: router.target ?? "server",
-				outDir: router.outDir
-					? join(appRoot, router.outDir)
-					: join(appRoot, ".vinxi", "build", router.name),
+				handler: resolve.relative(service.handler, root),
+				middleware: resolve.relative(service.middleware, root),
+				target: service.target ?? "server",
+				outDir: service.outDir
+					? join(appRoot, service.outDir)
+					: join(appRoot, ".vinxi", "build", service.name),
 				order: order ?? 0,
 			};
 
-			handlerRouter.internals = {
-				type: routerModes.handler,
-				routes: router.routes
-					? router.routes(handlerRouter, appConfig)
+			resolvedService.internals = {
+				type: serviceModes.handler,
+				routes: service.routes
+					? service.routes(resolvedService, appConfig)
 					: undefined,
 				devServer: undefined,
 			};
-			return handlerRouter;
+			return resolvedService;
 		},
 	}),
-	spa: createRouterMode(spaRouterSchema, {
+	spa: createServiceMode(spaServiceSchema, {
 		name: "spa",
 		dev: {
-			plugins: async (router) => {
-				const { ROUTER_MODE_DEV_PLUGINS } = await import(
-					"./router-dev-plugins.js"
-				);
-				return await ROUTER_MODE_DEV_PLUGINS.spa(router);
+			plugins: async (service) => {
+				const { SERVICE_MODE_DEV_PLUGINS: ROUTER_MODE_DEV_PLUGINS } =
+					await import("./service-dev-plugins.js");
+				return await ROUTER_MODE_DEV_PLUGINS.spa(service);
 			},
-			handler: async (router, app, serveConfig) => {
+			handler: async (service, app, serveConfig) => {
 				const { createViteHandler } = await import("./dev-server.js");
 				const { createServerResponse } = await import("./http-stream.js");
 				const {
@@ -385,7 +386,11 @@ const routerModes = {
 					getRequestURL,
 				} = await import("../runtime/http.js");
 				const { joinURL } = await import("ufo");
-				const viteDevServer = await createViteHandler(router, app, serveConfig);
+				const viteDevServer = await createViteHandler(
+					service,
+					app,
+					serveConfig,
+				);
 
 				viteDevServer.middlewares.stack.unshift({
 					route: "",
@@ -394,7 +399,7 @@ const routerModes = {
 						req.__preViteUrl = req.url;
 						req.url = joinURL(
 							app.config.server.baseURL ?? "",
-							router.base,
+							service.base,
 							req.url,
 						);
 						await next();
@@ -402,16 +407,16 @@ const routerModes = {
 					},
 				});
 
-				if (router.handler.endsWith(".html")) {
+				if (service.handler && service.handler.endsWith(".html")) {
 					return [
 						{
-							route: `${router.base}/**`,
+							route: `${service.base}/**`,
 							handler: defineEventHandler({
 								handler: fromNodeMiddleware(viteDevServer.middlewares),
 							}),
 						},
 						{
-							route: router.base,
+							route: service.base,
 							handler: defineEventHandler({
 								handler: fromNodeMiddleware(viteDevServer.middlewares),
 							}),
@@ -431,14 +436,14 @@ const routerModes = {
 					const viteHandler = fromNodeMiddleware(viteDevServer.middlewares);
 
 					return {
-						route: router.base,
+						route: service.base,
 						handler: defineEventHandler(async (event) => {
 							const response = await viteHandler(event);
 							if (event.handled) {
 								return;
 							}
 							const { default: handler } = await viteDevServer.ssrLoadModule(
-								router.handler,
+								service.handler,
 							);
 
 							let html = "";
@@ -473,51 +478,56 @@ const routerModes = {
 				}
 			},
 		},
-		resolveConfig(router, appConfig, order) {
-			invariant(router.type === "spa", "Invalid router mode");
+		resolveConfig(service, appConfig, order) {
+			invariant(service.type === "spa", "Invalid service mode");
 			const appRoot = appConfig.root ?? process.cwd();
-			const root = resolve.absolute(router.root, appRoot) ?? appRoot;
-			/** @type {SPARouterSchema} */
-			const spaRouter = {
-				...router,
-				base: router.base ?? "/",
+			const root = resolve.absolute(service.root, appRoot) ?? appRoot;
+			/** @type {SPAServicesSchema} */
+			const spaService = {
+				...service,
+				base: service.base ?? "/",
 				root,
 				// @ts-ignore
 				internals: {},
-				handler: resolve.relative(router.handler, root),
-				target: router.target ?? "browser",
-				outDir: router.outDir
-					? join(appRoot, router.outDir)
-					: join(appRoot, ".vinxi", "build", router.name),
+				handler: resolve.relative(service.handler, root),
+				target: service.target ?? "browser",
+				outDir: service.outDir
+					? join(appRoot, service.outDir)
+					: join(appRoot, ".vinxi", "build", service.name),
 				order: order ?? 0,
 			};
 
-			spaRouter.internals = {
-				type: routerModes.spa,
-				routes: router.routes ? router.routes(spaRouter, appConfig) : undefined,
+			spaService.internals = {
+				type: serviceModes.spa,
+				routes: service.routes
+					? service.routes(spaService, appConfig)
+					: undefined,
 				devServer: undefined,
 			};
 
-			return spaRouter;
+			return spaService;
 		},
 	}),
 };
 /**
  *
- * @param {ServiceSchemaInput} router
+ * @param {ServiceSchemaInput} service
  * @param {import("./app.js").AppOptions} appConfig
  * @param {number} order
- * @returns {RouterSchema}
+ * @returns {ServiceSchema}
  */
-export function resolveRouterConfig(router, appConfig, order) {
+export function resolveServiceConfig(service, appConfig, order) {
 	// @ts-ignore backwards compat with router.mode for a few versions (TODO)
-	router.type = router.type ?? router.mode;
-	const routerMode =
-		typeof router.type === "string" ? routerModes[router.type] : router.type;
+	// @deprecated
+	service.type = service.type ?? service.mode;
+	const serviceMode =
+		typeof service.type === "string"
+			? serviceModes[service.type]
+			: service.type;
 
-	invariant(routerMode, `Invalid router type: ${router.type}`);
+	invariant(serviceMode, `Invalid service type: ${service.type}`);
 
-	const config = routerMode.resolveConfig(router, appConfig, order);
-	config.internals.type = routerMode;
+	const config = serviceMode.resolveConfig(service, appConfig, order);
+	config.internals.type = serviceMode;
 	return config;
 }

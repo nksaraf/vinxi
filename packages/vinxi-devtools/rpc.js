@@ -8,6 +8,6 @@ const getApp = () => {
 export const functions = {
 	add: () => {},
 	getRouterNames: () => {
-		return getApp().config.routers.map((router) => router.name);
+		return getApp().config.services.map((service) => service.name);
 	},
 };
