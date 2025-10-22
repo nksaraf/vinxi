@@ -8,7 +8,11 @@ export function viteManifestPath(
 	/** @type {import("./router-mode").Router} */ router,
 ) {
 	let vite = require("vite/package.json");
-	if (vite.version.startsWith("5") || vite.version.startsWith("6")) {
+	if (
+		vite.version.startsWith("5") ||
+		vite.version.startsWith("6") ||
+		vite.version.startsWith("7")
+	) {
 		return join(router.outDir, router.base, ".vite", "manifest.json");
 	}
 	return join(router.outDir, router.base, "manifest.json");
