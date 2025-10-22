@@ -16,7 +16,7 @@ import { H3Event, createApp } from "../runtime/server.js";
 import { chunksServerVirtualModule } from "./chunks.js";
 import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
-import { c, consola, createLogger, log, withLogger } from "./logger.js";
+import { c, consola, log, withLogger } from "./logger.js";
 import { viteManifestPath } from "./manifest-path.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
 import {
@@ -357,7 +357,7 @@ async function buildServer({ app, buildConfig }) {
  */
 export async function createBuild({ app, buildConfig, configFile }) {
 	try {
-		let { log, createLogger, debug, c } = await import("../lib/logger.js");
+		let { log, debug, c } = await import("../lib/logger.js");
 		const { existsSync, promises: fsPromises } = await import("fs");
 		const { join } = await import("./path.js");
 		const { fileURLToPath } = await import("url");
