@@ -245,7 +245,7 @@ async function buildServer({ app, buildConfig }) {
 	  return {
 		config: { ...appConfig, buildManifest, routeManifest },
 		getRouter(name) {
-		  return appConfig.services.find(services => service.name === name)
+		  return appConfig.services.find(service => service.name === name)
 		},
 		getService(name) {
 		  return appConfig.services.find(service => service.name === name)

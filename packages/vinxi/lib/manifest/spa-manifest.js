@@ -4,15 +4,23 @@ import { join, relative } from "../path.js";
 import { createViteManifest } from "./create-vite-manifest.js";
 import findAssetsInViteManifest from "./vite-manifest.js";
 
+/**
+ * @param {{ src: string, pick: string[] }} route
+ * @returns {string}
+ */
 function toRouteId(route) {
 	return `${route.src}?${route.pick.map((p) => `pick=${p}`).join("&")}`;
 }
 
+/**
+ * @param {import('../service-mode.js').Service} service
+ * @returns {Promise<(string | undefined)[]>}
+ */
 async function getEntries(service) {
 	return [
 		service.handler,
 		...(
-			(await service.internals.routes?.getRoutes()).map((r) =>
+			((await service.internals.routes?.getRoutes()) ?? []).map((r) =>
 				Object.entries(r)
 					.filter(([r, v]) => v && r.startsWith("$") && !r.startsWith("$$"))
 					.map(([, v]) => toRouteId(v)),
@@ -59,27 +67,6 @@ export async function createSPAManifest(config, bundle, format) {
 					})),
 			};
 		}
-
-		// routeManifest[route.filePath] = {
-		// 	output: join(
-		// 		config.base,
-		// 		manifest[relative(config.router.root, route.filePath)].file,
-		// 	),
-		// 	assets: findAssetsInViteManifest(
-		// 		manifest,
-		// 		relative(config.router.root, route.filePath),
-		// 	)
-		// 		.filter((asset) => asset.endsWith(".css"))
-		// 		.map((asset) => ({
-		// 			tag: "link",
-		// 			attrs: {
-		// 				href: join(config.base, asset),
-		// 				key: join(config.base, asset),
-		// 				rel: "stylesheet",
-		// 				fetchPriority: "high",
-		// 			},
-		// 		})),
-		// };
 	}
 	return routeManifest;
 }
