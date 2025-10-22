@@ -9,7 +9,8 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 
 /** @typedef {{
 	devtools?: boolean;
-	routers?: import("./router-modes.js").RouterSchemaInput[];
+	routers?: import("./router-modes.js").ServiceSchemaInput[];
+	services?: import("./router-modes.js").ServiceSchemaInput[];
 	name?:
 	string;
 	server?: Omit<import('nitropack').NitroConfig, 'handlers' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual' | 'dev'  | 'buildDir'> & { https?: import('@vinxi/listhen').HTTPSOptions | boolean };
@@ -23,12 +24,23 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
 		devtools: boolean;
 		server: Omit<import('nitropack').NitroConfig, 'handlers' | 'scanDirs' | 'appConfigFiles' | 'imports' | 'virtual' | 'dev' | 'buildDir'> & { https?: import('@vinxi/listhen').HTTPSOptions | boolean };
 		routers: import("./router-mode.js").Router[];
+		services: import("./router-mode.js").Router[];
 		root: string;
 		mode?: string;
 	};
-	addRouter: (router: any) => App;
-	addRouterPlugins: (apply: (router: import("./router-mode.js").Router) => boolean, plugins: () => any[]) => void;
-	getRouter: (name: string) => import("./router-mode.js").Router;
+
+	// @deprecated
+	addRouter: (router: any) => App; 
+	
+	// @deprecated
+	// addRouterPlugins: (apply: (router: import("./router-mode.js").Router) => boolean, plugins: () => any[]) => void;
+	
+	// @deprecated
+	// getRouter: (name: string) => import("./router-mode.js").Router;
+	
+	addService: (service: import("./router-modes.js").ServiceSchemaInput) => App;
+	addServicePlugins: (apply: (service: import("./router-modes.js").ServiceSchemaInput) => boolean, plugins: () => any[]) => void;
+	getService: (name: string) => import("./router-modes.js").ServiceSchemaInput;
 	resolveSync: (mod: string) => string;
 	import: (mod: string) => Promise<any>;
 	stack: (stack: (app: App) => void | Promise<void>) => Promise<App>;
@@ -44,6 +56,7 @@ import { resolveRouterConfig, routerSchema } from "./router-modes.js";
  */
 export function createApp({
 	routers = [],
+	services = routers,
 	name = "vinxi",
 	server = {},
 	root = process.cwd(),
@@ -96,7 +109,8 @@ export function createApp({
 				{
 					name: name ?? "vinxi",
 					// @ts-ignore
-					routers: parsedRouters,
+					services: parsedServices,
+					routers: parsedServices,
 					server,
 					root,
 					mode,
@@ -106,15 +120,16 @@ export function createApp({
 		};
 	}
 
-	const parsedRouters = routers.map(parseRouter);
+	const parsedServices = services.map(parseRouter);
 
-	const resolvedRouters = routers.map(resolveRouter);
+	const resolvedServices = services.map(resolveRouter);
 
-	/** @type {{ name: string; devtools: boolean; server: import('nitropack').NitroConfig; routers: import("./router-mode.js").Router[]; root: string; }} */
+	/** @type {App['config']} */
 	const config = {
 		name: name ?? "vinxi",
-		// @ts-ignore
-		routers: resolvedRouters,
+		services: resolvedServices,
+		routers: resolvedServices,
+		devtools: false,
 		server,
 		root,
 		mode,
@@ -126,13 +141,19 @@ export function createApp({
 	const app = {
 		config,
 		hooks,
-		addRouter(router) {
-			const parsedRouter = parseRouter(router);
-			const resolvedRouter = resolveRouter(parsedRouter, config.routers.length);
-			config.routers.push(resolvedRouter);
+		addService(service) {
+			const parsedService = parseRouter(service);
+			const resolvedService = resolveRouter(
+				parsedService,
+				config.services.length,
+			);
+			config.services.push(resolvedService);
 			return app;
 		},
-		addRouterPlugins(apply, plugins) {
+		addRouter(router) {
+			return app.addService(router);
+		},
+		addServicePlugins(apply, plugins) {
 			const routers = app.config.routers.filter(apply);
 
 			routers.forEach((router) => {
@@ -154,12 +175,15 @@ export function createApp({
 			const resolved = app.resolveSync(mod);
 			return await import(resolved);
 		},
-		getRouter(/** @type {string} */ name) {
-			const router = config.routers.find((router) => router.name === name);
-			if (!router) {
-				throw new InvariantError(`Router ${name} not found`);
+		getService(/** @type {string} */ name) {
+			const service = config.services.find((service) => service.name === name);
+			if (!service) {
+				throw new InvariantError(`Service ${name} not found`);
 			}
-			return router;
+			return service;
+		},
+		getRouter(/** @type {string} */ name) {
+			return app.getService(name);
 		},
 		async stack(stack) {
 			await stack(app);
@@ -180,7 +204,16 @@ export function createApp({
 		},
 		async build() {
 			const { createBuild } = await import("./build.js");
-			await withLogger({}, () => createBuild(app, {}));
+			await withLogger({}, () =>
+				createBuild({
+					app,
+					buildConfig: {
+						mode: config.mode,
+						preset: config.server.preset,
+					},
+					configFile: undefined,
+				}),
+			);
 		},
 	};
 

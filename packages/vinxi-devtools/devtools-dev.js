@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import unocssConfig from "./uno.config.js";
 
-/** @returns {import('vinxi').RouterSchemaInput} */
+/** @returns {import('vinxi').ServiceSchemaInput} */
 export const devtoolsClientDev = () => {
 	return {
 		name: "devtools-client",

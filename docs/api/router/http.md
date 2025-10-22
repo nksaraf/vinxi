@@ -1,6 +1,6 @@
 # HTTP Router API
 
-The `http` router is a wrapper of a Nitro web server, with all the flexibility that entails. Great for server side rendering, websockets, custom API endpoints, etc... 
+The `http` router is a wrapper of a Nitro web server, with all the flexibility that entails. Great for server side rendering, websockets, custom API endpoints, etc...
 
 ## Configuration Options
 
@@ -17,6 +17,7 @@ A unique identifier for the router.
 
 :::tip
 The name of the router that the code is currently executing can be imported from `vinxi/manifest`.
+
 ```ts
 import { routerName } from "vinxi/manifest";
 
@@ -25,6 +26,7 @@ export default eventHandler(() => {
   const clientManifest = getManifest("react-client");
 });
 ```
+
 :::
 
 ### handler
@@ -53,7 +55,7 @@ A function returning an array of Vite plugins to use during the build process.
 
 ### routes
 
-- Type: `(router: RouterSchemaInput, app: AppOptions) => CompiledRouter`
+- Type: `(router: ServiceSchemaInput, app: AppOptions) => CompiledRouter`
 - Required: `false`
 
 A function defining the routing logic or structure.
@@ -96,7 +98,6 @@ The output directory for build artifacts.
 - Required: `false`
 
 The root directory for resolving paths. Defaults to the application's root directory.
-
 
 ## Example Configuration
 

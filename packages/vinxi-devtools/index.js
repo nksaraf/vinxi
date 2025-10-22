@@ -2,7 +2,7 @@ import { fileURLToPath } from "node:url";
 
 export { default as inspect } from "vite-plugin-inspect";
 
-/** @returns {import('vinxi').RouterSchemaInput} */
+/** @returns {import('vinxi').ServiceSchemaInput} */
 export const devtoolsRpc = () => {
 	return {
 		name: "devtools-rpc",
@@ -14,7 +14,7 @@ export const devtoolsRpc = () => {
 	};
 };
 
-/** @returns {import('vinxi').RouterSchemaInput} */
+/** @returns {import('vinxi').ServiceSchemaInput} */
 export const devtoolsClient = () => {
 	return {
 		name: "devtools-client",

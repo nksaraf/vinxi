@@ -29,7 +29,7 @@ const serverObjectSchema = z
 /**
  * @typedef {{ routes?: CompiledRouter; devServer?: import('vite').ViteDevServer; appWorker?: import('./app-worker-client.js').AppWorkerClient; type: import("./router-mode.js").RouterMode }} Internals
  * @typedef {import('./fs-router.js').BaseFileSystemRouter} CompiledRouter
- * @typedef {(router: RouterSchemaInput, app: import("./app.js").AppOptions) => CompiledRouter} RouterStyleFn
+ * @typedef {(router: ServiceSchemaInput, app: import("./app.js").AppOptions) => CompiledRouter} RouterStyleFn
  * */
 export const staticRouterSchema = z.object({
 	name: z.string(),
@@ -127,7 +127,7 @@ export const routerSchema = {
 /** @typedef {z.infer<typeof httpRouterSchema>} HandlerRouterInput */
 /** @typedef {z.infer<typeof spaRouterSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} SPARouterSchema */
 /** @typedef {(HTTPRouterSchema | ClientRouterSchema | SPARouterSchema | StaticRouterSchema | CustomRouterSchema )} RouterSchema  */
-/** @typedef {(z.infer<typeof clientRouterSchema> | z.infer<typeof staticRouterSchema> | z.infer<typeof spaRouterSchema> |  z.infer<typeof httpRouterSchema> | z.infer<typeof customRouterSchema>)} RouterSchemaInput  */
+/** @typedef {(z.infer<typeof clientRouterSchema> | z.infer<typeof staticRouterSchema> | z.infer<typeof spaRouterSchema> |  z.infer<typeof httpRouterSchema> | z.infer<typeof customRouterSchema>)} ServiceSchemaInput  */
 
 /**
  * @template X
@@ -504,7 +504,7 @@ const routerModes = {
 };
 /**
  *
- * @param {RouterSchemaInput} router
+ * @param {ServiceSchemaInput} router
  * @param {import("./app.js").AppOptions} appConfig
  * @param {number} order
  * @returns {RouterSchema}

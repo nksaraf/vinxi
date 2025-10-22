@@ -1,6 +1,6 @@
 /**
  *
- * @returns {import('vinxi').RouterSchemaInput}
+ * @returns {import('vinxi').ServiceSchemaInput}
  */
 export function publicDir({ ...options } = {}) {
 	return {

@@ -16,7 +16,7 @@ import { H3Event, createApp } from "../runtime/server.js";
 import { chunksServerVirtualModule } from "./chunks.js";
 import { createIncomingMessage, createServerResponse } from "./http-stream.js";
 import invariant from "./invariant.js";
-import { c, consola, createLogger, log, withLogger } from "./logger.js";
+import { c, consola, log, withLogger } from "./logger.js";
 import { viteManifestPath } from "./manifest-path.js";
 import { createSPAManifest } from "./manifest/spa-manifest.js";
 import {
@@ -357,16 +357,24 @@ async function buildServer({ app, buildConfig }) {
  */
 export async function createBuild({ app, buildConfig, configFile }) {
 	try {
-		let { log, createLogger, debug, c } = await import("../lib/logger.js");
+		let { log, debug, c } = await import("../lib/logger.js");
 		const { existsSync, promises: fsPromises } = await import("fs");
 		const { join } = await import("./path.js");
 		const { fileURLToPath } = await import("url");
-		const vinxiBuildLabel = c.dim(c.blue("vinxi build time"));
-		console.time(vinxiBuildLabel);
 
-		debug(buildConfig);
+		debug("build config", buildConfig);
+
 		if (buildConfig.server || buildConfig.nitro) {
-			await buildServer({ app, buildConfig, configFile });
+			const vinxiBuildLabel = c.dim(c.blue("vinxi server build time"));
+			console.time(vinxiBuildLabel);
+			try {
+				await buildServer({ app, buildConfig, configFile });
+			} catch (error) {
+				console.error("Error building server:", error);
+				throw error;
+			} finally {
+				console.timeEnd(vinxiBuildLabel);
+			}
 			return;
 		}
 
@@ -381,65 +389,76 @@ export async function createBuild({ app, buildConfig, configFile }) {
 				throw new Error(`Router ${buildConfig.router} not found`);
 			}
 
-			if (router.type === "static") {
-				log(c.yellow(router.name), `skipping static router`);
-				return;
-			}
-
-			if (router.type === "spa" && !router.handler.endsWith(".html")) {
-				log(c.yellow(router.name), `generating index.html for SPA`);
-				await generateIndexHTMLforSPA({
-					app,
-					router,
-					mode: buildConfig.mode ?? "production",
-				});
-
-				router = {
-					...router,
-					handler: "./index.html",
-				};
-			}
-
-			log(`${c.green("building...")}`);
-			if (
-				router.build !== false &&
-				(buildConfig.cache === false || !existsSync(router.outDir))
-			) {
-				if (existsSync(router.outDir) && buildConfig.cache === false) {
-					await withLogger({ router, requestId: "clean" }, async () => {
-						log(c.yellow(router.name), `cleaning previous build`);
-						debug(c.yellow(router.name), `removing ${router.outDir}`);
-						await fsPromises.rm(router.outDir, { recursive: true });
-					});
-				}
-
-				if (buildConfig.cache === false) {
-					await withLogger({ router, requestId: "build" }, async () => {
-						try {
-							await createRouterBuild(app, router, buildConfig.mode);
-						} catch (error) {
-							console.error(`Error building router ${router.name}:`, error);
-							process.exit(1);
-						}
-					});
-				} else {
-					log(c.yellow(router.name), `skipping build`);
-					log(c.yellow(router.name), `using cached build`);
-					debug(
-						c.yellow(router.name),
-						`cached build directory: ${router.outDir}`,
-					);
-				}
-			} else {
-			}
-
-			log(c.yellow(router.name), c.green(`built successfully`));
-			debug(
-				c.yellow(router.name),
-				c.green(`target directory: ${router.outDir}`),
+			console.time(
+				`${c.dim(c.blue("vinxi"))} ${c.yellow(router.name)} build time`,
 			);
-			console.timeEnd(vinxiBuildLabel);
-			return;
+
+			try {
+				if (router.type === "static") {
+					log(c.yellow(router.name), `skipping static router`);
+					return;
+				}
+
+				if (router.type === "spa" && !router.handler.endsWith(".html")) {
+					log(c.yellow(router.name), `generating index.html for SPA`);
+					await generateIndexHTMLforSPA({
+						app,
+						router,
+						mode: buildConfig.mode ?? "production",
+					});
+
+					router = {
+						...router,
+						handler: "./index.html",
+					};
+				}
+
+				if (
+					router.build !== false &&
+					(buildConfig.cache === false || !existsSync(router.outDir))
+				) {
+					if (existsSync(router.outDir) && buildConfig.cache === false) {
+						await withLogger({ router, requestId: "clean" }, async () => {
+							log(c.yellow(router.name), `cleaning previous build`);
+							debug(c.yellow(router.name), `removing ${router.outDir}`);
+							await fsPromises.rm(router.outDir, { recursive: true });
+						});
+					}
+
+					if (buildConfig.cache === false) {
+						await withLogger({ router, requestId: "build" }, async () => {
+							try {
+								await createRouterBuild(app, router, buildConfig.mode);
+							} catch (error) {
+								console.error(`Error building router ${router.name}:`, error);
+								process.exit(1);
+							}
+						});
+					} else {
+						log(c.yellow(router.name), `skipping build`);
+						log(c.yellow(router.name), `using cached build`);
+						debug(
+							c.yellow(router.name),
+							`cached build directory: ${router.outDir}`,
+						);
+					}
+				} else {
+				}
+
+				log(c.yellow(router.name), c.green(`built successfully`));
+				debug(
+					c.yellow(router.name),
+					c.green(`target directory: ${router.outDir}`),
+				);
+				return;
+			} catch (error) {
+				console.error(`Error building router ${router.name}:`, error);
+				throw error;
+			} finally {
+				console.timeEnd(
+					`${c.dim(c.blue("vinxi"))} ${c.yellow(router.name)} build time`,
+				);
+			}
 		}
 
 		for (const router of app.config.routers) {
@@ -464,6 +483,8 @@ export async function createBuild({ app, buildConfig, configFile }) {
 				(buildConfig.cache === false || !existsSync(router.outDir))
 			) {
 				await withLogger({ router, requestId: "build" }, async () => {
+					console.log();
+					log(c.yellow(router.name), c.green(`building in worker`));
 					try {
 						await createRouterBuildInWorker(
 							app,
@@ -511,9 +532,9 @@ async function createRouterBuildInWorker(app, router, mode, configFile) {
 	const { fileURLToPath } = await import("url");
 	await sh.default`node ${fileURLToPath(
 		new URL("../bin/cli.mjs", import.meta.url).href,
-	)} build --router=${router.name} ${mode ? `--mode=${mode}` : ""} ${
-		configFile ? `--config=${configFile}` : ""
-	}`;
+	)} build --vinxi-worker --router=${router.name} ${
+		mode ? `--mode=${mode}` : ""
+	} ${configFile ? `--config=${configFile}` : ""}`;
 }
 
 /**
@@ -598,8 +619,7 @@ async function generateIndexHTMLforSPA({ app, router, mode }) {
  * @param {string} [mode]
  */
 async function createRouterBuild(app, router, mode) {
-	console.log("\n");
-	console.log(c.green(`📦 Compiling ${router.name} router...`));
+	log(c.yellow(router.name), c.green(`build start`));
 	console.log("");
 	await app.hooks.callHook("app:build:router:start", { app, router });
 	let buildRouter = router;
@@ -659,7 +679,7 @@ async function createRouterBuild(app, router, mode) {
 		await rm(join(router.root, "index.html"));
 	}
 
-	consola.success("build done");
+	log(c.yellow(router.name), c.green(`build done`));
 }
 
 const buildTargetPlugin = {

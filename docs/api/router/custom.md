@@ -51,7 +51,7 @@ A function returning an array of Vite plugins to use during the build process.
 
 ### routes
 
-- Type: `(router: RouterSchemaInput, app: AppOptions) => CompiledRouter`
+- Type: `(router: ServiceSchemaInput, app: AppOptions) => CompiledRouter`
 - Required: `false`
 
 A function defining the routing logic or structure.
@@ -72,7 +72,6 @@ The output directory for build artifacts.
 
 The root directory for resolving paths. Defaults to the application's root directory.
 
-
 ## Example Configuration
 
 ```ts
@@ -87,4 +86,3 @@ The root directory for resolving paths. Defaults to the application's root direc
   target: "server",
 }
 ```
-
