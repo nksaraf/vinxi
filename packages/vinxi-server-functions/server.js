@@ -39,18 +39,21 @@ export const serverBuild = ({ client, manifest }) => {
 		apply: "build",
 		config(config, env) {
 			// @ts-ignore
-			const router = config.router;
+			const service = config.service;
 			// @ts-ignore
 			const app = config.app;
 
-			const rscRouter = app.getRouter(client);
+			const rscService = app.getService(client);
 
 			const serverFunctionsManifest = JSON.parse(
-				readFileSync(join(rscRouter.outDir, rscRouter.base, manifest), "utf-8"),
+				readFileSync(
+					join(rscService.outDir, rscService.base, manifest),
+					"utf-8",
+				),
 			);
 
 			input = {
-				entry: handlerModule(router),
+				entry: handlerModule(service),
 				...Object.fromEntries(
 					serverFunctionsManifest.server.map((key) => {
 						return [chunkify(key), key];

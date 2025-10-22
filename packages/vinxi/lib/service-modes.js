@@ -124,7 +124,7 @@ export const serviceSchema = {
 /** @typedef {z.infer<typeof customServiceSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} CustomServiceSchema */
 /** @typedef {z.infer<typeof staticServiceSchema> & { outDir: string; base: string; order: number; internals: Internals }} StaticServicesSchema */
 /** @typedef {z.infer<typeof httpServiceSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} HTTPServicesSchema */
-/** @typedef {z.infer<typeof httpServiceSchema>} HandlerRouterInput */
+/** @typedef {z.infer<typeof httpServiceSchema>} HandlerServiceInput */
 /** @typedef {z.infer<typeof spaServiceSchema> & { outDir: string; base: string; order: number; root: string; internals: Internals }} SPAServicesSchema */
 /** @typedef {(HTTPServicesSchema | ClientServiceSchema | SPAServicesSchema | StaticServicesSchema | CustomServiceSchema )} ServiceSchema  */
 /** @typedef {(z.infer<typeof clientServiceSchema> | z.infer<typeof staticServiceSchema> | z.infer<typeof spaServiceSchema> |  z.infer<typeof httpServiceSchema> | z.infer<typeof customServiceSchema>)} ServiceSchemaInput  */

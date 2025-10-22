@@ -1,6 +1,6 @@
 # Manifest API
 
-One of the trickier parts of making a full stack app is getting all the pieces across different environments to work together. These environments need some crucial information about one another to coordinate their work. This is where manifests come in. A manifest is a data structure that tells the runtime about the current router and the other routers. It includes information produced by the bundler about what files are involved in each router along with all the other assets that are used. The runtime uses the manifest to know what files to serve and how to serve them.
+One of the trickier parts of making a full stack app is getting all the pieces across different environments to work together. These environments need some crucial information about one another to coordinate their work. This is where manifests come in. A manifest is a data structure that tells the runtime about the current service and the other services. It includes information produced by the bundler about what files are involved in each service along with all the other assets that are used. The runtime uses the manifest to know what files to serve and how to serve them.
 
 The real tricky part is making it work the same during DEV and PROD.
 
@@ -9,26 +9,26 @@ The real tricky part is making it work the same during DEV and PROD.
 
 The manifest API is also the same between the server and client, development and production.
 
-You can access the manifest for any router by using calling `getManifest(routerName)` (exported by `vinxi/manifest`). This will give you a manifest object that looks like this:
+You can access the manifest for any service by using calling `getManifest(serviceName)` (exported by `vinxi/manifest`). This will give you a manifest object that looks like this:
 
 ```ts
 export type Asset = LinkAsset | ScriptOrStyleAsset;
 
 type LinkAsset = {
-	tag: 'link';
-	attrs: Record<string, string>
-}
+  tag: "link";
+  attrs: Record<string, string>;
+};
 
 type ScriptOrStyleAsset = {
-	tag: 'script' | 'style';
-	attrs: Record<string, string>;
-	children?: string;
-}
+  tag: "script" | "style";
+  attrs: Record<string, string>;
+  children?: string;
+};
 
 export type Manifest = {
-  /** Name of the router */
+  /** Name of the service */
   name: string;
-  /** Handler path for the router */
+  /** Handler path for the service */
   handler: string;
   base: string;
   routes(): Promise<

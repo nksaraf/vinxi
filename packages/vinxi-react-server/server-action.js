@@ -61,7 +61,6 @@ export default eventHandler(async (event) => {
 				};
 
 				event.node.res.setHeader("Content-Type", "application/json");
-				event.node.res.setHeader("Router", "server");
 
 				return stream;
 			} catch (error) {
@@ -101,7 +100,6 @@ export default eventHandler(async (event) => {
 	// };
 
 	// event.node.res.setHeader("Content-Type", "text/x-component");
-	// event.node.res.setHeader("Router", "rsc");
 
 	// return result;
 });

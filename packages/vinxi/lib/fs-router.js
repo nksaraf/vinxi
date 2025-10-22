@@ -55,7 +55,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	routes;
 
 	/** @type {import("./service-mode.js").Service<any>} */
-	routerConfig;
+	service;
 
 	/** @type {import("./app").AppOptions} */
 	appConfig;
@@ -66,14 +66,14 @@ export class BaseFileSystemRouter extends EventTarget {
 	/**
 	 *
 	 * @param {FileSystemRouterConfig} config
-	 * @param {import("./service-mode.js").Service<any>} router
+	 * @param {import("./service-mode.js").Service<any>} service
 	 * @param {import("./app").AppOptions} app
 	 */
-	constructor(config, router, app) {
+	constructor(config, service, app) {
 		super();
 		this.routes = [];
 		this.config = config;
-		this.routerConfig = router;
+		this.service = service;
 		this.appConfig = app;
 	}
 

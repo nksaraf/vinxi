@@ -1,6 +1,6 @@
 # HTTP Service API
 
-The `http` router is a wrapper of a Nitro web server, with all the flexibility that entails. Great for server side rendering, websockets, custom API endpoints, etc...
+The `http` service is a wrapper of a Nitro web server, with all the flexibility that entails. Great for server side rendering, websockets, custom API endpoints, etc...
 
 ## Configuration Options
 
@@ -13,16 +13,16 @@ The `http` router is a wrapper of a Nitro web server, with all the flexibility t
 - Type: `string`
 - Required: `true`
 
-A unique identifier for the router.
+A unique identifier for the service.
 
 :::tip
-The name of the router that the code is currently executing can be imported from `vinxi/manifest`.
+The name of the service that the code is currently executing can be imported from `vinxi/manifest`.
 
 ```ts
-import { routerName } from "vinxi/manifest";
+import { serviceName } from "vinxi/manifest";
 
 export default eventHandler(() => {
-  const serverManifest = getManifest(routerName);
+  const serverManifest = getManifest(serviceName);
   const clientManifest = getManifest("react-client");
 });
 ```
@@ -55,7 +55,7 @@ A function returning an array of Vite plugins to use during the build process.
 
 ### routes
 
-- Type: `(router: ServiceSchemaInput, app: AppOptions) => CompiledRouter`
+- Type: `(service: ServiceSchemaInput, app: AppOptions) => Compiledservice`
 - Required: `false`
 
 A function defining the routing logic or structure.
@@ -67,7 +67,7 @@ A function defining the routing logic or structure.
 - Type: `string`
 - Required: `false`
 
-Path to server middleware to apply to the router.
+Path to server middleware to apply to the service.
 
 ### worker
 
@@ -75,7 +75,7 @@ Path to server middleware to apply to the router.
 - Required: `false`
 - Default value: `false`
 
-Configures the router to run its request-handling in a separate worker thread.
+Configures the service to run its request-handling in a separate worker thread.
 
 ### build
 
@@ -83,7 +83,7 @@ Configures the router to run its request-handling in a separate worker thread.
 - Required: `false`
 - Default value: `true`
 
-Include the router in the build process.
+Include the service in the build process.
 
 ### outDir
 

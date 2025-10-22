@@ -25,7 +25,7 @@ export function serverActions({
 	const serverModules = new Set();
 	const clientModules = new Set();
 	return [
-		config("server-actions-resolve", (router, app, env) => ({
+		config("server-actions-resolve", (service, app, env) => ({
 			ssr: {
 				resolve: {
 					externalConditions: resolve.conditions,

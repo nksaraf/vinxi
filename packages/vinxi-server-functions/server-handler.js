@@ -13,18 +13,17 @@ export async function handleServerAction(event) {
 		// This is the client-side case
 		const [filepath, name] = serverReference.split("#");
 		const action = (
-			await getManifest(import.meta.env.ROUTER_NAME).chunks[filepath].import()
+			await getManifest(import.meta.env.SERVICE_NAME).chunks[filepath].import()
 		)[name];
 		let json = {};
 		if (event.method === "POST") {
 			json = await readBody(event);
-		} 
+		}
 		const result = action.apply(null, json);
 		try {
 			// Wait for any mutations
 			const response = await result;
 			setHeader(event, "Content-Type", "application/json");
-			setHeader(event, "Router", "server-fns");
 
 			return JSON.stringify(response ?? null);
 		} catch (x) {

@@ -39,22 +39,22 @@ export function buildClientComponents({
 		config(config, env) {
 			isBuild = env.command === "build";
 			// @ts-ignore
-			const router = config.router;
+			const service = config.service;
 			// @ts-ignore
 			const app = config.app;
 
 			if (isBuild) {
-				const serverRouter = app.getRouter(server);
+				const serverService = app.getService(server);
 
 				const serverManifest = JSON.parse(
 					readFileSync(
-						join(serverRouter.outDir, serverRouter.base, manifest),
+						join(serverService.outDir, serverService.base, manifest),
 						"utf-8",
 					),
 				);
 
 				input = {
-					entry: handlerModule(router),
+					entry: handlerModule(service),
 					...Object.fromEntries(
 						serverManifest.client.map((key) => {
 							return [chunkify(key), key];

@@ -5,11 +5,11 @@ import { createRequire } from "node:module";
 export const require = createRequire(import.meta.url);
 
 export function viteManifestPath(
-	/** @type {import("./service-modes").Router} */ router,
+	/** @type {import("./service-mode").Service} */ service,
 ) {
 	let vite = require("vite/package.json");
 	if (vite.version.startsWith("5") || vite.version.startsWith("6")) {
-		return join(router.outDir, router.base, ".vite", "manifest.json");
+		return join(service.outDir, service.base, ".vite", "manifest.json");
 	}
-	return join(router.outDir, router.base, "manifest.json");
+	return join(service.outDir, service.base, "manifest.json");
 }

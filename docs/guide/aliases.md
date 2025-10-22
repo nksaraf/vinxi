@@ -79,7 +79,7 @@ import { createApp } from "vinxi";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default createApp({
-  routers: [
+  services: [
     {
       base: "/",
       name: "server",
@@ -92,9 +92,9 @@ export default createApp({
 
 :::
 
-Now, your aliases will work everywhere in your app. Remember to add the `vite-tsconfig-paths` plugin to all the routers that might need to resolve such imports. By rule of hand, that would be all the routers that are not `type: "static"`.
+Now, your aliases will work everywhere in your app. Remember to add the `vite-tsconfig-paths` plugin to all the services that might need to resolve such imports. By rule of hand, that would be all the services that are not `type: "static"`.
 
-So, if you have a typical SSR app with server functions, you need to add the plugin to all three routers.
+So, if you have a typical SSR app with server functions, you need to add the plugin to all three services.
 
 ::: code-group
 
@@ -104,7 +104,7 @@ import { createApp } from "vinxi";
 import solid from "vite-plugin-solid";
 
 export default createApp({
-  routers: [
+  services: [
     {
       name: "public",
       type: "static",

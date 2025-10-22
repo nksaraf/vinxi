@@ -6,7 +6,7 @@ As the number of sub-routes grows, it becomes tedious to write out each route by
 
 Unlike most file system routing solutions, Vinxi doesn't care about what your preferred file system routing convention is. All it needs to know is what files are part of the route tree (there could be multiple files mapping to a route). Vinxi will take care of everything from HMR for the route tree, associating assets with routes, bundling them appropriately, etc.
 
-A file system router can be added to a Vinxi router using the `router.routes` option. The `routes` option expects a function that returns a `CompiledRouter`
+A file system router can be added to a Vinxi service using the `service.routes` option. The `routes` option expects a function that returns a `CompiledRouter`
 
 ```ts
 interface CompiledRouter extends EventTarget {
@@ -60,15 +60,15 @@ class MyFileSystemRouter extends BaseFileSystemRouter {
 }
 
 export default createApp({
-  routers: [
+  services: [
     {
-      routes: (router, app) => {
+      routes: (service, app) => {
         return new MyFileSystemRouter(
           {
             dir: path.join(__dirname, "app/routes"),
             extensions: ["jsx", "js", "tsx", "ts"],
           },
-          router,
+          service,
           app,
         );
       },

@@ -180,7 +180,7 @@ export async function loadApp(configFile = undefined, args = {}) {
 
 					const app = createApp({
 						mode: args.mode,
-						routers: [
+						services: [
 							{
 								name: "public",
 								type: "static",
