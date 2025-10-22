@@ -363,7 +363,6 @@ async function buildServer({ app, buildConfig }) {
 	await app.hooks.callHook("app:build:nitro:end", { app, nitro });
 	await nitro.close();
 	await app.hooks.callHook("app:build:end", { app });
-	process.exit(0);
 }
 
 /**
@@ -483,6 +482,8 @@ export async function createBuild({ app, buildConfig, configFile }) {
 			}
 		}
 
+		const vinxiBuildLabel = c.dim(c.blue("vinxi build time"));
+		console.time(vinxiBuildLabel);
 		for (const service of app.config.services) {
 			if (service.build !== false) {
 				if (existsSync(service.outDir) && buildConfig.cache === false) {
@@ -516,7 +517,11 @@ export async function createBuild({ app, buildConfig, configFile }) {
 			}
 		}
 
+		const vinxiServerBuildLabel = c.dim(c.blue("vinxi server build time"));
+		console.time(vinxiServerBuildLabel);
 		await buildServer({ app, buildConfig, configFile });
+		console.timeEnd(vinxiServerBuildLabel);
+		console.timeEnd(vinxiBuildLabel);
 	} catch (error) {
 		console.error("Build failed:", error);
 		process.exit(1);
