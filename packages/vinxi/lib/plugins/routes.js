@@ -8,9 +8,9 @@ export const moduleId = "vinxi/routes";
  */
 export function routes() {
 	/**
-	 * @type {Exclude<import("../router-modes.js").RouterSchema, import("../router-modes.js").StaticRouterSchema>}
+	 * @type {Exclude<import("../service-modes.js").ServiceSchema, import("../service-modes.js").StaticServicesSchema>}
 	 */
-	let router;
+	let service;
 	/**
 	 * @type {string}
 	 */
@@ -29,11 +29,11 @@ export function routes() {
 			isBuild = command.command === "build";
 		},
 		/**
-		 * @param {{ root: any; router: any; }} config
+		 * @param {{ root: any; service: any; }} config
 		 */
 		configResolved(config) {
 			root = config.root;
-			router = config.router;
+			service = config.service;
 		},
 		resolveId: {
 			order: "pre",
@@ -46,7 +46,7 @@ export function routes() {
 		async load(id) {
 			if (id === moduleId) {
 				const js = jsCode();
-				const routes = await router.internals.routes?.getRoutes();
+				const routes = await service.internals.routes?.getRoutes();
 
 				let routesCode = JSON.stringify(routes ?? [], (k, v) => {
 					if (v === undefined) {
@@ -81,13 +81,13 @@ export function routes() {
 								? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
 								: undefined,
 							import:
-								router.target === "server"
+								service.target === "server"
 									? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
 									: `_$(() => { const id = '${relative(
 											root,
 											buildId,
 									  )}'; return import(/* @vite-ignore */ import.meta.env.MANIFEST['${
-											router.name
+											service.name
 									  }'].inputs[id].output.path) })$_`,
 						};
 					}

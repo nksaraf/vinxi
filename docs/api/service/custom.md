@@ -1,22 +1,22 @@
-# Custom Router API
+# Custom Service API
 
-The Custom Router allows for defining routers with custom behavior or configurations that don’t fit into the predefined router types. It’s useful for advanced or specialized use cases.
+The Custom service allows for defining services with custom behavior or configurations that don’t fit into the predefined service types. It’s useful for advanced or specialized use cases.
 
 ## Configuration Options
 
 ### type
 
-- Type: `{ resolveConfig: (router: Router, app: App) => Router }`
+- Type: `{ resolveConfig: (service: Service, app: App) => service }`
 - Required: `true`
 
-Unlike all other routers, rather than a string literal, custom routers are defined by passing defining the `type` as an object with a `resolveConfig` function.
+Unlike all other services, rather than a string literal, custom services are defined by passing defining the `type` as an object with a `resolveConfig` function.
 
 ### name
 
 - Type: `string`
 - Required: `true`
 
-A unique identifier for the router.
+A unique identifier for the service.
 
 ### handler
 
@@ -30,7 +30,7 @@ The entry point file for Nitro server handling HTTP requests.
 - Type: `'server'`
 - Required: `true`
 
-Unlike all other routers where `target` is implied by the `type`, for custom routers the string literal `'server'` must be passed explicitly, as is currently the only option.
+Unlike all other services where `target` is implied by the `type`, for custom services the string literal `'server'` must be passed explicitly, as is currently the only option.
 
 ### base
 
@@ -51,7 +51,7 @@ A function returning an array of Vite plugins to use during the build process.
 
 ### routes
 
-- Type: `(router: ServiceSchemaInput, app: AppOptions) => CompiledRouter`
+- Type: `(service: ServiceSchemaInput, app: AppOptions) => Compiledservice`
 - Required: `false`
 
 A function defining the routing logic or structure.
@@ -76,9 +76,9 @@ The root directory for resolving paths. Defaults to the application's root direc
 
 ```ts
 {
-  name: "customRouter",
+  name: "customservice",
   type: {
-    resolveConfig: (router, app) => {
+    resolveConfig: (service, app) => {
       // Custom configuration logic
     },
   },

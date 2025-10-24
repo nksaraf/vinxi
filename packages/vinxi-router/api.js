@@ -48,13 +48,13 @@ class APIFileSystemRouter extends BaseFileSystemRouter {
 }
 
 export function apiRoutes(config) {
-	return (router, app) =>
+	return (service, app) =>
 		new APIFileSystemRouter(
 			{
 				dir: resolve.absolute(config.dir, router.root),
 				extensions: config.extensions ?? ["js", "jsx", "ts", "tsx"],
 			},
-			router,
+			service,
 			app,
 		);
 }
@@ -62,9 +62,9 @@ export function apiRoutes(config) {
 /**
  *
  * @param {{ plugins?: () => (import('vinxi').Plugin[] | Promise<import('vinxi').Plugin[]>); dir?: string; style?: any; base?: string; handler?: string }} param0
- * @returns {Partial<import('vinxi').RouterSchema>}
+ * @returns {Partial<import('vinxi').ServiceSchema>}
  */
-export function apiRouter({
+export function apiService({
 	dir = "./app/api/routes",
 	base = "/api",
 	handler = fileURLToPath(new URL("./api-handler.js", import.meta.url)),

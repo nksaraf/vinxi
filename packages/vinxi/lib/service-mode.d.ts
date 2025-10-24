@@ -2,7 +2,7 @@ import type { EventHandler } from "h3";
 
 import { App } from "./app.js";
 import { DevConfig } from "./dev-server.js";
-import { Internals } from "./router-modes.js";
+import { Internals } from "./service-modes.js";
 
 type PublicAsset = {
 	baseURL?: string | undefined;
@@ -13,10 +13,10 @@ type PublicAsset = {
 
 type DevHandler = {
 	route: string;
-	handler: EventHandler<any, any>;
+	handler: EventHandler;
 };
 
-type Router<T = {}> = T & {
+type Service<T = {}> = T & {
 	base: string;
 	type: string;
 	internals: Internals;
@@ -28,34 +28,29 @@ type Router<T = {}> = T & {
 	handler?: string;
 	build?: false;
 	server?: {
-		hmr?: Exclude<NonNullable<import("vite").UserConfig["server"]>["hmr"], boolean>;
+		hmr?: Exclude;
 	};
 };
 
-export type RouterMode<T extends any = any> = {
+export type ServiceMode<T extends any = any> = {
 	name: string;
 	dev: {
 		publicAssets?: (
-			router: Router<T>,
+			service: Service,
 			app: import("./app.js").App,
 		) => PublicAsset | PublicAsset[] | undefined | void;
 		plugins?: (
-			router: Router<T>,
+			service: Service,
 			app: import("./app.js").App,
-		) => Promise<(import("./vite-dev.js").Plugin | null)[]> | undefined | void;
+		) => Promise | undefined | void;
 		handler?: (
-			router: Router<T>,
+			service: Service,
 			app: App,
 			serveConfig: DevConfig,
-		) =>
-			| Promise<DevHandler | DevHandler[]>
-			| DevHandler
-			| DevHandler[]
-			| undefined
-			| void;
+		) => Promise | DevHandler | DevHandler[] | undefined | void;
 	};
 	resolveConfig: (
-		router: T,
+		service: T,
 		appConfig: import("./app.js").AppOptions,
 		order?: number,
 	) => T;

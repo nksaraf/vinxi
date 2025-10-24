@@ -51,8 +51,8 @@ class AppWorker {
 
 		this.initPromise = (async () => {
 			const app = await loadApp();
-			app.config.routers = app.config.routers.filter(
-				(router) => router.name === workerData.name || router.name === "client",
+			app.config.services = app.config.services.filter(
+				(service) => service.name === workerData.name || service.name === "client",
 			);
 			this.server = await createDevServer(app, {
 				port: 8989,

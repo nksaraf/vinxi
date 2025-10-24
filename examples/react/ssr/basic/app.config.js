@@ -7,7 +7,7 @@ export default createApp({
 			websocket: true,
 		},
 	},
-	routers: [
+	services: [
 		{
 			name: "public",
 			type: "static",

@@ -7,11 +7,11 @@ export function virtualId(/** @type {string} */ moduleName) {
 }
 
 export function handlerModule(
-	/** @type {import("./router-mode").Router} */ router,
+	/** @type {import("./service-mode").Service} */ service,
 ) {
-	return router.handler?.endsWith(".html")
-		? isAbsolute(router.handler)
-			? router.handler
-			: join(router.root, router.handler)
-		: `$vinxi/handler/${router.name}`;
+	return service.handler?.endsWith(".html")
+		? isAbsolute(service.handler)
+			? service.handler
+			: join(service.root, service.handler)
+		: `$vinxi/handler/${service.name}`;
 }

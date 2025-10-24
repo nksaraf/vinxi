@@ -6,7 +6,7 @@ import { consola, withLogger } from "./logger.js";
 import { join, normalize } from "./path.js";
 import { resolve } from "./resolve.js";
 
-export * from "./router-dev-plugins.js";
+export * from "./service-dev-plugins.js";
 
 /** @typedef {{ force?: boolean; devtools?: boolean; port?: number; ws?: { port?: number }; https?: import('@vinxi/listhen').HTTPSOptions | boolean; }} DevConfigInput */
 /** @typedef {{ force: boolean; port: number; devtools: boolean; ws: { port: number }; https?: import('@vinxi/listhen').Certificate; }} DevConfig */
@@ -32,7 +32,7 @@ export function devEntries() {
 
 /**
  *
- * @param {import('vite').InlineConfig & { router: import("./router-mode.js").Router<any>; app: import("./app.js").App }} config
+ * @param {import('vite').InlineConfig & { service: import("./service-mode.js").Service<any>; app: import("./app.js").App }} config
  * @returns
  */
 export async function createViteDevServer(config) {
@@ -43,27 +43,27 @@ export async function createViteDevServer(config) {
 /**
  *
  * @param {import('./app.js').App} app
- * @param {import('./router-mode.d.ts').Router<{ plugins?: any }>} router
+ * @param {import('./service-mode.js').Service<{ plugins?: any }>} service
  * @param {DevConfig} serveConfig
  * @returns {Promise<import("vite").ViteDevServer>}
  */
-export async function createViteHandler(router, app, serveConfig) {
+export async function createViteHandler(service, app, serveConfig) {
 	const vite = await import("vite");
 	const { getRandomPort } = await import("get-port-please");
-	const port = router.server?.hmr?.port ?? (await getRandomPort());
+	const port = service.server?.hmr?.port ?? (await getRandomPort());
 	const plugins = [
 		// ...(serveConfig.devtools ? [inspect()] : []),
-		...(((await router.internals.type.dev.plugins?.(router, app)) ?? []).filter(
-			Boolean,
-		) || []),
-		...(((await router.plugins?.(router)) ?? []).filter(Boolean) || []),
+		...((
+			(await service.internals.type.dev.plugins?.(service, app)) ?? []
+		).filter(Boolean) || []),
+		...(((await service.plugins?.(service)) ?? []).filter(Boolean) || []),
 	].filter(Boolean);
 
-	let base = join(app.config.server.baseURL ?? "/", router.base);
+	let base = join(app.config.server.baseURL ?? "/", service.base);
 
 	const viteDevServer = await createViteDevServer({
 		configFile: false,
-		root: router.root,
+		root: service.root,
 		base,
 		plugins,
 		optimizeDeps: {
@@ -71,7 +71,8 @@ export async function createViteHandler(router, app, serveConfig) {
 		},
 		dev: serveConfig,
 		mode: app.config.mode,
-		router,
+		router: service,
+		service: service,
 		app,
 		server: {
 			fs: {
@@ -82,14 +83,14 @@ export async function createViteHandler(router, app, serveConfig) {
 			},
 			middlewareMode: true,
 			hmr: {
-				...router.server?.hmr,
+				...service.server?.hmr,
 				port,
 			},
 			https: serveConfig.https,
 		},
 	});
 
-	router.internals.devServer = viteDevServer;
+	service.internals.devServer = viteDevServer;
 
 	return viteDevServer;
 }
@@ -124,11 +125,6 @@ export async function createDevServer(
 
 	await app.hooks.callHook("app:dev:start", { app, serveConfig });
 
-	// if (devtools) {
-	// 	const { devtoolsClient, devtoolsRpc } = await import("@vinxi/devtools");
-	// 	app.addRouter(devtoolsClient());
-	// 	app.addRouter(devtoolsRpc());
-	// }
 	const { createNitro, writeTypes } = await import("nitropack");
 
 	const nitro = await createNitro({
@@ -138,14 +134,14 @@ export async function createDevServer(
 		dev: true,
 		preset: "nitro-dev",
 		publicAssets: [
-			...app.config.routers
-				.map((router) => {
-					return router.internals.type.dev.publicAssets?.(router, app);
+			...app.config.services
+				.map((service) => {
+					return service.internals.type.dev.publicAssets?.(service, app);
 				})
 				.filter(
 					/**
 					 * @param {*} asset
-					 * @returns {asset is import("./router-mode.js").PublicAsset[]}
+					 * @returns {asset is import("./service-mode.js").PublicAsset[]}
 					 */
 					(asset) => Boolean(asset),
 				)
@@ -157,17 +153,17 @@ export async function createDevServer(
 		devHandlers: [
 			...(
 				await Promise.all(
-					app.config.routers
+					app.config.services
 						.sort((a, b) => b.base.length - a.base.length)
-						.map((router) =>
-							router.internals.type.dev.handler?.(router, app, serveConfig),
+						.map((service) =>
+							service.internals.type.dev.handler?.(service, app, serveConfig),
 						),
 				)
 			)
 				.filter(
 					/**
 					 * @param {*} asset
-					 * @returns {asset is import("./router-mode.js").DevHandler[]}
+					 * @returns {asset is import("./service-modes.js").DevHandler[]}
 					 */
 					(asset) => Boolean(asset),
 				)
@@ -195,15 +191,6 @@ export async function createDevServer(
 	const devApp = await createNitroDevServer(nitro);
 
 	await app.hooks.callHook("app:dev:server:created", { app, devApp });
-
-	// for (const router of app.config.routers) {
-	// 	if (router.internals && router.internals.routes) {
-	// 		const routes = await router.internals.routes.getRoutes();
-	// 		for (const route of routes) {
-	// 			withLogger({ router }, () => console.log(route.path));
-	// 		}
-	// 	}
-	// }
 
 	// Running plugins manually
 	const devViteServer = await import("vite").then(({ createServer }) =>
@@ -249,9 +236,9 @@ export async function createDevServer(
 			await app.hooks.callHook("app:dev:server:closing", { app, devApp });
 			await devApp.close();
 			await Promise.all(
-				app.config.routers
-					.filter((router) => router.internals.devServer)
-					.map((router) => router.internals.devServer?.close()),
+				app.config.services
+					.filter((service) => service.internals.devServer)
+					.map((service) => service.internals.devServer?.close()),
 			);
 			await app.hooks.callHook("app:dev:server:closed", { app, devApp });
 		},

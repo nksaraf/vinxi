@@ -2,17 +2,21 @@ import { Plugin as VitePlugin, ResolvedConfig as _ResolvedConfig } from "vite";
 
 import { App } from "./app.js";
 import { DevConfig } from "./dev-server.js";
-import { Router } from "./router-mode.js";
+import { Service } from "./service-modes.js";
 
 declare module "vite" {
 	interface UserConfig {
-		router?: Router;
-		app?: App;
+		// @deprecated
+		router?: Service;
+		service: Service;
+		app: App;
 		dev?: DevConfig;
 	}
 
 	interface PluginHookUtils {
-		router: Router;
+		// @deprecated
+		router: Service;
+		service: Service;
 		app: App;
 		dev: DevConfig;
 	}
@@ -24,29 +28,18 @@ declare module "nitropack" {
 	}
 }
 
-export type ViteConfig = _ResolvedConfig & { router: Router; app: App };
+export type ViteConfig = _ResolvedConfig & {
+	// @deprecated
+	router: Service;
+	service: Service;
+	app: App;
+};
 
 export type Plugin = VitePlugin;
 
-export type CustomizableConfig = Omit<
-	import("vite").InlineConfig,
-	| "appType"
-	| "app"
-	| "router"
-	| "base"
-	| "root"
-	| "publicDir"
-	| "mode"
-	| "server"
-	| "preview"
-	| "configFile"
-	| "envFile"
-> & {
-	build?: Omit<
-		import("vite").InlineConfig["build"],
-		"outDir" | "ssr" | "ssrManifest" | "rollupOptions"
-	> & {
-		rollupOptions?: Omit<import("vite").BuildOptions["rollupOptions"], "input">;
+export type CustomizableConfig = Omit & {
+	build?: Omit & {
+		rollupOptions?: Omit;
 	};
 };
 

@@ -3,7 +3,7 @@ import { moduleId } from "./routes.js";
 /**
  *
  * @param {import('vite').FSWatcher} watcher
- * @param {import("../router-modes.js").CompiledRouter} routes
+ * @param {import("../service-modes.js").CompiledRouter} routes
  */
 function setupWatcher(watcher, routes) {
 	watcher.on("unlink", (path) => routes.removeRoute(path));
@@ -13,7 +13,7 @@ function setupWatcher(watcher, routes) {
 
 /**
  * @param {import('vite').ViteDevServer} server
- * @param {import("../router-modes.js").CompiledRouter} routes
+ * @param {import("../service-modes.js").CompiledRouter} routes
  */
 function createRoutesReloader(server, routes) {
 	routes.addEventListener("reload", handleRoutesReload);
@@ -33,7 +33,7 @@ function createRoutesReloader(server, routes) {
 }
 
 export const fileSystemWatcher = () => {
-	/** @type {import('vite').ResolvedConfig & { router: Exclude<import('../router-modes.js').RouterSchema, import('../router-modes.js').StaticRouterSchema> }} */
+	/** @type {import('vite').ResolvedConfig & { service: Exclude<import('../service-modes.js').ServiceSchema, import('../service-modes.js').StaticServicesSchema> }} */
 	let config;
 
 	/** @type {undefined|(() => void)} */
@@ -44,13 +44,13 @@ export const fileSystemWatcher = () => {
 		name: "fs-watcher",
 		apply: "serve",
 		/**
-		 * @param {import('vite').ResolvedConfig & { router: any }} resolvedConfig
+		 * @param {import('vite').ResolvedConfig & { service: any }} resolvedConfig
 		 */
 		configResolved(resolvedConfig) {
 			config = resolvedConfig;
 		},
 		configureServer(server) {
-			const routes = config.router?.internals?.routes;
+			const routes = config.service?.internals?.routes;
 			if (routes) {
 				setupWatcher(server.watcher, routes);
 				close = createRoutesReloader(server, routes);

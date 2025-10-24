@@ -279,10 +279,16 @@ export class Vinxi {
 							type: "string",
 							description: "Server preset (default: node-server)",
 						},
+						// @deprecated
 						router: {
 							type: "string",
 							description:
 								"Router to build (by default, vinxi builds all your routers in separate processed and then into an app bundle, use this option to just build a single router",
+						},
+						service: {
+							type: "string",
+							description:
+								"Service to build (by default, vinxi builds all your services in separate processed and then into an app bundle, use this option to just build a single service",
 						},
 						version: {
 							type: "boolean",
@@ -309,6 +315,8 @@ export class Vinxi {
 								await printVersions();
 							}
 
+							args.service ??= args.router;
+
 							const { loadApp } = await import("../lib/load-app.js");
 							const app = await loadApp(configFile, {
 								mode: args.mode,
@@ -320,7 +328,8 @@ export class Vinxi {
 							const { createBuild } = await import("../lib/build.js");
 							const buildConfig = {
 								preset: args.preset,
-								router: args.router,
+								router: args.service,
+								service: args.service,
 								mode: args.mode,
 								server: args.server,
 								cache: args.cache,
@@ -453,9 +462,15 @@ export class Vinxi {
 							type: "number",
 							description: "Port to listen on (default: 3000)",
 						},
+
+						// @deprecated
 						router: {
 							type: "string",
 							description: "Router to run",
+						},
+						service: {
+							type: "string",
+							description: "Service to run",
 						},
 					},
 					async run({ args }) {
@@ -468,6 +483,8 @@ export class Vinxi {
 						const configFile = args.config;
 						globalThis.MANIFEST = {};
 
+						args.service ??= args.router;
+
 						const { loadApp } = await import("../lib/load-app.js");
 						const app = await loadApp(configFile, {
 							mode: args.mode,
@@ -476,12 +493,12 @@ export class Vinxi {
 							throw new Error("Couldn't load app");
 						}
 
-						let runnerRouter = args.router
-							? app.config.routers.find((r) => r.name === args.router)
-							: app.config.routers.find((r) => r.target === "server");
+						let runnerService = args.service
+							? app.config.services.find((r) => r.name === args.service)
+							: app.config.services.find((r) => r.target === "server");
 
 						const server = await createServer({
-							plugins: [...((await runnerRouter?.plugins?.()) ?? [])],
+							plugins: [...((await runnerService?.plugins?.()) ?? [])],
 							resolve: {
 								alias: {
 									"vinxi/sh": fileURLToPath(

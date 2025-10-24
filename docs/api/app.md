@@ -1,6 +1,6 @@
 # App API
 
-Vinxi is designed primary as a runtime for your server applications. The routers included in the app drive the behavior of the server, but the server is in your control via the `App` API.
+Vinxi is designed primary as a runtime for your server applications. The services included in the app drive the behavior of the server, but the server is in your control via the `App` API.
 
 ## `App` API
 
@@ -14,7 +14,7 @@ The primary way to use Vinxi is to use `createApp` to create an app,
 import { createApp } from "vinxi";
 
 export default createApp({
-  routers: [
+  services: [
     {
       name: "public",
       type: "static",
@@ -26,7 +26,7 @@ export default createApp({
       handler: "./server.ts",
       target: "server",
     },
-    // ... other routers
+    // ... other services
   ],
 });
 ```
@@ -49,8 +49,8 @@ Starts the development server for the app.
 import { createApp } from "vinxi";
 
 const app = createApp({
-  routers: [
-    // ... routers
+  services: [
+    // ... services
   ],
 });
 
@@ -65,28 +65,28 @@ Builds the app for production.
 import { createApp } from "vinxi";
 
 const app = createApp({
-  routers: [
-    // ... routers
+  services: [
+    // ... services
   ],
 });
 
 await app.build();
 ```
 
-### `app.getRouter(name)`
+### `app.getService(name)`
 
-Gets a router by name.
+Gets a service by name.
 
 ```ts
 import { createApp } from "vinxi";
 
 const app = createApp({
-  routers: [
-    // ... routers
+  services: [
+    // ... services
   ],
 });
 
-const router = app.getRouter("api");
+const apiService = app.getService("api");
 ```
 
 ## Running a Vinxi app using `node`
@@ -125,7 +125,7 @@ node .output/server/index.mjs
 
 ## Wrapping Vinxi
 
-You can also wrap Vinxi in your own runtime to add a pre-configured set of routers, middlewares, and other settings. You can also use it to add your own custom logic to the server.
+You can also wrap Vinxi in your own runtime to add a pre-configured set of services, middlewares, and other settings. You can also use it to add your own custom logic to the server.
 
 ::: code-group
 
@@ -134,7 +134,7 @@ import { createApp } from "vinxi";
 
 export function createFrameworkApp() {
   return createApp({
-    routers: [
+    services: [
       {
         name: "public",
         type: "static",
@@ -146,7 +146,7 @@ export function createFrameworkApp() {
         handler: "./server.ts",
         target: "server",
       },
-      // ... other routers
+      // ... other services
     ],
   });
 }

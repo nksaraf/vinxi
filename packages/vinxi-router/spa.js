@@ -4,7 +4,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 /**
  *
  * @param {{ plugins?: () => import('vinxi').Plugin[] | Promise<import('vinxi').Plugin[]>; routes?: import("vinxi").RouterStyleFn; }} param0
- * @returns {import('vinxi').RouterSchemaInput}
+ * @returns {import('vinxi').ServiceSchemaInput}
  */
 export function spaRouter({
 	plugins = () => [],

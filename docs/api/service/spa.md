@@ -1,26 +1,26 @@
-# Client Router API
+# SPA Service API
 
-The `client` router is a wrapper for Vite’s build processes and development server, allowing for easy integration with an `http` router for server-side rendering applications.
+The `spa` service specifies a single entrypoint for serving of single page applications.
 
 ## Configuration Options
 
 ### type
 
-- Value: `'client'`
+- Value: `'spa'`
 
 ### name
 
 - Type: `string`
 - Required: `true`
 
-A unique identifier for the router.
+A unique identifier for the service.
 
 ### handler
 
 - Type: `string`
 - Required: `true`
 
-The entry point file for the client application.
+The HTML file or entry point for the SPA.
 
 ### base
 
@@ -28,11 +28,7 @@ The entry point file for the client application.
 - Required: `false`
 - Default value: `'/'`
 
-The base URL path under which the built assets for client application will be served.
-
-::: tip
-As client router is mostly built assets, its good to use `base` for namspacing these assets in order to avoid conflicts, eg. `"/_build"`
-:::
+The base URL path under which the SPA will be served.
 
 ### plugins
 
@@ -45,7 +41,7 @@ A function returning an array of Vite plugins to use during the build process.
 
 ### routes
 
-- Type: `(router: ServiceSchemaInput, app: AppOptions) => CompiledRouter`
+- Type: `(service: ServiceSchemaInput, app: AppOptions) => Compiledservice`
 - Required: `false`
 
 A function defining the routing logic or structure.
@@ -70,10 +66,9 @@ The root directory for resolving paths. Defaults to the application's root direc
 
 ```ts
 {
-  name: "client",
-  type: "client",
-  handler: "./app/client.tsx",
-  base: "/_build",
-  plugins: () => [ reactRefresh() ],
+  name: "spa",
+  type: "spa",
+  handler: "./index.html",
+  plugins: () => [tsconfigPaths()],
 }
 ```

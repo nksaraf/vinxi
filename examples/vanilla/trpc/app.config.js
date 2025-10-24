@@ -2,8 +2,8 @@ import { fileURLToPath } from "url";
 import { createApp } from "vinxi";
 import { input } from "vinxi/plugins/config";
 
-/** @returns {import('vinxi').RouterSchemaInput} */
-function trpcRouter({ plugins = () => [] } = {}) {
+/** @returns {import('vinxi').ServiceSchemaInput} */
+function trpcService({ plugins = () => [] } = {}) {
 	return {
 		name: "server",
 		base: "/trpc",
@@ -20,13 +20,13 @@ function trpcRouter({ plugins = () => [] } = {}) {
 }
 
 export default createApp({
-	routers: [
+	services:: [
 		{
 			name: "public",
 			type: "static",
 			dir: "./public",
 		},
-		trpcRouter(),
+		trpcService(),
 		{
 			name: "client",
 			type: "spa",

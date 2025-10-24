@@ -1,6 +1,6 @@
 # SPA Router API
 
-The `spa` router specifies a single entrypoint for serving of single page applications. 
+The `spa` router specifies a single entrypoint for serving of single page applications.
 
 ## Configuration Options
 
@@ -41,7 +41,7 @@ A function returning an array of Vite plugins to use during the build process.
 
 ### routes
 
-- Type: `(router: RouterSchemaInput, app: AppOptions) => CompiledRouter`
+- Type: `(router: ServiceSchemaInput, app: AppOptions) => CompiledRouter`
 - Required: `false`
 
 A function defining the routing logic or structure.

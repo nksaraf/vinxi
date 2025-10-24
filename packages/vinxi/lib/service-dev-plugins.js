@@ -9,8 +9,10 @@ import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
 import { virtual } from "./plugins/virtual.js";
 
-export const ROUTER_MODE_DEV_PLUGINS = {
-	spa: (/** @type {import("./router-modes.js").SPARouterSchema} */ router) => [
+export const SERVICE_MODE_DEV_PLUGINS = {
+	spa: (
+		/** @type {import("./service-modes.js").SPAServicesSchema} */ service,
+	) => [
 		css(),
 		routes(),
 		devEntries(),
@@ -20,7 +22,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			ssr: {
 				noExternal: ["vinxi", /@vinxi\//],
 			},
-			cacheDir: `node_modules/.vinxi/cache/${router.name}`,
+			cacheDir: `node_modules/.vinxi/cache/${service.name}`,
 			optimizeDeps: {
 				exclude: ["vinxi"],
 			},
@@ -29,30 +31,30 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			},
 		}),
 		treeShake(),
-		router.internals.routes ? fileSystemWatcher() : null,
+		service.internals.routes ? fileSystemWatcher() : null,
 	],
 	http: (
-		/** @type {import("./router-modes.js").HTTPRouterSchema} */ router,
+		/** @type {import("./service-modes.js").HTTPServicesSchema} */ service,
 	) => [
 		virtual({
-			[handlerModule(router)]: ({ config }) => {
-				/** @type {import("./router-mode.js").Router<{ middleware?: string; }>} */
-				const router = config.router;
+			[handlerModule(service)]: ({ config }) => {
+				/** @type {import("./service-mode.js").Service<{ middleware?: string; }>} */
+				const service = config.service;
 				invariant(
-					router.handler,
+					service.handler,
 					"$vinxi/handler is only supported in handler mode",
 				);
 
-				if (router.middleware) {
+				if (service.middleware) {
 					return `
-					import middleware from "${join(router.root, router.middleware)}";
-					import handler from "${join(router.root, router.handler)}";
+					import middleware from "${join(service.root, service.middleware)}";
+					import handler from "${join(service.root, service.handler)}";
 					import { eventHandler } from "vinxi/http";
 					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler, websocket: handler.__websocket__});`;
 				}
 				return `import handler from "${join(
-					router.root,
-					router.handler,
+					service.root,
+					service.handler,
 				)}"; export default handler;`;
 			},
 		}),
@@ -64,33 +66,33 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			ssr: {
 				noExternal: ["vinxi", /@vinxi\//],
 			},
-			cacheDir: `node_modules/.vinxi/cache/${router.name}`,
+			cacheDir: `node_modules/.vinxi/cache/${service.name}`,
 			define: {
 				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},
 		}),
 		treeShake(),
-		config("handler:base", (router, app) => {
-			const clientRouter = router.link?.client
-				? app.getRouter(router.link?.client)
+		config("handler:base", (service, app) => {
+			const clientService = service.link?.client
+				? app.getService(service.link?.client)
 				: null;
 			return {
-				base: clientRouter ? clientRouter.base : router.base,
+				base: clientService ? clientService.base : service.base,
 			};
 		}),
-		router.internals.routes ? fileSystemWatcher() : null,
+		service.internals.routes ? fileSystemWatcher() : null,
 	],
 	client: (
-		/** @type {import("./router-modes.js").ClientRouterSchema} */ router,
+		/** @type {import("./service-modes.js").ClientServiceSchema} */ service,
 	) => [
 		css(),
 		virtual(
 			{
-				[handlerModule(router)]: ({ config }) => {
-					invariant(config.router.handler, "");
+				[handlerModule(service)]: ({ config }) => {
+					invariant(config.service.handler, "");
 					return `import * as mod from "${join(
-						config.router.root,
-						config.router.handler,
+						config.service.root,
+						config.service.handler,
 					)}"; export default mod['default']`;
 				},
 			},
@@ -101,7 +103,7 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 		manifest(),
 		config("appType", {
 			appType: "custom",
-			cacheDir: `node_modules/.vinxi/cache/${router.name}`,
+			cacheDir: `node_modules/.vinxi/cache/${service.name}`,
 			ssr: {
 				noExternal: ["vinxi", /@vinxi\//],
 			},
@@ -113,6 +115,6 @@ export const ROUTER_MODE_DEV_PLUGINS = {
 			},
 		}),
 		treeShake(),
-		router.internals.routes ? fileSystemWatcher() : null,
+		service.internals.routes ? fileSystemWatcher() : null,
 	],
 };

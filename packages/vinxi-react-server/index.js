@@ -18,7 +18,7 @@ function appEntry() {
 
 export function defineConfig() {
 	return createApp({
-		routers: [
+		services: [
 			{
 				name: "public",
 				type: "static",

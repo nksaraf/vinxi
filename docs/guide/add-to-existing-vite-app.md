@@ -21,7 +21,7 @@ import { createApp } from "vinxi";
 import { config } from "vinxi/plugins/config";
 
 export default createApp({
-  routers: [
+  services: [
     {
       name: "public",
       type: "static",
@@ -67,7 +67,7 @@ But `nodemailer` is not something you can use in the browser. You need to run it
 import { createApp } from "vinxi";
 
 export default createApp({
-  routers: [
+  services: [
     {
       name: "public",
       type: "static",

@@ -32,7 +32,15 @@ import { routes } from "./plugins/routes.js";
 import { treeShake } from "./plugins/tree-shake.js";
 import { virtual } from "./plugins/virtual.js";
 
-/** @typedef {{ mode?: string; preset?: string; server?: boolean; router?: string; nitro?: boolean; cache?: boolean }} BuildConfig */
+/** @typedef {{
+ * 		mode?: string;
+ * 		preset?: string;
+ * 		server?: boolean;
+ * 		router?: string;
+ * 		nitro?: boolean;
+ * 		cache?: boolean;
+ * 		service?: string
+ * }} BuildConfig */
 
 const require = createRequire(import.meta.url);
 
@@ -48,9 +56,9 @@ async function buildServer({ app, buildConfig }) {
 	console.log(`⚙  ${c.green("Building your app...")}`);
 	await app.hooks.callHook("app:build:start", { app, buildConfig });
 
-	// skip any routers that are not being built
-	app.config.routers = app.config.routers.filter(
-		(router) => router.build !== false,
+	// skip any services that are not being built
+	app.config.services = app.config.services.filter(
+		(service) => service.build !== false,
 	);
 
 	const nitro = await createNitro({
@@ -103,39 +111,39 @@ async function buildServer({ app, buildConfig }) {
 		],
 		buildDir: ".vinxi",
 		handlers: [
-			...[...app.config.routers]
+			...[...app.config.services]
 				.sort((a, b) => b.base.length - a.base.length)
-				.map((router) => {
-					if (router.type === "http") {
-						invariant(router.handler, "Missing router.handler");
+				.map((service) => {
+					if (service.type === "http") {
+						invariant(service.handler, "Missing service.handler");
 						const bundlerManifest = JSON.parse(
-							readFileSync(viteManifestPath(router), "utf-8"),
+							readFileSync(viteManifestPath(service), "utf-8"),
 						);
 
-						const virtualHandlerId = virtualId(handlerModule(router));
+						const virtualHandlerId = virtualId(handlerModule(service));
 
 						const handler = join(
-							router.outDir,
-							router.base,
+							service.outDir,
+							service.base,
 							bundlerManifest[
 								virtualHandlerId in bundlerManifest
 									? virtualHandlerId
-									: relative(app.config.root, router.handler)
+									: relative(app.config.root, service.handler)
 							].file,
 						);
 
 						return [
 							{
-								route: router.base.length === 1 ? "/" : `${router.base}`,
+								route: service.base.length === 1 ? "/" : `${service.base}`,
 								handler,
 								middleware: true,
 							},
 						];
-					} else if (router.type === "spa") {
+					} else if (service.type === "spa") {
 						return [
 							{
-								route: router.base.length === 1 ? "/" : `${router.base}`,
-								handler: `$vinxi/spa/${router.name}`,
+								route: service.base.length === 1 ? "/" : `${service.base}`,
+								handler: `$vinxi/spa/${service.name}`,
 								middleware: true,
 							},
 						];
@@ -145,25 +153,25 @@ async function buildServer({ app, buildConfig }) {
 			...(app.config.server.handlers ?? []),
 		].filter(Boolean),
 		publicAssets: [
-			...app.config.routers
-				.map((router) => {
-					if (router.type === "static") {
+			...app.config.services
+				.map((service) => {
+					if (service.type === "static") {
 						return {
 							// @ts-expect-error
-							dir: router.dir,
-							baseURL: router.base,
+							dir: service.dir,
+							baseURL: service.base,
 							fallthrough: true,
 						};
-					} else if (router.type === "http") {
+					} else if (service.type === "http") {
 						return {
-							dir: join(router.outDir, router.base, "assets"),
-							baseURL: join(router.base, "assets"),
+							dir: join(service.outDir, service.base, "assets"),
+							baseURL: join(service.base, "assets"),
 							fallthrough: true,
 						};
-					} else if (router.type === "spa" || router.type === "client") {
+					} else if (service.type === "spa" || service.type === "client") {
 						return {
-							dir: join(router.outDir, router.base),
-							baseURL: router.base,
+							dir: join(service.outDir, service.base),
+							baseURL: service.base,
 							fallthrough: true,
 						};
 					}
@@ -178,15 +186,19 @@ async function buildServer({ app, buildConfig }) {
 			"$vinxi/prod-app": () => {
 				const config = {
 					...app.config,
-					routers: app.config.routers.map((router) => {
-						if (router.type === "spa" && !router.handler.endsWith(".html")) {
+					services: app.config.services.map((service) => {
+						if (
+							service.type === "spa" &&
+							service.handler &&
+							!service.handler.endsWith(".html")
+						) {
 							return {
-								...router,
+								...service,
 								handler: "index.html",
 							};
 						}
 
-						return router;
+						return service;
 					}),
 				};
 				return `
@@ -200,13 +212,13 @@ async function buildServer({ app, buildConfig }) {
 				const buildManifest = ${JSON.stringify(
 					Object.fromEntries(
 						// @ts-ignore
-						app.config.routers
-							.map((router) => {
-								if (router.type !== "static") {
+						app.config.services
+							.map((service) => {
+								if (service.type !== "static") {
 									const bundlerManifest = JSON.parse(
-										readFileSync(viteManifestPath(router), "utf-8"),
+										readFileSync(viteManifestPath(service), "utf-8"),
 									);
-									return [router.name, bundlerManifest];
+									return [service.name, bundlerManifest];
 								}
 							})
 							.filter(Boolean),
@@ -216,10 +228,13 @@ async function buildServer({ app, buildConfig }) {
 				const routeManifest = ${JSON.stringify(
 					Object.fromEntries(
 						// @ts-ignore
-						app.config.routers
-							.map((router) => {
-								if (router.type !== "static" && router.internals.routes) {
-									return [router.name, router.internals.routes?.getRoutes?.()];
+						app.config.services
+							.map((service) => {
+								if (service.type !== "static" && service.internals.routes) {
+									return [
+										service.name,
+										service.internals.routes?.getRoutes?.(),
+									];
 								}
 							})
 							.filter(Boolean),
@@ -230,7 +245,10 @@ async function buildServer({ app, buildConfig }) {
 	  return {
 		config: { ...appConfig, buildManifest, routeManifest },
 		getRouter(name) {
-		  return appConfig.routers.find(router => router.name === name)
+		  return appConfig.services.find(service => service.name === name)
+		},
+		getService(name) {
+		  return appConfig.services.find(service => service.name === name)
 		}
 	  }
 	}
@@ -241,12 +259,12 @@ async function buildServer({ app, buildConfig }) {
 	}
   `;
 			},
-			...app.config.routers
-				.filter((router) => router.type === "spa")
-				.reduce((virtuals, router) => {
-					virtuals[`$vinxi/spa/${router.name}`] = () => {
+			...app.config.services
+				.filter((service) => service.type === "spa")
+				.reduce((virtuals, service) => {
+					virtuals[`$vinxi/spa/${service.name}`] = () => {
 						const indexHtml = readFileSync(
-							join(router.outDir, router.base, "index.html"),
+							join(service.outDir, service.base, "index.html"),
 							"utf-8",
 						);
 						return `
@@ -294,11 +312,11 @@ async function buildServer({ app, buildConfig }) {
 
 	// remove js files from assets for 'http' routers targetting 'server'
 	// https://github.com/nksaraf/vinxi/issues/363
-	for (const router of app.config.routers.filter(
+	for (const service of app.config.services.filter(
 		(r) => r.type === "http" && r.target === "server",
 	)) {
-		const routerDir = join(nitro.options.output.publicDir, router.base);
-		const assetsDir = join(routerDir, "assets");
+		const serviceDir = join(nitro.options.output.publicDir, service.base);
+		const assetsDir = join(serviceDir, "assets");
 		if (!existsSync(assetsDir)) {
 			continue;
 		}
@@ -321,10 +339,10 @@ async function buildServer({ app, buildConfig }) {
 			}
 		}
 
-		// if the router dir is empty (including its subdirectories), remove it
+		// if the service dir is empty (including its subdirectories), remove it
 		// if the subdirectories are empty, they will be removed recursively
 		if (hasFilesDeleted) {
-			await deleteEmptyDirs(routerDir);
+			await deleteEmptyDirs(serviceDir);
 		}
 	}
 
@@ -345,7 +363,6 @@ async function buildServer({ app, buildConfig }) {
 	await app.hooks.callHook("app:build:nitro:end", { app, nitro });
 	await nitro.close();
 	await app.hooks.callHook("app:build:end", { app });
-	process.exit(0);
 }
 
 /**
@@ -361,125 +378,150 @@ export async function createBuild({ app, buildConfig, configFile }) {
 		const { existsSync, promises: fsPromises } = await import("fs");
 		const { join } = await import("./path.js");
 		const { fileURLToPath } = await import("url");
-		const vinxiBuildLabel = c.dim(c.blue("vinxi build time"));
-		console.time(vinxiBuildLabel);
 
-		debug(buildConfig);
+		debug("build config", buildConfig);
+
 		if (buildConfig.server || buildConfig.nitro) {
-			await buildServer({ app, buildConfig, configFile });
+			const vinxiBuildLabel = c.dim(c.blue("vinxi server build time"));
+			console.time(vinxiBuildLabel);
+			try {
+				await buildServer({ app, buildConfig, configFile });
+			} catch (error) {
+				console.error("Error building server:", error);
+				throw error;
+			} finally {
+				console.timeEnd(vinxiBuildLabel);
+			}
 			return;
 		}
 
-		if (buildConfig.router) {
+		if (buildConfig.service) {
 			console.log("\n");
 
-			let router = app.config.routers.find(
-				(r) => r.name === buildConfig.router,
+			let service = app.config.services.find(
+				(s) => s.name === buildConfig.service,
 			);
 
-			if (!router) {
-				throw new Error(`Router ${buildConfig.router} not found`);
+			if (!service) {
+				throw new Error(`Service ${buildConfig.service} not found`);
 			}
 
-			if (router.type === "static") {
-				log(c.yellow(router.name), `skipping static router`);
-				return;
-			}
+			console.time(
+				`${c.dim(c.blue("vinxi"))} ${c.yellow(service.name)} build time`,
+			);
 
-			if (router.type === "spa" && !router.handler.endsWith(".html")) {
-				log(c.yellow(router.name), `generating index.html for SPA`);
-				await generateIndexHTMLforSPA({
-					app,
-					router,
-					mode: buildConfig.mode ?? "production",
-				});
-
-				router = {
-					...router,
-					handler: "./index.html",
-				};
-			}
-
-			log(`${c.green("building...")}`);
-			if (
-				router.build !== false &&
-				(buildConfig.cache === false || !existsSync(router.outDir))
-			) {
-				if (existsSync(router.outDir) && buildConfig.cache === false) {
-					await withLogger({ router, requestId: "clean" }, async () => {
-						log(c.yellow(router.name), `cleaning previous build`);
-						debug(c.yellow(router.name), `removing ${router.outDir}`);
-						await fsPromises.rm(router.outDir, { recursive: true });
-					});
+			try {
+				if (service.type === "static") {
+					log(c.yellow(service.name), `skipping static service`);
+					return;
 				}
 
-				if (buildConfig.cache === false) {
-					await withLogger({ router, requestId: "build" }, async () => {
+				if (
+					service.type === "spa" &&
+					service.handler &&
+					!service.handler.endsWith(".html")
+				) {
+					log(c.yellow(service.name), `generating index.html for SPA`);
+					await generateIndexHTMLforSPA({
+						app,
+						service,
+						mode: buildConfig.mode ?? "production",
+					});
+
+					service = {
+						...service,
+						handler: "./index.html",
+					};
+				}
+
+				if (
+					service.build !== false &&
+					(buildConfig.cache === false || !existsSync(service.outDir))
+				) {
+					if (existsSync(service.outDir) && buildConfig.cache === false) {
+						log(c.yellow(service.name), `cleaning previous build`);
+						debug(c.yellow(service.name), `removing ${service.outDir}`);
+						await fsPromises.rm(service.outDir, { recursive: true });
+					}
+
+					if (buildConfig.cache === false) {
 						try {
-							await createRouterBuild(app, router, buildConfig.mode);
+							await createServiceBuild(
+								app,
+								service,
+								buildConfig.mode ?? "production",
+							);
 						} catch (error) {
-							console.error(`Error building router ${router.name}:`, error);
+							console.error(`Error building service ${service.name}:`, error);
 							process.exit(1);
 						}
-					});
-				} else {
-					log(c.yellow(router.name), `skipping build`);
-					log(c.yellow(router.name), `using cached build`);
-					debug(
-						c.yellow(router.name),
-						`cached build directory: ${router.outDir}`,
-					);
-				}
-			} else {
-			}
-
-			log(c.yellow(router.name), c.green(`built successfully`));
-			debug(
-				c.yellow(router.name),
-				c.green(`target directory: ${router.outDir}`),
-			);
-			console.timeEnd(vinxiBuildLabel);
-			return;
-		}
-
-		for (const router of app.config.routers) {
-			if (router.build !== false) {
-				if (existsSync(router.outDir) && buildConfig.cache === false) {
-					await withLogger({ router, requestId: "build" }, async () => {
-						log(`removing ${router.outDir}`);
-						await rm(router.outDir, { recursive: true });
-					});
-				}
-			} else {
-				await withLogger({ router, requestId: "build" }, async () => {
-					log(`skipping ${router.name}`);
-				});
-			}
-		}
-
-		for (const router of app.config.routers) {
-			if (
-				router.type !== "static" &&
-				router.build !== false &&
-				(buildConfig.cache === false || !existsSync(router.outDir))
-			) {
-				await withLogger({ router, requestId: "build" }, async () => {
-					try {
-						await createRouterBuildInWorker(
-							app,
-							router,
-							buildConfig.mode,
-							configFile,
+					} else {
+						log(c.yellow(service.name), `skipping build`);
+						log(c.yellow(service.name), `using cached build`);
+						debug(
+							c.yellow(service.name),
+							`cached build directory: ${service.outDir}`,
 						);
-					} catch (error) {
-						console.error(`Error building router ${router.name}:`, error);
-						process.exit(1);
 					}
-				});
+				} else {
+				}
+
+				log(c.yellow(service.name), c.green(`built successfully`));
+				debug(
+					c.yellow(service.name),
+					c.green(`target directory: ${service.outDir}`),
+				);
+				return;
+			} catch (error) {
+				console.error(`Error building service ${service.name}:`, error);
+				throw error;
+			} finally {
+				console.timeEnd(
+					`${c.dim(c.blue("vinxi"))} ${c.yellow(service.name)} build time`,
+				);
 			}
 		}
 
+		const vinxiBuildLabel = c.dim(c.blue("vinxi build time"));
+		console.time(vinxiBuildLabel);
+		for (const service of app.config.services) {
+			if (service.build !== false) {
+				if (existsSync(service.outDir) && buildConfig.cache === false) {
+					log(`removing ${service.outDir}`);
+					await rm(service.outDir, { recursive: true });
+				}
+			} else {
+				log(`skipping ${service.name}`);
+			}
+		}
+
+		for (const service of app.config.services) {
+			if (
+				service.type !== "static" &&
+				service.build !== false &&
+				(buildConfig.cache === false || !existsSync(service.outDir))
+			) {
+				console.log();
+				log(c.yellow(service.name), c.green(`building in worker`));
+				try {
+					await buildServiceInWorker(
+						app,
+						service,
+						buildConfig.mode,
+						configFile,
+					);
+				} catch (error) {
+					console.error(`Error building service ${service.name}:`, error);
+					process.exit(1);
+				}
+			}
+		}
+
+		const vinxiServerBuildLabel = c.dim(c.blue("vinxi server build time"));
+		console.time(vinxiServerBuildLabel);
 		await buildServer({ app, buildConfig, configFile });
+		console.timeEnd(vinxiServerBuildLabel);
+		console.timeEnd(vinxiBuildLabel);
 	} catch (error) {
 		console.error("Build failed:", error);
 		process.exit(1);
@@ -488,7 +530,7 @@ export async function createBuild({ app, buildConfig, configFile }) {
 
 /**
  *
- * @param {import("vite").InlineConfig & { router?: any; app: any; root: string }} config
+ * @param {import("vite").InlineConfig & { router?: any; service?: any; app: any; root: string }} config
  */
 async function createViteBuild(config) {
 	const cwd = process.cwd();
@@ -502,55 +544,57 @@ async function createViteBuild(config) {
 /**
  *
  * @param {import("./app.js").App} app
- * @param {import("./router-mode.js").Router} router
+ * @param {import("./service-mode.js").Service} service
  * @param {string} [mode]
  * @param {string} [configFile]
  */
-async function createRouterBuildInWorker(app, router, mode, configFile) {
+async function buildServiceInWorker(app, service, mode, configFile) {
 	const sh = await import("../runtime/sh.js");
 	const { fileURLToPath } = await import("url");
 	await sh.default`node ${fileURLToPath(
 		new URL("../bin/cli.mjs", import.meta.url).href,
-	)} build --router=${router.name} ${mode ? `--mode=${mode}` : ""} ${
-		configFile ? `--config=${configFile}` : ""
-	}`;
+	)} build --vinxi-worker --service=${service.name} ${
+		mode ? `--mode=${mode}` : ""
+	} ${configFile ? `--config=${configFile}` : ""}`;
 }
 
 /**
  *
  * @param {object} options
  * @param {import("./app.js").App} options.app
- * @param {import("./router-mode.js").Router} options.router
+ * @param {import("./service-mode.js").Service} options.service
  * @param {string} options.mode
  */
-async function generateIndexHTMLforSPA({ app, router, mode }) {
-	await app.hooks.callHook("app:build:router:html:generate:start", {
+async function generateIndexHTMLforSPA({ app, service, mode }) {
+	await app.hooks.callHook("app:build:service:html:generate:start", {
 		app,
-		router,
+		service,
+		// @deprecated
+		router: service,
 	});
 
-	if (!router.handler) {
-		throw new Error(`Router ${router.name} has no handler`);
+	if (!service.handler) {
+		throw new Error(`Service ${service.name} has no handler`);
 	}
 
 	await createViteBuild({
 		app: app,
-		root: router.root,
+		root: service.root,
 		mode,
 		build: {
 			ssr: true,
 			ssrManifest: true,
 			rollupOptions: {
-				input: { handler: router.handler },
+				input: { handler: service.handler },
 			},
 			target: "esnext",
-			outDir: join(router.outDir + "_entry"),
+			outDir: join(service.outDir + "_entry"),
 			emptyOutDir: true,
 		},
 	});
 
 	const render = await import(
-		pathToFileURL(join(router.outDir + "_entry", "handler.js")).href
+		pathToFileURL(join(service.outDir + "_entry", "handler.js")).href
 	);
 
 	const smallApp = createApp();
@@ -575,58 +619,75 @@ async function generateIndexHTMLforSPA({ app, router, mode }) {
 
 	const htmlCode = { code: text };
 
-	await app.hooks.callHook("app:build:router:html:generate:end", {
+	await app.hooks.callHook("app:build:service:html:generate:end", {
 		app,
-		router,
+		// @deprecated
+		router: service,
+		service,
 		html: htmlCode,
 	});
 
-	writeFileSync(join(router.root, "index.html"), htmlCode.code);
+	writeFileSync(join(service.root, "index.html"), htmlCode.code);
 
-	await app.hooks.callHook("app:build:router:html:generate:write", {
+	await app.hooks.callHook("app:build:service:html:generate:write", {
 		app,
-		router,
+		// @deprecated
+		router: service,
+		service,
 		html: htmlCode,
-		path: join(router.root, "index.html"),
+		path: join(service.root, "index.html"),
 	});
 }
 
 /**
  *
  * @param {import("./app.js").App} app
- * @param {import("./router-mode.js").Router} router
- * @param {string} [mode]
+ * @param {import("./service-mode.js").Service} service
+ * @param {string} mode
  */
-async function createRouterBuild(app, router, mode) {
-	console.log("\n");
-	console.log(c.green(`📦 Compiling ${router.name} router...`));
+async function createServiceBuild(app, service, mode) {
+	log(c.yellow(service.name), c.green(`build start`));
 	console.log("");
-	await app.hooks.callHook("app:build:router:start", { app, router });
-	let buildRouter = router;
-	if (router.type === "spa" && !router.handler.endsWith(".html")) {
-		await generateIndexHTMLforSPA({ app, router, mode });
-		buildRouter = {
-			...router,
+	await app.hooks.callHook("app:build:service:start", {
+		app,
+		// @deprecated
+		router: service,
+		service,
+	});
+	let buildService = service;
+	if (
+		service.type === "spa" &&
+		service.handler &&
+		!service.handler.endsWith(".html")
+	) {
+		await generateIndexHTMLforSPA({ app, service, mode });
+		buildService = {
+			...service,
 			handler: "./index.html",
 		};
 	}
 
-	log(`${c.yellow(router.name)} building in ${router.type} mode`);
+	log(`${c.yellow(service.name)} building in ${service.type} mode`);
 
 	const viteBuildConfig = {
-		router: buildRouter,
+		// @deprecated
+		router: buildService,
+		service: buildService,
 		app,
-		root: router.root,
+		root: service.root,
 		plugins: [
-			buildTargetPlugin[buildRouter.target]?.(buildRouter) ?? [],
-			routerModePlugin[buildRouter.internals.type.name]?.(buildRouter) ?? [],
-			...((await buildRouter.plugins?.(buildRouter)) ?? []),
+			buildTargetPlugin[buildService.target]?.(buildService) ?? [],
+			serviceTypePlugins[buildService.internals.type.name]?.(buildService) ??
+				[],
+			...((await buildService.plugins?.(buildService)) ?? []),
 			{
-				name: "vinxi:build:router:config",
+				name: "vinxi:build:service:config",
 				async configResolved(config) {
-					await app.hooks.callHook("app:build:router:vite:config:resolved", {
+					await app.hooks.callHook("app:build:service:vite:config:resolved", {
 						vite: config,
-						router: buildRouter,
+						service: buildService,
+						// @deprecated
+						router: buildService,
 						app,
 					});
 				},
@@ -635,31 +696,37 @@ async function createRouterBuild(app, router, mode) {
 		mode,
 	};
 
-	await app.hooks.callHook("app:build:router:vite:config", {
+	await app.hooks.callHook("app:build:service:vite:config", {
 		vite: viteBuildConfig,
-		router: buildRouter,
+		// @deprecated
+		router: buildService,
+		service: buildService,
 		app,
 	});
 
-	await app.hooks.callHook("app:build:router:vite:start", {
+	await app.hooks.callHook("app:build:service:vite:start", {
 		vite: viteBuildConfig,
-		router: buildRouter,
+		// @deprecated
+		router: buildService,
+		service: buildService,
 		app,
 	});
 
 	await createViteBuild(viteBuildConfig);
 
-	await app.hooks.callHook("app:build:router:vite:end", {
+	await app.hooks.callHook("app:build:service:vite:end", {
 		vite: viteBuildConfig,
-		router: buildRouter,
+		// @deprecated
+		router: buildService,
+		service: buildService,
 		app,
 	});
 
-	if (router.type === "spa" && !router.handler.endsWith(".html")) {
-		await rm(join(router.root, "index.html"));
+	if (service.type === "spa" && !service.handler.endsWith(".html")) {
+		await rm(join(service.root, "index.html"));
 	}
 
-	consola.success("build done");
+	log(c.yellow(service.name), c.green(`build done`));
 }
 
 const buildTargetPlugin = {
@@ -688,7 +755,7 @@ const spaManifest = () => {
 						attrs: {
 							src: join(
 								config.app.config.server.baseURL ?? "/",
-								config.router.base,
+								config.service.base,
 								"manifest.js",
 							),
 						},
@@ -715,19 +782,24 @@ const spaManifest = () => {
 	return plugin;
 };
 
-const routerModePlugin = {
+const serviceTypePlugins = {
 	static: () => [],
-	client: (router) => [
+	/**
+	 *
+	 * @param {import('./service-mode.js').Service} service
+	 * @returns
+	 */
+	client: (service) => [
 		virtual(
 			{
-				[handlerModule(router)]: ({ config }) => {
+				[handlerModule(service)]: ({ config }) => {
 					invariant(
-						config.router.type === "client",
+						config.service.type === "client",
 						"$vinxi/handler is only supported in client mode",
 					);
 					return `import * as mod from "${join(
-						config.router.root,
-						config.router.handler,
+						config.service.root,
+						config.service.handler,
 					)}"; export default mod['default']`;
 				},
 			},
@@ -753,25 +825,33 @@ const routerModePlugin = {
 			},
 		}),
 	],
-	http: (router) => [
+	/**
+	 *
+	 * @param {import('./service-mode.js').Service} service
+	 * @returns
+	 */
+	http: (service) => [
 		virtual(
 			{
-				[handlerModule(router)]: ({ config }) => {
+				[handlerModule(service)]: ({ config }) => {
 					invariant(
-						config.router.type === "http",
+						config.service.type === "http",
 						"$vinxi/handler is only supported in handler mode",
 					);
 
-					if (config.router.middleware) {
+					if (config.service.middleware) {
 						return `
-					import middleware from "${join(config.router.root, config.router.middleware)}";
-					import handler from "${join(config.router.root, config.router.handler)}";
+					import middleware from "${join(
+						config.service.root,
+						config.service.middleware,
+					)}";
+					import handler from "${join(config.service.root, config.service.handler)}";
 					import { eventHandler } from "vinxi/http";
 					export default eventHandler({ onRequest: middleware.onRequest, onBeforeResponse: middleware.onBeforeResponse, handler, websocket: handler.__websocket__ });`;
 					}
 					return `import handler from "${join(
-						config.router.root,
-						config.router.handler,
+						config.service.root,
+						config.service.handler,
 					)}"; export default handler;`;
 				},
 			},
@@ -792,26 +872,31 @@ const routerModePlugin = {
 				"process.env.TARGET": JSON.stringify(process.env.TARGET ?? "node"),
 			},
 		}),
-		config("handler:base", (router, app) => {
-			const clientRouter = router.link?.client
-				? app.getRouter(router.link?.client)
+		config("handler:base", (service, app) => {
+			const clientService = service.link?.client
+				? app.getService(service.link?.client)
 				: null;
 
-			let routerBase = clientRouter ? clientRouter.base : router.base;
+			let serviceBase = clientService ? clientService.base : service.base;
 
-			let base = join(app.config.server.baseURL ?? "/", routerBase);
+			let base = join(app.config.server.baseURL ?? "/", serviceBase);
 
 			return {
 				base,
 			};
 		}),
 	],
-	spa: (router) => [
-		router.handler?.endsWith(".html")
+	/**
+	 *
+	 * @param {import('./service-mode.js').Service} service
+	 * @returns
+	 */
+	spa: (service) => [
+		service.handler?.endsWith(".html")
 			? undefined
 			: virtual(
 					{
-						[handlerModule(router)]: ({ config }) => {
+						[handlerModule(service)]: ({ config }) => {
 							return `export default {}`;
 						},
 					},
@@ -851,14 +936,14 @@ function toRouteId(route) {
 
 /**
  *
- * @param {import("./router-mode.js").Router<{ handler: string }>} router
+ * @param {import("./service-mode.js").Service<{ handler: string }>} service
  * @returns
  */
-export async function getEntries(router) {
+export async function getEntries(service) {
 	return [
-		handlerModule(router),
+		handlerModule(service),
 		...(
-			(await router.internals.routes?.getRoutes())?.map((r) =>
+			(await service.internals.routes?.getRoutes())?.map((r) =>
 				Object.entries(r)
 					.filter(([r, v]) => v && r.startsWith("$") && !r.startsWith("$$"))
 					.map(([, v]) => toRouteId(v)),
@@ -873,16 +958,16 @@ export async function getEntries(router) {
 function handlerBuild() {
 	return {
 		name: "react-rsc:handler",
-		async config({ router, app }, env) {
+		async config({ service, app }, env) {
 			if (env.command === "build") {
 				invariant(
-					router && router.type !== "static" && router.handler,
-					"Invalid router",
+					service && service.type !== "static" && service.handler,
+					"Invalid service",
 				);
 				const { builtinModules } = await import("module");
 				const { join } = await import("./path.js");
-				const input = await getEntries(router);
-				let base = join(app?.config.server.baseURL ?? "/", router.base);
+				const input = await getEntries(service);
+				let base = join(app?.config.server.baseURL ?? "/", service.base);
 				return {
 					build: {
 						rollupOptions: {
@@ -900,7 +985,7 @@ function handlerBuild() {
 						manifest: true,
 						target: "node18",
 						ssrEmitAssets: true,
-						outDir: join(router.outDir, router.base),
+						outDir: join(service.outDir, service.base),
 						emptyOutDir: false,
 					},
 					base,
@@ -917,23 +1002,23 @@ function handlerBuild() {
 function browserBuild() {
 	return {
 		name: "build:browser",
-		async config({ router, app }, env) {
+		async config({ service, app }, env) {
 			if (env.command === "build") {
-				invariant(router && router.type !== "static", "Invalid router");
+				invariant(service && service.type !== "static", "Invalid service");
 				const { join } = await import("./path.js");
-				let base = join(app.config.server.baseURL ?? "/", router.base);
+				let base = join(app.config.server.baseURL ?? "/", service.base);
 
 				return {
 					build: {
 						rollupOptions: {
-							input: await getEntries(router),
+							input: await getEntries(service),
 							treeshake: true,
 							preserveEntrySignatures: "exports-only",
 						},
 						minify: process.env.MINIFY !== "false" ?? true,
 						manifest: true,
 						cssMinify: "esbuild",
-						outDir: join(router.outDir, router.base),
+						outDir: join(service.outDir, service.base),
 						target: "esnext",
 						emptyOutDir: false,
 					},

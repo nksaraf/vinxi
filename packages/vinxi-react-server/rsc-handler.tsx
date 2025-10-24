@@ -18,7 +18,7 @@ export function createHandler() {
 				// This is the client-side case
 				const [filepath, name] = serverReference.split("#");
 				const action = (
-					await getManifest(import.meta.env.ROUTER_NAME).chunks[
+					await getManifest(import.meta.env.SERVICE_NAME).chunks[
 						filepath
 					].import()
 				)[name];
@@ -64,9 +64,8 @@ export function createHandler() {
 		}
 
 		const reactServerManifest = getManifest("rsc");
-		const serverAssets = await reactServerManifest.inputs[
-			reactServerManifest.handler
-		].assets();
+		const serverAssets =
+			await reactServerManifest.inputs[reactServerManifest.handler].assets();
 		const clientManifest = getManifest("client");
 		const assets = await clientManifest.inputs[clientManifest.handler].assets();
 		const { renderToPipeableStream } = await import(
@@ -92,7 +91,6 @@ export function createHandler() {
 		};
 
 		event.node.res.setHeader("Content-Type", "text/x-component");
-		event.node.res.setHeader("Router", "rsc");
 
 		return stream;
 	});

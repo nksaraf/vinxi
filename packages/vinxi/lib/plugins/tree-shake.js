@@ -20,7 +20,7 @@ export function treeShake() {
 			const babel = await import("@babel/core");
 			const transformed = await babel.transformAsync(code, {
 				plugins: [
-					...(config.router.babel?.plugins ?? []),
+					...(config.service.babel?.plugins ?? []),
 					[plugin, { pick: query.getAll("pick") }],
 				],
 				parserOpts: {

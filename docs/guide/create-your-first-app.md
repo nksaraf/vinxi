@@ -9,7 +9,7 @@ import reactRefresh from "@vitejs/plugin-react";
 import { createApp } from "vinxi";
 
 export default createApp({
-  routers: [
+  services: [
     {
       name: "public",
       type: "static",
@@ -38,7 +38,7 @@ import { createApp } from "vinxi";
 import solid from "vite-plugin-solid";
 
 export default createApp({
-  routers: [
+  services: [
     {
       name: "public",
       type: "static",

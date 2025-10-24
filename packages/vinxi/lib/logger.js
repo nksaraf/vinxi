@@ -8,10 +8,12 @@ export const consola = createConsola({});
 
 export { colors as c };
 
+let isWorker = process.argv.includes("--vinxi-worker");
+
 export const log = (...args) => {
 	console.log(
 		colors.dim(
-			[colors.blue("vinxi"), isMainThread ? undefined : "worker"]
+			[colors.blue("vinxi"), !isWorker ? undefined : "worker"]
 				.filter(Boolean)
 				.join(":"),
 		),

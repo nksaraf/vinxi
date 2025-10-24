@@ -1,6 +1,6 @@
-# Client Router API
+# Client Service API
 
-The `client` router is a wrapper for Vite’s build processes and development server, allowing for easy integration with an `http` router for server-side rendering applications.
+The `client` service is a wrapper for Vite’s build processes and development server, allowing for easy integration with an `http` service for server-side rendering applications.
 
 ## Configuration Options
 
@@ -13,7 +13,7 @@ The `client` router is a wrapper for Vite’s build processes and development se
 - Type: `string`
 - Required: `true`
 
-A unique identifier for the router.
+A unique identifier for the service.
 
 ### handler
 
@@ -31,7 +31,7 @@ The entry point file for the client application.
 The base URL path under which the built assets for client application will be served.
 
 ::: tip
-As client router is mostly built assets, its good to use `base` for namspacing these assets in order to avoid conflicts, eg. `"/_build"`
+As client service is mostly built assets, its good to use `base` for namspacing these assets in order to avoid conflicts, eg. `"/_build"`
 :::
 
 ### plugins
@@ -45,7 +45,7 @@ A function returning an array of Vite plugins to use during the build process.
 
 ### routes
 
-- Type: `(router: ServiceSchemaInput, app: AppOptions) => CompiledRouter`
+- Type: `(service: ServiceSchemaInput, app: AppOptions) => Compiledservice`
 - Required: `false`
 
 A function defining the routing logic or structure.
