@@ -10,7 +10,7 @@ import { shimExportsPlugin } from "./plugins/shim-exports.js";
 import { wrapExports } from "./plugins/wrap-exports.js";
 import { wrapExportsPlugin } from "./plugins/wrap-exports.js";
 
-const testFixtures = import.meta.glob("./fixtures/**/*.ts", {
+const testFixtures = import.meta.glob("./fixtures/**/*.ts(x)?", {
 	as: "raw",
 });
 
@@ -78,12 +78,19 @@ async function transformClient(
 	return js(await instance.transform(code, args.id, args.options));
 }
 
+// Helper to find and load a fixture with .ts or .tsx extension
+async function loadFixture(base, suffix = "") {
+	const ts = `./fixtures/${base}${suffix}.ts`;
+	const tsx = `./fixtures/${base}${suffix}.tsx`;
+	if (testFixtures[ts]) return await testFixtures[ts]();
+	if (testFixtures[tsx]) return await testFixtures[tsx]();
+	throw new Error(`Fixture not found: ${ts} or ${tsx}`);
+}
+
 async function runTest(name, transform, f) {
-	it(name + "-" + f, async () => {
-		const code = await testFixtures[`./fixtures/${name}.ts`]();
-		const expected = await testFixtures[
-			`./fixtures/${name}${f ? "." + f : ""}.snapshot.ts`
-		]();
+	it(name + (f ? "-" + f : ""), async () => {
+		const code = await loadFixture(name);
+		const expected = await loadFixture(name, (f ? "." + f + ".snapshot" : ".snapshot"));
 		expect(await transform(code)).toEqual(js({ code: expected }));
 	});
 }

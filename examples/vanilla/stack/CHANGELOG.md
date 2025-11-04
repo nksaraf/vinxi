@@ -4,6 +4,50 @@
 
 ### Patch Changes
 
+- Updated dependencies [0beb1564]
+  - vinxi@0.5.8
+
+## null
+
+### Patch Changes
+
+- Updated dependencies [5a956826]
+- Updated dependencies [4e841814]
+- Updated dependencies [da024716]
+- Updated dependencies [a25b8fdf]
+  - vinxi@0.5.7
+
+## null
+
+### Patch Changes
+
+- Updated dependencies [7a5bb6f1]
+  - vinxi@0.5.6
+
+## null
+
+### Patch Changes
+
+- Updated dependencies [a231ae3d]
+- Updated dependencies [3a753f54]
+- Updated dependencies [f84285be]
+- Updated dependencies [8b99de63]
+  - vinxi@0.5.5
+  - @vinxi/server-functions@0.5.1
+
+## null
+
+### Patch Changes
+
+- Updated dependencies [6bb17d02]
+- Updated dependencies [1f899056]
+- Updated dependencies [6d71612e]
+  - vinxi@0.5.4
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [09cd59b1]
 - Updated dependencies [696defe4]
 - Updated dependencies [fd93107b]

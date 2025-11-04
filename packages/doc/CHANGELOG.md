@@ -1,5 +1,11 @@
 # @vinxi/doc
 
+## 0.1.2
+
+### Patch Changes
+
+- 8b99de63: chore: bump versions of prettier, common deps in vinxi
+
 ## 0.1.1
 
 ### Patch Changes

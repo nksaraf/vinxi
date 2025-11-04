@@ -8,6 +8,24 @@ import { handlerModule, join } from "./path.js";
 import { resolve } from "./resolve.js";
 
 export { z };
+
+const serverObjectSchema = z
+	.object({
+		hmr: z
+			.object({
+				protocol: z.string().optional(),
+				host: z.string().optional(),
+				port: z.number().optional(),
+				clientPort: z.number().optional(),
+				path: z.string().optional(),
+				timeout: z.number().optional(),
+				overlay: z.boolean().optional(),
+				server: z.any().optional(),
+			})
+			.optional(),
+	})
+	.optional();
+
 /**
  * @typedef {{ routes?: CompiledRouter; devServer?: import('vite').ViteDevServer; appWorker?: import('./app-worker-client.js').AppWorkerClient; type: import("./router-mode.js").RouterMode }} Internals
  * @typedef {import('./fs-router.js').BaseFileSystemRouter} CompiledRouter
@@ -19,6 +37,7 @@ export const staticRouterSchema = z.object({
 	type: z.literal("static").default("static"),
 	dir: z.string(),
 	root: z.optional(z.string()),
+	server: serverObjectSchema,
 });
 export const clientRouterSchema = z.object({
 	name: z.string(),
@@ -32,6 +51,12 @@ export const clientRouterSchema = z.object({
 	outDir: z.string().optional(),
 	target: z.enum(["browser"]).default("browser").optional(),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
+	babel: z.optional(
+		z.object({
+			plugins: z.array(z.any()).optional(),
+		}),
+	),
+	server: serverObjectSchema,
 });
 export const httpRouterSchema = z.object({
 	name: z.string(),
@@ -48,6 +73,12 @@ export const httpRouterSchema = z.object({
 	outDir: z.string().optional(),
 	target: z.enum(["server"]).default("server").optional(),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
+	babel: z.optional(
+		z.object({
+			plugins: z.array(z.any()).optional(),
+		}),
+	),
+	server: serverObjectSchema,
 });
 export const spaRouterSchema = z.object({
 	name: z.string(),
@@ -60,6 +91,12 @@ export const spaRouterSchema = z.object({
 	outDir: z.string().optional(),
 	target: z.enum(["browser"]).default("browser").optional(),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
+	babel: z.optional(
+		z.object({
+			plugins: z.array(z.any()).optional(),
+		}),
+	),
+	server: serverObjectSchema,
 });
 const customRouterSchema = z.object({
 	name: z.string(),
@@ -74,6 +111,7 @@ const customRouterSchema = z.object({
 	outDir: z.string().optional(),
 	target: z.literal("server"),
 	plugins: z.optional(z.custom((value) => typeof value === "function")),
+	server: serverObjectSchema,
 });
 export const routerSchema = {
 	static: staticRouterSchema,

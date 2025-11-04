@@ -37,233 +37,244 @@ const require = createRequire(import.meta.url);
  * @param {string} configFile
  */
 export async function createBuild(app, buildConfig, configFile) {
-	const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
-	const { join } = await import("./path.js");
-	const { fileURLToPath } = await import("url");
+	try {
+		const { existsSync, promises: fsPromises, readFileSync } = await import("fs");
+		const { join } = await import("./path.js");
+		const { fileURLToPath } = await import("url");
 
-	if (buildConfig.router) {
-		console.log("\n");
-		console.log(
-			`⚙ ${c.green(`Building your router ${buildConfig.router}...`)}`,
-		);
-		let router = app.config.routers.find((r) => r.name === buildConfig.router);
-		if (router.build !== false) {
-			if (existsSync(router.outDir)) {
-				await withLogger({ router, requestId: "clean" }, async () => {
-					console.log(`removing ${router.outDir}`);
-					await fsPromises.rm(router.outDir, { recursive: true });
-				});
-			}
+		if (buildConfig.router) {
+			console.log("\n");
+			console.log(
+				`⚙ ${c.green(`Building your router ${buildConfig.router}...`)}`,
+			);
+			let router = app.config.routers.find((r) => r.name === buildConfig.router);
+			if (router.build !== false) {
+				if (existsSync(router.outDir)) {
+					await withLogger({ router, requestId: "clean" }, async () => {
+						console.log(`removing ${router.outDir}`);
+						await fsPromises.rm(router.outDir, { recursive: true });
+					});
+				}
 
-			await withLogger({ router, requestId: "build" }, async () => {
-				await createRouterBuild(app, router, buildConfig.mode);
-			});
-		}
-
-		console.log(
-			`⚙ ${c.green(`Built your router ${buildConfig.router} successfully`)}`,
-		);
-		return;
-	}
-
-	console.log("\n");
-	console.log(`⚙  ${c.green("Building your app...")}`);
-	await app.hooks.callHook("app:build:start", { app, buildConfig });
-
-	app.config.routers = app.config.routers.filter(
-		(router) => router.build !== false,
-	);
-	for (const router of app.config.routers) {
-		if (router.build !== false) {
-			if (existsSync(router.outDir)) {
 				await withLogger({ router, requestId: "build" }, async () => {
-					console.log(`removing ${router.outDir}`);
-					await fsPromises.rm(router.outDir, { recursive: true });
+					try {
+						await createRouterBuild(app, router, buildConfig.mode);
+					} catch (error) {
+						console.error(`Error building router ${router.name}:`, error);
+						process.exit(1);
+					}
 				});
 			}
-		} else {
-			await withLogger({ router, requestId: "build" }, async () => {
-				console.log(`skipping ${router.name}`);
-			});
+
+			console.log(
+				`⚙ ${c.green(`Built your router ${buildConfig.router} successfully`)}`,
+			);
+			return;
 		}
-	}
 
-	for (const router of app.config.routers) {
-		if (router.type !== "static" && router.build !== false) {
-			await withLogger({ router, requestId: "build" }, async () => {
-				await createRouterBuildInWorker(app, router, buildConfig.mode, configFile);
-			});
+		console.log("\n");
+		console.log(`⚙  ${c.green("Building your app...")}`);
+		await app.hooks.callHook("app:build:start", { app, buildConfig });
+
+		app.config.routers = app.config.routers.filter(
+			(router) => router.build !== false,
+		);
+		for (const router of app.config.routers) {
+			if (router.build !== false) {
+				if (existsSync(router.outDir)) {
+					await withLogger({ router, requestId: "build" }, async () => {
+						console.log(`removing ${router.outDir}`);
+						await fsPromises.rm(router.outDir, { recursive: true });
+					});
+				}
+			} else {
+				await withLogger({ router, requestId: "build" }, async () => {
+					console.log(`skipping ${router.name}`);
+				});
+			}
 		}
-	}
 
-	const nitro = await createNitro({
-		...app.config.server,
-		dev: false,
-		compatibilityDate: "2024-12-01",
-		rootDir: "",
-		logLevel: +(process.env.NITRO_LOG_LEVEL || 1),
-		preset:
-			buildConfig.preset ??
-			process.env.TARGET ??
-			process.env.PRESET ??
-			process.env.SERVER_PRESET ??
-			process.env.SERVER_TARGET ??
-			process.env.NITRO_PRESET ??
-			process.env.NITRO_TARGET ??
-			app.config.server.preset ??
-			(process.versions.bun !== undefined ? "bun" : undefined),
-		alias: {
-			/**
-			 * These
-			 */
-			"node-fetch-native/polyfill": require.resolve(
-				"node-fetch-native/polyfill",
-			),
-			...(app.config.server.alias ?? {}),
-			// "unstorage/drivers/fs-lite": require.resolve("unstorage/drivers/fs-lite"),
-			// "unstorage/drivers/fs": require.resolve("unstorage/drivers/fs"),
-			// defu: require.resolve("defu"),
-			// pathe: require.resolve("pathe"),
-			// unstorage: require.resolve("unstorage"),
-		},
-		// minify: process.env.MINIFY !== "false" ?? true,
-		plugins: [
-			"$vinxi/prod-app",
-			fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
-			fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
-			"$vinxi/chunks",
-			...(app.config.server.plugins ?? []).map((plugin) =>
-				isRelative(plugin)
-					? plugin
-					: isAbsolute(plugin)
-					? plugin
-					: require.resolve(plugin, { paths: [app.config.root] }),
-			),
-		],
-		buildDir: ".vinxi",
-		handlers: [
-			...[...app.config.routers]
-				.sort((a, b) => b.base.length - a.base.length)
-				.map((router) => {
-					if (router.type === "http") {
-						invariant(router.handler, "Missing router.handler");
-						const bundlerManifest = JSON.parse(
-							readFileSync(viteManifestPath(router), "utf-8"),
-						);
-
-						const virtualHandlerId = virtualId(handlerModule(router));
-
-						const handler = join(
-							router.outDir,
-							router.base,
-							bundlerManifest[
-								virtualHandlerId in bundlerManifest
-									? virtualHandlerId
-									: relative(app.config.root, router.handler)
-							].file,
-						);
-
-						return [
-							{
-								route: router.base.length === 1 ? "/" : `${router.base}`,
-								handler,
-								middleware: true,
-							},
-						];
-					} else if (router.type === "spa") {
-						return [
-							{
-								route: router.base.length === 1 ? "/" : `${router.base}`,
-								handler: `$vinxi/spa/${router.name}`,
-								middleware: true,
-							},
-						];
+		for (const router of app.config.routers) {
+			if (router.type !== "static" && router.build !== false) {
+				await withLogger({ router, requestId: "build" }, async () => {
+					try {
+						await createRouterBuildInWorker(app, router, buildConfig.mode, configFile);
+					} catch (error) {
+						console.error(`Error building router ${router.name}:`, error);
+						process.exit(1);
 					}
-				})
-				.flat(),
-			...(app.config.server.handlers ?? []),
-		].filter(Boolean),
-		publicAssets: [
-			...app.config.routers
-				.map((router) => {
-					if (router.type === "static") {
-						return {
-							// @ts-expect-error
-							dir: router.dir,
-							baseURL: router.base,
-							fallthrough: true,
-						};
-					} else if (router.type === "http") {
-						return {
-							dir: join(router.outDir, router.base, "assets"),
-							baseURL: join(router.base, "assets"),
-							fallthrough: true,
-						};
-					} else if (router.type === "spa" || router.type === "client") {
-						return {
-							dir: join(router.outDir, router.base),
-							baseURL: router.base,
-							fallthrough: true,
-						};
-					}
-				})
-				.filter(Boolean),
-			...(app.config.server.publicAssets ?? []),
-		],
-		scanDirs: [],
-		appConfigFiles: [],
-		imports: false,
-		virtual: {
-			"$vinxi/prod-app": () => {
-				const config = {
-					...app.config,
-					routers: app.config.routers.map((router) => {
-						if (router.type === "spa" && !router.handler.endsWith(".html")) {
+				});
+			}
+		}
+
+		const nitro = await createNitro({
+			...app.config.server,
+			dev: false,
+			compatibilityDate: "2024-12-01",
+			rootDir: "",
+			logLevel: +(process.env.NITRO_LOG_LEVEL || 1),
+			preset:
+				buildConfig.preset ??
+				process.env.TARGET ??
+				process.env.PRESET ??
+				process.env.SERVER_PRESET ??
+				process.env.SERVER_TARGET ??
+				process.env.NITRO_PRESET ??
+				process.env.NITRO_TARGET ??
+				app.config.server.preset ??
+				(process.versions.bun !== undefined ? "bun" : undefined),
+			alias: {
+				/**
+				 * These
+				 */
+				"node-fetch-native/polyfill": require.resolve(
+					"node-fetch-native/polyfill",
+				),
+				...(app.config.server.alias ?? {}),
+				// "unstorage/drivers/fs-lite": require.resolve("unstorage/drivers/fs-lite"),
+				// "unstorage/drivers/fs": require.resolve("unstorage/drivers/fs"),
+				// defu: require.resolve("defu"),
+				// pathe: require.resolve("pathe"),
+				// unstorage: require.resolve("unstorage"),
+			},
+			// minify: process.env.MINIFY !== "false" ?? true,
+			plugins: [
+				"$vinxi/prod-app",
+				fileURLToPath(new URL("./app-fetch.js", import.meta.url)),
+				fileURLToPath(new URL("./app-manifest.js", import.meta.url)),
+				"$vinxi/chunks",
+				...(app.config.server.plugins ?? []).map((plugin) =>
+					isRelative(plugin)
+						? plugin
+						: isAbsolute(plugin)
+						? plugin
+						: require.resolve(plugin, { paths: [app.config.root] }),
+				),
+			],
+			buildDir: ".vinxi",
+			handlers: [
+				...[...app.config.routers]
+					.sort((a, b) => b.base.length - a.base.length)
+					.map((router) => {
+						if (router.type === "http") {
+							invariant(router.handler, "Missing router.handler");
+							const bundlerManifest = JSON.parse(
+								readFileSync(viteManifestPath(router), "utf-8"),
+							);
+
+							const virtualHandlerId = virtualId(handlerModule(router));
+
+							const handler = join(
+								router.outDir,
+								router.base,
+								bundlerManifest[
+									virtualHandlerId in bundlerManifest
+										? virtualHandlerId
+										: relative(app.config.root, router.handler)
+								].file,
+							);
+
+							return [
+								{
+									route: router.base.length === 1 ? "/" : `${router.base}`,
+									handler,
+									middleware: true,
+								},
+							];
+						} else if (router.type === "spa") {
+							return [
+								{
+									route: router.base.length === 1 ? "/" : `${router.base}`,
+									handler: `$vinxi/spa/${router.name}`,
+									middleware: true,
+								},
+							];
+						}
+					})
+					.flat(),
+				...(app.config.server.handlers ?? []),
+			].filter(Boolean),
+			publicAssets: [
+				...app.config.routers
+					.map((router) => {
+						if (router.type === "static") {
 							return {
-								...router,
-								handler: "index.html",
+								// @ts-expect-error
+								dir: router.dir,
+								baseURL: router.base,
+								fallthrough: true,
+							};
+						} else if (router.type === "http") {
+							return {
+								dir: join(router.outDir, router.base, "assets"),
+								baseURL: join(router.base, "assets"),
+								fallthrough: true,
+							};
+						} else if (router.type === "spa" || router.type === "client") {
+							return {
+								dir: join(router.outDir, router.base),
+								baseURL: router.base,
+								fallthrough: true,
 							};
 						}
+					})
+					.filter(Boolean),
+				...(app.config.server.publicAssets ?? []),
+			],
+			scanDirs: [],
+			appConfigFiles: [],
+			imports: false,
+			virtual: {
+				"$vinxi/prod-app": () => {
+					const config = {
+						...app.config,
+						routers: app.config.routers.map((router) => {
+							if (router.type === "spa" && !router.handler.endsWith(".html")) {
+								return {
+									...router,
+									handler: "index.html",
+								};
+							}
 
-						return router;
-					}),
-				};
-				return `
+							return router;
+						}),
+					};
+					return `
         const appConfig = ${JSON.stringify(config, (k, v) => {
-					if (["routes", "internals", "plugins"].includes(k)) {
-						return undefined;
-					}
+						if (["routes", "internals", "plugins"].includes(k)) {
+							return undefined;
+						}
 
-					return v;
-				})}
-				const buildManifest = ${JSON.stringify(
-					Object.fromEntries(
-						// @ts-ignore
-						app.config.routers
-							.map((router) => {
-								if (router.type !== "static") {
-									const bundlerManifest = JSON.parse(
-										readFileSync(viteManifestPath(router), "utf-8"),
-									);
-									return [router.name, bundlerManifest];
-								}
-							})
-							.filter(Boolean),
-					),
-				)}
+						return v;
+					})}
+					const buildManifest = ${JSON.stringify(
+						Object.fromEntries(
+							// @ts-ignore
+							app.config.routers
+								.map((router) => {
+									if (router.type !== "static") {
+										const bundlerManifest = JSON.parse(
+											readFileSync(viteManifestPath(router), "utf-8"),
+										);
+										return [router.name, bundlerManifest];
+									}
+								})
+								.filter(Boolean),
+						),
+					)}
 
-				const routeManifest = ${JSON.stringify(
-					Object.fromEntries(
-						// @ts-ignore
-						app.config.routers
-							.map((router) => {
-								if (router.type !== "static" && router.internals.routes) {
-									return [router.name, router.internals.routes?.getRoutes?.()];
-								}
-							})
-							.filter(Boolean),
-					),
-				)}
+					const routeManifest = ${JSON.stringify(
+						Object.fromEntries(
+							// @ts-ignore
+							app.config.routers
+								.map((router) => {
+									if (router.type !== "static" && router.internals.routes) {
+										return [router.name, router.internals.routes?.getRoutes?.()];
+									}
+								})
+								.filter(Boolean),
+						),
+					)}
 
         function createProdApp(appConfig) {
           return {
@@ -279,109 +290,116 @@ export async function createBuild(app, buildConfig, configFile) {
           globalThis.app = prodApp
         }
       `;
-			},
-			...app.config.routers
-				.filter((router) => router.type === "spa")
-				.reduce((virtuals, router) => {
-					virtuals[`$vinxi/spa/${router.name}`] = () => {
-						const indexHtml = readFileSync(
-							join(router.outDir, router.base, "index.html"),
-							"utf-8",
-						);
-						return `
+				},
+				...app.config.routers
+					.filter((router) => router.type === "spa")
+					.reduce((virtuals, router) => {
+						virtuals[`$vinxi/spa/${router.name}`] = () => {
+							const indexHtml = readFileSync(
+								join(router.outDir, router.base, "index.html"),
+								"utf-8",
+							);
+							return `
 							import { eventHandler } from "vinxi/http"
 							const html = ${JSON.stringify(indexHtml)}
 							export default eventHandler(event => {
 								return html
 							})
 						`;
-					};
-					return virtuals;
-				}, {}),
-			"$vinxi/chunks": () => chunksServerVirtualModule()(app),
+						};
+						return virtuals;
+					}, {}),
+				"$vinxi/chunks": () => chunksServerVirtualModule()(app),
 
-			...(Object.fromEntries(
-				Object.entries(app.config.server?.virtual ?? {}).map(([k, v]) => [
-					k,
-					// @ts-ignore
-					typeof v === "function" ? () => v(app) : v,
-				]),
-			) ?? {}),
-		},
-	});
+				...(Object.fromEntries(
+					Object.entries(app.config.server?.virtual ?? {}).map(([k, v]) => [
+						k,
+						// @ts-ignore
+						typeof v === "function" ? () => v(app) : v,
+					]),
+				) ?? {}),
+			},
+		});
 
-	console.log("\n");
-	console.log(`⚙  ${c.green(`Preparing app for ${nitro.options.preset}...`)}`);
+		console.log("\n");
+		console.log(`⚙  ${c.green(`Preparing app for ${nitro.options.preset}...`)}`);
 
-	nitro.options.appConfigFiles = [];
-	nitro.logger = consola.withTag(app.config.name);
+		nitro.options.appConfigFiles = [];
+		nitro.logger = consola.withTag(app.config.name);
 
-	await app.hooks.callHook("app:build:nitro:config", { app, nitro });
+		await app.hooks.callHook("app:build:nitro:config", { app, nitro });
 
-	if (existsSync(join(nitro.options.output.serverDir))) {
-		await rm(join(nitro.options.output.serverDir), { recursive: true });
-	}
-
-	if (existsSync(join(nitro.options.output.publicDir))) {
-		await rm(join(nitro.options.output.publicDir), { recursive: true });
-	}
-
-	await app.hooks.callHook("app:build:nitro:assets:copy:start", { app, nitro });
-
-	await mkdir(join(nitro.options.output.publicDir), { recursive: true });
-	await copyPublicAssets(nitro);
-
-	// remove js files from assets for 'http' routers targetting 'server'
-	// https://github.com/nksaraf/vinxi/issues/363
-	for (const router of app.config.routers.filter(
-		(r) => r.type === "http" && r.target === "server",
-	)) {
-		const routerDir = join(nitro.options.output.publicDir, router.base);
-		const assetsDir = join(routerDir, "assets");
-		if (!existsSync(assetsDir)) {
-			continue;
+		if (existsSync(join(nitro.options.output.serverDir))) {
+			await rm(join(nitro.options.output.serverDir), { recursive: true });
 		}
 
-		let hasFilesDeleted = false;
-		const assetFiles = readdirSync(assetsDir);
-		for (const assetName of assetFiles) {
-			if (
-				assetName.endsWith(".js") ||
-				assetName.endsWith(".mjs") ||
-				assetName.endsWith(".cjs")
-			) {
-				if (!hasFilesDeleted) {
-					hasFilesDeleted = true;
+		if (existsSync(join(nitro.options.output.publicDir))) {
+			await rm(join(nitro.options.output.publicDir), { recursive: true });
+		}
+
+		await app.hooks.callHook("app:build:nitro:assets:copy:start", { app, nitro });
+
+		await mkdir(join(nitro.options.output.publicDir), { recursive: true });
+		await copyPublicAssets(nitro);
+
+		// remove js files from assets for 'http' routers targetting 'server'
+		// https://github.com/nksaraf/vinxi/issues/363
+		for (const router of app.config.routers.filter(
+			(r) => r.type === "http" && r.target === "server",
+		)) {
+			const routerDir = join(nitro.options.output.publicDir, router.base);
+			const assetsDir = join(routerDir, "assets");
+			if (!existsSync(assetsDir)) {
+				continue;
+			}
+
+			let hasFilesDeleted = false;
+			const assetFiles = readdirSync(assetsDir);
+			for (const assetName of assetFiles) {
+				if (
+					assetName.endsWith(".js") ||
+					assetName.endsWith(".mjs") ||
+					assetName.endsWith(".cjs") ||
+					assetName.includes(".js.") ||
+					assetName.includes(".cjs.") ||
+					assetName.includes(".mjs.")
+				) {
+					if (!hasFilesDeleted) {
+						hasFilesDeleted = true;
+					}
+					await rm(join(assetsDir, assetName));
 				}
-				await rm(join(assetsDir, assetName));
+			}
+
+			// if the router dir is empty (including its subdirectories), remove it
+			// if the subdirectories are empty, they will be removed recursively
+			if (hasFilesDeleted) {
+				await deleteEmptyDirs(routerDir);
 			}
 		}
 
-		// if the router dir is empty (including its subdirectories), remove it
-		// if the subdirectories are empty, they will be removed recursively
-		if (hasFilesDeleted) {
-			await deleteEmptyDirs(routerDir);
-		}
+		await app.hooks.callHook("app:build:nitro:assets:copy:end", { app, nitro });
+
+		await mkdir(join(nitro.options.output.serverDir), { recursive: true });
+
+		await app.hooks.callHook("app:build:nitro:prerender:start", { app, nitro });
+		nitro.hooks.hook("prerender:init", (nitro) => {
+			nitro.options.appConfigFiles = [];
+			nitro.logger = consola.withTag(app.config.name);
+		});
+		await prerender(nitro);
+		await app.hooks.callHook("app:build:nitro:prerender:end", { app, nitro });
+
+		await app.hooks.callHook("app:build:nitro:start", { app, nitro });
+		await build(nitro);
+		await app.hooks.callHook("app:build:nitro:end", { app, nitro });
+		await nitro.close();
+		await app.hooks.callHook("app:build:end", { app });
+		process.exit(0);
+	} catch (error) {
+		console.error("Build failed:", error);
+		process.exit(1);
 	}
-
-	await app.hooks.callHook("app:build:nitro:assets:copy:end", { app, nitro });
-
-	await mkdir(join(nitro.options.output.serverDir), { recursive: true });
-
-	await app.hooks.callHook("app:build:nitro:prerender:start", { app, nitro });
-	nitro.hooks.hook("prerender:init", (nitro) => {
-		nitro.options.appConfigFiles = [];
-		nitro.logger = consola.withTag(app.config.name);
-	});
-	await prerender(nitro);
-	await app.hooks.callHook("app:build:nitro:prerender:end", { app, nitro });
-
-	await app.hooks.callHook("app:build:nitro:start", { app, nitro });
-	await build(nitro);
-	await app.hooks.callHook("app:build:nitro:end", { app, nitro });
-	await nitro.close();
-	await app.hooks.callHook("app:build:end", { app });
-	process.exit(0);
 }
 
 /**

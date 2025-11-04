@@ -1,5 +1,43 @@
 # vinxi
 
+## 0.5.8
+
+### Patch Changes
+
+- 0beb1564: Update tree-shake.js
+
+## 0.5.7
+
+### Patch Changes
+
+- 5a956826: fix: ensure build process returns non-zero exit code on errors
+- 4e841814: fix: nitro H3Event extension
+- da024716: chore: switch to tinyglobby
+- a25b8fdf: fix: server code leaked in client bundle in compressed js files.
+
+## 0.5.6
+
+### Patch Changes
+
+- 7a5bb6f1: fix: babel plugin options validation
+
+## 0.5.5
+
+### Patch Changes
+
+- a231ae3d: fix mode arg for dev command
+- 3a753f54: fix: use vite 6's environment API for vinxi run command
+- f84285be: feat: add custom babel plugins support for treeshake plugin
+- 8b99de63: chore: bump versions of prettier, common deps in vinxi
+
+## 0.5.4
+
+### Patch Changes
+
+- 6bb17d02: Update Nitro to 2.11.1
+- 1f899056: feat: allow custom HMR configuration on a per router basis
+- 6d71612e: feat: allow custom `clearScreen` configuration
+
 ## 0.5.3
 
 ### Patch Changes
