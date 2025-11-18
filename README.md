@@ -50,10 +50,9 @@ export default createApp({
 
 ---
 
-There are currently two frameworks actively being developed on `vinxi`:
+Frameworks actively being developed on `vinxi`:
 
 - [SolidStart](https://github.com/solidjs/solid-start)
-- [TanstackStart](https://github.com/tanstack/router)
 
 There are also a few other frameworks experimenting with vinxi:
 
