@@ -88,7 +88,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	 */
 	async buildRoutes() {
 		await init;
-		for (var src of glob(this.glob())) {
+		for (var src of glob(this.glob(), { dot: true })) {
 			await this.addRoute(src);
 		}
 
@@ -101,7 +101,7 @@ export class BaseFileSystemRouter extends EventTarget {
 	 * @returns {boolean}
 	 */
 	isRoute(src) {
-		return Boolean(micromatch(src, this.glob())?.length);
+		return Boolean(micromatch(src, this.glob(), { dot: true })?.length);
 	}
 
 	/**
