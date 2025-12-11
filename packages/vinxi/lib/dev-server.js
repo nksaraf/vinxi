@@ -98,7 +98,7 @@ export async function createViteHandler(router, app, serveConfig) {
  *
  * @param {import('./app.js').App} app
  * @param {DevConfigInput} param1
- * @returns
+ * @returns {Promise<{ listen: () => Promise<import('@vinxi/listhen').Listener>; close: () => Promise<void> }>}
  */
 export async function createDevServer(
 	app,
