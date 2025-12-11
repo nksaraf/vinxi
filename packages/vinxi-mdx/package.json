@@ -20,6 +20,12 @@
   "files": [
     "dist"
   ],
+   "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "peerDependencies": {
     "@mdx-js/mdx": "<3"
   },
