@@ -4,6 +4,15 @@
 
 ### Patch Changes
 
+- Updated dependencies [c6ab728f]
+- Updated dependencies [dbce31b5]
+  - vinxi@0.5.9
+  - @vinxi/openapi@0.2.3
+
+## null
+
+### Patch Changes
+
 - Updated dependencies [0beb1564]
   - vinxi@0.5.8
   - @vinxi/openapi@0.2.3

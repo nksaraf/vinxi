@@ -1,5 +1,12 @@
 # vinxi
 
+## 0.5.9
+
+### Patch Changes
+
+- c6ab728f: add dot file suppot
+- dbce31b5: Update dependencies and improve compatibility with Vite 7
+
 ## 0.5.8
 
 ### Patch Changes
