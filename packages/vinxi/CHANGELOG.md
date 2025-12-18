@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.5.10
+
+### Patch Changes
+
+- 83082e13: bump to zod4
+
 ## 0.5.9
 
 ### Patch Changes
