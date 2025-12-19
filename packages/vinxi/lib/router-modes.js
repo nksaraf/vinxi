@@ -103,9 +103,8 @@ const customRouterSchema = z.object({
 	base: z.optional(z.string().default("/")),
 	root: z.optional(z.string()),
 	type: z.object({
-		resolveConfig: z.function().args(z.any(), z.any()).returns(z.any()),
+		resolveConfig: z.function({ input: [z.any(), z.any()], output: z.any() }),
 	}),
-	/** @type {z.ZodOptionalType<z.ZodType<RouterStyleFn, z.ZodTypeDef, RouterStyleFn>>} */
 	routes: z.optional(z.custom((value) => value !== null)),
 	handler: z.string(),
 	outDir: z.string().optional(),
