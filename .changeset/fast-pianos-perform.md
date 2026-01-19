@@ -1,0 +1,5 @@
+---
+"vinxi": patch
+---
+
+support rolldown
