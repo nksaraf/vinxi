@@ -45,7 +45,11 @@ export function treeShake() {
 				sourceFileName: id,
 			});
 
-			return transformed;
+			return {
+				code: transformed.code,
+				map: transformed.map,
+				moduleType: 'js'
+			};
 
 			// cache[path] ??= {};
 			// cache[path][id] ??= transformed.code;
@@ -108,6 +112,7 @@ export function treeShake() {
 				return {
 					code: transformed.code,
 					map: transformed.map,
+					moduleType: 'js'
 				};
 			}
 		},

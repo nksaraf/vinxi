@@ -78,11 +78,11 @@ export function routes() {
 						return {
 							src: isBuild ? relative(root, buildId) : buildId,
 							build: isBuild
-								? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
+								? `_$() => import('${buildId}')$_`
 								: undefined,
 							import:
 								router.target === "server"
-									? `_$() => import(/* @vite-ignore */ '${buildId}')$_`
+									? `_$() => import('${buildId}')$_`
 									: `_$(() => { const id = '${relative(
 											root,
 											buildId,
@@ -98,7 +98,7 @@ export function routes() {
 
 				const code = `${js.getImportStatements()}
 				export default ${routesCode}`;
-				return code;
+				return {code};
 			}
 		},
 	};

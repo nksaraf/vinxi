@@ -72,6 +72,7 @@ export function virtual(modules, name = "", cache = {}) {
 			return {
 				code: m,
 				map: null,
+				moduleType: 'js'
 			};
 		},
 	};

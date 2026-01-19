@@ -59,9 +59,12 @@ export function manifest() {
 						if (!id) {
 							throw new Error("Missing id to get assets.");
 						}
-						return `export default ${JSON.stringify(
-							await globalThis.MANIFEST[router.name].inputs[id].assets(),
-						)}`;
+						return {
+							code: `export default ${JSON.stringify(
+								await globalThis.MANIFEST[router.name].inputs[id].assets(),
+							)}`,
+							moduleType: 'js'
+						}
 					}
 				}
 			},
