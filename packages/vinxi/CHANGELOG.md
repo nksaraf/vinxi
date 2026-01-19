@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.5.11
+
+### Patch Changes
+
+- 9445249c: support rolldown
+
 ## 0.5.10
 
 ### Patch Changes
