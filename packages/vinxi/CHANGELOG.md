@@ -1,5 +1,11 @@
 # vinxi
 
+## 0.5.13
+
+### Patch Changes
+
+- de1436ee: bump h3 version to 1.15.5 due to high severe vulnerability
+
 ## 0.5.11
 
 ### Patch Changes
