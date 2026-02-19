@@ -449,6 +449,10 @@ async function createRouterBuild(app, router, mode) {
 			app: app,
 			root: router.root,
 			mode,
+			router: router,
+			plugins: [
+				...((await router.plugins?.(router)) ?? []),
+			],
 			build: {
 				ssr: true,
 				ssrManifest: true,
