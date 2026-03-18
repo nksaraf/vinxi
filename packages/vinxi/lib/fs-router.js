@@ -14,9 +14,10 @@ export { pathToRegexp };
 /**
  *
  * @param {string} path
+ * @param {import("tinyglobby").GlobOptions} [options]
  * @returns {string[]}
  */
-export const glob = (path) => globSync(path, { absolute: true, expandDirectories: false });
+export const glob = (path, options) => globSync(path, { absolute: true, expandDirectories: false, ...options });
 
 /** @typedef {{ dir: string; extensions: string[] }} FileSystemRouterConfig */
 /** @typedef {{ path: string } & any} Route */
