@@ -1,5 +1,13 @@
 # vinxi
 
+## 0.5.13
+
+### Patch Changes
+
+- b65368e4: Forward options to glob wrapper in fs-router to support dot-prefixed paths
+- de1436ee: bump h3 version to 1.15.5 due to high severe vulnerability
+- 2e553dab: Add support for Vite version 8 in manifest path
+
 ## 0.5.11
 
 ### Patch Changes

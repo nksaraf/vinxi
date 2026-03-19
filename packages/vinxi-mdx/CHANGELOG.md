@@ -1,5 +1,11 @@
 # @vinxi/plugin-mdx
 
+## 3.7.3
+
+### Patch Changes
+
+- 074875fe: chore: add 'exports' for type
+
 ## 3.7.2
 
 ### Patch Changes
