@@ -11,7 +11,8 @@ export function viteManifestPath(
 	if (
 		vite.version.startsWith("5") ||
 		vite.version.startsWith("6") ||
-		vite.version.startsWith("7")
+		vite.version.startsWith("7") ||
+		vite.version.startsWith("8")
 	) {
 		return join(router.outDir, router.base, ".vite", "manifest.json");
 	}
