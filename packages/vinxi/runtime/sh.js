@@ -1,2 +1,2 @@
-export * from "dax-sh"
-export { $ as default } from "dax-sh"
+export * from "dax"
+export { $ as default } from "dax"
