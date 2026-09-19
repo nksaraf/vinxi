@@ -60,7 +60,7 @@ eg.
 vinxi run script.ts
 ```
 
-This command is quite powerful and can be used to run any script, including server scripts, build scripts, one off tasks, etc. We expose a great scripting API from `vinxi/sh` (uses `dax-sh`).
+This command is quite powerful and can be used to run any script, including server scripts, build scripts, one off tasks, etc. We expose a great scripting API from `vinxi/sh` (uses [`dax`](https://www.npmjs.com/package/dax)).
 
 ```ts fileName=script.ts
 import $ from "vinxi/sh";
