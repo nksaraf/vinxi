@@ -30,7 +30,7 @@ export default createApp({
       handler: './app/api.ts',
       base: '/api',
       plugins: () => [
-        // Vite plugins applying to exclusively to `http` router
+        // Vite plugins applying exclusively to `http` router
       ]
     }
   ],
